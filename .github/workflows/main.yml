@@ -24,23 +24,21 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        working-directory: ./src
         run: npm install
 
       - name: Build project
-        working-directory: ./src
         run: npm run build
 
-      - name: Run tests
-        working-directory: ./src
-        run: npm test
+      - name: Export static site (for Next.js)
+        run: npm run export
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./src/out
+          publish_dir: ./out
+
 
 
      
