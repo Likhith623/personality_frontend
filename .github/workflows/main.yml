@@ -3,4 +3,44 @@ name: CI/CD Pipeline
 on:
  push:
   paths:
-   - 
+   - 'src/**'
+  branches:
+   - main
+ pull_request:
+  paths:
+   - 'src/**'
+  
+jobs:
+ build:
+  runs-on: ubuntu-latest
+
+  steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' 
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build project
+        run: |
+          npm run build
+          
+      - name: Run tests
+        run: |
+          npm test
+
+      - name: Deploy (Example step)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Deploying frontend app..."
+
+     
+    
+   
+ 
+ 
