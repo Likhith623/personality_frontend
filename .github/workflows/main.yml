@@ -3,12 +3,12 @@ name: CI/CD Pipeline
 on:
   push:
     paths:
-      - 'src/**'
+      - 'chatbot-new-frontend/src/**'
     branches:
       - main
   pull_request:
     paths:
-      - 'src/**'
+      - 'chatbot-new-frontend/src/**'
 
 jobs:
   build:
