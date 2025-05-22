@@ -32,14 +32,6 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_KEY }}
-
-      - name: Export static site (for Next.js)
-        working-directory: chatbot-new-frontend
-        run: npm run export
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_KEY }}
-
       
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
