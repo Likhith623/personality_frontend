@@ -24,7 +24,7 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        working-directory: ./NoviFE
+        working-directory: NoviFE
         run: npm install
 
       - name: Build project
