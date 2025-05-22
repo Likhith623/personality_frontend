@@ -22,6 +22,9 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Debug: Print next.config.mjs to confirm fix
+        run: cat chatbot-new-frontend/next.config.mjs
+
       - name: Install dependencies
         working-directory: chatbot-new-frontend
         run: npm install
@@ -50,3 +53,4 @@ jobs:
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated
+
