@@ -1,9 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export', // Enables static export
+export default {
+  output: 'export',
   images: {
-    domains: ['images.unsplash.com'], // Keep your existing config
+    domains: ['images.unsplash.com'],
   },
 };
-
-module.exports = nextConfig;
