@@ -46,17 +46,16 @@ jobs:
           workload_identity_provider: 'projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/github'
           service_account: 'github-actions-deployer@novife.iam.gserviceaccount.com'
 
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: novife
+
       - name: Debug Authentication
         run: |
           gcloud auth list
           gcloud config list
           gcloud info
-          gcloud config set project novife
-
-      - name: Set up gcloud
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: novife
 
       - name: Deploy to Cloud Run
         run: |
@@ -65,3 +64,4 @@ jobs:
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated
+
