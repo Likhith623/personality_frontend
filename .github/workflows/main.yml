@@ -36,10 +36,12 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_KEY }}
       
-      - name: Authenticate with Google Cloud
+      - name: Authenticate with Google Cloud via Workload Identity
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          token_format: 'access_token'
+          workload_identity_provider: 'projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/github'
+          service_account: 'github-actions-deployer@novife.iam.gserviceaccount.com'
 
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v1
