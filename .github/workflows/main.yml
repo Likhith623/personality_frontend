@@ -42,8 +42,6 @@ jobs:
 
       - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: novife
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
