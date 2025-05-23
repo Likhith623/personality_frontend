@@ -5,7 +5,7 @@ on:
     paths:
       - 'chatbot-new-frontend/src/**'
     branches:
-      - main
+      - '**'
   pull_request:
     paths:
       - 'chatbot-new-frontend/src/**'
