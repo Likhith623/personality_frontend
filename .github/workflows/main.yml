@@ -14,8 +14,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # Required for Workload Identity Federation
-      contents: read    # Required to checkout the repository
+      id-token: write   # Needed for Workload Identity Federation
+      contents: read    # To checkout code
 
     steps:
       - name: Checkout code
@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Debug:Print next.config.mjs
+      - name: Print next.config.mjs (debug)
         run: cat chatbot-new-frontend/next.config.mjs
 
       - name: Install dependencies
@@ -40,29 +40,28 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_KEY }}
 
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v1
-        with:
-         workload_identity_provider: 'projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
-         service_account: 'github-actions-deployer@novife.iam.gserviceaccount.com'
-         token_format: 'id_token'  # Use ID token, not access token
-         audience: 'sts.googleapis.com'
-    
-      - name: Set up gcloud
+      - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: novife
 
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: 'projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
+          service_account: 'github-actions-deployer@novife.iam.gserviceaccount.com'
+          token_format: 'access_token'
+
       - name: Debug Authentication
         run: |
-         echo "AUTH LIST:"
-         gcloud auth list
-         echo "CONFIG LIST:"
-         gcloud config list
-         echo "ACCESS TOKEN:"
-         gcloud auth print-access-token
-         echo "ADC Path:"
-         echo $GOOGLE_APPLICATION_CREDENTIALS
+          echo "gcloud auth list:"
+          gcloud auth list
+          echo "gcloud config list:"
+          gcloud config list
+          echo "Access token:"
+          gcloud auth print-access-token
+          echo "GOOGLE_APPLICATION_CREDENTIALS:"
+          echo $GOOGLE_APPLICATION_CREDENTIALS
 
       - name: Deploy to Cloud Run
         run: |
@@ -71,4 +70,3 @@ jobs:
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated
-
