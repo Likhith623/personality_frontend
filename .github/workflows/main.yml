@@ -13,9 +13,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions: # Add this section
-      id-token: write
-      contents: read
+    permissions:
+      id-token: write   # Required for Workload Identity Federation
+      contents: read    # Required to checkout the repository
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,7 +26,7 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Debug:Print next.config.mjs to confirm fix
+      - name: Debug:Print next.config.mjs
         run: cat chatbot-new-frontend/next.config.mjs
 
       - name: Install dependencies
@@ -44,6 +45,13 @@ jobs:
         with:
           workload_identity_provider: 'projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/github'
           service_account: 'github-actions-deployer@novife.iam.gserviceaccount.com'
+
+      - name: Debug Authentication
+        run: |
+          gcloud auth list
+          gcloud config list
+          gcloud info
+          gcloud config set project novife
 
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v1
