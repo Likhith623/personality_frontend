@@ -42,6 +42,8 @@ jobs:
           token_format: 'access_token'
           workload_identity_provider: 'projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/github'
           service_account: 'github-actions-deployer@novife.iam.gserviceaccount.com'
+          audience: 'https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/github'
+          export_default_credentials: true
 
       - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v1
