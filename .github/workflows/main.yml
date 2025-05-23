@@ -8,7 +8,7 @@ on:
       - 'main'
   pull_request:
     paths:
-      - 'chatbot-new-frontend/src/**'
+      - 'chatbot-new-frontend/**'
 
 jobs:
   build:
