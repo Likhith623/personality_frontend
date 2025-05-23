@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Debug: Print next.config.mjs to confirm fix
+      - name: Debug:Print next.config.mjs to confirm fix
         run: cat chatbot-new-frontend/next.config.mjs
 
       - name: Install dependencies
