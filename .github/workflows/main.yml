@@ -49,7 +49,7 @@ jobs:
         with:
           workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
           service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
-          audience: "https://token.actions.githubusercontent.com"   # Important for matching attributeCondition
+          audience: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider" # Update this value if needed
 
       - name: Print OIDC token (debug)
         run: |
