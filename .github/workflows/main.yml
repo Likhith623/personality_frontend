@@ -25,6 +25,19 @@ jobs:
           echo "Actor: ${{ github.actor }}"
           echo "Event: ${{ github.event_name }}"
           echo "Repository Owner: ${{ github.repository_owner }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "Run ID: ${{ github.run_id }}"
+      
+      - name: Get OIDC Token for debugging
+        uses: actions/github-script@v6
+        id: oidc-token
+        with:
+          script: |
+            const token = await core.getIDToken('https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider')
+            const [header, payload, signature] = token.split('.')
+            const decodedPayload = JSON.parse(Buffer.from(payload, 'base64').toString())
+            console.log('OIDC Token Claims:', JSON.stringify(decodedPayload, null, 2))
+            return decodedPayload
       
       - name: Set up Node.js
         uses: actions/setup-node@v4
