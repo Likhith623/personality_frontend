@@ -27,6 +27,8 @@ jobs:
           echo "Repository Owner: ${{ github.repository_owner }}"
           echo "SHA: ${{ github.sha }}"
           echo "Run ID: ${{ github.run_id }}"
+          echo "=== CURRENT IAM BINDING EXPECTS: amaze18/NoviFE ==="
+          echo "=== ACTUAL REPOSITORY IS: ${{ github.repository }} ==="
       
       - name: Get OIDC Token for debugging
         uses: actions/github-script@v6
