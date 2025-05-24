@@ -11,7 +11,7 @@ on:
       - 'chatbot-new-frontend/**'
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       id-token: write   # Needed for Workload Identity Federation
@@ -46,11 +46,11 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
-           workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
-           service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
-           token_format: 'access_token'
+          workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
+          token_format: 'access_token'
 
-      - name: Debug Authentication
+      - name: Debug Authentication (optional)
         run: |
           echo "gcloud auth list:"
           gcloud auth list
@@ -58,13 +58,14 @@ jobs:
           gcloud config list
           echo "Access token:"
           gcloud auth print-access-token
-          echo "GOOGLE_APPLICATION_CREDENTIALS:"
-          echo $GOOGLE_APPLICATION_CREDENTIALS
 
       - name: Deploy to Cloud Run
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           gcloud run deploy novife-frontend \
             --source=./chatbot-new-frontend \
             --region=us-central1 \
             --platform=managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
+
