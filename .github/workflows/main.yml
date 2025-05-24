@@ -43,6 +43,12 @@ jobs:
       - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v1
 
+      - name: Print OIDC Token (for debugging)
+        run: |
+          echo "${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" | jq -R 'split(".") | .[1] | @base64d | fromjson'
+        env:
+          ACTIONS_ID_TOKEN_REQUEST_TOKEN: ${{ steps.auth.outputs.id_token }}
+
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
