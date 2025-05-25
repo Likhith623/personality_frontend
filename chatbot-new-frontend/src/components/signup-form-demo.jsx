@@ -9,7 +9,7 @@ import { supabase } from "../../supabaseClient";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/support/UserContext";
 import Link from "next/link";
-import { IconBrandGoogle } from "@tabler/icons-react";
+import { IconBrandGoogle, IconBrandDiscord } from "@tabler/icons-react";
 import ForgotPasswordModal from "./ForgotPasswordModal";
 
 export default function SignupFormDemo({ filter }) {
@@ -31,7 +31,7 @@ export default function SignupFormDemo({ filter }) {
       if (session) {
         await fetchUserDetails(session.user);
 
-        // Check if the user signed up with Google
+        // Check if the user signed up with Google or Discord
         const { data: existingUser, error: fetchError } = await supabase
           .from("user_details")
           .select("auth_provider")
@@ -47,7 +47,7 @@ export default function SignupFormDemo({ filter }) {
             .insert([
               {
                 email: session.user.email,
-                auth_provider: "google", // Set the auth provider to 'google'
+                auth_provider: session.user.app_metadata.provider || "email", // Get the provider from session
               },
             ]);
 
@@ -225,6 +225,24 @@ export default function SignupFormDemo({ filter }) {
     }
   };
 
+  const discordAuth = async () => {
+    try {
+      const redirectTo = filter
+        ? `${window.location.origin}/signup?filter=${filter}`
+        : `${window.location.origin}/signup`;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "discord",
+        options: {
+          redirectTo: redirectTo,
+        },
+      });
+
+      if (error) throw new Error(error.message);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   return (<>
     <div
       className="font-[family-name:var(--font-garamond)] bg-white/40 backdrop-blur-lg 
@@ -302,15 +320,28 @@ lg:p-8 lg:px-20 p-8 px:10 md:px-20 rounded-3xl shadow-lg border border-white/30"
   to-transparent my-4 h-[1px] w-full"
       />
 
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4 mt-4">
         <button
-          className="mt-4 flex items-center justify-center px-4 w-full text-[#333] bg-white/70
-      rounded-md h-10 font-medium shadow-sm transition-all hover:bg-white/90"
+          className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
           type="button"
           onClick={googleAuth}
         >
-          <IconBrandGoogle className="h-5 w-5 text-neutral-800" />
-          <span className="text-md text-center ml-2">Continue with Google</span>
+          <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
+          <span className="text-neutral-700 dark:text-neutral-300 text-sm">
+            Continue with Google
+          </span>
+          <BottomGradient />
+        </button>
+        <button
+          className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+          type="button"
+          onClick={discordAuth}
+        >
+          <IconBrandDiscord className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
+          <span className="text-neutral-700 dark:text-neutral-300 text-sm">
+            Continue with Discord
+          </span>
+          <BottomGradient />
         </button>
       </div>
 
