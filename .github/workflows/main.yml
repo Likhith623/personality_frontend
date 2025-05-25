@@ -90,8 +90,20 @@ jobs:
   deploy-prod:
     needs: approval
     runs-on: ubuntu-latest
-
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
+          audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+
+      - name: Set GCP project
+        run: gcloud config set project novife
+
       - name: Deploy to Cloud Run prod
         run: |
           gcloud run deploy novife-frontend-prod \
@@ -99,4 +111,5 @@ jobs:
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated \
-            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
+            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }} \
+            --project=novife
