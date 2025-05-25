@@ -11,11 +11,11 @@ on:
       - 'chatbot-new-frontend/**'
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # Needed for Workload Identity Federation
-      contents: read    # To checkout code
+      id-token: write
+      contents: read
 
     steps:
       - name: Checkout code
@@ -25,9 +25,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-
-      - name: Print next.config.mjs (debug)
-        run: cat chatbot-new-frontend/next.config.mjs
 
       - name: Install dependencies
         working-directory: chatbot-new-frontend
@@ -44,31 +41,43 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Authenticate with Google Cloud
-        id: auth
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
           service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
           audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
 
-      - name: Print OIDC token (debug)
-        run: |
-          echo "${{ steps.auth.outputs.id_token }}" | cut -d '.' -f2 | base64 --decode | jq .
-        # This helps verify the token claims (repository, aud, etc.)
+  deploy-dev:
+    needs: build
+    runs-on: ubuntu-latest
 
-      - name: Debug Authentication (optional)
+    steps:
+      - name: Deploy to Cloud Run dev
         run: |
-          echo "gcloud auth list:"
-          gcloud auth list
-          echo "gcloud config list:"
-          gcloud config list
-          echo "Access token:"
-          gcloud auth print-access-token
+          gcloud run deploy novife-frontend-dev \
+            --source=./chatbot-new-frontend \
+            --region=us-central1 \
+            --platform=managed \
+            --allow-unauthenticated \
+            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
 
-      - name: Deploy to Cloud Run
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  approval:
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - name: Await manual approval
+        run: echo "Waiting for production deployment approval..."
+
+  deploy-prod:
+    needs: approval
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Cloud Run prod
         run: |
-          gcloud run deploy novife-frontend \
+          gcloud run deploy novife-frontend-prod \
             --source=./chatbot-new-frontend \
             --region=us-central1 \
             --platform=managed \
