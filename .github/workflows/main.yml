@@ -52,14 +52,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to Cloud Run dev
-        run: |
-          gcloud run deploy novife-frontend-dev \
-            --source=./chatbot-new-frontend \
-            --region=us-central1 \
-            --platform=managed \
-            --allow-unauthenticated \
-            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
+     - name: Deploy to Cloud Run dev
+       run: |
+        gcloud run deploy novife-frontend-dev \
+          --source=./chatbot-new-frontend \
+          --region=us-central1 \
+          --platform=managed \
+          --allow-unauthenticated \
+          --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }} \
+          --project=novife
+
 
   approval:
     needs: deploy-dev
