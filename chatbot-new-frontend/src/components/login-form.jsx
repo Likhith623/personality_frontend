@@ -4,6 +4,7 @@ import { Label } from "./ui/label";
 import { cn } from "@/lib/utils";
 import {
   IconBrandGoogle,
+  IconBrandDiscord,
 } from "@tabler/icons-react";
 import { Input } from "./ui/input";
 import Link from 'next/link';
@@ -31,7 +32,24 @@ const router = useRouter();
       }
       router.push('/user-details');
     } catch (error) {
-      alert(error.message); // Display error message
+      // Check if the user exists and what provider they used
+      const { data: existingUser } = await supabase
+        .from("user_details")
+        .select("auth_provider")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (existingUser) {
+        if (existingUser.auth_provider === "discord") {
+          alert("Please log in with Discord.");
+        } else if (existingUser.auth_provider === "google") {
+          alert("Please log in with Google.");
+        } else {
+          alert(error.message);
+        }
+      } else {
+        alert(error.message);
+      }
     }
   };
 
@@ -43,6 +61,15 @@ const googleAuth = async () => {
       },
     });
 
+
+  const discordAuth = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "discord",
+      options: {
+        redirectTo: `${window.location.origin}/user-details`,
+      },
+    });
+  };
 
   return (
     (<div
@@ -79,6 +106,15 @@ const googleAuth = async () => {
             <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
             <span className="text-neutral-700 dark:text-neutral-300 text-sm">
               Google
+            </span>
+            <BottomGradient />
+          </button>
+          <button
+            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+            type="submit" onClick={discordAuth}>
+            <IconBrandDiscord className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
+            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
+              Discord
             </span>
             <BottomGradient />
           </button>
