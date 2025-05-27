@@ -37,7 +37,7 @@ const PlayAudio = ({ text,bot_id }) => {
       setIsPlaying(false);
       setIsLoading(true);
       // Always fetch new audio for each click
-      const response = await fetch('http://127.0.0.1:8000/generate-audio', {
+      const response = await fetch('https://novi.aigurukul.dev/generate-audio', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
