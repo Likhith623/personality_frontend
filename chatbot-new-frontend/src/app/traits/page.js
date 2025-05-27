@@ -53,6 +53,9 @@ const TraitsPage = () => {
       if (prevTraits.includes(trait)) {
         return prevTraits.filter((t) => t !== trait);
       }
+      if (prevTraits.length >= 2) {
+        return prevTraits; // Don't add more traits if already at limit
+      }
       return [...prevTraits, trait];
     });
   };
@@ -83,7 +86,7 @@ const TraitsPage = () => {
               Personality
             </h2>
             <p className="text-m text-black/90 mb-8 font-light">
-              Select multiple traits that match your style
+              Select up to two traits that match your style
             </p>
             <div className="flex flex-wrap gap-3">
               {traits.map((trait) => (
