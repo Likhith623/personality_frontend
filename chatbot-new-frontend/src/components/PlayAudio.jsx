@@ -1,5 +1,4 @@
-
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useRef } from 'react';
 import { IconLoader, IconPlayerPlayFilled } from '@tabler/icons-react';
 
 const PlayAudio = ({ text,bot_id }) => {
@@ -7,9 +6,12 @@ const PlayAudio = ({ text,bot_id }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [audio, setAudio] = useState(null);
 
- const [voice_id, setVoiceId] = useState(null);
+  const [voice_id, setVoiceId] = useState(null);
+  const audioRef = useRef(null);
+  const [audioUrl, setAudioUrl] = useState(null);
 
 //  map voice id to bot id
+  /*
   const voiceIdMap = {
     'delhi_mentor_male': 'arvind',
     'delhi_mentor_female': 'meera',
@@ -22,84 +24,97 @@ const PlayAudio = ({ text,bot_id }) => {
   useEffect(() => {
     setVoiceId(voiceIdMap[bot_id]);
   }, [bot_id]);
+  */
 
   const handlePlay = async () => {
+    console.log('Play button clicked', { text, bot_id });
     try {
-      // If audio hasn't been fetched yet, get it from API
-      if (!audio) {
-        setIsLoading(true);
-        const response = await fetch('https://novi.aigurukul.dev/v2/generate-audio', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ text: text, speaker: voice_id }),
-        });
-
-        const audioData = await response.arrayBuffer();
-        const blob = new Blob([audioData], { type: 'audio/wav' });
-        const newAudio = new Audio(URL.createObjectURL(blob));
-        
-        // Handle audio end
-        newAudio.addEventListener('ended', () => {
-          setIsPlaying(false);
-        });
-
-        setAudio(newAudio);
-        setIsLoading(false);
-        
-        // Play the audio
-        await newAudio.play();
-        setIsPlaying(true);
-      } else {
-        // If audio exists, toggle play/pause
-        if (isPlaying) {
-          audio.pause();
-          setIsPlaying(false);
-        } else {
-          await audio.play();
+      // Pause and reset if already playing
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      setIsPlaying(false);
+      setIsLoading(true);
+      // Always fetch new audio for each click
+      const response = await fetch('http://127.0.0.1:8000/generate-audio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ transcript: text, bot_id: bot_id }),
+      });
+      if (!response.ok) throw new Error('Failed to generate audio');
+      const data = await response.json();
+      const { audio_base64 } = data;
+      const audioSrc = `data:audio/wav;base64,${audio_base64}`;
+      setAudioUrl(audioSrc);
+      setIsLoading(false);
+      // Play the audio after the src is set
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.src = audioSrc;
+          audioRef.current.play();
           setIsPlaying(true);
         }
-      }
+      }, 100);
     } catch (error) {
       console.error('Error handling audio:', error);
       setIsLoading(false);
     }
   };
 
+  // Handle audio end
+  const handleEnded = () => {
+    setIsPlaying(false);
+  };
+
   // Cleanup function when component unmounts
   React.useEffect(() => {
     return () => {
-      if (audio) {
-        audio.pause();
-        URL.revokeObjectURL(audio.src);
+      if (audioUrl) {
+        setIsPlaying(false);
+        setAudioUrl(null);
       }
     };
-  }, [audio]);
+    // eslint-disable-next-line
+  }, []);
 
   return (
-    <button 
-      onClick={handlePlay}
-      className="focus:outline-none"
-      disabled={isLoading}
-    >
-      {isLoading ? (
-        <IconLoader 
-          size={22} 
-          className="text-purple-400/100 mt-[-2px] animate-spin"
-        />
-      ) : isPlaying ? (
-        <IconPlayerPlayFilled 
-          size={22} 
-          className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
-        />
-      ) : (
-        <IconPlayerPlayFilled 
-          size={22} 
-          className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
+    <span>
+      <button 
+        onClick={handlePlay}
+        className="focus:outline-none"
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <IconLoader 
+            size={22} 
+            className="text-purple-400/100 mt-[-2px] animate-spin"
+          />
+        ) : isPlaying ? (
+          <IconPlayerPlayFilled 
+            size={22} 
+            className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
+          />
+        ) : (
+          <IconPlayerPlayFilled 
+            size={22} 
+            className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
+          />
+        )}
+      </button>
+      {audioUrl && (
+        <audio
+          ref={audioRef}
+          src={audioUrl}
+          onEnded={handleEnded}
+          style={{ display: 'none' }}
+          onError={() => { console.error('Audio playback error'); }}
+          onLoadedData={() => { console.log('Audio loaded and ready to play'); }}
         />
       )}
-    </button>
+    </span>
   );
 };
 
