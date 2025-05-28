@@ -1,16 +1,26 @@
+// PlayAudio.jsx
+// This component provides a play button to generate and play a bot's voice for a given message using a backend TTS API.
+
 import React, { useState,useEffect, useRef } from 'react';
 import { IconLoader, IconPlayerPlayFilled } from '@tabler/icons-react';
 
+// PlayAudio component: Plays the bot's voice for a given message
 const PlayAudio = ({ text,bot_id }) => {
+  // State to track if audio is currently playing
   const [isPlaying, setIsPlaying] = useState(false);
+  // State to track if audio is being loaded/generated
   const [isLoading, setIsLoading] = useState(false);
+  // (Unused) State for audio object
   const [audio, setAudio] = useState(null);
 
+  // (Unused) State for voice id (for future use or mapping)
   const [voice_id, setVoiceId] = useState(null);
+  // Ref to the audio element
   const audioRef = useRef(null);
+  // State to store the generated audio URL (base64 WAV)
   const [audioUrl, setAudioUrl] = useState(null);
 
-//  map voice id to bot id
+//  map voice id to bot id (example mapping, currently unused)
   /*
   const voiceIdMap = {
     'delhi_mentor_male': 'arvind',
@@ -26,6 +36,7 @@ const PlayAudio = ({ text,bot_id }) => {
   }, [bot_id]);
   */
 
+  // Handles the play button click: fetches and plays the bot's voice
   const handlePlay = async () => {
     console.log('Play button clicked', { text, bot_id });
     try {
@@ -37,7 +48,7 @@ const PlayAudio = ({ text,bot_id }) => {
       setIsPlaying(false);
       setIsLoading(true);
       // Always fetch new audio for each click
-      const response = await fetch('https://novi.aigurukul.dev/generate-audio', {
+      const response = await fetch('http://127.0.0.1:8000/generate-audio', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,10 +58,11 @@ const PlayAudio = ({ text,bot_id }) => {
       if (!response.ok) throw new Error('Failed to generate audio');
       const data = await response.json();
       const { audio_base64 } = data;
+      // Create a base64 WAV audio URL
       const audioSrc = `data:audio/wav;base64,${audio_base64}`;
       setAudioUrl(audioSrc);
       setIsLoading(false);
-      // Play the audio after the src is set
+      // Play the audio after the src is set (with a small delay)
       setTimeout(() => {
         if (audioRef.current) {
           audioRef.current.src = audioSrc;
@@ -64,12 +76,12 @@ const PlayAudio = ({ text,bot_id }) => {
     }
   };
 
-  // Handle audio end
+  // Handle audio end event: reset playing state
   const handleEnded = () => {
     setIsPlaying(false);
   };
 
-  // Cleanup function when component unmounts
+  // Cleanup function when component unmounts: reset audio state
   React.useEffect(() => {
     return () => {
       if (audioUrl) {
@@ -80,6 +92,7 @@ const PlayAudio = ({ text,bot_id }) => {
     // eslint-disable-next-line
   }, []);
 
+  // Render the play button and (conditionally) the hidden audio element
   return (
     <span>
       <button 
@@ -87,6 +100,7 @@ const PlayAudio = ({ text,bot_id }) => {
         className="focus:outline-none"
         disabled={isLoading}
       >
+        {/* Show loader while loading, play icon otherwise */}
         {isLoading ? (
           <IconLoader 
             size={22} 
@@ -104,6 +118,7 @@ const PlayAudio = ({ text,bot_id }) => {
           />
         )}
       </button>
+      {/* Only render the audio element if audioUrl is set */}
       {audioUrl && (
         <audio
           ref={audioRef}
