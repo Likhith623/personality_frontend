@@ -48,6 +48,7 @@ export default function SignupFormDemo({ filter }) {
               {
                 email: session.user.email,
                 auth_provider: session.user.app_metadata.provider || "email", // Get the provider from session
+                city: "", 
               },
             ]);
 
@@ -159,6 +160,7 @@ export default function SignupFormDemo({ filter }) {
               {
                 email: response.data.user.email,
                 auth_provider: "email", // Set the auth provider to 'email'
+                city: "", // Add a default empty string for city
               },
             ]);
 

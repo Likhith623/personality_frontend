@@ -70,7 +70,8 @@ const UserDetails = ({ filter }) => { // Receive the filter prop
     const email = user.email;
 
     if (name && gender) {
-      const userDetails = { name, gender, email, auth_provider: authProvider }; // Include auth provider
+      
+      const userDetails = { name, gender, email, auth_provider: authProvider, city: "" }; 
 
       // Store details in database
       const { error: dbError } = await supabase
