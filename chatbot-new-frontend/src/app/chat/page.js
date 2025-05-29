@@ -2561,7 +2561,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       using JSON.stringify. The request is being made using the fetch API with the specified method
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
-      const response = await fetch("https://novi.aigurukul.dev/v2/cv/chat", {
+      const response = await fetch("https://novi-be.aigurukul.dev/docs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
