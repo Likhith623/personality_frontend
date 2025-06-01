@@ -2010,7 +2010,44 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   const [highlightedMessage, setHighlightedMessage] = useState(null);
   // Define available emoticons
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
-
+  
+  // Helper: decide if a bot reply should be voice-only
+  function isVoiceOnlyBotReply(msg) {
+    return msg.voice_only === true;
+  }
+  
+  /*
+  // Helper: inject voice_only property for bot replies based on index
+  function processBotMessages(messages) {
+    let botReplyCount = {};
+    return messages.map((msg, idx) => {
+      if (msg.sender !== 'bot') return msg;
+      const botId = msg.bot_id || 'default';
+      if (!botReplyCount[botId]) botReplyCount[botId] = 0;
+      botReplyCount[botId]++;
+      let voice_only = false;
+      if (botReplyCount[botId] === 3) {
+        voice_only = true;
+      } else if (botReplyCount[botId] > 3) {
+        // Randomly assign voice_only for subsequent replies (50% chance)
+        voice_only = Math.random() < 0.5;
+      }
+      return { ...msg, voice_only };
+    });
+  }
+    */
+  function processBotMessages(messages) {
+    let botReplyCount = 0;
+    return messages.map((msg) => {
+      if (msg.sender === 'bot') {
+        botReplyCount++;
+        // Every 3rd bot reply is voice-only
+        const voice_only = ((botReplyCount - 1) % 3 === 2);
+        return { ...msg, voice_only };
+      }
+      return msg;
+    });
+  }
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (showReactionsFor && !e.target.closest('.reaction-selector')) {
@@ -2021,6 +2058,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('touchstart', handleClickOutside);
+
   
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -2061,7 +2099,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
 
   // Group messages by date whenever messages change
   useEffect(() => {
-    const grouped = messages.reduce((acc, msg) => {
+    const processedMessages = processBotMessages(messages);
+    const grouped = processedMessages.reduce((acc, msg) => {
       const date = formatDate(msg.timestamp);
       if (!acc[date]) {
         acc[date] = [];
@@ -2167,6 +2206,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
           timestamp: new Date(),
           feedback: "",     // Add feedback (empty initially)
           reaction: "",      // Add reaction field (empty initially)
+          bot_id: selectedBotId
         }];
 
         let messagesWithReactions = [];
@@ -2184,7 +2224,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
           // Apply stored reactions to messages
           messagesWithReactions = formattedMessages.map(msg => ({
             ...msg,
-            reaction: storedReactions[msg.id] || ""
+            reaction: storedReactions[msg.id] || "",
+            bot_id: msg.bot_id || selectedBotId
           }));
           
           setMessages(messagesWithReactions);
@@ -2208,7 +2249,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
             sender: 'bot',
             timestamp: new Date(),
             feedback: "",
-            reaction: ""
+            reaction: "",
+            bot_id: selectedBotId
           }];
           setMessages(defaultMessage);
         }
@@ -2582,7 +2624,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
           id: "",
           feedback: "",
           reaction: "",
-          timestamp: currentTime
+          timestamp: currentTime,
+          bot_id: selectedBotId
         }]);
       }
 
@@ -2615,7 +2658,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
           id: data.message_id,
           feedback: "",
           reaction: "",
-          timestamp: currentTime
+          timestamp: currentTime,
+          bot_id: selectedBotId
         }]);
       }
       else {
@@ -2625,7 +2669,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
           id: data.message_id,
           feedback: "",
           reaction: "",
-          timestamp: currentTime
+          timestamp: currentTime,
+          bot_id: selectedBotId
         }]);
       }
     } catch (error) {
@@ -2639,7 +2684,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
         id: "",
         feedback: "",
         reaction: "",
-        timestamp: currentTime
+        timestamp: currentTime,
+        bot_id: selectedBotId
       }]);
     }
     scrollToBottom();
@@ -2683,7 +2729,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       Tap to remove
     </div>
   );
-
+  console.log("All chat messages:", messages);
   return (
     <div className="flex flex-col flex-1 bg-gray-100 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden">
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
@@ -2702,7 +2748,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
           {messagesOnDate.map((msg, index) => (
             <div key={index} className={`my-2 flex ${msg.sender === 'bot' ? 'justify-start' : 'justify-end'}`}>
               <div className="max-w-[80%] min-w-16 relative">
-                {/* Reaction bubble displayed above the message if a reaction exists */}
+              {/* Reaction bubble displayed above the message if a reaction exists */}
                 {msg.sender === 'bot' && msg.reaction && (
                   <div 
                     className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
@@ -2715,55 +2761,71 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
                 )}
                 
                 <div className="flex flex-row items-center gap-2">
-                  <div className={`px-4 py-2 rounded-2xl ${msg.sender === 'bot'
-                    ? `bg-white/20 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-gray-900 placeholder-gray-200 ${
-      highlightedMessage === msg.id ? 'bg-orange-200/30' : ''
-    }`
-                    : `bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
-      highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
-    }`
-                    } w-full text-left`}
-                    style={{
-                      userSelect: 'none',
-                      WebkitUserSelect: 'none',
-                      WebkitTouchCallout: 'none'
-                    }}
-                 // Add touch handlers for long press on bot messages only
-                    onTouchStart={msg.sender === 'bot' ? (e) => {
-                      e.preventDefault(); // Prevent default touch behavior
-                      handleLongPressStart(msg.id);
-                    } : null}
-                    onTouchEnd={msg.sender === 'bot' ? handleLongPressEnd : null}
-                    onTouchMove={msg.sender === 'bot' ? handleLongPressEnd : null} // Cancel on move to avoid accidental triggers
-                    onTouchCancel={msg.sender === 'bot' ? handleLongPressEnd : null}
-                  >
-                    {msg.sender === 'bot' ? (
-                      <>
-                        <motion.p className="text-gray-700 dark:text-gray-700">
-                          {msg.text.split(" ").map((word, i) => (
-                            <motion.span
-                              key={i}
-                              initial={{ filter: "blur(10px)", opacity: 0, y: 5 }}
-                              animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-                              transition={{ duration: 0.2, ease: "easeInOut", delay: 0.02 * i }}
-                              className="inline-block select-none"
-                              style={{
-                                userSelect: 'none',
-                                WebkitUserSelect: 'none',
-                                WebkitTouchCallout: 'none'
-                              }}
-                            >
-                              {word}&nbsp;
-                            </motion.span>
-                          ))}
-                        </motion.p>
-                      </>
-                    ) : (
-                      <span className="text-right ml-auto">{msg.text}</span>
-                    )}
+           
+                {msg.sender === 'bot' ? (
+    msg.voice_only ? (
+      // Voice-only: only show the full voice note UI (no text)
+      <PlayAudio text={msg.text} bot_id={msg.bot_id || selectedBotId} />
+    ) : (
+      // Text + audio: show text bubble with small play button
+      <div className="flex flex-row items-center gap-2">
+        <div className={`px-4 py-2 rounded-2xl bg-white/20 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-gray-900 placeholder-gray-200 ${highlightedMessage === msg.id ? 'bg-orange-200/30' : ''} w-full text-left`}
+          style={{
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            WebkitTouchCallout: 'none',
+            width: '750px',
+            minWidth: '400px'
+          }}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            handleLongPressStart(msg.id);
+          }}
+          onTouchEnd={handleLongPressEnd}
+          onTouchMove={handleLongPressEnd}
+          onTouchCancel={handleLongPressEnd}
+        >
+          <motion.p className="text-gray-700 dark:text-gray-700">
+            {msg.text.split(" ").map((word, i) => (
+              <motion.span
+                key={i}
+                initial={{ filter: "blur(10px)", opacity: 0, y: 5 }}
+                animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, ease: "easeInOut", delay: 0.02 * i }}
+                className="inline-block select-none"
+                style={{
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  WebkitTouchCallout: 'none'
+                }}
+              >
+                {word}&nbsp;
+              </motion.span>
+            ))}
+          </motion.p>
+        </div>
+        {/* Small play button for text messages */}
+        <PlayAudio text={msg.text} bot_id={msg.bot_id || selectedBotId} minimal={true} />
+      </div>
+    )
+  ) : (
+    <div className="flex flex-row items-center gap-2">
+      <div className={`px-4 py-2 rounded-2xl bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${highlightedMessage === msg.id ? 'bg-orange-200/90' : ''} w-full text-left`}
+        style={{
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          WebkitTouchCallout: 'none',
+          maxWidth: '800px',
+          width: '100%'
+        }}
+      >
+        <span className="text-right ml-auto">{msg.text}</span>
+      </div>
+    </div>
+  )}
+
                   </div>
-                  {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} />}
-                </div>
+                
                 <div className="flex flex-row justify-end ">
                   <span className={`text-xs text-neutral-700 text-left mt-[7px] ${msg.sender == 'user' ? "mr-3" : ""}`}>
                       {formatTime(msg.timestamp)}
