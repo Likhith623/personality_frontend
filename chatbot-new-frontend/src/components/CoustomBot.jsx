@@ -100,13 +100,13 @@ const BotCustomization = ({ selectedBotDetails, onUpdate }) => {
                             className="bg-white/10 text-black/70 backdrop-blur-sm border-purple-500"
                         />
                     ) : ( */}
-                        <h3 className="text-2xl font-bold dark:text-black/70 text-black">
-                            {customName}
-                        </h3>
+                        <h3 className="text-2xl font-bold text-foreground">
+                          {customName}
+                         </h3>
                     {/* )} */}
-                    <p className="text-sm text-black/80 dark:text-black/80 whitespace-pre-line">
-                        {selectedBotDetails.designation}
-                    </p>
+                    <p className="text-sm text-foreground whitespace-pre-line">
+                    {selectedBotDetails.designation}
+                     </p>
                 </div>
             </div>
             {/* <div className="flex gap-2">
