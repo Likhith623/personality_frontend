@@ -3,16 +3,26 @@ import React, { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "@/components/theme-provider";
 
 const NavLink = ({ href, children }) => {
   const pathname = usePathname();
   const isActive = pathname === href;
+  const { theme } = useTheme();
+
+  console.log("NavLink theme:", theme); // Debug log
 
   return (
     <Link
       href={href}
       className={`text-base font-bold sm:text-lg ${
-        isActive ? "text-[#1D2939]" : "text-black/50 hover:text-[#1D2939]"
+        theme === "dark"
+          ? isActive
+            ? "text-red-400"
+            : "text-gray-300 hover:text-blue-400"
+          : isActive
+          ? "text-[#1D2939]"
+          : "text-black/50 hover:text-[#1D2939]"
       }`}
     >
       {children}
@@ -25,6 +35,9 @@ export default function Header() {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { theme } = useTheme();
+
+  console.log("Header theme:", theme); // Debug log
 
   const handleScroll = () => {
     const currentScrollPos = window.scrollY;
@@ -44,22 +57,38 @@ export default function Header() {
         visible ? "translate-y-0" : "-translate-y-full"
       } ${
         isScrolled
-          ? "bg-gradient-to-r from-orange-200 to-pink-200 shadow-md"
+          ? theme === "dark"
+            ? "bg-gray-900/80 backdrop-blur-md shadow-md"
+            : "bg-gradient-to-r from-orange-200 to-pink-200 shadow-md"
           : "bg-transparent"
       }`}
     >
       <div className="flex justify-between max-w-5xl mx-auto px-6 sm:px-10 py-4">
-
         {/* Center - Logo */}
-        <div >
-          <Link href='/' className="text-xl md:text-2xl font-bold text-black/50">CultureVo</Link>
+        <div>
+          <Link
+            href="/"
+            className={`text-xl md:text-2xl font-bold ${
+              theme === "dark"
+                ? "text-blue-300 hover:text-blue-400"
+                : "text-black/50 hover:text-[#1D2939]"
+            }`}
+          >
+            CultureVo
+          </Link>
         </div>
 
         {/* Right Side - Navigation Links */}
         <div className="text-xl hidden sm:flex justify-end gap-8">
           <NavLink href="/join-us">Join Us</NavLink>
           <NavLink href="/about">About</NavLink>
-          <NavLink href="https://discord.com/invite/mNmwYdmsPz" target="_blank" rel="noopener noreferrer">Discord</NavLink>
+          <NavLink
+            href="https://discord.com/invite/mNmwYdmsPz"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Discord
+          </NavLink>
         </div>
 
         {/* Mobile Menu Button */}
@@ -69,15 +98,29 @@ export default function Header() {
           aria-label="Toggle menu"
         >
           {isMenuOpen ? (
-            <X className="w-6 h-6 text-black/50" />
+            <X
+              className={`w-6 h-6 ${
+                theme === "dark" ? "text-gray-300" : "text-black/50"
+              }`}
+            />
           ) : (
-            <Menu className="w-6 h-6 text-black/50" />
+            <Menu
+              className={`w-6 h-6 ${
+                theme === "dark" ? "text-gray-300" : "text-black/50"
+              }`}
+            />
           )}
         </button>
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="sm:hidden absolute top-full left-0 right-0 mt-2 border border-white/10 bg-white/30 backdrop-blur-2xl z-10 rounded-2xl shadow-lg p-4 mx-6">
+          <div
+            className={`sm:hidden absolute top-full left-0 right-0 mt-2 border ${
+              theme === "dark"
+                ? "border-gray-700/50 bg-gray-900/80"
+                : "border-white/10 bg-white/30"
+            } backdrop-blur-2xl z-10 rounded-2xl shadow-lg p-4 mx-6`}
+          >
             <div className="flex flex-col gap-4">
               <NavLink href="/join-us">Join Us</NavLink>
               <NavLink href="/about">About</NavLink>

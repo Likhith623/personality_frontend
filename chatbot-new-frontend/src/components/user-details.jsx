@@ -15,7 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const UserDetails = ({ filter }) => { // Receive the filter prop
+const UserDetails = ({ filter }) => {
+  // Receive the filter prop
   const router = useRouter();
   const { setUserDetails } = useUser();
   const [session, setSession] = useState(null);
@@ -25,7 +26,9 @@ const UserDetails = ({ filter }) => { // Receive the filter prop
 
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         if (filter) {
           router.push(`/signup?filter=${filter}`); // Redirect to signup with filter
@@ -70,8 +73,13 @@ const UserDetails = ({ filter }) => { // Receive the filter prop
     const email = user.email;
 
     if (name && gender) {
-      
-      const userDetails = { name, gender, email, auth_provider: authProvider, city: "" }; 
+      const userDetails = {
+        name,
+        gender,
+        email,
+        auth_provider: authProvider,
+        city: "",
+      };
 
       // Store details in database
       const { error: dbError } = await supabase
@@ -197,7 +205,11 @@ const BottomGradient = () => {
 };
 
 const LabelInputContainer = ({ children, className }) => {
-  return <div className={cn("flex flex-col space-y-2 w-full", className)}>{children}</div>;
+  return (
+    <div className={cn("flex flex-col space-y-2 w-full", className)}>
+      {children}
+    </div>
+  );
 };
 
 export default UserDetails;

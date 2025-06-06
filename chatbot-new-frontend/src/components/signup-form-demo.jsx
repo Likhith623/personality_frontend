@@ -11,6 +11,7 @@ import { useUser } from "@/support/UserContext";
 import Link from "next/link";
 import { IconBrandGoogle, IconBrandDiscord } from "@tabler/icons-react";
 import ForgotPasswordModal from "./ForgotPasswordModal";
+import { useTheme } from "@/components/theme-provider";
 
 export default function SignupFormDemo({ filter }) {
   const [session, setSession] = useState(null);
@@ -22,6 +23,8 @@ export default function SignupFormDemo({ filter }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null); // Added error state
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
 
   useEffect(() => {
     const checkSession = async () => {
@@ -48,7 +51,7 @@ export default function SignupFormDemo({ filter }) {
               {
                 email: session.user.email,
                 auth_provider: session.user.app_metadata.provider || "email", // Get the provider from session
-                city: "", 
+                city: "",
               },
             ]);
 
@@ -94,7 +97,9 @@ export default function SignupFormDemo({ filter }) {
       }
     } else {
       // If no details, redirect to user-details page, passing the filter if it exists
-      const redirectPath = filter ? `/user-details?filter=${filter}` : "/user-details";
+      const redirectPath = filter
+        ? `/user-details?filter=${filter}`
+        : "/user-details";
       router.replace(redirectPath);
     }
   };
@@ -245,123 +250,212 @@ export default function SignupFormDemo({ filter }) {
     }
   };
 
-  return (<>
-    <div
-      className="font-[family-name:var(--font-garamond)] bg-white/40 backdrop-blur-lg 
-lg:p-8 lg:px-20 p-8 px:10 md:px-20 rounded-3xl shadow-lg border border-white/30"
-    >
-      <p className="text-center text-[#333] text-2xl mb-2 font-bold">
-        Welcome
-      </p>
-      <h1 className="text-xl text-[#333] font-bold text-center">
-        {state === "login" ? "Login" : "Sign Up"}
-      </h1>
+  // Update the handleStateToggle function to be more robust
+  const handleStateToggle = (e) => {
+    e.preventDefault(); // Prevent any default behavior
+    e.stopPropagation(); // Stop event propagation
 
-      {error && (
-        <div className="text-red-500 text-center mb-4">
-          <p>{error}</p>
-        </div>
-      )}
+    // Use a callback to ensure we're working with the latest state
+    setState((prevState) => {
+      const newState = prevState === "login" ? "signup" : "login";
+      // Clear form data after state change
+      setEmail("");
+      setPassword("");
+      setError(null);
+      return newState;
+    });
+  };
 
-      <form className="my-8 border-none" onSubmit={handleSignup}>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="email" className="mb-1 text-[#333] text-md">
-            Email Address
-          </Label>
-          <Input
-            className="border border-gray-300 bg-white/80 rounded-md p-2 text-md focus:outline-none 
-        focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-[#333]"
-            id="email"
-            placeholder="projectmayhem@fc.com"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </LabelInputContainer>
-
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="password" className="mb-1 text-[#333] text-md">
-            Password
-          </Label>
-          <Input
-            className="border border-gray-300 bg-white/80 rounded-md p-2 text-md focus:outline-none 
-        focus:ring-2 focus:ring-orange-400 focus:border-orange-400 text-[#333]"
-            id="password"
-            placeholder="••••••••"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {state === "login" && (
-            <p
-              className="text-orange-500 cursor-pointer text-sm mt-2"
-              onClick={() => setShowForgotPasswordModal(true)}
-            >
-              Forgot Password?
-            </p>
-          )}
-        </LabelInputContainer>
-
-        <button
-          type="submit"
-          className={`w-full py-2 px-4 bg-gradient-to-r from-orange-400/80 via-pink-400/80 to-purple-400/80 
-      hover:from-orange-400/90 hover:via-pink-400/90 hover:to-purple-400/90 backdrop-blur-md 
-      text-white font-medium text-lg rounded mt-6 shadow-md transition-all ${
-        loading ? "opacity-50 cursor-not-allowed" : ""
-      }`}
-          disabled={loading}
-        >
-          {loading ? "Processing..." : state === "login" ? "Login" : "Sign Up"}
-        </button>
-      </form>
-
+  return (
+    <>
       <div
-        className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 
-  to-transparent my-4 h-[1px] w-full"
-      />
+        className={`font-[family-name:var(--font-garamond)] ${
+          isDarkMode ? "bg-gray-800/20" : "bg-white/40"
+        } backdrop-blur-lg lg:p-8 lg:px-20 p-8 px-10 md:px-20 rounded-3xl shadow-lg border ${
+          isDarkMode ? "border-gray-700/30" : "border-white/30"
+        }`}
+      >
+        <p
+          className={`text-center ${
+            isDarkMode ? "text-white" : "text-[#333]"
+          } text-2xl mb-2 font-bold`}
+        >
+          Welcome
+        </p>
+        <h1
+          className={`text-xl ${
+            isDarkMode ? "text-white" : "text-[#333]"
+          } font-bold text-center`}
+        >
+          {state === "login" ? "Login" : "Sign Up"}
+        </h1>
 
-      <div className="flex flex-col space-y-4 mt-4">
-        <button
-          className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-          type="button"
-          onClick={googleAuth}
+        {error && (
+          <div className="text-red-500 text-center mb-4">
+            <p>{error}</p>
+          </div>
+        )}
+
+        <form className="my-8 border-none" onSubmit={handleSignup}>
+          <LabelInputContainer className="mb-4">
+            <Label
+              htmlFor="email"
+              className={`mb-1 ${
+                isDarkMode ? "text-white" : "text-[#333]"
+              } text-md`}
+            >
+              Email Address
+            </Label>
+            <Input
+              className={`border ${
+                isDarkMode
+                  ? "border-gray-700 bg-gray-800/80"
+                  : "border-gray-300 bg-white/80"
+              } rounded-md p-2 text-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 ${
+                isDarkMode ? "text-white" : "text-[#333]"
+              }`}
+              id="email"
+              placeholder="projectmayhem@fc.com"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </LabelInputContainer>
+
+          <LabelInputContainer className="mb-4">
+            <Label
+              htmlFor="password"
+              className={`mb-1 ${
+                isDarkMode ? "text-white" : "text-[#333]"
+              } text-md`}
+            >
+              Password
+            </Label>
+            <Input
+              className={`border ${
+                isDarkMode
+                  ? "border-gray-700 bg-gray-800/80"
+                  : "border-gray-300 bg-white/80"
+              } rounded-md p-2 text-md focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 ${
+                isDarkMode ? "text-white" : "text-[#333]"
+              }`}
+              id="password"
+              placeholder="••••••••"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {state === "login" && (
+              <p
+                className="text-orange-500 cursor-pointer text-sm mt-2"
+                onClick={() => setShowForgotPasswordModal(true)}
+              >
+                Forgot Password?
+              </p>
+            )}
+          </LabelInputContainer>
+
+          <button
+            type="submit"
+            className={`relative group/btn flex items-center justify-center px-4 w-full ${
+              isDarkMode ? "text-white" : "text-black"
+            } rounded-md h-10 font-medium shadow-input ${
+              isDarkMode ? "bg-gray-800/5" : "bg-gray-50"
+            } dark:shadow-[0px_0px_1px_1px_var(--neutral-800)] ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading
+              ? "Processing..."
+              : state === "login"
+              ? "Login"
+              : "Sign Up"}
+            <BottomGradient />
+          </button>
+        </form>
+
+        <div
+          className={`bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 
+  to-transparent my-4 h-[1px] w-full`}
+        />
+
+        <div className="flex flex-col space-y-4 mt-4">
+          <button
+            className={`relative group/btn flex space-x-2 items-center justify-start px-4 w-full ${
+              isDarkMode ? "text-white" : "text-black"
+            } rounded-md h-10 font-medium shadow-input ${
+              isDarkMode ? "bg-gray-800/5" : "bg-gray-50"
+            } dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]`}
+            type="button"
+            onClick={googleAuth}
+          >
+            <IconBrandGoogle
+              className={`h-4 w-4 ${
+                isDarkMode ? "text-neutral-300" : "text-neutral-800"
+              }`}
+            />
+            <span
+              className={`${
+                isDarkMode ? "text-neutral-300" : "text-neutral-700"
+              } text-sm`}
+            >
+              Continue with Google
+            </span>
+            <BottomGradient />
+          </button>
+          <button
+            className={`relative group/btn flex space-x-2 items-center justify-start px-4 w-full ${
+              isDarkMode ? "text-white" : "text-black"
+            } rounded-md h-10 font-medium shadow-input ${
+              isDarkMode ? "bg-gray-800/5" : "bg-gray-50"
+            } dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]`}
+            type="button"
+            onClick={discordAuth}
+          >
+            <IconBrandDiscord
+              className={`h-4 w-4 ${
+                isDarkMode ? "text-neutral-300" : "text-neutral-800"
+              }`}
+            />
+            <span
+              className={`${
+                isDarkMode ? "text-neutral-300" : "text-neutral-700"
+              } text-sm`}
+            >
+              Continue with Discord
+            </span>
+            <BottomGradient />
+          </button>
+        </div>
+
+        <p
+          className={`text-center mt-4 text-md ${
+            isDarkMode ? "text-white" : "text-[#333]"
+          }`}
         >
-          <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-          <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-            Continue with Google
-          </span>
-          <BottomGradient />
-        </button>
-        <button
-          className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
-          type="button"
-          onClick={discordAuth}
-        >
-          <IconBrandDiscord className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-          <span className="text-neutral-700 dark:text-neutral-300 text-sm">
-            Continue with Discord
-          </span>
-          <BottomGradient />
-        </button>
+          {state === "login"
+            ? "Don't have an account?"
+            : "Already have an account?"}
+          <button
+            type="button"
+            className="text-orange-500 hover:text-orange-600 font-medium cursor-pointer hover:underline ml-1 bg-transparent border-none p-0 focus:outline-none focus:ring-2 focus:ring-orange-400 rounded"
+            onClick={handleStateToggle}
+            aria-label={
+              state === "login" ? "Switch to Sign Up" : "Switch to Login"
+            }
+          >
+            {state === "login" ? "Sign Up" : "Login"}
+          </button>
+        </p>
       </div>
-
-      <p className="text-center mt-4 text-md text-[#333]">
-        {state === "login"
-          ? "Don't have an account?"
-          : "Already have an account?"}
-        <span
-          className="text-orange-500 cursor-pointer hover:underline"
-          onClick={() => setState(state === "login" ? "signup" : "login")}
-        >
-          {state === "login" ? " Sign Up" : " Login"}
-        </span>
-      </p>
-    </div>
       {/* Forgot Password Modal */}
       {showForgotPasswordModal && (
-        <ForgotPasswordModal onClose={() => setShowForgotPasswordModal(false)} />
+        <ForgotPasswordModal
+          onClose={() => setShowForgotPasswordModal(false)}
+        />
       )}
     </>
   );

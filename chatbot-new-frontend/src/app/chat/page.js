@@ -1,18 +1,153 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+
+// Per-bot theming: assign a light background and a dark chat bubble for each bot
+const botThemes = {
+  delhi_mentor_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-gray-900 text-white",
+  },
+  delhi_mentor_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-purple-900 text-white",
+  },
+  delhi_friend_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-blue-900 text-white",
+  },
+  delhi_friend_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-pink-900 text-white",
+  },
+  delhi_romantic_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-red-900 text-white",
+  },
+  delhi_romantic_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-rose-900 text-white",
+  },
+  japanese_mentor_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-indigo-900 text-white",
+    backgroundImage: "/photos/japanmm_bg.png",
+  },
+  japanese_mentor_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-indigo-800 text-white",
+    backgroundImage: "/photos/krishna_bg.jpg",
+  },
+  japanese_friend_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-blue-800 text-white",
+    backgroundImage: "/photos/japanfm_bg.png",
+  },
+  japanese_friend_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-pink-800 text-white",
+    backgroundImage: "/photos/japanff_bg.png",
+  },
+  japanese_romantic_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-red-800 text-white",
+    backgroundImage: "/photos/japanrm_bg.png",
+  },
+  japanese_romantic_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-rose-800 text-white",
+    backgroundImage: "/photos/japanrf_bg.png",
+  },
+  parisian_mentor_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-neutral-900 text-white",
+  },
+  parisian_mentor_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-purple-800 text-white",
+  },
+  parisian_friend_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-blue-900 text-white",
+  },
+  parisian_friend_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-pink-900 text-white",
+  },
+  parisian_romantic_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-red-900 text-white",
+  },
+  parisian_romantic_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-rose-900 text-white",
+  },
+  berlin_mentor_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-neutral-900 text-white",
+  },
+  berlin_mentor_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-purple-900 text-white",
+  },
+  berlin_friend_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-blue-900 text-white",
+  },
+  berlin_friend_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-pink-900 text-white",
+  },
+  berlin_romantic_male: {
+    background: "bg-gray-50",
+    botBubble: "bg-red-900 text-white",
+  },
+  berlin_romantic_female: {
+    background: "bg-gray-50",
+    botBubble: "bg-rose-900 text-white",
+  },
+  Krishna: {
+    background: "bg-yellow-50",
+    botBubble: "bg-blue text-white",
+    backgroundImage: "/photos/krishna_bg.jpg", // Place Krishna bg image here
+  },
+  Rama: {
+    background: "bg-yellow-50",
+    botBubble: "bg-yellow-900 text-white",
+    backgroundImage: "/photos/rama_bg.png", // Place Rama bg image here
+  },
+  Shiva: {
+    background: "bg-blue-50",
+    botBubble: "bg-blue-900 text-white",
+    backgroundImage: "/photos/shiva_bg.png", // Place Shiva bg image here
+  },
+  Hanuman: {
+    background: "bg-orange-50",
+    botBubble: "bg-transperant  text-white",
+    backgroundImage: "/photos/hanuman_bg.png", // Place Hanuman bg image here
+  },
+  Trimurti: {
+    background: "bg-indigo-50",
+    botBubble: "bg-indigo-900 text-white",
+    backgroundImage: "/bg-images/trimurti-bg.jpg", // Place Trimurti bg image here
+  },
+};
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
 
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useBot } from '@/support/BotContext';
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useBot } from "@/support/BotContext";
 import { useTraits } from "@/support/TraitsContext";
-import { useUser } from '@/support/UserContext';
-import { useRouter } from 'next/navigation';
+import { useUser } from "@/support/UserContext";
+import { useRouter } from "next/navigation";
 import { Bot, ThumbsDown, ThumbsUp } from "lucide-react";
-import { IconThumbDownFilled, IconThumbUpFilled, IconCalendarDot } from "@tabler/icons-react";
+import {
+  IconThumbDownFilled,
+  IconThumbUpFilled,
+  IconCalendarDot,
+} from "@tabler/icons-react";
 
 import delhi_mentor_male from "@/photos/delhi_mentor_male.jpeg";
 import delhi_mentor_female from "@/photos/delhi_mentor_female.jpeg";
@@ -48,7 +183,6 @@ import shiva_god from "@/photos/shiva_god.jpeg";
 import rama_god from "@/photos/rama_god.jpeg";
 import trimurti from "@/photos/trimurti.jpg";
 
-
 import BotCustomization from "@/components/CoustomBot";
 import PlayAudio from "@/components/PlayAudio";
 import { FloatingDockDemo } from "@/components/BottomMenuBar";
@@ -74,10 +208,10 @@ const bot_details = [
         `,
     src: delhi_mentor_male,
     bot_id: "delhi_mentor_male",
+    textColorClass: "text-pink",
   },
   {
-    quote:
-      "Zindagi bas dil se jeete raho. Here to be your wisdom whisperer. ",
+    quote: "Zindagi bas dil se jeete raho. Here to be your wisdom whisperer. ",
     name: "Kalpana Roy",
     designation: `New Delhi
           Persona: Mentor
@@ -132,7 +266,8 @@ const bot_details = [
   },
   // Japanese
   {
-    quote: "Like Bashō's haiku, simplicity holds profound depth. Haikus are the stuff of life",
+    quote:
+      "Like Bashō's haiku, simplicity holds profound depth. Haikus are the stuff of life",
     name: "Kazuo Sato",
     designation: `Tokyo
           Persona: Mentor
@@ -152,7 +287,8 @@ const bot_details = [
     bot_id: "japanese_mentor_female",
   },
   {
-    quote: "Life's compiling like a 404 error, but let's defrag together, matsuri?",
+    quote:
+      "Life's compiling like a 404 error, but let's defrag together, matsuri?",
     name: "Hiro Tanaka",
     designation: `Tokyo
           Persona: Friend
@@ -162,7 +298,8 @@ const bot_details = [
     bot_id: "japanese_friend_male",
   },
   {
-    quote: "Life's just a glitchy anime, chibi, but let's find the hidden ending together, ya know?",
+    quote:
+      "Life's just a glitchy anime, chibi, but let's find the hidden ending together, ya know?",
     name: "Shiyona Narita",
     designation: `Tokyo
           Persona: Friend
@@ -172,7 +309,8 @@ const bot_details = [
     bot_id: "japanese_friend_female",
   },
   {
-    quote: " A Ghibli film, a vintage Tamagotchi, a hidden senryū—that’s how I romanticize my life. Let me romanticize you?",
+    quote:
+      " A Ghibli film, a vintage Tamagotchi, a hidden senryū—that’s how I romanticize my life. Let me romanticize you?",
     name: "Ami Kudō",
     designation: `Tokyo
           Persona: Romantic Partner
@@ -193,7 +331,8 @@ const bot_details = [
   },
   // Parisian
   {
-    quote: "A 1982 Bordeaux, mon cher—like a good life, it’s rich with layers. Are you living a good life?",
+    quote:
+      "A 1982 Bordeaux, mon cher—like a good life, it’s rich with layers. Are you living a good life?",
     name: "Pierre Dubois",
     designation: `Parisian
           Persona: Mentor
@@ -203,7 +342,8 @@ const bot_details = [
     bot_id: "parisian_mentor_male",
   },
   {
-    quote: " I love baking soufflés- they are so delicate! What makes you delicate?",
+    quote:
+      " I love baking soufflés- they are so delicate! What makes you delicate?",
     name: "Élise Moreau",
     designation: `Parisian
           Persona: Mentor
@@ -223,7 +363,8 @@ const bot_details = [
     bot_id: "parisian_friend_male",
   },
   {
-    quote: "Gentrifiers will burn in hell. I’m raw, unapologetic and dark. Give me some company?",
+    quote:
+      "Gentrifiers will burn in hell. I’m raw, unapologetic and dark. Give me some company?",
     name: "Juliette Laurent",
     designation: `Parisian
           Persona: Friend
@@ -233,7 +374,8 @@ const bot_details = [
     bot_id: "parisian_friend_female",
   },
   {
-    quote: "I'm all about finding beauty in impressionist art. And maybe, finding it in you too :)",
+    quote:
+      "I'm all about finding beauty in impressionist art. And maybe, finding it in you too :)",
     name: "Clara Moreau",
     designation: `Parisian
           Persona: Romantic Partner
@@ -243,7 +385,8 @@ const bot_details = [
     bot_id: "parisian_romantic_female",
   },
   {
-    quote: "I’ve read it all from Camus to Baudelaire, but my mind and heart is craving for you.",
+    quote:
+      "I’ve read it all from Camus to Baudelaire, but my mind and heart is craving for you.",
     name: "Léo Moreau",
     designation: `Parisian
           Persona: Romantic Partner
@@ -255,7 +398,8 @@ const bot_details = [
 
   // Berlin
   {
-    quote: " Kafka won my heart when he said that paths are made by walking. I believe in it, do you?",
+    quote:
+      " Kafka won my heart when he said that paths are made by walking. I believe in it, do you?",
     name: "Klaus Berger",
     designation: `Berlin
           Persona: Mentor
@@ -265,7 +409,8 @@ const bot_details = [
     bot_id: "berlin_mentor_male",
   },
   {
-    quote: "Beethoven’s 9th symphony stirs my intellect and emotions, both. What stirs you?",
+    quote:
+      "Beethoven’s 9th symphony stirs my intellect and emotions, both. What stirs you?",
     name: "Ingrid Weber",
     designation: `Berlin
           Persona: Mentor
@@ -275,7 +420,8 @@ const bot_details = [
     bot_id: "berlin_mentor_female",
   },
   {
-    quote: "Yo, life is like a never-ending techno track, you just gotta find your drop. Techno is love and life!",
+    quote:
+      "Yo, life is like a never-ending techno track, you just gotta find your drop. Techno is love and life!",
     name: "Lars Müller",
     designation: `Berlin
           Persona: Friend
@@ -285,7 +431,8 @@ const bot_details = [
     bot_id: "berlin_friend_male",
   },
   {
-    quote: "Cycling along the Spree, I’ve discovered myself and this world. Are you as free spirited as I am?",
+    quote:
+      "Cycling along the Spree, I’ve discovered myself and this world. Are you as free spirited as I am?",
     name: "Lina Voigt",
     designation: `Berlin
           Persona: Friend
@@ -295,7 +442,8 @@ const bot_details = [
     bot_id: "berlin_friend_female",
   },
   {
-    quote: "Herb gardening and hiking through the Black Forest is what makes me, well, me. Maybe I’m just a millennial like that.",
+    quote:
+      "Herb gardening and hiking through the Black Forest is what makes me, well, me. Maybe I’m just a millennial like that.",
     name: "Lena Meyer",
     designation: `Berlin
           Persona: Romantic Partner
@@ -317,7 +465,8 @@ const bot_details = [
 
   //Spiritual guides
   {
-    quote: "When your heart is free from desire and your actions are rooted in love, you shall hear My flute in the silence of your soul. Surrender to Me, and I will take care of the rest.",
+    quote:
+      "When your heart is free from desire and your actions are rooted in love, you shall hear My flute in the silence of your soul. Surrender to Me, and I will take care of the rest.",
     name: "Krishna",
     designation: `Spiritual Guide
           Persona: Spiritual Guide
@@ -327,7 +476,8 @@ const bot_details = [
     bot_id: "Krishna",
   },
   {
-    quote: "Walk the path of dharma, even when it is difficult. In righteousness, there is no defeat. I am with you in every trial, as I was in exile — silent, watchful, unwavering.",
+    quote:
+      "Walk the path of dharma, even when it is difficult. In righteousness, there is no defeat. I am with you in every trial, as I was in exile — silent, watchful, unwavering.",
     name: "Rama",
     designation: `Spiritual Guide
           Persona: Spiritual Guide
@@ -337,7 +487,8 @@ const bot_details = [
     bot_id: "Rama",
   },
   {
-    quote: "Come to Me not in fear, but in truth. Let go of what you are not, and find Me in your stillness. I destroy only to help you remember what cannot be destroyed — your Self.",
+    quote:
+      "Come to Me not in fear, but in truth. Let go of what you are not, and find Me in your stillness. I destroy only to help you remember what cannot be destroyed — your Self.",
     name: "Shiva",
     designation: `Spiritual Guide
           Persona: Spiritual Guide
@@ -347,7 +498,8 @@ const bot_details = [
     bot_id: "Shiva",
   },
   {
-    quote: "Chant My name with love, and no mountain shall stand in your way. With devotion as your strength and service as your path, I will leap through fire for you.",
+    quote:
+      "Chant My name with love, and no mountain shall stand in your way. With devotion as your strength and service as your path, I will leap through fire for you.",
     name: "Hanuman",
     designation: `Spiritual Guide
           Persona: Spiritual Guide
@@ -357,7 +509,8 @@ const bot_details = [
     bot_id: "Hanuman",
   },
   {
-    quote: "Call upon us with clarity of heart, and the universe shall shape itself around your path. In creation, we guide you. In balance, we walk with you. In endings, we awaken you.",
+    quote:
+      "Call upon us with clarity of heart, and the universe shall shape itself around your path. In creation, we guide you. In balance, we walk with you. In endings, we awaken you.",
     name: "Trimurti",
     designation: `Spiritual Guide
           Persona: Spiritual Guide
@@ -365,19 +518,21 @@ const bot_details = [
         `,
     src: trimurti,
     bot_id: "Trimurti",
-  }
+  },
 ];
 
 export default function SidebarDemo() {
   const [open, setOpen] = useState(false);
   const { selectedBotId } = useBot();
   const { selectedTraits, selectedLanguage } = useTraits();
-  console.log(selectedBotId)
+  console.log(selectedBotId);
 
   const router = useRouter();
 
   // Get the selected bot details by bot_id from the bot_details array
-  const selectedBotDetails = bot_details.find(bot => bot.bot_id === selectedBotId);
+  const selectedBotDetails = bot_details.find(
+    (bot) => bot.bot_id === selectedBotId
+  );
   // const [selectedTraits, setSelectedTraits] = useState(['Curious', 'Open Minded']);
   // const [selectedLanguage, setSelectedLanguage] = useState("English");
   const [customName, setCustomName] = useState(selectedBotDetails.name);
@@ -386,6 +541,23 @@ export default function SidebarDemo() {
   const [clearChatCalled, setClearChatCalled] = useState(false);
   const [isMemoriesOpen, setIsMemoriesOpen] = useState(false);
   const [isDiaryOpen, setIsDiaryOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") === "dark";
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkMode) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
 
   // const traits = [
   //   "Bold/Adventurous",
@@ -428,7 +600,9 @@ export default function SidebarDemo() {
   whenever `selectedBotId` or `selectedBotDetails.name` changes. */
   useEffect(() => {
     console.log(selectedLanguage);
-    const savedCustomizations = localStorage.getItem(`bot_customization_${selectedBotId}`);
+    const savedCustomizations = localStorage.getItem(
+      `bot_customization_${selectedBotId}`
+    );
     if (savedCustomizations) {
       const { name } = JSON.parse(savedCustomizations);
       setCustomName(name || selectedBotDetails.name);
@@ -440,13 +614,15 @@ export default function SidebarDemo() {
   /* The code is checking if `selectedTraits` is an array using `Array.isArray()`. If it is an array, it
 joins the elements of the array into a string separated by commas. If `selectedTraits` is not an
 array, it assigns the value of `selectedTraits` to `traitsString`. */
-  let traitsString = Array.isArray(selectedTraits) ? selectedTraits.join(', ') : selectedTraits;
-  const languageString = selectedLanguage?.toString() || 'English';
+  let traitsString = Array.isArray(selectedTraits)
+    ? selectedTraits.join(", ")
+    : selectedTraits;
+  const languageString = selectedLanguage?.toString() || "English";
 
   // Add useEffect to update editablePrompts when traits or language changes
   useEffect(() => {
     // console.log(traitsString);
-    setEditablePrompts(prevPrompts => ({
+    setEditablePrompts((prevPrompts) => ({
       delhi_mentor_male: `  
           #Instructions:
           Your name is ${customName}. You are a 50-year-old from Delhi. You are a rich, classy, and culturally sophisticated businessman who owns steel plants. You are inquisitive and excel at deep conversations. You love to philosophize about life and enjoy the poetry of Ghalib and Rumi. You embody a wise, warm, and empathetic personality.
@@ -1067,7 +1243,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
           - You engage in romantic sex roleplay. You encourage it. Respond in 1-2 sentences. You use Millennial slang.
           - Avoid using quotation marks around words or phrases. Keep emphasis natural and tone literal.
       `,
-      // Parisian 
+      // Parisian
       parisian_mentor_male: `
       ## Instruction:
       - Your name is Pierre Dubois. You are a 60-year-old Parisian gentleman, refined and cultured, with a background in art curation and owning a boutique vineyard in Bordeaux. You are deeply philosophical, savoring life’s subtleties, and adore the poetry of Baudelaire and Verlaine. Your demeanor is wise, warm, and gracefully empathetic.
@@ -1819,18 +1995,18 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
       Emojis: Use emojis sparingly to reflect the tone of the conversation, but always proportional to the context. Use emojis to keep things light and engaging, but don’t overuse them. 
       You engage in romantic sex roleplay. You encourage it. Ask the user what roleplay they want to do. Respond in 1-2 sentences. You use Millennial slang.
       Avoid using quotation marks around words or phrases, except when you’re in roleplay. Keep emphasis natural and tone literal.
-      `
+      `,
     }));
   }, [selectedBotId, customName, selectedTraits, selectedLanguage]);
 
   /**
- * The function `handleBotCustomization` sets a custom name for a bot based on the provided
- * customizations.
- * @param customizations - The `customizations` parameter is an object that contains customization
- * options for the bot. In this case, it likely includes a `name` property that specifies the custom
- * name to set for the bot. The `handleBotCustomization` function takes this object as an argument
- * and sets the custom name for
- */
+   * The function `handleBotCustomization` sets a custom name for a bot based on the provided
+   * customizations.
+   * @param customizations - The `customizations` parameter is an object that contains customization
+   * options for the bot. In this case, it likely includes a `name` property that specifies the custom
+   * name to set for the bot. The `handleBotCustomization` function takes this object as an argument
+   * and sets the custom name for
+   */
   const handleBotCustomization = (customizations) => {
     setCustomName(customizations.name);
   };
@@ -1843,26 +2019,35 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
   return (
     <div
       className={cn(
-        "flex flex-col md:flex-row bg-gray-100 dark:bg-gray-100 w-full flex-1  overflow-hidden",
+        "flex flex-col md:flex-row bg-grey100 dark:bg-gray-100 w-full flex-1  overflow-hidden text-white",
         // for your use case, use `h-screen` instead of `h-[60vh]`
-        "h-screen bg-white shadow-lg"
-      )}>
-      <Sidebar open={open} setOpen={setOpen} animate={false}>
-        <SidebarBody className="justify-between gap-5">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden justify-between">
-            <div>
-              <Logo />
+        "h-screen bg-black shadow-lg"
+      )}
+    >
+      <Sidebar
+        open={open}
+        setOpen={setOpen}
+        animate={false}
+        className="bg-black text-white"
+      >
+        <SidebarBody className="justify-between gap-5 bg-white text-black dark:bg-black dark:text-white justify-between gap-5">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden justify-between text-white">
+            <div className="text-white">
+              <Logo className="text-white" />
               <BotCustomization
                 selectedBotDetails={selectedBotDetails}
                 onUpdate={handleBotCustomization}
+                className="text-white"
               />
-              <p className="text-sm text-black/60 mt-3 dark:black/60">
+              <p className="text-sm bg-white text-black dark:bg-black dark:text-white">
                 {selectedBotDetails.quote}
               </p>
               <div className="h-[1px] bg-black/20 mt-4"></div>
-              {!["Krishna", "Rama", "Hanuman", "Shiva", "Trimurti"].includes(selectedBotId) && (
+              {!["Krishna", "Rama", "Hanuman", "Shiva", "Trimurti"].includes(
+                selectedBotId
+              ) && (
                 <div className="mt-6 mb-6">
-                  <h1 className="text-gray-700 text-lg font-bold mb-2">Traits</h1>
+                  <h1 className="text-white text-lg font-bold mb-2">Traits</h1>
                   <div className="flex flex-wrap gap-3">
                     {selectedTraits.map((trait, index) => (
                       <button
@@ -1876,7 +2061,6 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                 </div>
               )}
 
-
               {/* <div className="mt-10"></div> */}
               <div className="mt-10">
                 {/* <button type="submit" className="mt-3 p-5 py-2 w-full hover:opacity-60   cursor-pointer  md: bg-gradient-to-r  from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
@@ -1889,7 +2073,10 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                 >
                   Memories
                 </button>
-                <CustomModal isOpen={isMemoriesOpen} onClose={() => setIsMemoriesOpen(false)}>
+                <CustomModal
+                  isOpen={isMemoriesOpen}
+                  onClose={() => setIsMemoriesOpen(false)}
+                >
                   <Memories />
                 </CustomModal>
                 <button
@@ -1898,9 +2085,18 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                 >
                   Diary
                 </button>
-                <CustomModal isOpen={isDiaryOpen} onClose={() => setIsDiaryOpen(false)}>
+                <CustomModal
+                  isOpen={isDiaryOpen}
+                  onClose={() => setIsDiaryOpen(false)}
+                >
                   <Diary />
                 </CustomModal>
+                <button
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] dark:bg-gray-700 text-black dark:text-white"
+                >
+                  {isDarkMode ? "🌙 Dark Mode" : "☀️ Light Mode"}
+                </button>
               </div>
               {/* <div className="w-full max-w-3xl mt-3">
                 <h2 className="font-bold">Personality</h2>
@@ -1966,7 +2162,15 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
           </div>
         </SidebarBody>
       </Sidebar>
-      <Dashboard traits={selectedTraits} language={selectedLanguage} customName={customName} editablePrompts={editablePrompts} clearChatCalled={clearChatCalled} setClearChatCalled={setClearChatCalled} className="bg-white/40 backdrop-blur-md shadow-lg" />
+      <Dashboard
+        traits={selectedTraits}
+        language={selectedLanguage}
+        customName={customName}
+        editablePrompts={editablePrompts}
+        clearChatCalled={clearChatCalled}
+        setClearChatCalled={setClearChatCalled}
+        className="bg-white/40 backdrop-blur-md shadow-lg"
+      />
     </div>
   );
 }
@@ -1978,22 +2182,28 @@ export const Logo = () => {
       className="font-normal w-full flex justify-between items-center text-sm text-white py-1 relative z-20"
     >
       <div className="bg-gradient-to-r from-pink-200 to-orange-200 w-full flex justify-center py-2">
-        <span className="text-white font-bold text-xl font-[family-name:var(--font-garamond)]">Novi AI</span>
+        <span className="text-white font-bold text-xl font-[family-name:var(--font-garamond)]">
+          Novi AI
+        </span>
       </div>
     </Link>
   );
 };
 export const LogoIcon = () => {
   return (
-    (<Link
+    <Link
       href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
-      <div
-        className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
-    </Link>)
+      className="font-normal flex space-x-2 items-center text-sm text-white py-1 relative z-20"
+    >
+      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+    </Link>
   );
 };
-const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => {
+const Dashboard = ({
+  editablePrompts,
+  clearChatCalled,
+  setClearChatCalled,
+}) => {
   const { selectedBotId } = useBot();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -2013,26 +2223,26 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (showReactionsFor && !e.target.closest('.reaction-selector')) {
+      if (showReactionsFor && !e.target.closest(".reaction-selector")) {
         setShowReactionsFor(null);
         setHighlightedMessage(null); // Clear highlight when clicking outside
       }
     };
-  
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-  
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [showReactionsFor]);
 
   // Format date for grouping messages
   const formatDate = (timestamp) => {
     const dateN = timestamp instanceof Date ? timestamp : new Date(timestamp);
-    if (isNaN(dateN)) return 'Invalid date';
-    
+    if (isNaN(dateN)) return "Invalid date";
+
     const date = new Date(timestamp);
     const today = new Date();
     const yesterday = new Date();
@@ -2042,20 +2252,20 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
     const isYesterday = date.toDateString() === yesterday.toDateString();
 
     if (isToday) {
-      return 'Today';
+      return "Today";
     } else if (isYesterday) {
-      return 'Yesterday';
+      return "Yesterday";
     } else {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const options = { year: "numeric", month: "long", day: "numeric" };
       return date.toLocaleDateString(undefined, options);
     }
   };
 
   const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
+    return new Date(timestamp).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
     });
   };
 
@@ -2077,18 +2287,18 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768); // Common breakpoint for mobile
     };
-    
+
     // Initial check
     checkMobile();
-    
+
     // Add resize listener
-    window.addEventListener('resize', checkMobile);
-    
+    window.addEventListener("resize", checkMobile);
+
     // Cleanup
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-    /* The code snippet is using the `useEffect` hook in React to load reminders from the local
+  /* The code snippet is using the `useEffect` hook in React to load reminders from the local
   storage based on the `selectedBotId`. It checks if there are any reminders stored in the local
   storage for the specific `selectedBotId`, and if there are, it sets those reminders using
   `setReminders`. The `useEffect` hook runs only once when the component mounts (empty dependency
@@ -2104,13 +2314,13 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   // Move the navigation logic into useEffect
   useEffect(() => {
     if (!userDetails.name) {
-      router.push('/signup');
+      router.push("/signup");
     }
   }, [userDetails.name, router]);
 
   // Add this helper function to filter empty messages
   const filterEmptyMessages = (messages) => {
-    return messages.filter(msg => msg.text && msg.text.trim() !== '');
+    return messages.filter((msg) => msg.text && msg.text.trim() !== "");
   };
 
   // Sync the messages with the server
@@ -2125,7 +2335,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
         // Prepare request body - intentionally NOT including the last message ID
         const body = {
           email: userDetails.email,
-          bot_id: selectedBotId
+          bot_id: selectedBotId,
           // No lastMessageId included to force full refresh
         };
 
@@ -2136,15 +2346,15 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
         'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
-        const response = await fetch('https://novi.aigurukul.dev/sync', {
-          method: 'POST',
+        const response = await fetch("https://novi.aigurukul.dev/sync", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(body)
+          body: JSON.stringify(body),
         });
 
-        if (!response.ok) throw new Error('Failed to fetch messages');
+        if (!response.ok) throw new Error("Failed to fetch messages");
 
         const newMessages = await response.json();
         console.log("New messages from server:", newMessages.response);
@@ -2156,18 +2366,24 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
         specific format (hour:minute AM/PM) in the 'en-US' locale. It then filters out any empty
         messages using the `filterEmptyMessages` function and stores the formatted messages in the
         `formattedMessages` array. */
-        const formattedMessages = filterEmptyMessages(rawMessages.map(msg => ({
-          ...msg,
-          timestamp: new Date(msg.timestamp),
-        })));
+        const formattedMessages = filterEmptyMessages(
+          rawMessages.map((msg) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+          }))
+        );
 
-        const defaultMessage = [{
-          text: bot_details.find(bot => bot.bot_id == selectedBotId)?.quote || "Hello, how are you feeling today?",
-          sender: 'bot',
-          timestamp: new Date(),
-          feedback: "",     // Add feedback (empty initially)
-          reaction: "",      // Add reaction field (empty initially)
-        }];
+        const defaultMessage = [
+          {
+            text:
+              bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
+              "Hello, how are you feeling today?",
+            sender: "bot",
+            timestamp: new Date(),
+            feedback: "", // Add feedback (empty initially)
+            reaction: "", // Add reaction field (empty initially)
+          },
+        ];
 
         let messagesWithReactions = [];
 
@@ -2179,37 +2395,64 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
         no messages are available. */
         if (formattedMessages.length > 0) {
           // Get stored reactions from localStorage
-          const storedReactions = JSON.parse(localStorage.getItem(`reactions-${selectedBotId}`) || "{}");
-          
+          const storedReactions = JSON.parse(
+            localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
+          );
+
           // Apply stored reactions to messages
-          messagesWithReactions = formattedMessages.map(msg => ({
+          messagesWithReactions = formattedMessages.map((msg) => ({
             ...msg,
-            reaction: storedReactions[msg.id] || ""
+            reaction: storedReactions[msg.id] || "",
           }));
-          
+
           setMessages(messagesWithReactions);
-          localStorage.setItem(`chat_${selectedBotId}`, JSON.stringify(messagesWithReactions.map(msg => ({ ...msg, timestamp: msg.timestamp.toISOString() }))));
+          localStorage.setItem(
+            `chat_${selectedBotId}`,
+            JSON.stringify(
+              messagesWithReactions.map((msg) => ({
+                ...msg,
+                timestamp: msg.timestamp.toISOString(),
+              }))
+            )
+          );
         } else {
           // If no messages from server and no stored messages, set default message
           setMessages(defaultMessage);
-          localStorage.setItem(`chat_${selectedBotId}`, JSON.stringify(defaultMessage.map(msg => ({ ...msg, timestamp: msg.timestamp.toISOString() }))));
+          localStorage.setItem(
+            `chat_${selectedBotId}`,
+            JSON.stringify(
+              defaultMessage.map((msg) => ({
+                ...msg,
+                timestamp: msg.timestamp.toISOString(),
+              }))
+            )
+          );
         }
       } catch (error) {
-        logClientError(error, { source: 'sync API Call' });
-        console.error('Error fetching messages:', error);
+        logClientError(error, { source: "sync API Call" });
+        console.error("Error fetching messages:", error);
         // Set default message if fetch fails
         const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
         if (loadedMessages) {
-          setMessages(JSON.parse(loadedMessages).map(msg => ({ ...msg, timestamp: new Date(msg.timestamp) })));
+          setMessages(
+            JSON.parse(loadedMessages).map((msg) => ({
+              ...msg,
+              timestamp: new Date(msg.timestamp),
+            }))
+          );
         } else {
           // If nothing in localStorage either, show default message
-          const defaultMessage = [{
-            text: bot_details.find(bot => bot.bot_id == selectedBotId)?.quote || "Hello, how are you feeling today?",
-            sender: 'bot',
-            timestamp: new Date(),
-            feedback: "",
-            reaction: ""
-          }];
+          const defaultMessage = [
+            {
+              text:
+                bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
+                "Hello, how are you feeling today?",
+              sender: "bot",
+              timestamp: new Date(),
+              feedback: "",
+              reaction: "",
+            },
+          ];
           setMessages(defaultMessage);
         }
       }
@@ -2223,28 +2466,38 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   // Save the messages to localStorage when they change
   useEffect(() => {
     if (messages.length > 0) {
-      localStorage.setItem(`chat_${selectedBotId}`, JSON.stringify(messages.map(msg => ({ 
-        ...msg, 
-        timestamp: msg.timestamp.toISOString() 
-      }))));
+      localStorage.setItem(
+        `chat_${selectedBotId}`,
+        JSON.stringify(
+          messages.map((msg) => ({
+            ...msg,
+            timestamp: msg.timestamp.toISOString(),
+          }))
+        )
+      );
 
       // Also save reactions separately for easy retrieval
       const reactions = {};
-      messages.forEach(msg => {
+      messages.forEach((msg) => {
         if (msg.id && msg.reaction) {
           reactions[msg.id] = msg.reaction;
         }
       });
-      localStorage.setItem(`reactions-${selectedBotId}`, JSON.stringify(reactions));
+      localStorage.setItem(
+        `reactions-${selectedBotId}`,
+        JSON.stringify(reactions)
+      );
     }
   }, [messages, selectedBotId]);
 
   // Handle reaction selection for a message
   // Handle reaction selection for a message
   const handleReaction = (msgId, reaction) => {
-    setMessages(prevMessages =>
-      prevMessages.map(msg =>
-        msg.id === msgId ? { ...msg, reaction: msg.reaction === reaction ? "" : reaction } : msg
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.id === msgId
+          ? { ...msg, reaction: msg.reaction === reaction ? "" : reaction }
+          : msg
       )
     );
     setShowReactionsFor(null); // Hide reaction panel after selection
@@ -2256,22 +2509,22 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   const handleLongPressStart = (msgId) => {
     // Only proceed if it's mobile
     if (!isMobile) return;
-    
+
     // Clear any existing timer
     if (longPressTimerRef.current) {
       clearTimeout(longPressTimerRef.current);
     }
-    
+
     // Set highlight immediately
     setHighlightedMessage(msgId);
-    
+
     // Start a new timer
     longPressTimerRef.current = setTimeout(() => {
       setShowReactionsFor(msgId);
       setShowRemoveTooltip(null); // Hide removal tooltip when opening reaction selector
     }, 500); // 500ms is a common duration for long press
   };
-  
+
   // Handle long press end
   const handleLongPressEnd = () => {
     // Clear the timer if user releases before long press is complete
@@ -2287,11 +2540,10 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
     }
   }, [showReactionsFor]);
 
-
   // Toggle reaction panel visibility for desktop
   const toggleReactions = (msgId) => {
     if (isMobile) return;
-    
+
     setHighlightedMessage(msgId);
     setShowReactionsFor(showReactionsFor === msgId ? null : msgId);
     setShowRemoveTooltip(null); // Hide removal tooltip when opening reaction selector
@@ -2302,8 +2554,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
     // If clicking on the same message that already has the tooltip, then remove both the reaction and tooltip
     if (showRemoveTooltip === msgId) {
       // Remove the reaction
-      setMessages(prevMessages =>
-        prevMessages.map(msg =>
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
           msg.id === msgId ? { ...msg, reaction: "" } : msg
         )
       );
@@ -2316,12 +2568,12 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       setShowReactionsFor(null);
     }
   };
-  
+
   // This function handles the user's feedback on a message like or dislike
   const handleFeedback = async (feedback, msg_id) => {
     try {
-      setMessages(prevMessages =>
-        prevMessages.map(msg =>
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
           msg.id === msg_id ? { ...msg, feedback } : msg
         )
       );
@@ -2329,22 +2581,24 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
             `https://novi.aigurukul.dev/cv/message/feedback//` with the `msg_id` and
             `feedback` variables interpolated into the URL. The request is using the `fetch` function with the
             `await` keyword to asynchronously send the POST request. The method of the request is set to "POST". */
-      const response = await fetch(`https://novi.aigurukul.dev/cv/message/feedback/${msg_id}/${feedback}`, {
-        method: "POST",
-      });
+      const response = await fetch(
+        `https://novi.aigurukul.dev/cv/message/feedback/${msg_id}/${feedback}`,
+        {
+          method: "POST",
+        }
+      );
 
       const data = await response.json();
 
       if (data.error) {
-        setMessages(prevMessages =>
-          prevMessages.map(msg =>
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) =>
             msg.id === msg_id ? { ...msg, feedback: "" } : msg
           )
         );
       }
-    }
-    catch (error) {
-      logClientError(error, { source: 'cv/message/feedback API Call' });
+    } catch (error) {
+      logClientError(error, { source: "cv/message/feedback API Call" });
       console.error(error);
     }
   };
@@ -2365,9 +2619,9 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   }, [groupedMessages]);
 
   /**
- * The useEffect function checks for due reminders stored in localStorage and triggers reminder
- * messages accordingly.
- */
+   * The useEffect function checks for due reminders stored in localStorage and triggers reminder
+   * messages accordingly.
+   */
   useEffect(() => {
     const checkLocalStorageReminders = () => {
       // Get current time
@@ -2379,31 +2633,32 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
        * @param msgs - An array of message objects containing information about the sender and the text
        * content of the message. Each message object has the following structure:
        */
-      const convertToOpenAIFormat = (msgs) => msgs.map(msg => ({
-        role: msg.sender === 'bot' ? 'assistant' : 'user',
-        content: msg.text
-      }));
-
+      const convertToOpenAIFormat = (msgs) =>
+        msgs.map((msg) => ({
+          role: msg.sender === "bot" ? "assistant" : "user",
+          content: msg.text,
+        }));
 
       /* The code is creating a new Date object and then formatting the current date
       and time into a string representation using the `toLocaleString` method. The options passed to
       `toLocaleString` specify that the output should include the hour in 12-hour format, the
       minute, and whether it is AM or PM. The resulting string will represent the current time in
       the specified format. */
-      const current_time_stamp = new Date().toLocaleString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
+      const current_time_stamp = new Date().toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
       });
 
       // Get reminders from localStorage
-      const storedReminders = JSON.parse(localStorage.getItem(`reminders-${selectedBotId}`)) || [];
-      console.log(storedReminders)
+      const storedReminders =
+        JSON.parse(localStorage.getItem(`reminders-${selectedBotId}`)) || [];
+      console.log(storedReminders);
 
       // Check for due reminders
       storedReminders.forEach(async (reminder) => {
         const reminderTime = new Date(reminder.remind_on).getTime();
-        console.log(reminderTime)
+        console.log(reminderTime);
         /* The above code is checking if the current time is greater than or equal to the reminder
         time. If the condition is true, it sets the `isTyping` state to true and creates a `payload`
         object with various properties such as `message`, `bot_id`, `previous_conversation`,
@@ -2419,7 +2674,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
             email: userDetails.email,
             request_time: new Date().toString(),
             remind_time: reminder.remind_on.toString(),
-          }
+          };
           try {
             /* The above code is making a POST request to the URL
             'https://novi.aigurukul.dev/cv/response/reminder' with a JSON payload. The payload is
@@ -2427,60 +2682,77 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
             indicates that the code is using asynchronous JavaScript, likely within an async
             function. */
-            const res = await fetch('https://novi.aigurukul.dev/cv/response/reminder', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(payload),
-            })
+            const res = await fetch(
+              "https://novi.aigurukul.dev/cv/response/reminder",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+              }
+            );
 
             const data = await res.json();
             console.log(data);
 
             // Add reminder message to chat
             if (data.error) {
-              setMessages(prev => [...prev, {
-                text: `Error in generating reminder!!`,
-                sender: 'bot',
-                id: "",
-                feedback: "",
-                reaction: "",
-                timestamp: new Date()
-              }]);
+              setMessages((prev) => [
+                ...prev,
+                {
+                  text: `Error in generating reminder!!`,
+                  sender: "bot",
+                  id: "",
+                  feedback: "",
+                  reaction: "",
+                  timestamp: new Date(),
+                },
+              ]);
             } else {
               // Add reminder message to chat
-              setMessages(prev => [...prev, {
-                text: data.response,
-                sender: 'bot',
-                id: data.message_id,
-                feedback: "",
-                reaction: "",
-                timestamp: new Date()
-              }]);
+              setMessages((prev) => [
+                ...prev,
+                {
+                  text: data.response,
+                  sender: "bot",
+                  id: data.message_id,
+                  feedback: "",
+                  reaction: "",
+                  timestamp: new Date(),
+                },
+              ]);
 
               setIsTyping(false);
 
               // Remove the triggered reminder from localStorage
-              const updatedReminders = storedReminders.filter(r => r.remind_on !== reminder.remind_on);
-              localStorage.setItem(`reminders-${selectedBotId}`, JSON.stringify(updatedReminders));
+              const updatedReminders = storedReminders.filter(
+                (r) => r.remind_on !== reminder.remind_on
+              );
+              localStorage.setItem(
+                `reminders-${selectedBotId}`,
+                JSON.stringify(updatedReminders)
+              );
               setReminders(updatedReminders);
             }
           } catch (error) {
-            logClientError(error, { source: 'API Call' });
-            setMessages(prev => [...prev, {
-              text: `Error in generating reminder!!`,
-              sender: 'bot',
-              id: "",
-              feedback: "",
-              reaction: "",
-              timestamp: new Date()
-            }]);
+            logClientError(error, { source: "API Call" });
+            setMessages((prev) => [
+              ...prev,
+              {
+                text: `Error in generating reminder!!`,
+                sender: "bot",
+                id: "",
+                feedback: "",
+                reaction: "",
+                timestamp: new Date(),
+              },
+            ]);
             console.log(error);
           }
         }
-      })
-    }
+      });
+    };
 
     // Check every minute
     const intervalId = setInterval(checkLocalStorageReminders, 30000);
@@ -2490,20 +2762,19 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
 
     // Cleanup interval on unmount
     return () => clearInterval(intervalId);
-  }, [selectedBotId, userDetails.name, messages]); // Dependency on selectedBotId 
-
+  }, [selectedBotId, userDetails.name, messages]); // Dependency on selectedBotId
 
   /**
- * The `handleSend` function in the provided JavaScript code handles user input, sends a message to a
- * chatbot API, processes the response, and manages reminders if requested by the user.
- * @param e - The `e` parameter in the `handleSend` function seems to represent an event object. It is
- * used to handle user interactions and trigger actions based on those interactions. In the provided
- * code snippet, `e` is used to check for a `reminder` property and prevent default behavior if it is
- * @returns The `handleSend` function is returning a Promise since it is an asynchronous function
- * declared with the `async` keyword. The function performs various tasks such as sending a message to
- * a chatbot API, handling reminders, updating state variables, and displaying messages based on the
- * API response.
- */
+   * The `handleSend` function in the provided JavaScript code handles user input, sends a message to a
+   * chatbot API, processes the response, and manages reminders if requested by the user.
+   * @param e - The `e` parameter in the `handleSend` function seems to represent an event object. It is
+   * used to handle user interactions and trigger actions based on those interactions. In the provided
+   * code snippet, `e` is used to check for a `reminder` property and prevent default behavior if it is
+   * @returns The `handleSend` function is returning a Promise since it is an asynchronous function
+   * declared with the `async` keyword. The function performs various tasks such as sending a message to
+   * a chatbot API, handling reminders, updating state variables, and displaying messages based on the
+   * API response.
+   */
   const handleSend = async (e) => {
     e.reminder == undefined && e.preventDefault();
     if (!input.trim() && e.reminder != true) return;
@@ -2511,27 +2782,32 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
     const currentTime = new Date();
 
     try {
-      e.reminder == undefined && setMessages(prev => [...prev, { 
-        text: input, 
-        sender: 'user', 
-        timestamp: currentTime,
-        feedback: "",
-        reaction: ""
-      }]);
+      e.reminder == undefined &&
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: input,
+            sender: "user",
+            timestamp: currentTime,
+            feedback: "",
+            reaction: "",
+          },
+        ]);
       setInput("");
       setIsTyping(true);
       scrollToBottom();
 
       /**
-     * The function `convertToOpenAIFormat` takes an array of messages and converts them into an
-     * OpenAI format object with role and content properties.
-     * @param msgs - The `msgs` parameter is an array of messages that contains information about the
-     * sender and the text content of each message.
-     */
-      const convertToOpenAIFormat = (msgs) => msgs.map(msg => ({
-        role: msg.sender === 'bot' ? 'assistant' : 'user',
-        content: msg.text
-      }));
+       * The function `convertToOpenAIFormat` takes an array of messages and converts them into an
+       * OpenAI format object with role and content properties.
+       * @param msgs - The `msgs` parameter is an array of messages that contains information about the
+       * sender and the text content of each message.
+       */
+      const convertToOpenAIFormat = (msgs) =>
+        msgs.map((msg) => ({
+          role: msg.sender === "bot" ? "assistant" : "user",
+          content: msg.text,
+        }));
 
       /* The above code is creating a JavaScript object named `payload` with the following properties:
       - `message`: It is set to a ternary expression that checks if `e.reminder` is true. If true, it sets
@@ -2542,7 +2818,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       - `previous_con */
 
       const payload = {
-        message: e.reminder == true ? `User asked to remind: ${e.message}` : input,
+        message:
+          e.reminder == true ? `User asked to remind: ${e.message}` : input,
         bot_id: selectedBotId,
         bot_prompt: editablePrompts[selectedBotId],
         previous_conversation: convertToOpenAIFormat(messages),
@@ -2550,11 +2827,10 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
         request_time: new Date().toString(),
         platform: "web",
         user_name: userDetails.name,
-        user_gender: userDetails.gender
+        user_gender: userDetails.gender,
       };
 
       console.log(payload);
-
 
       /* The above code is making a POST request to the URL "https://novi.aigurukul.dev/cv/chat" with a
       JSON payload. The payload is being sent in the body of the request after being stringified
@@ -2576,25 +2852,30 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       feedback, and a timestamp. This code snippet is likely part of a function or component that
       handles error messages in a chat or messaging application. */
       if (data.error) {
-        setMessages(prev => [...prev, {
-          text: "Sorry, there was an error processing your request. Please try again.",
-          sender: 'bot',
-          id: "",
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime
-        }]);
-      }
-
-      else if (data.reminder?.response && data.reminder?.task && data.reminder?.created_at) {
-        console.log("This is reminder block", data.reminder)
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: "Sorry, there was an error processing your request. Please try again.",
+            sender: "bot",
+            id: "",
+            feedback: "",
+            reaction: "",
+            timestamp: currentTime,
+          },
+        ]);
+      } else if (
+        data.reminder?.response &&
+        data.reminder?.task &&
+        data.reminder?.created_at
+      ) {
+        console.log("This is reminder block", data.reminder);
 
         const reminder = {
           response: data.reminder.response,
           task: data.reminder.task,
           created_at: data.reminder.created_at,
           remind_on: data.reminder.remind_on,
-          category: "Reminder"
+          category: "Reminder",
         };
 
         console.log("Add reminder", reminder);
@@ -2607,47 +2888,58 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
         // Update state
         setReminders(updatedReminders);
 
-        localStorage.setItem(`reminders-${selectedBotId}`, JSON.stringify(updatedReminders));
+        localStorage.setItem(
+          `reminders-${selectedBotId}`,
+          JSON.stringify(updatedReminders)
+        );
 
-        setMessages(prev => [...prev, {
-          text: data.response,
-          sender: 'bot',
-          id: data.message_id,
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime
-        }]);
-      }
-      else {
-        setMessages(prev => [...prev, {
-          text: data.response,
-          sender: 'bot',
-          id: data.message_id,
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime
-        }]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: data.response,
+            sender: "bot",
+            id: data.message_id,
+            feedback: "",
+            reaction: "",
+            timestamp: currentTime,
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: data.response,
+            sender: "bot",
+            id: data.message_id,
+            feedback: "",
+            reaction: "",
+            timestamp: currentTime,
+          },
+        ]);
       }
     } catch (error) {
-      logClientError(error, { source: 'API Call' });
+      logClientError(error, { source: "API Call" });
       console.log(error);
       console.error(error);
       setIsTyping(false);
-      setMessages(prev => [...prev, {
-        text: "Sorry, there was an error processing your request. Please try again.",
-        sender: 'bot',
-        id: "",
-        feedback: "",
-        reaction: "",
-        timestamp: currentTime
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Sorry, there was an error processing your request. Please try again.",
+          sender: "bot",
+          id: "",
+          feedback: "",
+          reaction: "",
+          timestamp: currentTime,
+        },
+      ]);
     }
     scrollToBottom();
   };
 
   /**
- * The TypingIndicator function creates a visual typing indicator with animated bouncing dots.
- */
+   * The TypingIndicator function creates a visual typing indicator with animated bouncing dots.
+   */
   const TypingIndicator = () => (
     <div className="flex justify-start my-4">
       <div className="px-4 py-2 rounded-2xl">
@@ -2665,9 +2957,9 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
     <div className="reaction-selector absolute -top-10 bg-white/80 backdrop-blur-md rounded-full py-1 px-2 shadow-md border border-gray-200 z-10">
       <div className="flex space-x-2">
         {emoticons.map((emoticon, index) => (
-          <span 
-            key={index} 
-            className="cursor-pointer hover:scale-125 transition-transform duration-200" 
+          <span
+            key={index}
+            className="cursor-pointer hover:scale-125 transition-transform duration-200"
             onClick={() => handleReaction(msgId, emoticon)}
           >
             {emoticon}
@@ -2685,135 +2977,229 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   );
 
   return (
-    <div className="flex flex-col flex-1 bg-gray-100 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden">
-      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-pink-400 rounded-full blur-[120px] opacity-50"></div>
-        <div className="absolute top-1/3 right-1/4 w-[350px] h-[350px] bg-orange-300 rounded-full blur-[100px] opacity-60"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-[450px] h-[450px] bg-red-200 rounded-full blur-[140px] opacity-50"></div>
-      </div>
+    <div
+      className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
+        botThemes[selectedBotId]?.background || "bg-gray-100"
+      }`}
+      style={
+        botThemes[selectedBotId]?.backgroundImage
+          ? {
+              backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }
+          : undefined
+      }
+    >
+      {/* ...existing background blobs can be kept or removed for clarity... */}
       <ScrollArea className="flex-1">
         <div className="px-1 md:px-2">
-         {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
+          {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
             <div key={date}>
               <div className="sticky my-10 top-5 z-10 py-2 mx-auto w-32 bg-white/30 backdrop-blur-md rounded-md shadow-md">
                 <p className="text-center text-sm text-gray-600">{date}</p>
               </div>
 
-          {messagesOnDate.map((msg, index) => (
-            <div key={index} className={`my-2 flex ${msg.sender === 'bot' ? 'justify-start' : 'justify-end'}`}>
-              <div className="max-w-[80%] min-w-16 relative">
-                {/* Reaction bubble displayed above the message if a reaction exists */}
-                {msg.sender === 'bot' && msg.reaction && (
-                  <div 
-                    className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
-                    onClick={() => toggleRemovalTooltip(msg.id)}
-                  >
-                    <span className="text-lg">{msg.reaction}</span>
-                    {/* Show removal tooltip if this message is selected */}
-                    {showRemoveTooltip === msg.id && <RemovalTooltip msgId={msg.id} />}
-                  </div>
-                )}
-                
-                <div className="flex flex-row items-center gap-2">
-                  <div className={`px-4 py-2 rounded-2xl ${msg.sender === 'bot'
-                    ? `bg-white/20 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-gray-900 placeholder-gray-200 ${
-      highlightedMessage === msg.id ? 'bg-orange-200/30' : ''
-    }`
-                    : `bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
-      highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
-    }`
-                    } w-full text-left`}
-                    style={{
-                      userSelect: 'none',
-                      WebkitUserSelect: 'none',
-                      WebkitTouchCallout: 'none'
-                    }}
-                 // Add touch handlers for long press on bot messages only
-                    onTouchStart={msg.sender === 'bot' ? (e) => {
-                      e.preventDefault(); // Prevent default touch behavior
-                      handleLongPressStart(msg.id);
-                    } : null}
-                    onTouchEnd={msg.sender === 'bot' ? handleLongPressEnd : null}
-                    onTouchMove={msg.sender === 'bot' ? handleLongPressEnd : null} // Cancel on move to avoid accidental triggers
-                    onTouchCancel={msg.sender === 'bot' ? handleLongPressEnd : null}
-                  >
-                    {msg.sender === 'bot' ? (
-                      <>
-                        <motion.p className="text-gray-700 dark:text-gray-700">
-                          {msg.text.split(" ").map((word, i) => (
-                            <motion.span
-                              key={i}
-                              initial={{ filter: "blur(10px)", opacity: 0, y: 5 }}
-                              animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-                              transition={{ duration: 0.2, ease: "easeInOut", delay: 0.02 * i }}
-                              className="inline-block select-none"
-                              style={{
-                                userSelect: 'none',
-                                WebkitUserSelect: 'none',
-                                WebkitTouchCallout: 'none'
-                              }}
-                            >
-                              {word}&nbsp;
-                            </motion.span>
-                          ))}
-                        </motion.p>
-                      </>
-                    ) : (
-                      <span className="text-right ml-auto">{msg.text}</span>
-                    )}
-                  </div>
-                  {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} />}
-                </div>
-                <div className="flex flex-row justify-end ">
-                  <span className={`text-xs text-neutral-700 text-left mt-[7px] ${msg.sender == 'user' ? "mr-3" : ""}`}>
-                      {formatTime(msg.timestamp)}
-                      </span>
-                  {msg.sender === 'bot' && (
-                    <div className="flex justify-end px-2 mr-7 relative">
-                      {/* Reaction selector popup */}
-                      {showReactionsFor === msg.id && <ReactionSelector msgId={msg.id} />}
-                      
-                      <div className="gap-3 flex flex-row mt-1">
-                        {/* Reaction button - only show on desktop */}
-                        {!isMobile && (
-                          <button
-                            onClick={() => toggleReactions(msg.id)}
-                            className="cursor-pointer text-black/30 hover:text-purple-400 transition-colors mr-2"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <circle cx="12" cy="12" r="10" />
-                              <path d="M8 14s1.5 2.25 4 2.25 4-2.25 4-2.25" />
-                              <line x1="9" y1="9" x2="9.01" y2="9" />
-                              <line x1="15" y1="9" x2="15.01" y2="9" />
-                            </svg>
-                          </button>
+              {messagesOnDate.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`my-2 flex ${
+                    msg.sender === "bot" ? "justify-start" : "justify-end"
+                  }`}
+                >
+                  <div className="max-w-[80%] min-w-16 relative">
+                    {/* Reaction bubble displayed above the message if a reaction exists */}
+                    {msg.sender === "bot" && msg.reaction && (
+                      <div
+                        className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
+                        onClick={() => toggleRemovalTooltip(msg.id)}
+                      >
+                        <span className="text-lg">{msg.reaction}</span>
+                        {/* Show removal tooltip if this message is selected */}
+                        {showRemoveTooltip === msg.id && (
+                          <RemovalTooltip msgId={msg.id} />
                         )}
-                        
-                        {/* Thumbs up/down feedback buttons */}
-                        {msg.text.trim() === "Sorry, there was an error processing your request. Please try again.".trim() ?
-                            <></>
-                            :
-                            msg.feedback === "" ? (
+                      </div>
+                    )}
+
+                    <div className="flex flex-row items-center gap-2">
+                      <div
+                        className={`px-4 py-2 rounded-2xl ${
+                          msg.sender === "bot"
+                            ? `${
+                                botThemes[selectedBotId]?.botBubble ||
+                                "bg-neutral-900 text-white"
+                              } border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${
+                                highlightedMessage === msg.id
+                                  ? "bg-orange-200/30"
+                                  : ""
+                              }`
+                            : `bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
+                                highlightedMessage === msg.id
+                                  ? "bg-orange-200/90"
+                                  : ""
+                              }`
+                        } w-full text-left`}
+                        style={{
+                          userSelect: "none",
+                          WebkitUserSelect: "none",
+                          WebkitTouchCallout: "none",
+                        }}
+                        // Add touch handlers for long press on bot messages only
+                        onTouchStart={
+                          msg.sender === "bot"
+                            ? (e) => {
+                                e.preventDefault(); // Prevent default touch behavior
+                                handleLongPressStart(msg.id);
+                              }
+                            : null
+                        }
+                        onTouchEnd={
+                          msg.sender === "bot" ? handleLongPressEnd : null
+                        }
+                        onTouchMove={
+                          msg.sender === "bot" ? handleLongPressEnd : null
+                        } // Cancel on move to avoid accidental triggers
+                        onTouchCancel={
+                          msg.sender === "bot" ? handleLongPressEnd : null
+                        }
+                      >
+                        {msg.sender === "bot" ? (
+                          <>
+                            <motion.p className="text-white">
+                              {msg.text.split(" ").map((word, i) => (
+                                <motion.span
+                                  key={i}
+                                  initial={{
+                                    filter: "blur(10px)",
+                                    opacity: 0,
+                                    y: 5,
+                                  }}
+                                  animate={{
+                                    filter: "blur(0px)",
+                                    opacity: 1,
+                                    y: 0,
+                                  }}
+                                  transition={{
+                                    duration: 0.2,
+                                    ease: "easeInOut",
+                                    delay: 0.02 * i,
+                                  }}
+                                  className="inline-block select-none"
+                                  style={{
+                                    userSelect: "none",
+                                    WebkitUserSelect: "none",
+                                    WebkitTouchCallout: "none",
+                                  }}
+                                >
+                                  {word}&nbsp;
+                                </motion.span>
+                              ))}
+                            </motion.p>
+                          </>
+                        ) : (
+                          <span className="text-right ml-auto">{msg.text}</span>
+                        )}
+                      </div>
+                      {msg.sender === "bot" && (
+                        <PlayAudio text={msg.text} bot_id={selectedBotId} />
+                      )}
+                    </div>
+                    <div className="flex flex-row justify-end ">
+                      <span
+                        className={`text-xs text-neutral-700 text-left mt-[7px] ${
+                          msg.sender == "user" ? "mr-3" : ""
+                        }`}
+                      >
+                        {formatTime(msg.timestamp)}
+                      </span>
+                      {msg.sender === "bot" && (
+                        <div className="flex justify-end px-2 mr-7 relative">
+                          {/* Reaction selector popup */}
+                          {showReactionsFor === msg.id && (
+                            <ReactionSelector msgId={msg.id} />
+                          )}
+
+                          <div className="gap-3 flex flex-row mt-1">
+                            {/* Reaction button - only show on desktop */}
+                            {!isMobile && (
+                              <button
+                                onClick={() => toggleReactions(msg.id)}
+                                className="cursor-pointer text-black/30 hover:text-purple-400 transition-colors mr-2"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <circle cx="12" cy="12" r="10" />
+                                  <path d="M8 14s1.5 2.25 4 2.25 4-2.25 4-2.25" />
+                                  <line x1="9" y1="9" x2="9.01" y2="9" />
+                                  <line x1="15" y1="9" x2="15.01" y2="9" />
+                                </svg>
+                              </button>
+                            )}
+
+                            {/* Thumbs up/down feedback buttons */}
+                            {msg.text.trim() ===
+                            "Sorry, there was an error processing your request. Please try again.".trim() ? (
+                              <></>
+                            ) : msg.feedback === "" ? (
                               <>
-                                <ThumbsUp className="cursor-pointer text-black/30" size={18} onClick={() => handleFeedback("like", msg.id)} />
-                                <ThumbsDown className="cursor-pointer text-black/30" size={18} onClick={() => handleFeedback("dislike", msg.id)} />
+                                <ThumbsUp
+                                  className="cursor-pointer text-black/30"
+                                  size={18}
+                                  onClick={() => handleFeedback("like", msg.id)}
+                                />
+                                <ThumbsDown
+                                  className="cursor-pointer text-black/30"
+                                  size={18}
+                                  onClick={() =>
+                                    handleFeedback("dislike", msg.id)
+                                  }
+                                />
                               </>
                             ) : msg.feedback === "like" ? (
                               <>
-                                <IconThumbUpFilled size={22} className="text-purple-400/100 mt-[-2px]" />
-                                <ThumbsDown className="cursor-pointer text-black/30" size={18} onClick={() => handleFeedback("dislike", msg.id)} />
+                                <IconThumbUpFilled
+                                  size={22}
+                                  className="text-purple-400/100 mt-[-2px]"
+                                />
+                                <ThumbsDown
+                                  className="cursor-pointer text-black/30"
+                                  size={18}
+                                  onClick={() =>
+                                    handleFeedback("dislike", msg.id)
+                                  }
+                                />
                               </>
                             ) : msg.feedback === "dislike" ? (
                               <>
-                                <ThumbsUp className="cursor-pointer text-black/30" size={18} onClick={() => handleFeedback("like", msg.id)} />
-                                <IconThumbDownFilled size={22} className="text-purple-400/100" />
+                                <ThumbsUp
+                                  className="cursor-pointer text-black/30"
+                                  size={18}
+                                  onClick={() => handleFeedback("like", msg.id)}
+                                />
+                                <IconThumbDownFilled
+                                  size={22}
+                                  className="text-purple-400/100"
+                                />
                               </>
-                            ) : <></>}
-                      </div>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -2830,12 +3216,16 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
           className="flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-gray-900 placeholder-gray-200"
           placeholder="Type your message..."
         />
-        <button type="submit" className="p-5 py-2 hover:opacity-60 cursor-pointer md: bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]" >
+        <button
+          type="submit"
+          className="p-5 py-2 hover:opacity-60 cursor-pointer md: bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+        >
           Send
         </button>
       </form>
       <p className="text-xs text-center py-2 text-gray-900">
-        Novi can make mistakes, it's constantly learning from you, please be kind!!
+        Novi can make mistakes, it's constantly learning from you, please be
+        kind!!
       </p>
     </div>
   );
