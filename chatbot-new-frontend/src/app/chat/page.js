@@ -2037,7 +2037,9 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
     });
   }
     */
-  // Helper function to detect if a message should be treated as a system message
+  // Helper function to detect if a message should be treated as a system message.
+  // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
+  //This function helps the chat interface determine which bot responses should be displayed as voice-only messages (with audio controls but no text bubble) versus regular text messages (with both text and a small play button).
   function processBotMessages(messages) {
     let botReplyCount = 0;
     return messages.map((msg) => {
