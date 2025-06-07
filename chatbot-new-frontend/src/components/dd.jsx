@@ -177,7 +177,7 @@ function Diary() {
   }
 
   return (
-    <div className="h-full max-w-7xl mx-auto p-2">
+    <div className="h-full max-w-7xl mx-auto p-2 bg-white/70 backdrop-blur">
       {/* Mobile Detail View */}
       <div
         className={`fixed inset-0 bg-white z-50 md:hidden ${

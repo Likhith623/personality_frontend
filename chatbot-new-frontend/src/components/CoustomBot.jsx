@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 const BotCustomization = ({ selectedBotDetails, onUpdate }) => {
     // const [isEditing, setIsEditing] = useState(false);
-    const [customName, setCustomName] = useState(selectedBotDetails.name);
+    const [customName, setCustomName] = useState(selectedBotDetails?.name || "Unnamed");
     // const [customImage, setCustomImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -15,7 +15,7 @@ const BotCustomization = ({ selectedBotDetails, onUpdate }) => {
         // setIsEditing(false);
         setCustomName(selectedBotDetails.name);
         loadCustomizations();
-    }, [selectedBotDetails.bot_id]);
+    }, [selectedBotDetails?.bot_id || "Unnamed"]);
 
     const loadCustomizations = () => {
         const savedCustomizations = localStorage.getItem(`bot_customization_${selectedBotDetails.bot_id}`);
@@ -72,7 +72,7 @@ const BotCustomization = ({ selectedBotDetails, onUpdate }) => {
             <div className="flex items-center mb-6 mt-4">
                 <div className="relative">
                     <Image
-                        src={previewUrl || selectedBotDetails.src}
+                        src={previewUrl || selectedBotDetails?.src || "Unnamed"}
                         alt="Bot"
                         width={100}
                         height={100}
@@ -105,9 +105,10 @@ const BotCustomization = ({ selectedBotDetails, onUpdate }) => {
                          </h3>
                     {/* )} */}
                     <p className="text-sm text-foreground whitespace-pre-line">
-                    {selectedBotDetails.designation}
+                    {selectedBotDetails?.designation || "Unnamed"}
                      </p>
                 </div>
+
             </div>
             {/* <div className="flex gap-2">
                 {isEditing ? (

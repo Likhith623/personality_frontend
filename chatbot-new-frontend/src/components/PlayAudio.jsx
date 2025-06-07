@@ -5,7 +5,7 @@ import React, { useState,useEffect, useRef } from 'react';
 import { IconLoader, IconPlayerPlayFilled } from '@tabler/icons-react';
 
 // PlayAudio component: Plays the bot's voice for a given message
-const PlayAudio = ({ text,bot_id }) => {
+const PlayAudio = ({ text, bot_id, isWhiteIcon }) => {
   // State to track if audio is currently playing
   const [isPlaying, setIsPlaying] = useState(false);
   // State to track if audio is being loaded/generated
@@ -103,19 +103,21 @@ const PlayAudio = ({ text,bot_id }) => {
         {/* Show loader while loading, play icon otherwise */}
         {isLoading ? (
           <IconLoader 
-            size={22} 
-            className="text-purple-400/100 mt-[-2px] animate-spin"
+            size={30} 
+            className="text-white mt-[-2px] animate-spin"
           />
         ) : isPlaying ? (
           <IconPlayerPlayFilled 
-            size={22} 
-            className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
+          size={22} 
+          className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
           />
+        
         ) : (
           <IconPlayerPlayFilled 
             size={22} 
-            className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
+            className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform `}
           />
+
         )}
       </button>
       {/* Only render the audio element if audioUrl is set */}

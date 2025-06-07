@@ -6,129 +6,206 @@ const botThemes = {
   delhi_mentor_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-gray-900 text-white',
+    backgroundImages: [
+    '/photos/default_bg.png'
+  ],
   },
   delhi_mentor_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-purple-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   delhi_friend_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-blue-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   delhi_friend_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-pink-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   delhi_romantic_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-red-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   delhi_romantic_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-rose-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   japanese_mentor_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-indigo-900 text-white',
-    backgroundImage: '/photos/japanmm_bg.png',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanmm_bg.png',
+    '/photos/default_bg.png'
+  ],
   },
   japanese_mentor_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-indigo-800 text-white',
-    backgroundImage: '/photos/krishna_bg.jpg',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanmf_bg.jpeg',
+    '/photos/default_bg.png'  
+  ],
   },
   japanese_friend_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-blue-800 text-white',
-    backgroundImage: '/photos/japanfm_bg.png',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanfm_bg.png',
+    '/photos/default_bg.png' 
+  ],
   },
   japanese_friend_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-pink-800 text-white',
-    backgroundImage: '/photos/japanff_bg.png',
+    botBubble: 'bg-white text-black',
+    backgroundImages:['/photos/japanff_bg.png',
+    '/photos/default_bg.png'
+  ],
   },
   japanese_romantic_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-red-800 text-white',
-    backgroundImage: '/photos/japanrm_bg.png',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanrm_bg.png',
+    '/photos/default_bg.png'
+  ],
   },
   japanese_romantic_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-rose-800 text-white',
-    backgroundImage: '/photos/japanrf_bg.png',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanrf_bg.png',
+    '/photos/default_bg.png'
+  ],
   },
   parisian_mentor_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-neutral-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   parisian_mentor_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-purple-800 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   parisian_friend_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-blue-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   parisian_friend_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-pink-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   parisian_romantic_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-red-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   parisian_romantic_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-rose-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   berlin_mentor_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-neutral-900 text-white',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinmm_bg.png',
+    '/photos/default_bg.png'  
+  ]
   },
   berlin_mentor_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-purple-900 text-white',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinmf_bg.png',
+    '/photos/default_bg.png' 
+  ],
   },
   berlin_friend_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-blue-900 text-white',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinfm_bg.png',
+    '/photos/default_bg.png'
+  ],
   },
   berlin_friend_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-pink-900 text-white',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinff_bg.png',
+    '/photos/default_bg.png' 
+  ],
   },
   berlin_romantic_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-red-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   berlin_romantic_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-rose-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
   },
   Krishna: {
     background: 'bg-yellow-50',
-    botBubble: 'bg-blue text-white',
-    backgroundImage: '/photos/krishna_bg.jpg', // Place Krishna bg image here
+    botBubble: 'bg-white text-black',
+    backgroundImages:[
+      '/photos/krishna_bg.jpg',
+      '/photos/default_bg.png'
+      ],// Place Krishna bg image here
   },
   Rama: {
     background: 'bg-yellow-50',
-    botBubble: 'bg-yellow-900 text-white',
-    backgroundImage: '/photos/rama_bg.png', // Place Rama bg image here
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      '/photos/rama_bg.png',
+      '/photos/default_bg.png'
+    ], // Place Rama bg image here
   },
   Shiva: {
     background: 'bg-blue-50',
-    botBubble: 'bg-blue-900 text-white',
-    backgroundImage: '/photos/shiva_bg.png', // Place Shiva bg image here
-  },
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/shiva_bg.png',
+    '/photos/default_bg.png'   // Place Shiva background image here
+  ],
+  },  
   Hanuman: {
     background: 'bg-orange-50',
-    botBubble: 'bg-transperant  text-white',
-    backgroundImage: '/photos/hanuman_bg.png', // Place Hanuman bg image here
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/hanuman_bg.png',
+    '/photos/default_bg.png'  ], // Place Hanuman bg image here
   },
   Trimurti: {
     background: 'bg-indigo-50',
-    botBubble: 'bg-indigo-900 text-white',
-    backgroundImage: '/bg-images/trimurti-bg.jpg', // Place Trimurti bg image here
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/trimurthi_bg.png',
+    '/photos/default_bg.png' 
+   ], // Place Trimurti bg image here
   },
 };
 import Link from "next/link";
@@ -503,8 +580,25 @@ const bot_details = [
 export default function SidebarDemo() {
   const [open, setOpen] = useState(false);
   const { selectedBotId } = useBot();
+  const currentTheme = botThemes[selectedBotId] || {};
+  let images = [];
+if (Array.isArray(currentTheme.backgroundImages)) {
+  images = currentTheme.backgroundImages;
+} else if (typeof currentTheme.backgroundImage === 'string') {
+  images = [currentTheme.backgroundImage];
+}
+   console.log("Selected images:", images);
+
+  const [backgroundIndex, setBackgroundIndex] = useState(0);
+  const currentBgImage = images[backgroundIndex % images.length] || "";
+  const handleBackgroundChange = () => {
+    setBackgroundIndex((prev) => (prev + 1) % images.length);
+    setIsWhiteIcon((prev) => !prev); // 🔄 toggle icon color
+  };
+  
   const { selectedTraits, selectedLanguage } = useTraits();
-  console.log(selectedBotId)
+  console.log(selectedBotId);
+  console.log("Using background:", currentBgImage);
 
   const router = useRouter();
 
@@ -512,12 +606,13 @@ export default function SidebarDemo() {
   const selectedBotDetails = bot_details.find(bot => bot.bot_id === selectedBotId);
   // const [selectedTraits, setSelectedTraits] = useState(['Curious', 'Open Minded']);
   // const [selectedLanguage, setSelectedLanguage] = useState("English");
-  const [customName, setCustomName] = useState(selectedBotDetails.name);
+  const [customName, setCustomName] = useState(selectedBotDetails?.name || "Unnamed");
   const [editablePrompts, setEditablePrompts] = useState({});
   const { userDetails } = useUser();
   const [clearChatCalled, setClearChatCalled] = useState(false);
   const [isMemoriesOpen, setIsMemoriesOpen] = useState(false);
   const [isDiaryOpen, setIsDiaryOpen] = useState(false);
+  const [isWhiteIcon, setIsWhiteIcon] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") === "dark";
@@ -536,7 +631,7 @@ export default function SidebarDemo() {
     }
   }, [isDarkMode]);
   
-
+   
   // const traits = [
   //   "Bold/Adventurous",
   //   "Bubbly/Positive",
@@ -585,7 +680,8 @@ export default function SidebarDemo() {
     } else {
       setCustomName(selectedBotDetails.name);
     }
-  }, [selectedBotId, selectedBotDetails.name]);
+  }, [selectedBotId, selectedBotDetails?.name || "Unnamed"
+]);
    
   
   /* The code is checking if `selectedTraits` is an array using `Array.isArray()`. If it is an array, it
@@ -1993,11 +2089,20 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
 
   return (
     <div
-      className={cn(
-        "flex flex-col md:flex-row bg-grey100 dark:bg-gray-100 w-full flex-1  overflow-hidden text-white" ,
-        // for your use case, use `h-screen` instead of `h-[60vh]`
-        "h-screen bg-black shadow-lg"
-      )}>
+    className={cn(
+      "min-h-screen transition-all duration-500",
+      currentTheme.background,
+      "flex flex-col md:flex-row w-full flex-1 overflow-hidden",
+      "h-screen shadow-lg",
+      !currentBgImage && "bg-white" // fallback if no image
+    )}
+
+    style={{
+      backgroundImage: currentBgImage ? `url(${currentBgImage})` : 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+    }}>
       <Sidebar open={open} setOpen={setOpen} animate={false} className="bg-black text-white">
         <SidebarBody className="justify-between gap-5 bg-white text-black dark:bg-black dark:text-white justify-between gap-5">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden justify-between text-white">
@@ -2009,7 +2114,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                 className="text-white"
               />
               <p className="text-sm bg-white text-black dark:bg-black dark:text-white">
-                {selectedBotDetails.quote} 
+                {selectedBotDetails?.quote || "Unnamed"} 
               </p>
               <div className="h-[1px] bg-black/20 mt-4"></div>
               {!["Krishna", "Rama", "Hanuman", "Shiva", "Trimurti"].includes(selectedBotId) && (
@@ -2019,12 +2124,13 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                     {selectedTraits.map((trait, index) => (
                       <button
                         key={index}
-                        className="text-gray-700 rounded-full px-4 py-2 text-base bg-gray-100"
+                        className="text-gray-700 dark:text-gray-200 rounded-full px-4 py-2 text-base bg-gray-100 dark:bg-gray-700"
                       >
                         {trait}
                       </button>
                     ))}
                   </div>
+
                 </div>
               )}
 
@@ -2054,10 +2160,16 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                   <Diary />
                 </CustomModal>
                 <button
+                    onClick={handleBackgroundChange}
+                    className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+                  >
+                    Change Background
+                  </button>
+                <button
                   onClick={() => setIsDarkMode(!isDarkMode)}
-                  className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] dark:bg-gray-700 text-black dark:text-white"
+                  className="fixed bottom-20 right-4 p-1 w-8 h-8 flex items-center justify-center text-xl rounded-full bg-white dark:bg-black text-black dark:text-white shadow hover:opacity-80 transition z-50"
                 >
-                  {isDarkMode ? '🌙 Dark Mode' : '☀️ Light Mode'}
+                  {isDarkMode ? '🌙' : '☀️'}
                 </button>
               </div>
               {/* <div className="w-full max-w-3xl mt-3">
@@ -2124,7 +2236,18 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
           </div>
         </SidebarBody>
       </Sidebar>
-      <Dashboard traits={selectedTraits} language={selectedLanguage} customName={customName} editablePrompts={editablePrompts} clearChatCalled={clearChatCalled} setClearChatCalled={setClearChatCalled} className="bg-white/40 backdrop-blur-md shadow-lg" />
+      <Dashboard 
+      traits={selectedTraits} 
+      language={selectedLanguage} 
+      customName={customName} 
+      editablePrompts={editablePrompts} 
+      clearChatCalled={clearChatCalled} 
+      setClearChatCalled={setClearChatCalled} 
+      backgroundIndex={backgroundIndex}
+      isWhiteIcon = {isWhiteIcon}
+      className="bg-white/40 backdrop-blur-md shadow-lg" 
+      />
+  
     </div>
   );
 }
@@ -2151,7 +2274,7 @@ export const LogoIcon = () => {
     </Link>)
   );
 };
-const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => {
+const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon}) => {
   const { selectedBotId } = useBot();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -2719,7 +2842,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       using JSON.stringify. The request is being made using the fetch API with the specified method
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
-      const response = await fetch("https://novi-be.aigurukul.dev/docs", {
+      const response = await fetch("https://novi-be.aigurukul.dev/docs#/default/generate_response_generate_response__post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -2844,18 +2967,36 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
 
   return (
     <div
-      className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${botThemes[selectedBotId]?.background || 'bg-gray-100'}`}
-      style={
-        botThemes[selectedBotId]?.backgroundImage
-          ? {
-              backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }
-          : undefined
-      }
-    >
+  className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
+    botThemes[selectedBotId]?.background || "bg-gray-100"
+  }`}
+  style={
+    botThemes[selectedBotId]?.backgroundImages
+      ? (() => {
+          const bg = botThemes[selectedBotId].backgroundImages[backgroundIndex];
+          if (bg.startsWith("http") || bg.startsWith("/")) {
+            // Image background
+            return {
+              backgroundImage: `url('${bg}')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            };
+          } else if (bg.startsWith("radial-gradient")) {
+            // Gradient background
+            return {
+              backgroundImage: bg,
+            };
+          } else {
+            // Solid color
+            return {
+              backgroundColor: bg,
+            };
+          }
+        })()
+      : undefined
+  }
+>
       {/* ...existing background blobs can be kept or removed for clarity... */}
       <ScrollArea className="flex-1">
         <div className="px-1 md:px-2">
@@ -2901,7 +3042,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
                   >
                     {msg.sender === 'bot' ? (
                       <>
-                        <motion.p className="text-white">
+                        <motion.p className="">
                           {msg.text.split(" ").map((word, i) => (
                             <motion.span
                               key={i}
@@ -2924,7 +3065,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
                       <span className="text-right ml-auto">{msg.text}</span>
                     )}
                   </div>
-                  {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} />}
+                  {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} isWhiteIcon={isWhiteIcon} />
+}
                 </div>
                 <div className="flex flex-row justify-end ">
                   <span className={`text-xs text-neutral-700 text-left mt-[7px] ${msg.sender == 'user' ? "mr-3" : ""}`}>
