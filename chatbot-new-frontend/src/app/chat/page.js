@@ -52,6 +52,7 @@ import trimurti from "@/photos/trimurti.jpg";
 
 import BotCustomization from "@/components/CoustomBot";
 import PlayAudio from "@/components/PlayAudio";
+import VoiceCall from "@/components/VoiceCall";
 import { FloatingDockDemo } from "@/components/BottomMenuBar";
 import { Input } from "@/components/ui/input";
 import CustomModal from "@/components/CustomModal";
@@ -1999,6 +2000,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isVoiceCallOpen, setIsVoiceCallOpen] = useState(false);
   const messagesEndRef = useRef(null);
   const router = useRouter();
   const { userDetails } = useUser();
@@ -2717,6 +2719,136 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   };
 
   /**
+   * Handle voice call messages from VoiceCall component - add processed messages to chat
+   * This function receives already processed messages from the VoiceCall component
+   * and simply adds them to the chat without making additional API calls
+   * @param {Object} message - The message object from VoiceCall component
+   */
+  const handleVoiceCallMessage = async (message) => {
+    if (!message) return;
+
+    try {
+      // Add the message to chat (this comes from VoiceCall's processVoiceInput)
+      const currentTime = new Date();
+      const messageWithTimestamp = {
+        ...message,
+        timestamp: message.timestamp || currentTime
+      };
+
+      console.log("Adding voice call message to chat:", messageWithTimestamp);
+      
+      setMessages(prev => [...prev, messageWithTimestamp]);
+      scrollToBottom();
+
+    } catch (error) {
+      logClientError(error, { source: 'Voice Call Message Handler' });
+      console.error("Error handling voice call message:", error);
+    }
+  };
+
+  /**
+   * Legacy function for handling transcribed text (kept for backwards compatibility)
+   * @param {string} transcribedText - The transcribed text from voice input
+   */
+  const handleTranscribedTextMessage = async (transcribedText) => {
+    if (!transcribedText?.trim()) return;
+
+    const currentTime = new Date();
+
+    try {
+      // Add user's voice message to chat
+      setMessages(prev => [...prev, { 
+        text: transcribedText, 
+        sender: 'user', 
+        timestamp: currentTime,
+        feedback: "",
+        reaction: "",
+        isVoiceMessage: true
+      }]);
+
+      setIsTyping(true);
+      scrollToBottom();
+
+      // Convert messages to OpenAI format
+      const convertToOpenAIFormat = (msgs) => msgs.map(msg => ({
+        role: msg.sender === 'bot' ? 'assistant' : 'user',
+        content: msg.text
+      }));
+
+      // Create payload for voice call API
+      const payload = {
+        message: transcribedText,
+        bot_id: selectedBotId,
+        bot_prompt: editablePrompts[selectedBotId],
+        user_name: userDetails.name,
+        history: convertToOpenAIFormat(messages),
+        isVoiceCall: true
+      };
+
+      console.log("Voice call payload:", payload);
+
+      // Send to voice call API endpoint - Using local development server
+      const response = await fetch('http://127.0.0.1:8000/voice-call', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Voice call API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Voice call response:", data);
+
+      setIsTyping(false);
+
+      // Add bot's response to chat
+      if (data.response) {
+        const shouldBeSystemMessage = isSystemMessageContent(data.response);
+        
+        setMessages(prev => [...prev, {
+          text: data.response,
+          sender: 'bot',
+          id: data.message_id || `voice_${Date.now()}`,
+          feedback: "",
+          reaction: "",
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: shouldBeSystemMessage,
+          voice_only: true, // Mark as voice-only response
+          audioUrl: data.audioUrl // If the API returns audio URL
+        }]);
+      }
+
+      scrollToBottom();
+      return data; // Return the response for the VoiceCall component
+
+    } catch (error) {
+      logClientError(error, { source: 'Voice Call API' });
+      console.error("Voice call error:", error);
+      setIsTyping(false);
+      
+      const errorMessage = "Sorry, there was an error processing your voice message. Please try again.";
+      setMessages(prev => [...prev, {
+        text: errorMessage,
+        sender: 'bot',
+        id: `error_${Date.now()}`,
+        feedback: "",
+        reaction: "",
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: true
+      }]);
+      
+      scrollToBottom();
+      throw error; // Re-throw for VoiceCall component to handle
+    }
+  };
+
+  /**
  * The TypingIndicator function creates a visual typing indicator with animated bouncing dots.
  */
   const TypingIndicator = () => (
@@ -2917,6 +3049,19 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
           className="flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-gray-900 placeholder-gray-200"
           placeholder="Type your message..."
         />
+        <button 
+          type="button"
+          onClick={() => setIsVoiceCallOpen(true)}
+          className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+          title="Start Voice Call"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <path d="M12 19v3"/>
+            <path d="M8 22h8"/>
+          </svg>
+        </button>
         <button type="submit" className="p-5 py-2 hover:opacity-60 cursor-pointer md: bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]" >
           Send
         </button>
@@ -2924,6 +3069,17 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       <p className="text-xs text-center py-2 text-gray-900">
         Novi can make mistakes, it's constantly learning from you, please be kind!!
       </p>
+      
+      {/* Voice Call Component */}
+      {isVoiceCallOpen && (
+        <VoiceCall
+          isOpen={isVoiceCallOpen}
+          onClose={() => setIsVoiceCallOpen(false)}
+          onMessageReceived={handleVoiceCallMessage}
+          editablePrompts={editablePrompts}
+          messages={messages}
+        />
+      )}
     </div>
   );
 };
