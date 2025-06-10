@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/support/UserContext';
 import { Textarea } from '../ui/textarea';
@@ -32,6 +32,98 @@ function Profile() {
   const [dateOfBirth, setDateOfBirth] = useState(userDetails.date_of_birth || '')
   const [gender, setGender] = useState(userDetails.gender || '')
   const [isEditing, setIsEditing] = useState(false)
+  const [pushNotificationsEnabled, setPushNotificationsEnabled] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  useEffect(() => {
+    const registerServiceWorker = async () => {
+      try {
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.register('/sw.js');
+          console.log('Service Worker registered with scope:', registration.scope);
+          
+          // Check if user has already subscribed
+          const subscription = await registration.pushManager.getSubscription();
+          setPushNotificationsEnabled(!!subscription);
+        }
+      } catch (error) {
+        console.error('Service Worker registration failed:', error);
+      }
+    };
+
+    registerServiceWorker();
+  }, []);
+
+  const handlePushNotificationToggle = async () => {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      alert('Push notifications are not supported in your browser');
+      return;
+    }
+
+    setIsSubscribing(true);
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      
+      if (!pushNotificationsEnabled) {
+        // Request notification permission
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          throw new Error('Notification permission denied');
+        }
+
+        // Convert VAPID public key to Uint8Array
+        const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+        if (!vapidPublicKey) {
+          throw new Error('VAPID public key is not configured');
+        }
+
+        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+        
+        // Subscribe to push notifications
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidKey
+        });
+
+        console.log('Push Notification subscription:', subscription);
+
+        // Store subscription in localStorage
+        localStorage.setItem('pushSubscription', JSON.stringify(subscription));
+        
+        setPushNotificationsEnabled(true);
+      } else {
+        // Unsubscribe from push notifications
+        const subscription = await registration.pushManager.getSubscription();
+        
+        if (subscription) {
+          await subscription.unsubscribe();
+          localStorage.removeItem('pushSubscription');
+          setPushNotificationsEnabled(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling push notifications:', error);
+      alert('Failed to update push notification settings: ' + error.message);
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
+  // Helper function to convert VAPID key
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
 
   const handleLogout = async () => {
     localStorage.removeItem('userDetails');
@@ -177,19 +269,33 @@ function Profile() {
               <h3 className="font-medium mb-4 text-gray-800">Notification Preferences</h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Email Notifications</span>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-400/80 peer-checked:via-pink-400/80 peer-checked:to-orange-400/80"></div>
-                  </label>
-                </div>
-                <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Push Notifications</span>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-400/80 peer-checked:via-pink-400/80 peer-checked:to-orange-400/80"></div>
-                  </label>
+                  <button
+                    onClick={handlePushNotificationToggle}
+                    disabled={isSubscribing}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:ring-offset-2 ${
+                      pushNotificationsEnabled 
+                        ? 'bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80' 
+                        : 'bg-gray-200'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        pushNotificationsEnabled ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
                 </div>
+                {isSubscribing && (
+                  <p className="text-sm text-gray-600">Updating notification settings...</p>
+                )}
+                {!isSubscribing && (
+                  <p className="text-sm text-gray-600">
+                    {pushNotificationsEnabled 
+                      ? 'Push notifications are enabled' 
+                      : 'Push notifications are disabled'}
+                  </p>
+                )}
               </div>
             </div>
           </div>

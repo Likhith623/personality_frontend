@@ -4,7 +4,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { motion, AnimatePresence } from "framer-motion";
-import { IconLoader } from '@tabler/icons-react';
+import { IconLoader, IconPlayerPlayFilled, IconPlayerPauseFilled } from '@tabler/icons-react';
+
 
 // Import avatar images from src/photos
 import delhi_mentor_male from "@/photos/delhi_mentor_male.jpeg";
@@ -146,7 +147,8 @@ const LoadingDots = () => {
 };
 
 // PlayAudio component: Plays the bot's voice for a given message
-const PlayAudio = ({ text, bot_id, minimal = false }) => {
+const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -366,21 +368,23 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
         className="flex items-center justify-center rounded-full hover:bg-gray-100 p-2 transition-colors"
         style={{ width: '32px', height: '32px', minWidth: '32px' }}
       >
-        {isLoading ? (
-          <motion.div 
-            className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-        ) : isPlaying ? (
-          <svg width="18" height="18" viewBox="0 0 22 22">
-            <rect x="5" y="4" width="3" height="12" rx="1.2" fill="#888" />
-            <rect x="12" y="4" width="3" height="12" rx="1.2" fill="#888" />
-          </svg>
-        ) : (
-          <svg width="18" height="18" viewBox="0 0 22 22">
-            <polygon points="6,4 16,11 6,18" fill="#888" />
-          </svg>
+
+         {isLoading ? (
+            <IconLoader 
+              size={30} 
+              className="text-white mt-[-2px] animate-spin"
+            />
+          ) : isPlaying ? (
+            <IconPlayerPauseFilled 
+              size={22} 
+              className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
+            />
+          ) : (
+            <IconPlayerPlayFilled 
+              size={22} 
+              className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
+            />
+          )}
         )}
         <audio
           ref={audioElement}

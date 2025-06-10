@@ -437,7 +437,7 @@ export default function Memories() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-full p-4 md:p-6 rounded-xl shadow-2xl">
+    <div className="flex flex-col md:flex-row h-full p-4 md:p-6 rounded-xl shadow-2xl bg-white/70 backdrop-blur">
       {/* Left Panel - Categories */}
       <div className="w-full md:w-1/3 lg:w-1/4 p-4 md:p-6">
         <h1 className="text-lg md:text-2xl font-bold mb-4 md:mb-6 text-[#36454f]">
