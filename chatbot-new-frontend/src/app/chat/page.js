@@ -1,5 +1,93 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+
+
+const botThemes = {
+  delhi_mentor_male: {
+    
+    botBubble: 'bg-slate-100 text-black shadow-md',
+    userBubble: 'bg-amber-100 text-black shadow-md',
+    backgroundImage: '/bg-images/delhi_mentor_male-bg.jpg',
+  },
+  delhi_mentor_female: {
+    
+    botBubble: 'bg-white text-black  shadow-md',
+    userBubble: 'bg-rose-100 text-black shadow-md',
+    backgroundImage: '/bg-images/delhi_mentor_female-bg.jpg',
+  },  delhi_friend_male: {
+    
+    botBubble: 'bg-amber-200 text-black  shadow-md',
+    userBubble: 'bg-sky-100 text-black shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/delhi_friend_male-bg.jpg',
+  },
+  delhi_friend_female: {
+    
+    botBubble: 'bg-rose-50 text-black shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-emerald-100 text-black shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/delhi_friend_female-bg.jpg',
+  },
+  delhi_romantic_male: {
+    
+    botBubble: 'bg-purple-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-yellow-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/delhi_romantic_male-bg.jpg',
+  },
+  delhi_romantic_female: {
+    
+    botBubble: 'bg-pink-200 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-yellow-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/delhi_romantic_female-bg.jpg',
+  },  parisian_mentor_male: {
+    
+    botBubble: 'bg-white text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-stone-200 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_mentor_male-bg.jpg',
+  },
+  parisian_mentor_female: {
+    
+    botBubble: 'bg-amber-50 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-indigo-50 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_mentor_female-bg.jpg',
+  },
+  parisian_friend_male: {
+    
+    botBubble: 'bg-blue-100 text-blue-900 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-green-100 text-green-900 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_friend_male-bg.jpg',
+  },
+  parisian_friend_female: {
+    
+    botBubble: 'bg-gray-100 text-gray-900 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-indigo-200 text-indigo-900 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_friend_female-bg.jpg',
+  },
+  parisian_romantic_male: {
+    
+    botBubble: 'bg-gray-200 text-gray-900 shadow-md',
+    userBubble: 'bg-white text-gray-900 shadow-md',
+    backgroundImage: '/bg-images/parisian_romantic_male-bg.jpg',
+  },
+  parisian_romantic_female: {
+    
+    botBubble: 'bg-rose-200 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-sky-200 text-neutral-800 backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_romantic_female-bg.jpg',
+  },
+  
+  berlin_romantic_male: {
+   
+    botBubble: 'bg-orange-100 text-black shadow-md',
+    userBubble: 'bg-yellow-100 text-black shadow-md',
+    backgroundImage: '/bg-images/berlin_romantic_male-bg.jpg',
+  },
+  berlin_romantic_female: {
+    
+    botBubble: 'bg-orange-200 text-black shadow-md',
+    userBubble: 'bg-orange-100 text-black shadow-md',
+    backgroundImage: '/bg-images/berlin_romantic_female-bg.jpg',
+  },
+
+};
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -367,6 +455,8 @@ const bot_details = [
     bot_id: "Trimurti",
   }
 ];
+
+
 
 export default function SidebarDemo() {
   const [open, setOpen] = useState(false);
@@ -2427,6 +2517,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
             indicates that the code is using asynchronous JavaScript, likely within an async
             function. */
+          
             const res = await fetch('https://novi.aigurukul.dev/cv/response/reminder', {
               method: 'POST',
               headers: {
@@ -2436,7 +2527,9 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
             })
 
             const data = await res.json();
+            
             console.log(data);
+            
 
             // Add reminder message to chat
             if (data.error) {
@@ -2667,7 +2760,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
         {emoticons.map((emoticon, index) => (
           <span 
             key={index} 
-            className="cursor-pointer hover:scale-125 transition-transform duration-200" 
+            className="cursor-pointer" 
             onClick={() => handleReaction(msgId, emoticon)}
           >
             {emoticon}
@@ -2685,12 +2778,20 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
   );
 
   return (
-    <div className="flex flex-col flex-1 bg-gray-100 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden">
-      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-pink-400 rounded-full blur-[120px] opacity-50"></div>
-        <div className="absolute top-1/3 right-1/4 w-[350px] h-[350px] bg-orange-300 rounded-full blur-[100px] opacity-60"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-[450px] h-[450px] bg-red-200 rounded-full blur-[140px] opacity-50"></div>
-      </div>
+    <div
+      className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${botThemes[selectedBotId]?.background || 'bg-gray-100'}`}
+      style={
+        botThemes[selectedBotId]?.backgroundImage
+          ? {
+              backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }
+          : undefined
+      }
+    >
+      {/* ...existing background blobs can be kept or removed for clarity... */}
       <ScrollArea className="flex-1">
         <div className="px-1 md:px-2">
          {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
@@ -2706,6 +2807,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
                 {msg.sender === 'bot' && msg.reaction && (
                   <div 
                     className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
+                    style={{ color: '#FFFFFF' }}
                     onClick={() => toggleRemovalTooltip(msg.id)}
                   >
                     <span className="text-lg">{msg.reaction}</span>
@@ -2715,19 +2817,15 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
                 )}
                 
                 <div className="flex flex-row items-center gap-2">
-                  <div className={`px-4 py-2 rounded-2xl ${msg.sender === 'bot'
-                    ? `bg-white/20 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-gray-900 placeholder-gray-200 ${
-      highlightedMessage === msg.id ? 'bg-orange-200/30' : ''
-    }`
-                    : `bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
-      highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
-    }`
-                    } w-full text-left`}
-                    style={{
-                      userSelect: 'none',
-                      WebkitUserSelect: 'none',
-                      WebkitTouchCallout: 'none'
-                    }}
+    <div className={`px-4 py-2 rounded-2xl ${msg.sender === 'bot'
+      ? `${botThemes[selectedBotId]?.botBubble || 'bg-neutral-900 text-white'} border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${highlightedMessage === msg.id ? 'bg-orange-200/30' : ''}`
+      : `${botThemes[selectedBotId]?.userBubble || 'bg-purple-400/80 text-white'} border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${highlightedMessage === msg.id ? 'bg-orange-200/90' : ''}`
+      } w-full text-left`}
+      style={{
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        WebkitTouchCallout: 'none'
+      }}
                  // Add touch handlers for long press on bot messages only
                     onTouchStart={msg.sender === 'bot' ? (e) => {
                       e.preventDefault(); // Prevent default touch behavior
@@ -2739,7 +2837,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
                   >
                     {msg.sender === 'bot' ? (
                       <>
-                        <motion.p className="text-gray-700 dark:text-gray-700">
+                        <motion.p>
                           {msg.text.split(" ").map((word, i) => (
                             <motion.span
                               key={i}
@@ -2762,23 +2860,22 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
                       <span className="text-right ml-auto">{msg.text}</span>
                     )}
                   </div>
-                  {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} />}
-                </div>
+                   {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} />}
+</div>
                 <div className="flex flex-row justify-end ">
-                  <span className={`text-xs text-neutral-700 text-left mt-[7px] ${msg.sender == 'user' ? "mr-3" : ""}`}>
-                      {formatTime(msg.timestamp)}
-                      </span>
+                  <span className={`text-xs text-white text-left mt-[7px] ${msg.sender == 'user' ? "mr-3" : ""}`}>
+                    {formatTime(msg.timestamp)}
+                  </span>
                   {msg.sender === 'bot' && (
                     <div className="flex justify-end px-2 mr-7 relative">
                       {/* Reaction selector popup */}
                       {showReactionsFor === msg.id && <ReactionSelector msgId={msg.id} />}
-                      
                       <div className="gap-3 flex flex-row mt-1">
                         {/* Reaction button - only show on desktop */}
                         {!isMobile && (
                           <button
                             onClick={() => toggleReactions(msg.id)}
-                            className="cursor-pointer text-black/30 hover:text-purple-400 transition-colors mr-2"
+                            className="cursor-pointer text-white hover:text-white transition-colors mr-2"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <circle cx="12" cy="12" r="10" />
@@ -2788,26 +2885,42 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
                             </svg>
                           </button>
                         )}
-                        
                         {/* Thumbs up/down feedback buttons */}
                         {msg.text.trim() === "Sorry, there was an error processing your request. Please try again.".trim() ?
-                            <></>
+                         <></>
+
                             :
+
                             msg.feedback === "" ? (
+
                               <>
-                                <ThumbsUp className="cursor-pointer text-black/30" size={18} onClick={() => handleFeedback("like", msg.id)} />
-                                <ThumbsDown className="cursor-pointer text-black/30" size={18} onClick={() => handleFeedback("dislike", msg.id)} />
+
+                                <ThumbsUp className="cursor-pointer text-white" size={18} onClick={() => handleFeedback("like", msg.id)} />
+
+                                <ThumbsDown className="cursor-pointer text-white" size={18} onClick={() => handleFeedback("dislike", msg.id)} />
+
                               </>
+
                             ) : msg.feedback === "like" ? (
+
                               <>
-                                <IconThumbUpFilled size={22} className="text-purple-400/100 mt-[-2px]" />
-                                <ThumbsDown className="cursor-pointer text-black/30" size={18} onClick={() => handleFeedback("dislike", msg.id)} />
+
+                                <IconThumbUpFilled size={22} className="text-white mt-[-2px]" />
+
+                                <ThumbsDown className="cursor-pointer text-white" size={18} onClick={() => handleFeedback("dislike", msg.id)} />
+
                               </>
+
                             ) : msg.feedback === "dislike" ? (
+
                               <>
-                                <ThumbsUp className="cursor-pointer text-black/30" size={18} onClick={() => handleFeedback("like", msg.id)} />
-                                <IconThumbDownFilled size={22} className="text-purple-400/100" />
+
+                                <ThumbsUp className="cursor-pointer text-white" size={18} onClick={() => handleFeedback("like", msg.id)} />
+
+                                <IconThumbDownFilled size={22} className="text-white" />
+
                               </>
+
                             ) : <></>}
                       </div>
                     </div>

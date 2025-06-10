@@ -104,17 +104,17 @@ const PlayAudio = ({ text,bot_id }) => {
         {isLoading ? (
           <IconLoader 
             size={22} 
-            className="text-purple-400/100 mt-[-2px] animate-spin"
+            className="text-white mt-[-2px] animate-spin"
           />
         ) : isPlaying ? (
           <IconPlayerPlayFilled 
             size={22} 
-            className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
+            className="text-white mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
           />
         ) : (
           <IconPlayerPlayFilled 
             size={22} 
-            className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
+            className="text-white mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
           />
         )}
       </button>
