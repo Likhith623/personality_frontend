@@ -1,13 +1,13 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { BotProvider } from "@/support/BotContext";
 import { UserProvider } from "@/support/UserContext";
 import { TraitsProvider } from "@/support/TraitsContext";
 import Script from "next/script";
 import React from "react";
 import GlobalErrorListener from "@/components/GlobalErrorListener";
+import ThemeToggleWrapper from "@/components/ThemeToggleWrapper";
 // const GA_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS;
 
 const geistSans = Geist({
@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
               <UserProvider>
                 <GlobalErrorListener />
                 {children}
-                <ThemeToggle />
+                <ThemeToggleWrapper />
               </UserProvider>
             </TraitsProvider>
           </BotProvider>

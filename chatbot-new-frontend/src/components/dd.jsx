@@ -146,7 +146,7 @@ function Diary() {
         setSelectedMonth("");
         setSelectedLog(null);
       }
-      setRefreshTrigger(prev => prev + 1);  //triggers when there is deletion of the summaries
+      setRefreshTrigger((prev) => prev + 1); //triggers when there is deletion of the summaries
     } catch (err) {
       console.error("Failed to delete summaries", err);
     }
@@ -154,68 +154,56 @@ function Diary() {
 
   if (Object.keys(summaries).length === 0) {
     return (
-      <div className="h-full max-w-7xl mx-auto flex flex-col">
-               {" "}
-        <div className="flex-none px-6 border-b border-gray-200">
-                   {" "}
+      <div className="h-full max-w-7xl mx-auto flex flex-col bg-white dark:bg-black">
+        <div className="flex-none px-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex">
-                       {" "}
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
               Diary
             </h1>
-                     {" "}
           </div>
-                 {" "}
         </div>
-               {" "}
-        <div className="flex-1 flex items-center justify-center text-gray-500">
-                    No summaries available.        {" "}
+        <div className="flex-1 flex items-center justify-center text-gray-500 dark:text-gray-400">
+          No summaries available.
         </div>
-             {" "}
       </div>
     );
   }
 
   return (
-    <div className="h-full max-w-7xl mx-auto p-2">
+    <div className="h-full max-w-7xl mx-auto p-2 bg-white/70 backdrop-blur">
       {/* Mobile Detail View */}
       <div
-        className={`fixed inset-0 bg-white z-50 md:hidden ${
+        className={`fixed inset-0 bg-white dark:bg-black z-50 md:hidden ${
           isDetailView ? "block" : "hidden"
         }`}
       >
-        <div className="p-4 flex items-center gap-4 border-b border-gray-200">
+        <div className="p-4 flex items-center gap-4 border-b border-gray-200 dark:border-gray-700">
           <button onClick={() => setIsDetailView(false)}>
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5 text-gray-800 dark:text-white" />
           </button>
-          <h2 className="text-xl font-semibold">{selectedLog?.date}</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+            {selectedLog?.date}
+          </h2>
         </div>
-        {/* Add a scrollable container for the content */}
         <div className="overflow-y-auto h-[calc(100%-70px)]">
           <div className="p-6">
-            <p className="text-lg leading-relaxed whitespace-pre-line">
+            <p className="text-lg leading-relaxed whitespace-pre-line text-gray-800 dark:text-white">
               {selectedLog?.content}
             </p>
           </div>
         </div>
-        
-        {/* <div className="p-6">
-          <p className="text-lg leading-relaxed whitespace-pre-line">
-            {selectedLog?.content}
-          </p>
-        </div> */}
       </div>
 
       <div className="h-full flex flex-col overflow-hidden">
         {/* Header Section */}
-        <div className="p-2 pt-4 flex-none md:px-6 md:py-6 border-b border-gray-200">
+        <div className="p-2 pt-4 flex-none md:px-6 md:py-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
               Diary
             </h1>
             <button
               onClick={() => setEditMode(!editMode)}
-              className="sm:py-2 px-6 mr-12 md:mr-20 py-2 text-md font-semibold rounded-2xl bg-white/30 hover:bg-gray-300 text-gray-700 transition-all duration-300"
+              className="sm:py-2 px-6 mr-12 md:mr-20 py-2 text-md font-semibold rounded-2xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-white transition-all duration-300"
             >
               {editMode ? "Cancel" : "Edit"}
             </button>
@@ -225,8 +213,7 @@ function Diary() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           {/* Left Panel - Diary Entries */}
-
-          <div className="mt-4 md:mt-0 w-full md:w-2/5 lg:w-1/3 flex flex-col h-full border-r border-gray-200">
+          <div className="mt-4 md:mt-0 w-full md:w-2/5 lg:w-1/3 flex flex-col h-full border-r border-gray-200 dark:border-gray-700">
             <div className="p-2 flex-none md:p-6">
               <MonthDropdown
                 summaries={summaries}
@@ -243,23 +230,23 @@ function Diary() {
                     ref={(el) => (monthRefs.current[month] = el)}
                     className="space-y-3"
                   >
-                    <h2 className="text-md font-bold text-gray-700 top-0 py-2">
+                    <h2 className="text-md font-bold text-gray-700 dark:text-gray-300 top-0 py-2">
                       {month}
                     </h2>
                     {summaries[month]?.map((log, index) => (
                       <div key={index} className="flex items-center gap-3">
                         {editMode && (
                           <div
-                            className={`w-5 h-5 cursor-pointer rounded-md border-2 border-white/50 transition-all duration-200 flex items-center justify-center ${
+                            className={`w-5 h-5 cursor-pointer rounded-md border-2 border-gray-300 dark:border-gray-600 transition-all duration-200 flex items-center justify-center ${
                               selectedEntries.includes(log.isoDate)
-                                ? "bg-white/40"
-                                : "bg-white/10"
+                                ? "bg-gray-200 dark:bg-gray-700"
+                                : "bg-white dark:bg-gray-800"
                             }`}
                             onClick={() => toggleEntrySelection(log.isoDate)}
                           >
                             {selectedEntries.includes(log.isoDate) && (
                               <svg
-                                className="w-3 h-3 text-gray-800 fill-current"
+                                className="w-3 h-3 text-gray-800 dark:text-white fill-current"
                                 viewBox="0 0 20 20"
                               >
                                 <path
@@ -271,24 +258,21 @@ function Diary() {
                             )}
                           </div>
                         )}
-                        <button
-                          className={`w-full p-3 rounded-lg text-left transition-all duration-200 ${
-                            selectedLog?.isoDate === log.isoDate
-                              ? "bg-white/50"
-                              : "bg-white/20 hover:bg-white/30 text-gray-700"
-                          }`}
+                        <div
                           onClick={() => {
                             setSelectedLog(log);
-                            if (window.innerWidth < 768) {
-                              setIsDetailView(true);
-                            }
+                            setIsDetailView(true);
                           }}
+                          className={`flex-1 p-3 rounded-lg cursor-pointer transition-all duration-300 ${
+                            selectedLog?.isoDate === log.isoDate
+                              ? "bg-gray-100 dark:bg-gray-800"
+                              : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                          }`}
                         >
-                          <div className="font-semibold mb-1">{log.date}</div>
-                          <div className="text-sm opacity-90 line-clamp-2">
-                            {log.content}
-                          </div>
-                        </button>
+                          <p className="text-gray-800 dark:text-white">
+                            {log.date}
+                          </p>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -332,15 +316,15 @@ function Diary() {
             <div className="flex-1 p-6 md:p-12">
               {selectedLog ? (
                 <div className="max-w-2xl">
-                  <h2 className="text-3xl md:text-2xl font-bold text-gray-800 mb-4">
+                  <h2 className="text-3xl md:text-2xl font-bold text-gray-800 dark:text-white mb-4">
                     {selectedLog.date}
                   </h2>
-                  <p className="text-md text-gray-700 whitespace-pre-line">
+                  <p className="text-md text-gray-700 dark:text-gray-300 whitespace-pre-line">
                     {selectedLog.content}
                   </p>
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-500">
+                <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
                   Select a diary entry to view its content.
                 </div>
               )}
@@ -360,13 +344,12 @@ function MonthDropdown({ summaries, selectedMonth, handleMonthSelect }) {
   const toggleOpen = () => setIsOpen(!isOpen);
 
   return (
-    <div className="relative w-full">
+    <div className="relative">
       <button
-        type="button"
         onClick={toggleOpen}
-        className="w-full p-3 bg-white/70 backdrop-blur-sm border border-white/20 text-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent flex justify-between items-center"
+        className="w-full flex items-center justify-between p-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
       >
-        {selectedMonth || "March 2025"}
+        <span>{selectedMonth}</span>
         {isOpen ? (
           <ChevronUp className="w-5 h-5" />
         ) : (
@@ -374,23 +357,21 @@ function MonthDropdown({ summaries, selectedMonth, handleMonthSelect }) {
         )}
       </button>
       {isOpen && (
-        <div className="absolute mt-2 top-full left-0 right-0 bg-gray-100 backdrop-blur-3xl shadow-md rounded-xl z-10 overflow-hidden">
-          <div className="py-2 px-3">
-            {Object.keys(summaries).map((month) => (
-              <button
-                key={month}
-                onClick={() => {
-                  handleMonthSelect(month);
-                  toggleOpen();
-                }}
-                className={`w-full rounded-full text-left px-4 py-2 hover:bg-gray-300 ${
-                  selectedMonth === month ? "bg-gray-200" : ""
-                }`}
-              >
-                {month}
-              </button>
-            ))}
-          </div>
+        <div className="absolute z-10 w-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+          {Object.keys(summaries).map((month) => (
+            <button
+              key={month}
+              onClick={() => {
+                handleMonthSelect(month);
+                setIsOpen(false);
+              }}
+              className={`w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-800 dark:text-white ${
+                selectedMonth === month ? "bg-gray-100 dark:bg-gray-700" : ""
+              }`}
+            >
+              {month}
+            </button>
+          ))}
         </div>
       )}
     </div>

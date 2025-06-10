@@ -1,79 +1,329 @@
 // PlayAudio.jsx
 // This component provides a play button to generate and play a bot's voice for a given message using a backend TTS API.
 
-import React, { useState,useEffect, useRef } from 'react';
-import { IconLoader, IconPlayerPlayFilled } from '@tabler/icons-react';
+import React, { useRef, useEffect, useState } from "react";
+import WaveSurfer from "wavesurfer.js";
+import { motion, AnimatePresence } from "framer-motion";
+import { IconLoader, IconPlayerPlayFilled, IconPlayerPauseFilled } from '@tabler/icons-react';
+
+
+// Import avatar images from src/photos
+import delhi_mentor_male from "@/photos/delhi_mentor_male.jpeg";
+import delhi_mentor_female from "@/photos/delhi_mentor_female.jpeg";
+import delhi_friend_male from "@/photos/delhi_friend_male.jpeg";
+import delhi_friend_female from "@/photos/delhi_friend_female.jpeg";
+import delhi_romantic_male from "@/photos/delhi_romantic_male.jpeg";
+import delhi_romantic_female from "@/photos/delhi_romantic_female.jpeg";
+
+import japanese_mentor_male from "@/photos/japanese_mentor_male.jpeg";
+import japanese_mentor_female from "@/photos/japanese_mentor_female.jpeg";
+import japanese_friend_male from "@/photos/japanese_friend_male.jpeg";
+import japanese_friend_female from "@/photos/japanese_friend_female.jpeg";
+import japanese_romantic_female from "@/photos/japanese_romantic_female.jpeg";
+import japanese_romantic_male from "@/photos/japanese_romantic_male.jpeg";
+
+import parisian_mentor_male from "@/photos/parisian_mentor_male.jpg";
+import parisian_mentor_female from "@/photos/parisian_mentor_female.png";
+import parisian_friend_male from "@/photos/parisian_friend_male.jpg";
+import parisian_friend_female from "@/photos/parisian_friend_female.jpg";
+import parisian_romantic_female from "@/photos/parisian_romantic_female.png";
+import parisian_romantic_male from "@/photos/parisian_romantic_male.jpg";
+
+import berlin_mentor_male from "@/photos/berlin_mentor_male.jpeg";
+import berlin_mentor_female from "@/photos/berlin_mentor_female.jpeg";
+import berlin_friend_male from "@/photos/berlin_friend_male.jpeg";
+import berlin_friend_female from "@/photos/berlin_friend_female.jpeg";
+import berlin_romantic_male from "@/photos/berlin_romantic_male.jpeg";
+import berlin_romantic_female from "@/photos/berlin_romantic_female.jpeg";
+
+import lord_krishna from "@/photos/lord_krishna.jpg";
+import rama_god from "@/photos/rama_god.jpeg";
+import shiva_god from "@/photos/shiva_god.jpeg";
+import trimurti from "@/photos/trimurti.jpg";
+import hanuman_god from "@/photos/hanuman_god.jpeg";
+
+import defaultAvatar from "@/photos/defaultforvoice.png";
+
+// Map bot_id to avatar image
+const avatarMap = {
+  delhi_mentor_male,
+  delhi_mentor_female,
+  delhi_friend_male,
+  delhi_friend_female,
+  delhi_romantic_male,
+  delhi_romantic_female,
+
+  japanese_mentor_male,
+  japanese_mentor_female,
+  japanese_friend_male,
+  japanese_friend_female,
+  japanese_romantic_female,
+  japanese_romantic_male,
+
+  parisian_mentor_male,
+  parisian_mentor_female,
+  parisian_friend_male,
+  parisian_friend_female,
+  parisian_romantic_female,
+
+  berlin_mentor_male,
+  berlin_mentor_female,
+  berlin_friend_male,
+  berlin_friend_female,
+  berlin_romantic_male,
+  berlin_romantic_female,
+
+  Krishna: lord_krishna,
+  Rama: rama_god,
+  Shiva: shiva_god,
+  Trimurti: trimurti,
+  Hanuman: hanuman_god,
+};
+
+// Helper to convert base64 to ArrayBuffer
+function base64ToArrayBuffer(base64) {
+  const binaryString = window.atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+// Loading Animation Component
+const LoadingWaveform = () => {
+  return (
+    <div className="flex items-center justify-center w-full h-7 space-x-1">
+      {[...Array(12)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="w-1 bg-gradient-to-t from-pink-300 to-pink-500 rounded-full"
+          style={{
+            height: Math.random() * 20 + 8,
+          }}
+          animate={{
+            height: [
+              Math.random() * 20 + 8,
+              Math.random() * 28 + 12,
+              Math.random() * 20 + 8,
+            ],
+            opacity: [0.3, 1, 0.3],
+          }}
+          transition={{
+            duration: 1.2,
+            repeat: Infinity,
+            delay: i * 0.1,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Pulsing Loading Dots Component
+const LoadingDots = () => {
+  return (
+    <div className="flex items-center justify-center space-x-1">
+      {[...Array(3)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="w-1.5 h-1.5 bg-pink-400 rounded-full"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.5, 1, 0.5],
+          }}
+          transition={{
+            duration: 0.6,
+            repeat: Infinity,
+            delay: i * 0.1,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 // PlayAudio component: Plays the bot's voice for a given message
-const PlayAudio = ({ text,bot_id }) => {
-  // State to track if audio is currently playing
+const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
+
   const [isPlaying, setIsPlaying] = useState(false);
-  // State to track if audio is being loaded/generated
   const [isLoading, setIsLoading] = useState(false);
-  // (Unused) State for audio object
-  const [audio, setAudio] = useState(null);
-
-  // (Unused) State for voice id (for future use or mapping)
-  const [voice_id, setVoiceId] = useState(null);
-  // Ref to the audio element
-  const audioRef = useRef(null);
-  // State to store the generated audio URL (base64 WAV)
   const [audioUrl, setAudioUrl] = useState(null);
+  const [duration, setDuration] = useState("0:00");
+  const [progress, setProgress] = useState(0);
+  const audioElement = useRef(null);
+  const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const waveformRef = useRef(null);
+  const wavesurfer = useRef(null);
 
-//  map voice id to bot id (example mapping, currently unused)
-  /*
-  const voiceIdMap = {
-    'delhi_mentor_male': 'arvind',
-    'delhi_mentor_female': 'meera',
-    'delhi_friend_male': 'amol',
-    'delhi_friend_female': 'pavithra',
-    'delhi_romantic_male': 'neel',
-    'delhi_romantic_female': 'maitreyi',
-  };
-
-  useEffect(() => {
-    setVoiceId(voiceIdMap[bot_id]);
-  }, [bot_id]);
-  */
+  // Get the correct avatar image for the bot_id, or fallback to default
+  const avatarSrc = avatarMap[bot_id] || defaultAvatar;
 
   // Handles the play button click: fetches and plays the bot's voice
-  const handlePlay = async () => {
-    console.log('Play button clicked', { text, bot_id });
+  const handlePlayPause = async () => {
     try {
       // Pause and reset if already playing
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+      if (minimal) {
+        if (audioElement.current) {
+          if (isPlaying) {
+            audioElement.current.pause();
+            setIsPlaying(false);
+            return;
+          }
+        }
+      } else {
+        if (wavesurfer.current) {
+          if (isPlaying) {
+            wavesurfer.current.pause();
+            setIsPlaying(false);
+            return;
+          }
+        }
       }
-      setIsPlaying(false);
-      setIsLoading(true);
-      // Always fetch new audio for each click
-      const response = await fetch('https://novi.aigurukul.dev/generate-audio', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ transcript: text, bot_id: bot_id }),
-      });
-      if (!response.ok) throw new Error('Failed to generate audio');
-      const data = await response.json();
-      const { audio_base64 } = data;
-      // Create a base64 WAV audio URL
-      const audioSrc = `data:audio/wav;base64,${audio_base64}`;
-      setAudioUrl(audioSrc);
-      setIsLoading(false);
-      // Play the audio after the src is set (with a small delay)
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.src = audioSrc;
-          audioRef.current.play();
+
+      if (!audioUrl) {
+        setIsLoading(true);
+        setShouldAutoPlay(true); // Set flag to auto-play after load
+        // Always fetch new audio for each click
+        const response = await fetch('http://127.0.0.1:8000/generate-audio', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ transcript: text, bot_id: bot_id }),
+        });
+        if (!response.ok) throw new Error('Failed to generate audio');
+        const data = await response.json();
+        const { audio_base64 } = data;
+        // Convert base64 to Blob and create Object URL
+        const audioBuffer = base64ToArrayBuffer(audio_base64);
+        const audioBlob = new Blob([audioBuffer], { type: 'audio/wav' });
+        const audioSrc = URL.createObjectURL(audioBlob);
+        setAudioUrl(audioSrc);
+        console.log('Set audioUrl:', audioSrc);
+        setIsLoading(false);
+
+        // For minimal mode, play as soon as audio is loaded
+        if (minimal) {
+          setTimeout(() => {
+            if (audioElement.current) {
+              console.log('Trying to play audio...', audioElement.current.src);
+              audioElement.current.play().then(() => {
+                console.log('Playback started!');
+              }).catch(e => {
+                console.error('Playback error:', e);
+              });
+              setIsPlaying(true);
+            } else {
+              console.log('audioElement.current is null');
+            }
+          }, 100);
+        }
+      } else {
+        if (minimal) {
+          if (audioElement.current) {
+            console.log('Trying to play audio...', audioElement.current.src);
+            audioElement.current.play().then(() => {
+              console.log('Playback started!');
+            }).catch(e => {
+              console.error('Playback error:', e);
+            });
+            setIsPlaying(true);
+          } else {
+            console.log('audioElement.current is null');
+          }
+        } else if (wavesurfer.current) {
+          wavesurfer.current.play();
           setIsPlaying(true);
         }
-      }, 100);
+      }
     } catch (error) {
       console.error('Error handling audio:', error);
       setIsLoading(false);
     }
+  };
+
+  // Initialize WaveSurfer when audioUrl is set
+  useEffect(() => {
+    if (audioUrl && waveformRef.current && !minimal) {
+      if (wavesurfer.current) {
+        wavesurfer.current.destroy();
+      }
+      wavesurfer.current = WaveSurfer.create({
+        container: waveformRef.current,
+        waveColor: 'rgba(255, 255, 255, 0.5)',
+        progressColor: '#FF69B4',
+        height: 40,
+        barWidth: 2,
+        barGap: 2,
+        barRadius: 3,
+        barHeight: 1,
+        minPxPerBar: 1,
+        fillParent: true,
+        responsive: true,
+        cursorWidth: 0,
+        normalize: true,
+        partialRender: true,
+        interact: true,
+        hideScrollbar: true,
+        autoCenter: true,
+        dragToSeek: true
+      });
+      
+      wavesurfer.current.load(audioUrl);
+
+      wavesurfer.current.on('ready', () => {
+        const wsDuration = wavesurfer.current.getDuration();
+        if (wsDuration && wsDuration > 0) {
+          setDuration(formatTime(wsDuration));
+        } else if (audioElement.current) {
+          setDuration(formatTime(audioElement.current.duration));
+        }
+        if (shouldAutoPlay) {
+          wavesurfer.current.play();
+          setIsPlaying(true);
+          setShouldAutoPlay(false);
+        }
+      });
+
+      wavesurfer.current.on('finish', () => {
+        setIsPlaying(false);
+        setProgress(0);
+        setCurrentTime(0);
+      });
+
+      wavesurfer.current.on('audioprocess', () => {
+        const cur = wavesurfer.current.getCurrentTime();
+        const dur = wavesurfer.current.getDuration();
+        setCurrentTime(cur);
+        setProgress(dur ? cur / dur : 0);
+      });
+
+      wavesurfer.current.on('seek', (progress) => {
+        const dur = wavesurfer.current.getDuration();
+        const cur = dur * progress;
+        setCurrentTime(cur);
+        setProgress(progress);
+      });
+
+      return () => wavesurfer.current && wavesurfer.current.destroy();
+    }
+  }, [audioUrl, minimal]);
+
+  // Handle <audio> loadedmetadata to get duration as fallback
+  const handleAudioLoadedMetadata = () => {
+    if (audioElement.current && (!duration || duration === '0:00')) {
+      setDuration(formatTime(audioElement.current.duration));
+    }
+  };
+
+  // Log decode errors from the <audio> element
+  const handleAudioError = (e) => {
+    console.error('Audio element decode error:', e);
   };
 
   // Handle audio end event: reset playing state
@@ -88,48 +338,292 @@ const PlayAudio = ({ text,bot_id }) => {
         setIsPlaying(false);
         setAudioUrl(null);
       }
+      if (wavesurfer.current) {
+        wavesurfer.current.destroy();
+      }
     };
-    // eslint-disable-next-line
   }, []);
 
-  // Render the play button and (conditionally) the hidden audio element
-  return (
-    <span>
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+
+  // Handle waveform click to seek audio
+  const handleWaveformClick = (e) => {
+    if (!wavesurfer.current || !waveformRef.current) return;
+    const rect = waveformRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percent = Math.max(0, Math.min(1, x / rect.width));
+    wavesurfer.current.seekTo(percent);
+  };
+
+  // Minimal UI (minimal play button)
+  if (minimal) {
+    return (
       <button 
-        onClick={handlePlay}
-        className="focus:outline-none"
+        onClick={handlePlayPause}
         disabled={isLoading}
+        className="flex items-center justify-center rounded-full hover:bg-gray-100 p-2 transition-colors"
+        style={{ width: '32px', height: '32px', minWidth: '32px' }}
       >
-        {/* Show loader while loading, play icon otherwise */}
+
+         {isLoading ? (
+            <IconLoader 
+              size={30} 
+              className="text-white mt-[-2px] animate-spin"
+            />
+          ) : isPlaying ? (
+            <IconPlayerPauseFilled 
+              size={22} 
+              className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
+            />
+          ) : (
+            <IconPlayerPlayFilled 
+              size={22} 
+              className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
+            />
+          )}
+        <audio
+          ref={audioElement}
+          src={audioUrl}
+          onLoadedMetadata={handleAudioLoadedMetadata}
+          onError={handleAudioError}
+          onEnded={handleEnded}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          style={{ display: 'none' }}
+        />
+      </button>
+    );
+  }
+
+  // Full voice note UI (existing design)
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      whileHover={{ 
+        scale: 1.02,
+        boxShadow: '0 10px 40px -5px rgba(0,0,0,0.15)',
+        transition: { duration: 0.2 }
+      }}
+      className="inline-flex items-center shadow-lg min-h-[32px] relative px-4 py-2 rounded-2xl border border-white/30 backdrop-blur-sm transition-all"
+      style={{
+        boxShadow: '0 8px 32px -4px rgba(0,0,0,0.1)',
+        background: 'linear-gradient(135deg, rgba(255,224,236,0.95) 0%, rgba(251,238,230,0.95) 100%)',
+        width: '620px',
+        minWidth: '320px',
+        maxWidth: '800px',
+        borderRadius: 24,
+        padding: '0.3rem 0.7rem',
+      }}
+    >
+      {/* Avatar with mic overlay */}
+      <div className="mr-4 relative flex-shrink-0 group">
+        <motion.img
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          src={avatarSrc?.src || avatarSrc}
+          alt="Bot Avatar"
+          className="w-14 h-14 rounded-full transition-transform duration-200 group-hover:scale-105"
+          style={{
+            border: '3px solid rgba(255,255,255,0.9)',
+            boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
+          }}
+        />
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.1, type: "spring", stiffness: 500 }}
+          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center bg-white/90 backdrop-blur-sm"
+          style={{ boxShadow: '0 3px 8px rgba(0,0,0,0.12)' }}
+        >
+          {isLoading ? (
+            <motion.div 
+              className="w-3 h-3 border border-pink-400 border-t-transparent rounded-full"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            />
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
+                stroke="#FF69B4"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"
+                stroke="#FF69B4"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
+        </motion.div>
+      </div>
+
+      {/* Play/Pause Button */}
+      <motion.button
+        onClick={handlePlayPause}
+        disabled={isLoading}
+        whileTap={{ scale: 0.95 }}
+        className="mr-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200 hover:shadow-lg"
+        style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
+      >
         {isLoading ? (
-          <IconLoader 
-            size={22} 
-            className="text-purple-400/100 mt-[-2px] animate-spin"
+          <motion.div 
+            className="w-5 h-5 border-3 border-pink-200 border-t-pink-400 rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
         ) : isPlaying ? (
-          <IconPlayerPlayFilled 
-            size={22} 
-            className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
-          />
+          <svg 
+            width="20" 
+            height="20" 
+            viewBox="0 0 22 22"
+          >
+            <rect x="5" y="4" width="3" height="12" rx="1.2" fill="#FF69B4" />
+            <rect x="12" y="4" width="3" height="12" rx="1.2" fill="#FF69B4" />
+          </svg>
         ) : (
-          <IconPlayerPlayFilled 
-            size={22} 
-            className="text-purple-400/100 mt-[-2px] cursor-pointer hover:scale-125 transition-transform"
-          />
+          <svg 
+            width="22" 
+            height="22" 
+            viewBox="0 0 22 22"
+          >
+            <polygon points="6,4 16,11 6,18" fill="#FF69B4" />
+          </svg>
         )}
-      </button>
-      {/* Only render the audio element if audioUrl is set */}
-      {audioUrl && (
-        <audio
-          ref={audioRef}
-          src={audioUrl}
-          onEnded={handleEnded}
-          style={{ display: 'none' }}
-          onError={() => { console.error('Audio playback error'); }}
-          onLoadedData={() => { console.log('Audio loaded and ready to play'); }}
-        />
-      )}
-    </span>
+      </motion.button>
+
+      {/* Waveform and progress dot */}
+      <div className="flex-1 relative flex flex-col justify-center min-h-[44px] mx-2">
+        <div className="flex items-center w-full" style={{ minHeight: 28 }}>
+          <div
+            ref={waveformRef}
+            className="w-full h-7 min-h-[28px] cursor-pointer hover:opacity-90 transition-opacity duration-200 relative"
+            style={{ position: 'relative', minHeight: 28 }}
+            onClick={handleWaveformClick}
+          >
+            {/* Enhanced Loading Animation Overlay */}
+            <AnimatePresence>
+              {isLoading && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 flex items-center justify-center bg-white/20 backdrop-blur-sm rounded-lg"
+                >
+                  <LoadingWaveform />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          
+          {/* Progress dot - only show when not loading */}
+          <AnimatePresence>
+            {!isLoading && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  left: `${progress * 100}%`,
+                }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 500,
+                  damping: 30,
+                  mass: 0.5
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: 0,
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: 3,
+                  pointerEvents: 'none',
+                }}
+              >
+                <motion.span 
+                  className="block w-4 h-4 rounded-full border-2 border-white shadow-lg" 
+                  style={{ 
+                    background: 'linear-gradient(135deg, #FF69B4, #c3a0ff)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)' 
+                  }}
+                  animate={{ 
+                    scale: isPlaying ? [1, 1.15, 1] : 1,
+                  }}
+                  transition={{ 
+                    duration: 1.5, 
+                    repeat: isPlaying ? Infinity : 0, 
+                    ease: "easeInOut" 
+                  }}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {/* Duration */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="ml-5 text-sm font-medium flex-shrink-0 min-w-[90px] text-right px-3 py-1 rounded-full bg-white/30 flex items-center justify-center"
+        style={{ 
+          color: '#FF69B4',
+          textShadow: '0 1px 2px rgba(0,0,0,0.05)'
+        }}
+      >
+        <AnimatePresence mode="wait">
+          {isLoading ? (
+            <motion.div
+              key="loading-text"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              className="flex items-center justify-center h-5"
+            >
+              <LoadingDots />
+            </motion.div>
+          ) : (
+            <motion.span 
+              key="duration-text"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.1 }}
+              className="font-mono"
+            >
+              {currentTime ? `${formatTime(currentTime)} / ` : ""}
+              {duration}
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Hidden audio element */}
+      <audio
+        ref={audioElement}
+        src={audioUrl}
+        onLoadedMetadata={handleAudioLoadedMetadata}
+        onError={handleAudioError}
+        onEnded={handleEnded}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        style={{ display: 'none' }}
+      />
+    </motion.div>
   );
 };
 

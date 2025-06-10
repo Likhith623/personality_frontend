@@ -80,7 +80,7 @@
 
 /* Chat specific styles */
 .chat-bubble-bot {
-  @apply bg-white/20 dark:bg-gray-800/20 border border-white/20 dark:border-gray-700/20 backdrop-blur-sm shadow-md rounded-3xl text-gray-900 dark:text-gray-100;
+  @apply bg-white/20 dark:bg-black border border-white/20 dark:border-gray-700/20 backdrop-blur-sm shadow-md rounded-3xl text-gray-900 dark:text-white;
 }
 
 .chat-bubble-user {
@@ -96,7 +96,7 @@
 }
 
 .chat-reaction {
-  @apply bg-white/80 dark:bg-gray-800/80 rounded-full shadow-sm border border-gray-100 dark:border-gray-700 hover:bg-white/90 dark:hover:bg-gray-700/90;
+  @apply bg-white/80 dark:bg-black/80 rounded-full shadow-sm border border-gray-100 dark:border-gray-700 hover:bg-white/90 dark:hover:bg-gray-700/90;
 }
 
 .chat-icon {
@@ -113,22 +113,21 @@
 }
 
 /* Dark mode specific styles */
+.dark .sidebar {
+  @apply bg-black text-white;
+}
+
+.dark .sidebar-content {
+  @apply bg-black text-white;
+}
+
+.dark .sidebar-link {
+  @apply text-white hover:text-gray-300;
+}
+
+/* Remove global dark mode styles */
 .dark {
-  @apply bg-gray-900 text-gray-100;
-}
-
-.dark input,
-.dark textarea,
-.dark select {
-  @apply bg-gray-800 border-gray-700 text-gray-100;
-}
-
-.dark button {
-  @apply bg-gray-800 hover:bg-gray-700 text-gray-100;
-}
-
-.dark a {
-  @apply text-white;
+  @apply text-gray-100;
 }
 
 /* Card styles */

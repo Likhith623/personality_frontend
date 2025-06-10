@@ -1,11 +1,21 @@
-// src/support/BotContext.js
 "use client";
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const BotContext = createContext();
 
 export function BotProvider({ children }) {
-  const [selectedBotId, setSelectedBotId] = useState('delhi_mentor_male'); // Default bot
+  const [selectedBotId, setSelectedBotId] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("selectedBotId") || null;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && selectedBotId) {
+      localStorage.setItem("selectedBotId", selectedBotId);
+    }
+  }, [selectedBotId]);
 
   return (
     <BotContext.Provider value={{ selectedBotId, setSelectedBotId }}>
