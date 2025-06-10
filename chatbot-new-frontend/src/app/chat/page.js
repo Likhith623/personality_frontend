@@ -213,6 +213,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
+import { systemPatterns, isSystemMessageContent } from "@/constants/identifiers";
 
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useBot } from '@/support/BotContext';
@@ -2291,7 +2292,52 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
   const [highlightedMessage, setHighlightedMessage] = useState(null);
   // Define available emoticons
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
-
+  
+  // Helper: decide if a bot reply should be voice-only
+  function isVoiceOnlyBotReply(msg) {
+    return msg.voice_only === true;
+  }
+  
+  /*
+  // Helper: inject voice_only property for bot replies based on index
+  function processBotMessages(messages) {
+    let botReplyCount = {};
+    return messages.map((msg, idx) => {
+      if (msg.sender !== 'bot') return msg;
+      const botId = msg.bot_id || 'default';
+      if (!botReplyCount[botId]) botReplyCount[botId] = 0;
+      botReplyCount[botId]++;
+      let voice_only = false;
+      if (botReplyCount[botId] === 3) {
+        voice_only = true;
+      } else if (botReplyCount[botId] > 3) {
+        // Randomly assign voice_only for subsequent replies (50% chance)
+        voice_only = Math.random() < 0.5;
+      }
+      return { ...msg, voice_only };
+    });
+  }
+    */
+  // Helper function to detect if a message should be treated as a system message.
+  // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
+  //This function helps the chat interface determine which bot responses should be displayed as voice-only messages (with audio controls but no text bubble) versus regular text messages (with both text and a small play button).
+  function processBotMessages(messages) {
+    let botReplyCount = 0;
+    return messages.map((msg) => {
+      if (msg.sender === 'bot') {
+        botReplyCount++;
+        
+        // Check if this is a system message either by explicit flag OR by content pattern
+        const isSystemMsg = (msg.isSystemMessage === true) || isSystemMessageContent(msg.text);
+        
+        // Force voice-only for system/proactive messages, otherwise use the regular pattern
+        const voice_only = isSystemMsg ? true : ((botReplyCount - 1) % 3 === 2);
+        
+        return { ...msg, voice_only, isSystemMessage: isSystemMsg };
+      }
+      return msg;
+    });
+  }
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (showReactionsFor && !e.target.closest('.reaction-selector')) {
@@ -2302,6 +2348,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
   
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('touchstart', handleClickOutside);
+
   
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -2342,7 +2389,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
 
   // Group messages by date whenever messages change
   useEffect(() => {
-    const grouped = messages.reduce((acc, msg) => {
+    const processedMessages = processBotMessages(messages);
+    const grouped = processedMessages.reduce((acc, msg) => {
       const date = formatDate(msg.timestamp);
       if (!acc[date]) {
         acc[date] = [];
@@ -2442,12 +2490,15 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
           timestamp: new Date(msg.timestamp),
         })));
 
+        const defaultMessageText = bot_details.find(bot => bot.bot_id == selectedBotId)?.quote || "Hello, how are you feeling today?";
         const defaultMessage = [{
-          text: bot_details.find(bot => bot.bot_id == selectedBotId)?.quote || "Hello, how are you feeling today?",
+          text: defaultMessageText,
           sender: 'bot',
           timestamp: new Date(),
           feedback: "",     // Add feedback (empty initially)
           reaction: "",      // Add reaction field (empty initially)
+          bot_id: selectedBotId,
+          isSystemMessage: isSystemMessageContent(defaultMessageText)
         }];
 
         let messagesWithReactions = [];
@@ -2465,7 +2516,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
           // Apply stored reactions to messages
           messagesWithReactions = formattedMessages.map(msg => ({
             ...msg,
-            reaction: storedReactions[msg.id] || ""
+            reaction: storedReactions[msg.id] || "",
+            bot_id: msg.bot_id || selectedBotId
           }));
           
           setMessages(messagesWithReactions);
@@ -2484,12 +2536,15 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
           setMessages(JSON.parse(loadedMessages).map(msg => ({ ...msg, timestamp: new Date(msg.timestamp) })));
         } else {
           // If nothing in localStorage either, show default message
+          const defaultMessageText = bot_details.find(bot => bot.bot_id == selectedBotId)?.quote || "Hello, how are you feeling today?";
           const defaultMessage = [{
-            text: bot_details.find(bot => bot.bot_id == selectedBotId)?.quote || "Hello, how are you feeling today?",
+            text: defaultMessageText,
             sender: 'bot',
             timestamp: new Date(),
             feedback: "",
-            reaction: ""
+            reaction: "",
+            bot_id: selectedBotId,
+            isSystemMessage: isSystemMessageContent(defaultMessageText)
           }];
           setMessages(defaultMessage);
         }
@@ -2721,13 +2776,15 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
 
             // Add reminder message to chat
             if (data.error) {
+              const errorMessage = `Error in generating reminder!!`;
               setMessages(prev => [...prev, {
-                text: `Error in generating reminder!!`,
+                text: errorMessage,
                 sender: 'bot',
                 id: "",
                 feedback: "",
                 reaction: "",
-                timestamp: new Date()
+                timestamp: new Date(),
+                isSystemMessage: isSystemMessageContent(errorMessage)
               }]);
             } else {
               // Add reminder message to chat
@@ -2737,7 +2794,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
                 id: data.message_id,
                 feedback: "",
                 reaction: "",
-                timestamp: new Date()
+                timestamp: new Date(),
+                isSystemMessage: true  // Reminders are always system messages
               }]);
 
               setIsTyping(false);
@@ -2749,13 +2807,15 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
             }
           } catch (error) {
             logClientError(error, { source: 'API Call' });
+            const errorMessage = `Error in generating reminder!!`;
             setMessages(prev => [...prev, {
-              text: `Error in generating reminder!!`,
+              text: errorMessage,
               sender: 'bot',
               id: "",
               feedback: "",
               reaction: "",
-              timestamp: new Date()
+              timestamp: new Date(),
+              isSystemMessage: isSystemMessageContent(errorMessage)
             }]);
             console.log(error);
           }
@@ -2857,13 +2917,16 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
       feedback, and a timestamp. This code snippet is likely part of a function or component that
       handles error messages in a chat or messaging application. */
       if (data.error) {
+        const errorMessage = "Sorry, there was an error processing your request. Please try again.";
         setMessages(prev => [...prev, {
-          text: "Sorry, there was an error processing your request. Please try again.",
+          text: errorMessage,
           sender: 'bot',
           id: "",
           feedback: "",
           reaction: "",
-          timestamp: currentTime
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: isSystemMessageContent(errorMessage)
         }]);
       }
 
@@ -2896,17 +2959,24 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
           id: data.message_id,
           feedback: "",
           reaction: "",
-          timestamp: currentTime
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: true
         }]);
       }
       else {
+        // Check if this response should be treated as a system message based on content
+        const shouldBeSystemMessage = isSystemMessageContent(data.response);
+        
         setMessages(prev => [...prev, {
           text: data.response,
           sender: 'bot',
           id: data.message_id,
           feedback: "",
           reaction: "",
-          timestamp: currentTime
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: shouldBeSystemMessage
         }]);
       }
     } catch (error) {
@@ -2914,13 +2984,16 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
       console.log(error);
       console.error(error);
       setIsTyping(false);
+      const errorMessage = "Sorry, there was an error processing your request. Please try again.";
       setMessages(prev => [...prev, {
-        text: "Sorry, there was an error processing your request. Please try again.",
+        text: errorMessage,
         sender: 'bot',
         id: "",
         feedback: "",
         reaction: "",
-        timestamp: currentTime
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: isSystemMessageContent(errorMessage)
       }]);
     }
     scrollToBottom();
@@ -2964,7 +3037,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
       Tap to remove
     </div>
   );
-
+  console.log("All chat messages:", messages);
   return (
     <div
   className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
@@ -3009,7 +3082,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
           {messagesOnDate.map((msg, index) => (
             <div key={index} className={`my-2 flex ${msg.sender === 'bot' ? 'justify-start' : 'justify-end'}`}>
               <div className="max-w-[80%] min-w-16 relative">
-                {/* Reaction bubble displayed above the message if a reaction exists */}
+              {/* Reaction bubble displayed above the message if a reaction exists */}
                 {msg.sender === 'bot' && msg.reaction && (
                   <div 
                     className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
@@ -3021,53 +3094,77 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
                   </div>
                 )}
                 
-                <div className="flex flex-row items-center gap-2">
-    <div className={`px-4 py-2 rounded-2xl ${msg.sender === 'bot'
-      ? `${botThemes[selectedBotId]?.botBubble || 'bg-neutral-900 text-white'} border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${highlightedMessage === msg.id ? 'bg-orange-200/30' : ''}`
-      : `bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${highlightedMessage === msg.id ? 'bg-orange-200/90' : ''}`
+                
+<div className="flex flex-row items-center gap-2">
+  {msg.sender === 'bot' ? (
+    msg.voice_only ? (
+      // Voice-only bot message
+      <PlayAudio text={msg.text} bot_id={msg.bot_id || selectedBotId} />
+    ) : (
+      // Text + audio bot message
+      <>
+        <div
+          className={`px-4 py-2 rounded-2xl ${
+            botThemes[selectedBotId]?.botBubble || 'bg-white/20 text-gray-900'
+          } border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${
+            highlightedMessage === msg.id ? 'bg-orange-200/30' : ''
+          } w-full text-left`}
+          style={{
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            WebkitTouchCallout: 'none',
+            width: '750px',
+            minWidth: '400px',
+          }}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            handleLongPressStart(msg.id);
+          }}
+          onTouchEnd={handleLongPressEnd}
+          onTouchMove={handleLongPressEnd}
+          onTouchCancel={handleLongPressEnd}
+        >
+          <motion.p className="text-gray-700 dark:text-gray-700">
+            {msg.text.split(' ').map((word, i) => (
+              <motion.span
+                key={i}
+                initial={{ filter: 'blur(10px)', opacity: 0, y: 5 }}
+                animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, ease: 'easeInOut', delay: 0.02 * i }}
+                className="inline-block select-none"
+                style={{
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  WebkitTouchCallout: 'none',
+                }}
+              >
+                {word}&nbsp;
+              </motion.span>
+            ))}
+          </motion.p>
+        </div>
+        <PlayAudio text={msg.text} bot_id={msg.bot_id || selectedBotId} minimal={true} />
+      </>
+    )
+  ) : (
+    // User message
+    <div
+      className={`px-4 py-2 rounded-2xl bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
+        highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
       } w-full text-left`}
       style={{
         userSelect: 'none',
         WebkitUserSelect: 'none',
-        WebkitTouchCallout: 'none'
+        WebkitTouchCallout: 'none',
+        maxWidth: '800px',
+        width: '100%',
       }}
-                 // Add touch handlers for long press on bot messages only
-                    onTouchStart={msg.sender === 'bot' ? (e) => {
-                      e.preventDefault(); // Prevent default touch behavior
-                      handleLongPressStart(msg.id);
-                    } : null}
-                    onTouchEnd={msg.sender === 'bot' ? handleLongPressEnd : null}
-                    onTouchMove={msg.sender === 'bot' ? handleLongPressEnd : null} // Cancel on move to avoid accidental triggers
-                    onTouchCancel={msg.sender === 'bot' ? handleLongPressEnd : null}
-                  >
-                    {msg.sender === 'bot' ? (
-                      <>
-                        <motion.p className="">
-                          {msg.text.split(" ").map((word, i) => (
-                            <motion.span
-                              key={i}
-                              initial={{ filter: "blur(10px)", opacity: 0, y: 5 }}
-                              animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
-                              transition={{ duration: 0.2, ease: "easeInOut", delay: 0.02 * i }}
-                              className="inline-block select-none"
-                              style={{
-                                userSelect: 'none',
-                                WebkitUserSelect: 'none',
-                                WebkitTouchCallout: 'none'
-                              }}
-                            >
-                              {word}&nbsp;
-                            </motion.span>
-                          ))}
-                        </motion.p>
-                      </>
-                    ) : (
-                      <span className="text-right ml-auto">{msg.text}</span>
-                    )}
-                  </div>
-                  {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} isWhiteIcon={isWhiteIcon} />
-}
-                </div>
+    >
+      <span className="text-right ml-auto">{msg.text}</span>
+    </div>
+  )}
+</div>
+
                 <div className="flex flex-row justify-end ">
                   <span className={`text-xs text-neutral-700 text-left mt-[7px] ${msg.sender == 'user' ? "mr-3" : ""}`}>
                       {formatTime(msg.timestamp)}
