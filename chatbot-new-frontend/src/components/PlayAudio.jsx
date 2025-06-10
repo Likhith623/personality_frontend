@@ -385,7 +385,6 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
               className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
             />
           )}
-        )}
         <audio
           ref={audioElement}
           src={audioUrl}
