@@ -4,152 +4,208 @@ import React, { useState, useEffect, useRef } from "react";
 // Per-bot theming: assign a light background and a dark chat bubble for each bot
 const botThemes = {
   delhi_mentor_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-gray-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
+    background: 'bg-gray-50',
+    botBubble: 'bg-gray-900 text-white',
+    backgroundImages: [
+    '/photos/default_bg.png'
+  ],
   },
   delhi_mentor_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-purple-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  delhi_friend_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-blue-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  delhi_friend_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-pink-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  delhi_romantic_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-red-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  delhi_romantic_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-rose-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  japanese_mentor_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/japanmm_bg.png", "/photos/default_bg.png"],
-  },
-  japanese_mentor_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/japanmf_bg.jpeg", "/photos/default_bg.png"],
-  },
-  japanese_friend_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/japanfm_bg.png", "/photos/default_bg.png"],
-  },
-  japanese_friend_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/japanff_bg.png", "/photos/default_bg.png"],
-  },
-  japanese_romantic_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/japanrm_bg.png", "/photos/default_bg.png"],
-  },
-  japanese_romantic_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/japanrf_bg.png", "/photos/default_bg.png"],
-  },
-  parisian_mentor_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-neutral-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  parisian_mentor_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-purple-800 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  parisian_friend_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-blue-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  parisian_friend_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-pink-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  parisian_romantic_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-red-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  parisian_romantic_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-rose-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  berlin_mentor_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/berlinmm_bg.png", "/photos/default_bg.png"],
-  },
-  berlin_mentor_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/berlinmf_bg.png", "/photos/default_bg.png"],
-  },
-  berlin_friend_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/berlinfm_bg.png", "/photos/default_bg.png"],
-  },
-  berlin_friend_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/berlinff_bg.png", "/photos/default_bg.png"],
-  },
-  berlin_romantic_male: {
-    background: "bg-gray-50",
-    botBubble: "bg-red-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  berlin_romantic_female: {
-    background: "bg-gray-50",
-    botBubble: "bg-rose-900 text-white",
-    backgroundImages: ["/photos/default_bg.png"],
-  },
-  Krishna: {
-    background: "bg-yellow-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/krishna_bg.jpg", "/photos/default_bg.png"], // Place Krishna bg image here
-  },
-  Rama: {
-    background: "bg-yellow-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/rama_bg.png", "/photos/default_bg.png"], // Place Rama bg image here
-  },
-  Shiva: {
-    background: "bg-blue-50",
-    botBubble: "bg-white text-black",
+    background: 'bg-gray-50',
+    botBubble: 'bg-purple-900 text-white',
     backgroundImages: [
-      "/photos/shiva_bg.png",
-      "/photos/default_bg.png", // Place Shiva background image here
+      '/photos/default_bg.png'
     ],
   },
+  delhi_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-blue-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  delhi_friend_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-pink-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  delhi_romantic_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-red-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  delhi_romantic_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-rose-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  japanese_mentor_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanmm_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  japanese_mentor_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanmf_bg.jpeg',
+    '/photos/default_bg.png'  
+  ],
+  },
+  japanese_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanfm_bg.png',
+    '/photos/default_bg.png' 
+  ],
+  },
+  japanese_friend_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages:['/photos/japanff_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  japanese_romantic_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanrm_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  japanese_romantic_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanrf_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  parisian_mentor_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-neutral-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  parisian_mentor_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-purple-800 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  parisian_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-blue-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  parisian_friend_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-pink-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  parisian_romantic_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-red-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  parisian_romantic_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-rose-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  berlin_mentor_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinmm_bg.png',
+    '/photos/default_bg.png'  
+  ]
+  },
+  berlin_mentor_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinmf_bg.png',
+    '/photos/default_bg.png' 
+  ],
+  },
+  berlin_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinfm_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  berlin_friend_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinff_bg.png',
+    '/photos/default_bg.png' 
+  ],
+  },
+  berlin_romantic_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-red-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  berlin_romantic_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-rose-900 text-white',
+    backgroundImages: [
+      '/photos/default_bg.png'
+    ],
+  },
+  Krishna: {
+    background: 'bg-yellow-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages:[
+      '/photos/krishna_bg.jpg',
+      '/photos/default_bg.png'
+      ],// Place Krishna bg image here
+  },
+  Rama: {
+    background: 'bg-yellow-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      '/photos/rama_bg.png',
+      '/photos/default_bg.png'
+    ], // Place Rama bg image here
+  },
+  Shiva: {
+    background: 'bg-blue-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/shiva_bg.png',
+    '/photos/default_bg.png'   // Place Shiva background image here
+  ],
+  },  
   Hanuman: {
-    background: "bg-orange-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/hanuman_bg.png", "/photos/default_bg.png"], // Place Hanuman bg image here
+    background: 'bg-orange-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/hanuman_bg.png',
+    '/photos/default_bg.png'  ], // Place Hanuman bg image here
   },
   Trimurti: {
-    background: "bg-indigo-50",
-    botBubble: "bg-white text-black",
-    backgroundImages: ["/photos/trimurthi_bg.png", "/photos/default_bg.png"], // Place Trimurti bg image here
+    background: 'bg-indigo-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/trimurthi_bg.png',
+    '/photos/default_bg.png' 
+   ], // Place Trimurti bg image here
   },
 };
 import Link from "next/link";
@@ -157,10 +213,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
-import {
-  systemPatterns,
-  isSystemMessageContent,
-} from "@/constants/identifiers";
+import { systemPatterns, isSystemMessageContent } from "@/constants/identifiers";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBot } from "@/support/BotContext";
@@ -233,7 +286,7 @@ const bot_details = [
         `,
     src: delhi_mentor_male,
     bot_id: "delhi_mentor_male",
-    textColorClass: "text-pink",
+    textColorClass: "text-pink"
   },
   {
     quote: "Zindagi bas dil se jeete raho. Here to be your wisdom whisperer. ",
@@ -551,12 +604,12 @@ export default function SidebarDemo() {
   const { selectedBotId } = useBot();
   const currentTheme = botThemes[selectedBotId] || {};
   let images = [];
-  if (Array.isArray(currentTheme.backgroundImages)) {
-    images = currentTheme.backgroundImages;
-  } else if (typeof currentTheme.backgroundImage === "string") {
-    images = [currentTheme.backgroundImage];
-  }
-  console.log("Selected images:", images);
+if (Array.isArray(currentTheme.backgroundImages)) {
+  images = currentTheme.backgroundImages;
+} else if (typeof currentTheme.backgroundImage === 'string') {
+  images = [currentTheme.backgroundImage];
+}
+   console.log("Selected images:", images);
 
   const [backgroundIndex, setBackgroundIndex] = useState(0);
   const currentBgImage = images[backgroundIndex % images.length] || "";
@@ -564,7 +617,7 @@ export default function SidebarDemo() {
     setBackgroundIndex((prev) => (prev + 1) % images.length);
     setIsWhiteIcon((prev) => !prev); // 🔄 toggle icon color
   };
-
+  
   const { selectedTraits, selectedLanguage } = useTraits();
   console.log(selectedBotId);
   console.log("Using background:", currentBgImage);
@@ -577,9 +630,7 @@ export default function SidebarDemo() {
   );
   // const [selectedTraits, setSelectedTraits] = useState(['Curious', 'Open Minded']);
   // const [selectedLanguage, setSelectedLanguage] = useState("English");
-  const [customName, setCustomName] = useState(
-    selectedBotDetails?.name || "Unnamed"
-  );
+  const [customName, setCustomName] = useState(selectedBotDetails?.name || "Unnamed");
   const [editablePrompts, setEditablePrompts] = useState({});
   const { userDetails } = useUser();
   const [clearChatCalled, setClearChatCalled] = useState(false);
@@ -592,7 +643,7 @@ export default function SidebarDemo() {
     }
     return false;
   });
-
+  
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
@@ -603,7 +654,8 @@ export default function SidebarDemo() {
       localStorage.setItem("theme", "light");
     }
   }, [isDarkMode]);
-
+  
+   
   // const traits = [
   //   "Bold/Adventurous",
   //   "Bubbly/Positive",
@@ -654,8 +706,10 @@ export default function SidebarDemo() {
     } else {
       setCustomName(selectedBotDetails.name);
     }
-  }, [selectedBotId, selectedBotDetails?.name || "Unnamed"]);
-
+  }, [selectedBotId, selectedBotDetails?.name || "Unnamed"
+]);
+   
+  
   /* The code is checking if `selectedTraits` is an array using `Array.isArray()`. If it is an array, it
 joins the elements of the array into a string separated by commas. If `selectedTraits` is not an
 array, it assigns the value of `selectedTraits` to `traitsString`. */
@@ -2063,37 +2117,32 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
 
   return (
     <div
-      className={cn(
-        "min-h-screen transition-all duration-500",
-        currentTheme.background,
-        "flex flex-col md:flex-row w-full flex-1 overflow-hidden",
-        "h-screen shadow-lg",
-        !currentBgImage && "bg-white" // fallback if no image
-      )}
-      style={{
-        backgroundImage: currentBgImage ? `url(${currentBgImage})` : "none",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <Sidebar
-        open={open}
-        setOpen={setOpen}
-        animate={false}
-        className="bg-black text-white"
-      >
+    className={cn(
+      "min-h-screen transition-all duration-500",
+      currentTheme.background,
+      "flex flex-col md:flex-row w-full flex-1 overflow-hidden",
+      "h-screen shadow-lg",
+      !currentBgImage && "bg-white" // fallback if no image
+    )}
+
+    style={{
+      backgroundImage: currentBgImage ? `url(${currentBgImage})` : 'none',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+    }}>
+      <Sidebar open={open} setOpen={setOpen} animate={false} className="bg-black text-white">
         <SidebarBody className="justify-between gap-5 bg-white text-black dark:bg-black dark:text-white justify-between gap-5">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden justify-between text-white">
             <div className="text-white">
-              <Logo className="text-white" />
+            <Logo className="text-white" />
               <BotCustomization
                 selectedBotDetails={selectedBotDetails}
                 onUpdate={handleBotCustomization}
                 className="text-white"
               />
               <p className="text-sm bg-white text-black dark:bg-black dark:text-white">
-                {selectedBotDetails?.quote || "Unnamed"}
+                {selectedBotDetails?.quote || "Unnamed"} 
               </p>
               <div className="h-[1px] bg-black/20 mt-4"></div>
               {!["Krishna", "Rama", "Hanuman", "Shiva", "Trimurti"].includes(
@@ -2111,6 +2160,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                       </button>
                     ))}
                   </div>
+
                 </div>
               )}
 
@@ -2145,16 +2195,16 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                   <Diary />
                 </CustomModal>
                 <button
-                  onClick={handleBackgroundChange}
-                  className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-                >
-                  Change Background
-                </button>
+                    onClick={handleBackgroundChange}
+                    className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+                  >
+                    Change Background
+                  </button>
                 <button
                   onClick={() => setIsDarkMode(!isDarkMode)}
                   className="fixed bottom-20 right-4 p-1 w-8 h-8 flex items-center justify-center text-xl rounded-full bg-white dark:bg-black text-black dark:text-white shadow hover:opacity-80 transition z-50"
                 >
-                  {isDarkMode ? "🌙" : "☀️"}
+                  {isDarkMode ? '🌙' : '☀️'}
                 </button>
               </div>
               {/* <div className="w-full max-w-3xl mt-3">
@@ -2221,17 +2271,18 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
           </div>
         </SidebarBody>
       </Sidebar>
-      <Dashboard
-        traits={selectedTraits}
-        language={selectedLanguage}
-        customName={customName}
-        editablePrompts={editablePrompts}
-        clearChatCalled={clearChatCalled}
-        setClearChatCalled={setClearChatCalled}
-        backgroundIndex={backgroundIndex}
-        isWhiteIcon={isWhiteIcon}
-        className="bg-white/40 backdrop-blur-md shadow-lg"
+      <Dashboard 
+      traits={selectedTraits} 
+      language={selectedLanguage} 
+      customName={customName} 
+      editablePrompts={editablePrompts} 
+      clearChatCalled={clearChatCalled} 
+      setClearChatCalled={setClearChatCalled} 
+      backgroundIndex={backgroundIndex}
+      isWhiteIcon = {isWhiteIcon}
+      className="bg-white/40 backdrop-blur-md shadow-lg" 
       />
+  
     </div>
   );
 }
@@ -2260,13 +2311,7 @@ export const LogoIcon = () => {
     </Link>
   );
 };
-const Dashboard = ({
-  editablePrompts,
-  clearChatCalled,
-  setClearChatCalled,
-  backgroundIndex,
-  isWhiteIcon,
-}) => {
+const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon}) => {
   const { selectedBotId } = useBot();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -2283,12 +2328,12 @@ const Dashboard = ({
   const [highlightedMessage, setHighlightedMessage] = useState(null);
   // Define available emoticons
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
-
+  
   // Helper: decide if a bot reply should be voice-only
   function isVoiceOnlyBotReply(msg) {
     return msg.voice_only === true;
   }
-
+  
   /*
   // Helper: inject voice_only property for bot replies based on index
   function processBotMessages(messages) {
@@ -2315,16 +2360,15 @@ const Dashboard = ({
   function processBotMessages(messages) {
     let botReplyCount = 0;
     return messages.map((msg) => {
-      if (msg.sender === "bot") {
+      if (msg.sender === 'bot') {
         botReplyCount++;
-
+        
         // Check if this is a system message either by explicit flag OR by content pattern
-        const isSystemMsg =
-          msg.isSystemMessage === true || isSystemMessageContent(msg.text);
-
+        const isSystemMsg = (msg.isSystemMessage === true) || isSystemMessageContent(msg.text);
+        
         // Force voice-only for system/proactive messages, otherwise use the regular pattern
-        const voice_only = isSystemMsg ? true : (botReplyCount - 1) % 3 === 2;
-
+        const voice_only = isSystemMsg ? true : ((botReplyCount - 1) % 3 === 2);
+        
         return { ...msg, voice_only, isSystemMessage: isSystemMsg };
       }
       return msg;
@@ -2337,10 +2381,11 @@ const Dashboard = ({
         setHighlightedMessage(null); // Clear highlight when clicking outside
       }
     };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("touchstart", handleClickOutside);
-
+  
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
@@ -2483,20 +2528,16 @@ const Dashboard = ({
           }))
         );
 
-        const defaultMessageText =
-          bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
-          "Hello, how are you feeling today?";
-        const defaultMessage = [
-          {
-            text: defaultMessageText,
-            sender: "bot",
-            timestamp: new Date(),
-            feedback: "", // Add feedback (empty initially)
-            reaction: "", // Add reaction field (empty initially)
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(defaultMessageText),
-          },
-        ];
+        const defaultMessageText = bot_details.find(bot => bot.bot_id == selectedBotId)?.quote || "Hello, how are you feeling today?";
+        const defaultMessage = [{
+          text: defaultMessageText,
+          sender: 'bot',
+          timestamp: new Date(),
+          feedback: "",     // Add feedback (empty initially)
+          reaction: "",      // Add reaction field (empty initially)
+          bot_id: selectedBotId,
+          isSystemMessage: isSystemMessageContent(defaultMessageText)
+        }];
 
         let messagesWithReactions = [];
 
@@ -2516,7 +2557,7 @@ const Dashboard = ({
           messagesWithReactions = formattedMessages.map((msg) => ({
             ...msg,
             reaction: storedReactions[msg.id] || "",
-            bot_id: msg.bot_id || selectedBotId,
+            bot_id: msg.bot_id || selectedBotId
           }));
 
           setMessages(messagesWithReactions);
@@ -2556,20 +2597,16 @@ const Dashboard = ({
           );
         } else {
           // If nothing in localStorage either, show default message
-          const defaultMessageText =
-            bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
-            "Hello, how are you feeling today?";
-          const defaultMessage = [
-            {
-              text: defaultMessageText,
-              sender: "bot",
-              timestamp: new Date(),
-              feedback: "",
-              reaction: "",
-              bot_id: selectedBotId,
-              isSystemMessage: isSystemMessageContent(defaultMessageText),
-            },
-          ];
+          const defaultMessageText = bot_details.find(bot => bot.bot_id == selectedBotId)?.quote || "Hello, how are you feeling today?";
+          const defaultMessage = [{
+            text: defaultMessageText,
+            sender: 'bot',
+            timestamp: new Date(),
+            feedback: "",
+            reaction: "",
+            bot_id: selectedBotId,
+            isSystemMessage: isSystemMessageContent(defaultMessageText)
+          }];
           setMessages(defaultMessage);
         }
       }
@@ -2816,32 +2853,26 @@ const Dashboard = ({
             // Add reminder message to chat
             if (data.error) {
               const errorMessage = `Error in generating reminder!!`;
-              setMessages((prev) => [
-                ...prev,
-                {
-                  text: errorMessage,
-                  sender: "bot",
-                  id: "",
-                  feedback: "",
-                  reaction: "",
-                  timestamp: new Date(),
-                  isSystemMessage: isSystemMessageContent(errorMessage),
-                },
-              ]);
+              setMessages(prev => [...prev, {
+                text: errorMessage,
+                sender: 'bot',
+                id: "",
+                feedback: "",
+                reaction: "",
+                timestamp: new Date(),
+                isSystemMessage: isSystemMessageContent(errorMessage)
+              }]);
             } else {
               // Add reminder message to chat
-              setMessages((prev) => [
-                ...prev,
-                {
-                  text: data.response,
-                  sender: "bot",
-                  id: data.message_id,
-                  feedback: "",
-                  reaction: "",
-                  timestamp: new Date(),
-                  isSystemMessage: true, // Reminders are always system messages
-                },
-              ]);
+              setMessages(prev => [...prev, {
+                text: data.response,
+                sender: 'bot',
+                id: data.message_id,
+                feedback: "",
+                reaction: "",
+                timestamp: new Date(),
+                isSystemMessage: true  // Reminders are always system messages
+              }]);
 
               setIsTyping(false);
 
@@ -2856,20 +2887,17 @@ const Dashboard = ({
               setReminders(updatedReminders);
             }
           } catch (error) {
-            logClientError(error, { source: "API Call" });
+            logClientError(error, { source: 'API Call' });
             const errorMessage = `Error in generating reminder!!`;
-            setMessages((prev) => [
-              ...prev,
-              {
-                text: errorMessage,
-                sender: "bot",
-                id: "",
-                feedback: "",
-                reaction: "",
-                timestamp: new Date(),
-                isSystemMessage: isSystemMessageContent(errorMessage),
-              },
-            ]);
+            setMessages(prev => [...prev, {
+              text: errorMessage,
+              sender: 'bot',
+              id: "",
+              feedback: "",
+              reaction: "",
+              timestamp: new Date(),
+              isSystemMessage: isSystemMessageContent(errorMessage)
+            }]);
             console.log(error);
           }
         }
@@ -2959,14 +2987,11 @@ const Dashboard = ({
       using JSON.stringify. The request is being made using the fetch API with the specified method
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
-      const response = await fetch(
-        "https://novi-be.aigurukul.dev/docs#/default/generate_response_generate_response__post",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch("https://novi-be.aigurukul.dev/docs#/default/generate_response_generate_response__post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
       const data = await response.json();
 
@@ -2977,27 +3002,21 @@ const Dashboard = ({
       feedback, and a timestamp. This code snippet is likely part of a function or component that
       handles error messages in a chat or messaging application. */
       if (data.error) {
-        const errorMessage =
-          "Sorry, there was an error processing your request. Please try again.";
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: errorMessage,
-            sender: "bot",
-            id: "",
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(errorMessage),
-          },
-        ]);
-      } else if (
-        data.reminder?.response &&
-        data.reminder?.task &&
-        data.reminder?.created_at
-      ) {
-        console.log("This is reminder block", data.reminder);
+        const errorMessage = "Sorry, there was an error processing your request. Please try again.";
+        setMessages(prev => [...prev, {
+          text: errorMessage,
+          sender: 'bot',
+          id: "",
+          feedback: "",
+          reaction: "",
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: isSystemMessageContent(errorMessage)
+        }]);
+      }
+
+      else if (data.reminder?.response && data.reminder?.task && data.reminder?.created_at) {
+        console.log("This is reminder block", data.reminder)
 
         const reminder = {
           response: data.reminder.response,
@@ -3022,57 +3041,48 @@ const Dashboard = ({
           JSON.stringify(updatedReminders)
         );
 
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: true,
-          },
-        ]);
-      } else {
+        setMessages(prev => [...prev, {
+          text: data.response,
+          sender: 'bot',
+          id: data.message_id,
+          feedback: "",
+          reaction: "",
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: true
+        }]);
+      }
+      else {
         // Check if this response should be treated as a system message based on content
         const shouldBeSystemMessage = isSystemMessageContent(data.response);
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: shouldBeSystemMessage,
-          },
-        ]);
+        
+        setMessages(prev => [...prev, {
+          text: data.response,
+          sender: 'bot',
+          id: data.message_id,
+          feedback: "",
+          reaction: "",
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: shouldBeSystemMessage
+        }]);
       }
     } catch (error) {
       logClientError(error, { source: "API Call" });
       console.log(error);
       console.error(error);
       setIsTyping(false);
-      const errorMessage =
-        "Sorry, there was an error processing your request. Please try again.";
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: errorMessage,
-          sender: "bot",
-          id: "",
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime,
-          bot_id: selectedBotId,
-          isSystemMessage: isSystemMessageContent(errorMessage),
-        },
-      ]);
+      const errorMessage = "Sorry, there was an error processing your request. Please try again.";
+      setMessages(prev => [...prev, {
+        text: errorMessage,
+        sender: 'bot',
+        id: "",
+        feedback: "",
+        reaction: "",
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: isSystemMessageContent(errorMessage)
+      }]);
     }
     scrollToBottom();
   };
@@ -3111,290 +3121,223 @@ const Dashboard = ({
 
   // Component for removal tooltip
   const RemovalTooltip = ({ msgId }) => (
-    <div className="absolute -top-10 left-0 bg-white/90 backdrop-blur-md rounded-lg py-1 px-3 shadow-md border border-gray-200 z-10 text-sm text-gray-700 whitespace-nowrap">
-      Tap to remove
-    </div>
-  );
-  console.log("All chat messages:", messages);
-  return (
-    <div
-      className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
-        botThemes[selectedBotId]?.background || "bg-gray-100"
-      }`}
-      style={
-        botThemes[selectedBotId]?.backgroundImages
-          ? (() => {
-              const bg =
-                botThemes[selectedBotId].backgroundImages[backgroundIndex];
-              if (bg.startsWith("http") || bg.startsWith("/")) {
-                // Image background
-                return {
-                  backgroundImage: `url('${bg}')`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                };
-              } else if (bg.startsWith("radial-gradient")) {
-                // Gradient background
-                return {
-                  backgroundImage: bg,
-                };
-              } else {
-                // Solid color
-                return {
-                  backgroundColor: bg,
-                };
-              }
-            })()
-          : undefined
-      }
-    >
-      {/* ...existing background blobs can be kept or removed for clarity... */}
-      <ScrollArea className="flex-1">
-        <div className="px-1 md:px-2">
-          {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
-            <div key={date}>
-              <div className="sticky my-10 top-5 z-10 py-2 mx-auto w-32 bg-white/30 backdrop-blur-md rounded-md shadow-md">
-                <p className="text-center text-sm text-gray-600">{date}</p>
-              </div>
+  <div className="absolute -top-10 left-0 bg-white/90 backdrop-blur-md rounded-lg py-1 px-3 shadow-md border border-gray-200 z-10 text-sm text-gray-700 whitespace-nowrap">
+    Tap to remove
+  </div>
+);
 
-              {messagesOnDate.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`my-2 flex ${
-                    msg.sender === "bot" ? "justify-start" : "justify-end"
-                  }`}
-                >
-                  <div className="max-w-[80%] min-w-16 relative">
-                    {/* Reaction bubble displayed above the message if a reaction exists */}
-                    {msg.sender === "bot" && msg.reaction && (
+console.log("All chat messages:", messages);
+
+return (
+  <div
+    className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
+      botThemes[selectedBotId]?.background || "bg-gray-100"
+    }`}
+    style={
+      botThemes[selectedBotId]?.backgroundImages
+        ? (() => {
+            const bg = botThemes[selectedBotId].backgroundImages[backgroundIndex];
+            if (bg.startsWith("http") || bg.startsWith("/")) {
+              return {
+                backgroundImage: `url('${bg}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              };
+            } else if (bg.startsWith("radial-gradient")) {
+              return {
+                backgroundImage: bg,
+              };
+            } else {
+              return {
+                backgroundColor: bg,
+              };
+            }
+          })()
+        : undefined
+    }
+  >
+    <ScrollArea className="flex-1">
+      <div className="px-1 md:px-2">
+        {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
+          <div key={date}>
+            <div className="sticky my-10 top-5 z-10 py-2 mx-auto w-32 bg-white/30 backdrop-blur-md rounded-md shadow-md">
+              <p className="text-center text-sm text-gray-600">{date}</p>
+            </div>
+
+            {messagesOnDate.map((msg, index) => (
+              <div key={index} className={`my-2 flex ${msg.sender === 'bot' ? 'justify-start' : 'justify-end'}`}>
+                <div className="max-w-[80%] min-w-16 relative">
+                  {msg.sender === 'bot' && msg.reaction && (
+                    <div
+                      className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
+                      onClick={() => toggleRemovalTooltip(msg.id)}
+                    >
+                      <span className="text-lg">{msg.reaction}</span>
+                      {showRemoveTooltip === msg.id && <RemovalTooltip msgId={msg.id} />}
+                    </div>
+                  )}
+
+                  <div className="flex flex-row items-center gap-2">
+                    {msg.sender === 'bot' ? (
+                      msg.voice_only ? (
+                        <PlayAudio text={msg.text} bot_id={msg.bot_id || selectedBotId} />
+                      ) : (
+                        <>
+                          <div
+                            className={`px-4 py-2 rounded-2xl ${
+                              botThemes[selectedBotId]?.botBubble || 'bg-white/20 text-gray-900'
+                            } border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${
+                              highlightedMessage === msg.id ? 'bg-orange-200/30' : ''
+                            } w-full text-left`}
+                            style={{
+                              userSelect: 'none',
+                              WebkitUserSelect: 'none',
+                              WebkitTouchCallout: 'none',
+                              width: '750px',
+                              minWidth: '400px',
+                            }}
+                            onTouchStart={(e) => {
+                              e.preventDefault();
+                              handleLongPressStart(msg.id);
+                            }}
+                            onTouchEnd={handleLongPressEnd}
+                            onTouchMove={handleLongPressEnd}
+                            onTouchCancel={handleLongPressEnd}
+                          >
+                            <motion.p className="text-gray-700 dark:text-gray-700">
+                              {msg.text.split(' ').map((word, i) => (
+                                <motion.span
+                                  key={i}
+                                  initial={{ filter: 'blur(10px)', opacity: 0, y: 5 }}
+                                  animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
+                                  transition={{ duration: 0.2, ease: 'easeInOut', delay: 0.02 * i }}
+                                  className="inline-block select-none"
+                                  style={{
+                                    userSelect: 'none',
+                                    WebkitUserSelect: 'none',
+                                    WebkitTouchCallout: 'none',
+                                  }}
+                                >
+                                  {word}&nbsp;
+                                </motion.span>
+                              ))}
+                            </motion.p>
+                          </div>
+                          <PlayAudio text={msg.text} bot_id={msg.bot_id || selectedBotId} minimal={true} />
+                        </>
+                      )
+                    ) : (
                       <div
-                        className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
-                        onClick={() => toggleRemovalTooltip(msg.id)}
+                        className={`px-4 py-2 rounded-2xl bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
+                          highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
+                        } w-full text-left`}
+                        style={{
+                          userSelect: 'none',
+                          WebkitUserSelect: 'none',
+                          WebkitTouchCallout: 'none',
+                          maxWidth: '800px',
+                          width: '100%',
+                        }}
                       >
-                        <span className="text-lg">{msg.reaction}</span>
-                        {/* Show removal tooltip if this message is selected */}
-                        {showRemoveTooltip === msg.id && (
-                          <RemovalTooltip msgId={msg.id} />
-                        )}
+                        <span className="text-right ml-auto">{msg.text}</span>
                       </div>
                     )}
+                  </div>
 
-                    <div className="flex flex-row items-center gap-2">
-                      {msg.sender === "bot" ? (
-                        msg.voice_only ? (
-                          // Voice-only bot message
-                          <PlayAudio
-                            text={msg.text}
-                            bot_id={msg.bot_id || selectedBotId}
-                          />
-                        ) : (
-                          // Text + audio bot message
-                          <>
-                            <div
-                              className={`px-4 py-2 rounded-2xl ${
-                                botThemes[selectedBotId]?.botBubble ||
-                                "bg-white/20 text-gray-900"
-                              } border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${
-                                highlightedMessage === msg.id
-                                  ? "bg-orange-200/30"
-                                  : ""
-                              } w-full text-left`}
-                              style={{
-                                userSelect: "none",
-                                WebkitUserSelect: "none",
-                                WebkitTouchCallout: "none",
-                                width: "750px",
-                                minWidth: "400px",
-                              }}
-                              onTouchStart={(e) => {
-                                e.preventDefault();
-                                handleLongPressStart(msg.id);
-                              }}
-                              onTouchEnd={handleLongPressEnd}
-                              onTouchMove={handleLongPressEnd}
-                              onTouchCancel={handleLongPressEnd}
+                  <div className="flex flex-row justify-end">
+                    <span className={`text-xs text-neutral-700 text-left mt-[7px] ${msg.sender === 'user' ? 'mr-3' : ''}`}>
+                      {formatTime(msg.timestamp)}
+                    </span>
+
+                    {msg.sender === 'bot' && (
+                      <div className="flex justify-end px-2 mr-7 relative">
+                        {showReactionsFor === msg.id && <ReactionSelector msgId={msg.id} />}
+
+                        <div className="gap-3 flex flex-row mt-1">
+                          {!isMobile && (
+                            <button
+                              onClick={() => toggleReactions(msg.id)}
+                              className="cursor-pointer text-black/30 hover:text-purple-400 transition-colors mr-2"
                             >
-                              <motion.p className="text-gray-700 dark:text-gray-700">
-                                {msg.text.split(' ').map((word, i) => (
-                                  <motion.span
-                                    key={i}
-                                    initial={{
-                                      filter: "blur(10px)",
-                                      opacity: 0,
-                                      y: 5,
-                                    }}
-                                    animate={{
-                                      filter: "blur(0px)",
-                                      opacity: 1,
-                                      y: 0,
-                                    }}
-                                    transition={{
-                                      duration: 0.2,
-                                      ease: "easeInOut",
-                                      delay: 0.02 * i,
-                                    }}
-                                    className="inline-block select-none"
-                                    style={{
-                                      userSelect: "none",
-                                      WebkitUserSelect: "none",
-                                      WebkitTouchCallout: "none",
-                                    }}
-                                  >
-                                    {word}&nbsp;
-                                  </motion.span>
-                                ))}
-                              </motion.p>
-                            </div>
-                            <PlayAudio
-                              text={msg.text}
-                              bot_id={msg.bot_id || selectedBotId}
-                              minimal={true}
-                            />
-                          </>
-                        )
-                      ) : (
-                        // User message
-                        <div
-                          className={`px-4 py-2 rounded-2xl bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
-                            highlightedMessage === msg.id
-                              ? "bg-orange-200/90"
-                              : ""
-                          } w-full text-left`}
-                          style={{
-                            userSelect: "none",
-                            WebkitUserSelect: "none",
-                            WebkitTouchCallout: "none",
-                            maxWidth: "800px",
-                            width: "100%",
-                          }}
-                        >
-                          <span className="text-right ml-auto">{msg.text}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-row justify-end ">
-                      <span
-                        className={`text-xs text-neutral-700 text-left mt-[7px] ${
-                          msg.sender == "user" ? "mr-3" : ""
-                        }`}
-                      >
-                        {formatTime(msg.timestamp)}
-                      </span>
-                      {msg.sender === "bot" && (
-                        <div className="flex justify-end px-2 mr-7 relative">
-                          {/* Reaction selector popup */}
-                          {showReactionsFor === msg.id && (
-                            <ReactionSelector msgId={msg.id} />
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M8 14s1.5 2.25 4 2.25 4-2.25 4-2.25" />
+                                <line x1="9" y1="9" x2="9.01" y2="9" />
+                                <line x1="15" y1="9" x2="15.01" y2="9" />
+                              </svg>
+                            </button>
                           )}
 
-                          <div className="gap-3 flex flex-row mt-1">
-                            {/* Reaction button - only show on desktop */}
-                            {!isMobile && (
-                              <button
-                                onClick={() => toggleReactions(msg.id)}
-                                className="cursor-pointer text-black/30 hover:text-purple-400 transition-colors mr-2"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="18"
-                                  height="18"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <circle cx="12" cy="12" r="10" />
-                                  <path d="M8 14s1.5 2.25 4 2.25 4-2.25 4-2.25" />
-                                  <line x1="9" y1="9" x2="9.01" y2="9" />
-                                  <line x1="15" y1="9" x2="15.01" y2="9" />
-                                </svg>
-                              </button>
-                            )}
-
-                            {/* Thumbs up/down feedback buttons */}
-                            {msg.text.trim() ===
-                            "Sorry, there was an error processing your request. Please try again.".trim() ? (
-                              <></>
-                            ) : msg.feedback === "" ? (
-                              <>
-                                <ThumbsUp
-                                  className="cursor-pointer text-black/30"
-                                  size={18}
-                                  onClick={() => handleFeedback("like", msg.id)}
-                                />
-                                <ThumbsDown
-                                  className="cursor-pointer text-black/30"
-                                  size={18}
-                                  onClick={() =>
-                                    handleFeedback("dislike", msg.id)
-                                  }
-                                />
-                              </>
-                            ) : msg.feedback === "like" ? (
-                              <>
-                                <IconThumbUpFilled
-                                  size={22}
-                                  className="text-purple-400/100 mt-[-2px]"
-                                />
-                                <ThumbsDown
-                                  className="cursor-pointer text-black/30"
-                                  size={18}
-                                  onClick={() =>
-                                    handleFeedback("dislike", msg.id)
-                                  }
-                                />
-                              </>
-                            ) : msg.feedback === "dislike" ? (
-                              <>
-                                <ThumbsUp
-                                  className="cursor-pointer text-black/30"
-                                  size={18}
-                                  onClick={() => handleFeedback("like", msg.id)}
-                                />
-                                <IconThumbDownFilled
-                                  size={22}
-                                  className="text-purple-400/100"
-                                />
-                              </>
-                            ) : (
-                              <></>
-                            )}
-                          </div>
+                          {msg.text.trim() === "Sorry, there was an error processing your request. Please try again." ? (
+                            <></>
+                          ) : msg.feedback === '' ? (
+                            <>
+                              <ThumbsUp
+                                className="cursor-pointer text-black/30"
+                                size={18}
+                                onClick={() => handleFeedback('like', msg.id)}
+                              />
+                              <ThumbsDown
+                                className="cursor-pointer text-black/30"
+                                size={18}
+                                onClick={() => handleFeedback('dislike', msg.id)}
+                              />
+                            </>
+                          ) : msg.feedback === 'like' ? (
+                            <>
+                              <IconThumbUpFilled size={22} className="text-purple-400/100 mt-[-2px]" />
+                              <ThumbsDown
+                                className="cursor-pointer text-black/30"
+                                size={18}
+                                onClick={() => handleFeedback('dislike', msg.id)}
+                              />
+                            </>
+                          ) : msg.feedback === 'dislike' ? (
+                            <>
+                              <ThumbsUp
+                                className="cursor-pointer text-black/30"
+                                size={18}
+                                onClick={() => handleFeedback('like', msg.id)}
+                              />
+                              <IconThumbDownFilled size={22} className="text-purple-400/100" />
+                            </>
+                          ) : (
+                            <></>
+                          )}
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
-          ))}
-          {isTyping && <TypingIndicator />}
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
-      <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
-        <Input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-gray-900 placeholder-gray-200"
-          placeholder="Type your message..."
-        />
-        <button
-          type="submit"
-          className="p-5 py-2 hover:opacity-60 cursor-pointer md: bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-        >
-          Send
-        </button>
-      </form>
-      <p className="text-xs text-center py-2 text-gray-900">
-        Novi can make mistakes, it's constantly learning from you, please be
-        kind!!
-      </p>
-    </div>
-  );
-};
+              </div>
+            ))}
+          </div>
+        ))}
+        {isTyping && <TypingIndicator />}
+        <div ref={messagesEndRef} />
+      </div>
+    </ScrollArea>
+
+    <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
+      <Input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className="flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-gray-900 placeholder-gray-200"
+        placeholder="Type your message..."
+      />
+      <button
+        type="submit"
+        className="p-5 py-2 hover:opacity-60 cursor-pointer md: bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+      >
+        Send
+      </button>
+    </form>
+
+    <p className="text-xs text-center py-2 text-gray-900">
+      Novi can make mistakes, it's constantly learning from you, please be kind!!
+    </p>
+  </div>
+)};
