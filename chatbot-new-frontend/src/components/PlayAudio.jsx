@@ -189,7 +189,7 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
         setIsLoading(true);
         setShouldAutoPlay(true); // Set flag to auto-play after load
         // Always fetch new audio for each click
-        const response = await fetch('http://127.0.0.1:8000/generate-audio', {
+        const response = await fetch('https://novi.aigurukul.dev/generate-audio', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
