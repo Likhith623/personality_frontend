@@ -60,7 +60,7 @@ export default function Memories() {
     };
     // event listener to detect mouse clicks anywhere on the document
     document.addEventListener("mousedown", handleClickOutside);
-     // Cleanup function to remove the event listener when the component unmounts
+    // Cleanup function to remove the event listener when the component unmounts
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -75,36 +75,41 @@ export default function Memories() {
       try {
         // API request to fetch memories based on user email and bot ID
         const response = await fetch(
-          `https://novi.aigurukul.dev/get_persona?email=${encodeURIComponent(userDetails.email)}&bot_id=${encodeURIComponent(selectedBotId)}`
+          `https://novi.aigurukul.dev/get_persona?email=${encodeURIComponent(
+            userDetails.email
+          )}&bot_id=${encodeURIComponent(selectedBotId)}`
         );
         if (!response.ok) throw new Error("Failed to fetch memories");
         // Parsing the response data
         const data = await response.json();
         console.log("API Response:", data);
-  
+
         const categorizedMemories = {};
-        categoryOrder.forEach(category => {
+        categoryOrder.forEach((category) => {
           categorizedMemories[category] = [];
         });
-  
-        data.forEach(memory => {
+
+        data.forEach((memory) => {
           const category = memory.category;
           if (!categorizedMemories[category]) {
             categorizedMemories[category] = [];
           }
 
-           // Replace 'user1' with the user's actual name
-          const updatedText = memory.memory.replace(/User1/g, userDetails?.name || "User");
-          
-              categorizedMemories[category].push({
-                id: memory.id,
-                text: updatedText,
-                categories: [category],
-                relation_id: memory.relation_id,
-                created_at: memory.created_at
-              });
+          // Replace 'user1' with the user's actual name
+          const updatedText = memory.memory.replace(
+            /User1/g,
+            userDetails?.name || "User"
+          );
+
+          categorizedMemories[category].push({
+            id: memory.id,
+            text: updatedText,
+            categories: [category],
+            relation_id: memory.relation_id,
+            created_at: memory.created_at,
           });
-  
+        });
+
         setMemories(categorizedMemories);
       } catch (error) {
         console.error("Error fetching memories:", error);
@@ -177,9 +182,9 @@ export default function Memories() {
         bot_id: selectedBotId,
         memory: newMemoryText,
         category: selectedCategory,
-        redundant: false
+        redundant: false,
       };
-      
+
       // Send a POST request to the backend to add the new memory using add_persona endpoint
       const response = await fetch("https://novi.aigurukul.dev/add_persona", {
         method: "POST",
@@ -188,7 +193,7 @@ export default function Memories() {
         },
         body: JSON.stringify(payload),
       });
-      
+
       // Handle unsuccessful response
       if (!response.ok) {
         console.error("Failed to add memory");
@@ -196,23 +201,23 @@ export default function Memories() {
         console.error("Error details:", errorData);
         return;
       }
-      
+
       // Parse the response to get the newly created memory data
       const data = await response.json();
       console.log("Add Persona Response:", data);
-      
+
       if (data.success && data.inserted && data.inserted.length > 0) {
         const insertedMemory = data.inserted[0];
-        
+
         // Create memory object from response data
         const newMemory = {
           id: insertedMemory.id,
           text: insertedMemory.memory,
           categories: [insertedMemory.category],
           relation_id: insertedMemory.relation_id,
-          created_at: insertedMemory.created_at
+          created_at: insertedMemory.created_at,
         };
-        
+
         // Update the local `memories` state by appending the new memory
         const updatedMemories = { ...memories };
         if (updatedMemories[selectedCategory]) {
@@ -220,7 +225,7 @@ export default function Memories() {
         } else {
           updatedMemories[selectedCategory] = [newMemory];
         }
-        
+
         // Set the updated memories state
         setMemories(updatedMemories);
       }
@@ -252,13 +257,13 @@ export default function Memories() {
       const response = await fetch(
         `https://novi.aigurukul.dev/update_persona?id=${memoryIdToUpdate}`, // Include ID in query
         {
-            method: "PUT", // Changed to PUT as per API
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
+          method: "PUT", // Changed to PUT as per API
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         }
-    );
+      );
       console.log("Update API Response:", response);
 
       // Check if the API response indicates a failure (not an OK status code)
@@ -274,7 +279,7 @@ export default function Memories() {
 
       // Optimistically update the local state (memories) to reflect the changes.
       const updatedMemories = { ...memories };
-      
+
       // Remove the memory from old category
       for (const cat in updatedMemories) {
         if (updatedMemories[cat]) {
@@ -296,7 +301,7 @@ export default function Memories() {
           text: editText,
           categories: editCategories,
           relation_id: selectedMemory.relation_id,
-          created_at: selectedMemory.created_at
+          created_at: selectedMemory.created_at,
         });
       });
       // Update the local state with the modified memories object.
@@ -314,7 +319,7 @@ export default function Memories() {
   const handleStartEdit = () => {
     setIsEditing(true);
   };
-  
+
   // Disables editing mode and clears any selected memories marked for deletion
   const handleCancelEdit = () => {
     setIsEditing(false);
@@ -342,21 +347,17 @@ export default function Memories() {
     if (!selectedMemory) return;
 
     try {
-      
       const memoryIdToDelete = selectedMemory.id;
       const deleteUrl = `https://novi.aigurukul.dev/delete_persona?id=${memoryIdToDelete}`;
       // Make an asynchronous API call to delete the current memory ID.
-      const response = await fetch(
-        deleteUrl,
-        {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json", // You might not even need this for a DELETE with query params
-                "accept": "application/json", // Add the accept header as in the curl example
-            },
-            // Remove the body: line as the ID is in the URL
-        }
-    );
+      const response = await fetch(deleteUrl, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json", // You might not even need this for a DELETE with query params
+          accept: "application/json", // Add the accept header as in the curl example
+        },
+        // Remove the body: line as the ID is in the URL
+      });
       console.log("Delete Single Memory API Response:", response);
       if (!response.ok) {
         console.error("Failed to delete memory");
@@ -390,18 +391,14 @@ export default function Memories() {
       for (const memoryIdToDelete of selectedMemoriesToDelete) {
         const deleteUrl = `https://novi.aigurukul.dev/delete_persona?id=${memoryIdToDelete}`;
         // Make an asynchronous API call to delete the current memory ID.
-        const response = await fetch(
-          deleteUrl,
-          {
-              method: "DELETE",
-              headers: {
-                  "Content-Type": "application/json", // You might not even need this for a DELETE with query params
-                  "accept": "application/json", // Add the accept header as in the curl example
-              },
-              // Remove the body: line as the ID is in the URL
-          }
-      );
-
+        const response = await fetch(deleteUrl, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json", // You might not even need this for a DELETE with query params
+            accept: "application/json", // Add the accept header as in the curl example
+          },
+          // Remove the body: line as the ID is in the URL
+        });
 
         console.log(`Deleting memory ID: ${memoryIdToDelete}`, response);
 
@@ -440,11 +437,11 @@ export default function Memories() {
     <div className="flex flex-col md:flex-row h-full p-4 md:p-6 rounded-xl shadow-2xl bg-white/70 backdrop-blur">
       {/* Left Panel - Categories */}
       <div className="w-full md:w-1/3 lg:w-1/4 p-4 md:p-6">
-        <h1 className="text-lg md:text-2xl font-bold mb-4 md:mb-6 text-[#36454f]">
+        <h1 className="text-lg md:text-2xl font-bold mb-4 md:mb-6 text-gray-800 dark:text-white">
           Memory
         </h1>
         {/* Horizontal scrollable categories on mobile, vertical on larger screens */}
-        <div className="flex flex-row scrollbar-thin scrollbar-thumb-white scrollbar-track-white/30 overflow-x-auto md:flex-col md:space-y-2 mt-8 sm:mt-12">
+        <div className="flex flex-row scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800 overflow-x-auto md:flex-col md:space-y-2 mt-8 sm:mt-12">
           {/* Map through the categoryOrder array to display category buttons */}
           {categoryOrder.map((category) => (
             <button
@@ -452,12 +449,13 @@ export default function Memories() {
               onClick={() => scrollToCategory(category)}
               className={`text-sm md:text-base text-left px-3 py-3 md:px-4 md:py-3 rounded-lg transition-all font-bold duration-300 whitespace-nowrap ${
                 selectedCategory === category
-                  ? " text-[#36454f] bg-white/30 font-bold "
-                  : "hover:bg-white/20 text-[#36454f]"
+                  ? "text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-800 font-bold"
+                  : "hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300"
               }`}
               style={{ width: "auto" }} // Override w-full for mobile
             >
-              {replaceUnderscoreWithSpace(category)} {/* Display category name with spaces */}
+              {replaceUnderscoreWithSpace(category)}{" "}
+              {/* Display category name with spaces */}
             </button>
           ))}
         </div>
@@ -472,13 +470,13 @@ export default function Memories() {
             <>
               <button
                 onClick={handleOpenAddSidebar}
-                className="text-gray-500 bg-white/30 hover:text-gray-700 hover:bg-white/20 mr-2 rounded-3xl px-8 py-2"
+                className="text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 mr-2 rounded-3xl px-8 py-2"
               >
                 Add
               </button>
               <button
                 onClick={handleStartEdit}
-                className="text-gray-500 bg-white/30 hover:text-gray-700 hover:bg-white/20 rounded-3xl px-8 py-2"
+                className="text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-3xl px-8 py-2"
               >
                 Edit
               </button>
@@ -491,17 +489,17 @@ export default function Memories() {
               <button
                 onClick={handleDeleteSelectedMemories}
                 disabled={selectedMemoriesToDelete.length === 0}
-                className={`rounded-3xl px-6 py-2 text-white hover:bg-white/40  font-semibold ${
+                className={`rounded-3xl px-6 py-2 text-white hover:bg-red-700 dark:hover:bg-red-700 font-semibold ${
                   selectedMemoriesToDelete.length > 0
-                    ? "bg-gray-400"
-                    : "bg-white/40 cursor-not-allowed"
+                    ? "bg-red-500 dark:bg-red-600"
+                    : "bg-gray-300 dark:bg-gray-600 cursor-not-allowed"
                 } transition-colors mr-2`}
               >
                 Delete
               </button>
               <button
                 onClick={handleCancelEdit}
-                className="text-gray-500 hover:text-gray-700 hover:bg-white/20 bg-white/30 rounded-3xl px-6 py-2"
+                className="text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-3xl px-6 py-2"
               >
                 Cancel
               </button>
@@ -510,7 +508,7 @@ export default function Memories() {
         </div>
 
         {/* Scrollable Memories Content */}
-        <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-white scrollbar-track-white/30">
+        <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800">
           <div className="space-y-6 md:space-y-8 mt-2">
             {/* Map through the categoryOrder again to display memories under each category */}
             {categoryOrder.map((category) => (
@@ -519,8 +517,9 @@ export default function Memories() {
                 ref={(el) => (categoryRefs.current[category] = el)}
                 className="relative p-4 rounded-xl"
               >
-                <h2 className="text-sm sm:text-base md:text-base font-semibold text-[#36454f] mb-3 md:mb-4">
-                  {replaceUnderscoreWithSpace(category)} {/* Display category title */}
+                <h2 className="text-sm sm:text-base md:text-base font-semibold text-gray-800 dark:text-white mb-3 md:mb-4">
+                  {replaceUnderscoreWithSpace(category)}{" "}
+                  {/* Display category title */}
                 </h2>
                 <div className="space-y-2 md:space-y-3">
                   {/* Check if there are memories for the current category */}
@@ -530,10 +529,10 @@ export default function Memories() {
                       <div
                         key={memory.id}
                         onClick={() => handleMemoryClick(memory, category)}
-                        className={`text-sm sm:text-base md:text-base p-3 md:p-4 rounded-lg bg-white/30 font-bold hover:bg-white/20 transition-all duration-300 text-[#36454f] flex items-center justify-between cursor-pointer ${
+                        className={`text-sm sm:text-base md:text-base p-3 md:p-4 rounded-lg bg-gray-100 dark:bg-gray-800 font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 text-gray-800 dark:text-white flex items-center justify-between cursor-pointer ${
                           isEditing &&
                           selectedMemoriesToDelete.includes(memory.id)
-                            ? "bg-red-200"
+                            ? "bg-red-200 dark:bg-red-900"
                             : ""
                         }`}
                       >
@@ -651,7 +650,7 @@ export default function Memories() {
                       />
                     </svg>
                   </button>
-                   {/* Category dropdown options */}
+                  {/* Category dropdown options */}
                   {isCategoryDropdownOpen && (
                     <div className="absolute left-0 mt-2 w-full rounded-2xl shadow-lg z-10 bg-black/20 backdrop-blur-md border border-white/10 overflow-hidden">
                       {categoryOrder.map((cat) => (
@@ -788,7 +787,7 @@ export default function Memories() {
                   )}
                 </div>
               </div>
-                {/* Textarea for editing text */}
+              {/* Textarea for editing text */}
               <div className="mb-6 mt-2">
                 <textarea
                   id="editText"
