@@ -52,7 +52,7 @@ import trimurti from "@/photos/trimurti.jpg";
 
 import BotCustomization from "@/components/CoustomBot";
 import PlayAudio from "@/components/PlayAudio";
-import VoiceCall from "@/components/VoiceCall";
+import VoiceCallUltra from "@/components/VoiceCallUltra";
 import { FloatingDockDemo } from "@/components/BottomMenuBar";
 import { Input } from "@/components/ui/input";
 import CustomModal from "@/components/CustomModal";
@@ -437,7 +437,7 @@ export default function SidebarDemo() {
     } else {
       setCustomName(selectedBotDetails.name);
     }
-  }, [selectedBotId, selectedBotDetails.name]);
+  }, [selectedBotId, selectedBotDetails.name, selectedLanguage]);
 
   /* The code is checking if `selectedTraits` is an array using `Array.isArray()`. If it is an array, it
 joins the elements of the array into a string separated by commas. If `selectedTraits` is not an
@@ -1823,7 +1823,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
       Avoid using quotation marks around words or phrases, except when you’re in roleplay. Keep emphasis natural and tone literal.
       `
     }));
-  }, [selectedBotId, customName, selectedTraits, selectedLanguage]);
+  }, [selectedBotId, customName, selectedTraits, selectedLanguage, languageString, traitsString, userDetails.gender, userDetails.name]);
 
   /**
  * The function `handleBotCustomization` sets a custom name for a bot based on the provided
@@ -2788,13 +2788,18 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       console.log("Voice call payload:", payload);
 
       // Send to voice call API endpoint - Using local development server
-      const response = await fetch('http://127.0.0.1:8000/voice-call', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await Promise.race([
+        fetch('http://127.0.0.1:8000/voice-call', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Voice call request timeout')), 30000)
+        )
+      ]);
 
       if (!response.ok) {
         throw new Error(`Voice call API error: ${response.status}`);
@@ -3072,11 +3077,10 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       
       {/* Voice Call Component */}
       {isVoiceCallOpen && (
-        <VoiceCall
+        <VoiceCallUltra
           isOpen={isVoiceCallOpen}
           onClose={() => setIsVoiceCallOpen(false)}
           onMessageReceived={handleVoiceCallMessage}
-          editablePrompts={editablePrompts}
           messages={messages}
         />
       )}
