@@ -1,0 +1,6 @@
+# Exclude only dev-specific files
+.git
+.gitignore
+node_modules
+*.log
+.env
