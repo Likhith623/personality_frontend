@@ -1,6 +1,12 @@
-# Exclude only dev-specific files
+# Ignore development-only files
 .git
-.gitignore
 node_modules
-*.log
+.vscode
 .env
+*.log
+
+# Allow these folders (needed for build)
+!.next
+!public
+!pages
+!package.json
