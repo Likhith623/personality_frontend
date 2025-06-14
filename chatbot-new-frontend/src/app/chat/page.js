@@ -3002,8 +3002,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
     </div>
   );
 
-  // Component for removal tooltip
-  const RemovalTooltip = ({ msgId }) => (
+const RemovalTooltip = ({ msgId }) => (
   <div className="absolute -top-10 left-0 bg-white/90 backdrop-blur-md rounded-lg py-1 px-3 shadow-md border border-gray-200 z-10 text-sm text-gray-700 whitespace-nowrap">
     Tap to remove
   </div>
@@ -3014,7 +3013,7 @@ console.log("All chat messages:", messages);
 return (
   <div
     className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
-      botThemes[selectedBotId]?.background || "bg-gray-100"
+      botThemes[selectedBotId]?.background || 'bg-gray-100'
     }`}
     style={
       botThemes[selectedBotId]?.backgroundImages
@@ -3028,35 +3027,17 @@ return (
                 backgroundRepeat: "no-repeat",
               };
             } else if (bg.startsWith("radial-gradient")) {
-              return {
-                backgroundImage: bg,
-              };
+              return { backgroundImage: bg };
             } else {
-              return {
-                backgroundColor: bg,
-              };
+              return { backgroundColor: bg };
             }
           })()
-        : undefined
-    }
-  >
-    <ScrollArea className="flex-1">
-      <div className="px-1 md:px-2">
-        {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
-          <div key={date}>
-            <div className="sticky my-10 top-5 z-10 py-2 mx-auto w-32 bg-white/30 backdrop-blur-md rounded-md shadow-md">
-              <p className="text-center text-sm text-gray-600">{date}</p>
-            </div>
-return (
-  <div
-    className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${botThemes[selectedBotId]?.background || 'bg-gray-100'}`}
-    style={
-      botThemes[selectedBotId]?.backgroundImage
+        : botThemes[selectedBotId]?.backgroundImage
         ? {
             backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
           }
         : undefined
     }
@@ -3091,7 +3072,7 @@ return (
                           <div
                             className={`px-4 py-2 rounded-2xl ${
                               botThemes[selectedBotId]?.botBubble || 'bg-white/20 text-gray-900'
-                            } border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${
+                            } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
                               highlightedMessage === msg.id ? 'bg-orange-200/30' : ''
                             } w-full text-left`}
                             style={{
@@ -3128,7 +3109,7 @@ return (
                       <div
                         className={`px-4 py-2 rounded-2xl ${
                           botThemes[selectedBotId]?.userBubble || 'bg-purple-400/80 text-white'
-                        } border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${
+                        } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
                           highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
                         } w-full text-left`}
                         style={{
@@ -3141,52 +3122,27 @@ return (
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </ScrollArea>
-  </div>
-);
-
-                    ) : (
-                      <div
-                        className={`px-4 py-2 rounded-2xl bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
-                          highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
-                        } w-full text-left`}
-                        style={{
-                          userSelect: 'none',
-                          WebkitUserSelect: 'none',
-                          WebkitTouchCallout: 'none',
-                          maxWidth: '800px',
-                          width: '100%',
-                        }}
-                      >
-                        <span className="text-right ml-auto">{msg.text}</span>
-                      </div>
-                    )}
-                  </div>
-                  {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} />}
-                  </div>
 
                   <div className="flex flex-row justify-end">
-                    <span className={`text-xs ${msg.sender === 'user' ? 'mr-3' : ''} ${isDarkTheme ? 'text-white' : 'text-neutral-700'} mt-[7px]`}>
+                    <span
+                      className={`text-xs mt-[7px] ${msg.sender === 'user' ? 'mr-3' : ''} ${
+                        isDarkTheme ? 'text-white' : 'text-neutral-700'
+                      }`}
+                    >
                       {formatTime(msg.timestamp)}
                     </span>
 
                     {msg.sender === 'bot' && (
                       <div className="flex justify-end px-2 mr-7 relative">
-                        {/* Reaction selector popup */}
                         {showReactionsFor === msg.id && <ReactionSelector msgId={msg.id} />}
 
                         <div className="gap-3 flex flex-row mt-1">
-                          {/* Reaction button - only show on desktop */}
                           {!isMobile && (
                             <button
                               onClick={() => toggleReactions(msg.id)}
-                              className={`cursor-pointer transition-colors mr-2 ${isDarkTheme ? 'text-white hover:text-white' : 'text-black/30 hover:text-purple-400'}`}
+                              className={`cursor-pointer transition-colors mr-2 ${
+                                isDarkTheme ? 'text-white hover:text-white' : 'text-black/30 hover:text-purple-400'
+                              }`}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -3198,46 +3154,43 @@ return (
                             </button>
                           )}
 
-                          {/* Thumbs feedback */}
-                          {msg.text.trim() === "Sorry, there was an error processing your request. Please try again." ? (
-                            <></>
-                          ) : msg.feedback === '' ? (
+                          {msg.text.trim() === "Sorry, there was an error processing your request. Please try again." ? null : (
                             <>
-                              <ThumbsUp
-                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
-                                size={18}
-                                onClick={() => handleFeedback('like', msg.id)}
-                              />
-                              <ThumbsDown
-                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
-                                size={18}
-                                onClick={() => handleFeedback('dislike', msg.id)}
-                              />
-                            </>
-                          ) : msg.feedback === 'like' ? (
-                            <>
-                              <IconThumbUpFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'} mt-[-2px]`} />
-                              <ThumbsDown
-                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
-                                size={18}
-                                onClick={() => handleFeedback('dislike', msg.id)}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <ThumbsUp
-                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
-                                size={18}
-                                onClick={() => handleFeedback('like', msg.id)}
-                              />
-                              <IconThumbDownFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'}`} />
+                              {msg.feedback === '' ? (
+                                <>
+                                  <ThumbsUp
+                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    size={18}
+                                    onClick={() => handleFeedback('like', msg.id)}
+                                  />
+                                  <ThumbsDown
+                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    size={18}
+                                    onClick={() => handleFeedback('dislike', msg.id)}
+                                  />
+                                </>
+                              ) : msg.feedback === 'like' ? (
+                                <>
+                                  <IconThumbUpFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'} mt-[-2px]`} />
+                                  <ThumbsDown
+                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    size={18}
+                                    onClick={() => handleFeedback('dislike', msg.id)}
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <ThumbsUp
+                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    size={18}
+                                    onClick={() => handleFeedback('like', msg.id)}
+                                  />
+                                  <IconThumbDownFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'}`} />
+                                </>
+                              )}
                             </>
                           )}
                         </div>
-                      </div>
-                    )}
-                  </div>
-
                       </div>
                     )}
                   </div>
@@ -3261,7 +3214,7 @@ return (
       />
       <button
         type="submit"
-        className="p-5 py-2 hover:opacity-60 cursor-pointer md: bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+        className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
       >
         Send
       </button>
@@ -3271,4 +3224,5 @@ return (
       Novi can make mistakes, it's constantly learning from you, please be kind!!
     </p>
   </div>
-)};
+);
+
