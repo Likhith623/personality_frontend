@@ -3,87 +3,208 @@ import React, { useState, useEffect, useRef } from "react";
 
 const botThemes = {
   delhi_mentor_male: {
-    
-    botBubble: 'bg-slate-100 text-black shadow-md',
-    userBubble: 'bg-amber-100 text-black shadow-md',
-    backgroundImage: '/bg-images/delhi_mentor_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-gray-900 text-white',
+    backgroundImages: [ '/bg-images/delhi_mentor_male-bg.jpg',
+    '/photos/default_bg.png'
+  ],
   },
   delhi_mentor_female: {
-    
-    botBubble: 'bg-white text-black  shadow-md',
-    userBubble: 'bg-rose-100 text-black shadow-md',
-    backgroundImage: '/bg-images/delhi_mentor_female-bg.jpg',
-  },  delhi_friend_male: {
-    
-    botBubble: 'bg-amber-200 text-black  shadow-md',
-    userBubble: 'bg-sky-100 text-black shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/delhi_friend_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-purple-900 text-white',
+    backgroundImages: [ '/bg-images/delhi_mentor_female-bg.jpg',
+      '/photos/default_bg.png'
+    ],
+  },
+  delhi_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-blue-900 text-white',
+    backgroundImages: [ '/bg-images/delhi_friend_male-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
   delhi_friend_female: {
-    
-    botBubble: 'bg-rose-50 text-black shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-emerald-100 text-black shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/delhi_friend_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-pink-900 text-white',
+    backgroundImages: [ '/bg-images/delhi_friend_female-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
   delhi_romantic_male: {
-    
-    botBubble: 'bg-purple-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-yellow-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/delhi_romantic_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-red-900 text-white',
+    backgroundImages: [ '/bg-images/delhi_romantic_male-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
   delhi_romantic_female: {
-    
-    botBubble: 'bg-pink-200 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-yellow-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/delhi_romantic_female-bg.jpg',
-  },  parisian_mentor_male: {
-    
-    botBubble: 'bg-white text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-stone-200 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_mentor_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-rose-900 text-white',
+    backgroundImages: ['/bg-images/delhi_romantic_female-bg.jpg',
+      '/photos/default_bg.png'
+    ],
+  },
+  japanese_mentor_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanmm_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  japanese_mentor_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanmf_bg.jpeg',
+    '/photos/default_bg.png'  
+  ],
+  },
+  japanese_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanfm_bg.png',
+    '/photos/default_bg.png' 
+  ],
+  },
+  japanese_friend_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages:['/photos/japanff_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  japanese_romantic_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanrm_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  japanese_romantic_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanrf_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  parisian_mentor_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-neutral-900 text-white',
+    backgroundImages: ['/bg-images/parisian_mentor_male-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_mentor_female: {
-    
-    botBubble: 'bg-amber-50 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-indigo-50 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_mentor_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-purple-800 text-white',
+    backgroundImages: ['/bg-images/parisian_mentor_female-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_friend_male: {
-    
-    botBubble: 'bg-blue-100 text-blue-900 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-green-100 text-green-900 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_friend_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-blue-900 text-white',
+    backgroundImages: ['/bg-images/parisian_friend_male-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_friend_female: {
-    
-    botBubble: 'bg-gray-100 text-gray-900 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-indigo-200 text-indigo-900 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_friend_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-pink-900 text-white',
+    backgroundImages: ['/bg-images/parisian_friend_female-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_romantic_male: {
-    
-    botBubble: 'bg-gray-200 text-gray-900 shadow-md',
-    userBubble: 'bg-white text-gray-900 shadow-md',
-    backgroundImage: '/bg-images/parisian_romantic_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-red-900 text-white',
+    backgroundImages: [ '/bg-images/parisian_romantic_male-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_romantic_female: {
-    
-    botBubble: 'bg-rose-200 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-sky-200 text-neutral-800 backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_romantic_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-rose-900 text-white',
+    backgroundImages: ['/bg-images/parisian_romantic_female-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
-  
+  berlin_mentor_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinmm_bg.png',
+    '/photos/default_bg.png'  
+  ]
+  },
+  berlin_mentor_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinmf_bg.png',
+    '/photos/default_bg.png' 
+  ],
+  },
+  berlin_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinfm_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  berlin_friend_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinff_bg.png',
+    '/photos/default_bg.png' 
+  ],
+  },
   berlin_romantic_male: {
-   
-    botBubble: 'bg-orange-100 text-black shadow-md',
-    userBubble: 'bg-yellow-100 text-black shadow-md',
-    backgroundImage: '/bg-images/berlin_romantic_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-red-900 text-white',
+    backgroundImages: ['/bg-images/berlin_romantic_male-bg.jpg',
+      '/photos/default_bg.png'
+    ],
   },
   berlin_romantic_female: {
-    
-    botBubble: 'bg-orange-200 text-black shadow-md',
-    userBubble: 'bg-orange-100 text-black shadow-md',
-    backgroundImage: '/bg-images/berlin_romantic_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-rose-900 text-white',
+    backgroundImages: ['/bg-images/berlin_romantic_female-bg.jpg',
+      '/photos/default_bg.png'
+    ],
+  },
+  Krishna: {
+    background: 'bg-yellow-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages:[
+      '/photos/krishna_bg.jpg',
+      '/photos/default_bg.png'
+      ],// Place Krishna bg image here
+  },
+  Rama: {
+    background: 'bg-yellow-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      '/photos/rama_bg.png',
+      '/photos/default_bg.png'
+    ], // Place Rama bg image here
+  },
+  Shiva: {
+    background: 'bg-blue-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/shiva_bg.png',
+    '/photos/default_bg.png'   // Place Shiva background image here
+  ],
+  },  
+  Hanuman: {
+    background: 'bg-orange-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/hanuman_bg.png',
+    '/photos/default_bg.png'  ], // Place Hanuman bg image here
+  },
+  Trimurti: {
+    background: 'bg-indigo-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/trimurthi_bg.png',
+    '/photos/default_bg.png' 
+   ], // Place Trimurti bg image here
   },
 };
 import Link from "next/link";
