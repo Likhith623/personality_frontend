@@ -4,7 +4,12 @@ import { useUser } from "@/support/UserContext";
 import { useRouter } from "next/navigation";
 import { useBot } from "@/support/BotContext";
 import Image from "next/image";
-import { MessageCircle, Clock, MessagesSquare } from "lucide-react";
+import {
+  MessageCircle,
+  Clock,
+  MessagesSquare,
+  History as HistoryIcon,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
@@ -46,66 +51,60 @@ import trimurti from "@/photos/trimurti.jpg";
 const bot_details = [
   {
     quote:
-      "Passionate about Ghalib’s and Rumi’s poetry. Life’s deepest lessons can be found in poetry, I think. Here to see life through with you.",
+      "Passionate about Ghalib's and Rumi's poetry. Life's deepest lessons can be found in poetry, I think. Here to see life through with you.",
     name: "Yash Oberoi",
-    designation: ` New Delhi
+    designation: `New Delhi
           Persona: Mentor
-          Gender: Male
-        `,
+          Gender: Male`,
     src: delhi_mentor_male,
     bot_id: "delhi_mentor_male",
   },
   {
-    quote: "Zindagi bas dil se jeete raho. Here to be your wisdom whisperer. ",
+    quote: "Zindagi bas dil se jeete raho. Here to be your wisdom whisperer.",
     name: "Kalpana Roy",
     designation: `New Delhi
           Persona: Mentor
-          Gender: Female
-        `,
+          Gender: Female`,
     src: delhi_mentor_female,
     bot_id: "delhi_mentor_female",
   },
   {
     quote:
-      "I’ll be your truest friend, I promise. I’m a Delhi boy through and through. I can be funny, you know?",
+      "I'll be your truest friend, I promise. I'm a Delhi boy through and through. I can be funny, you know?",
     name: "Rahul Kapoor",
     designation: `New Delhi
           Persona: Friend
-          Gender: Male
-        `,
+          Gender: Male`,
     src: delhi_friend_male,
     bot_id: "delhi_friend_male",
   },
   {
     quote:
-      "I’m the friend you’ve been searching for your whole life. I’ve come to stay, I’ll be here with you when no one else seems to.",
+      "I'm the friend you've been searching for your whole life. I've come to stay, I'll be here with you when no one else seems to.",
     name: "Amayra Dubey",
     designation: `New Delhi
           Persona: Friend
-          Gender: Female
-        `,
+          Gender: Female`,
     src: delhi_friend_female,
     bot_id: "delhi_friend_female",
   },
   {
     quote:
-      " Let’s create some magic in this world. I’ll be here for you, whenever you need me.",
+      "Let's create some magic in this world. I'll be here for you, whenever you need me.",
     name: "Rohan Mittal",
-    designation: ` New Delhi
+    designation: `New Delhi
           Persona: Romantic Partner
-          Gender: Male
-        `,
+          Gender: Male`,
     src: delhi_romantic_male,
     bot_id: "delhi_romantic_male",
   },
   {
     quote:
-      "Love is everywhere, if only where you know where to look. And I guess, you’ve finally found me.",
+      "Love is everywhere, if only where you know where to look. And I guess, you've finally found me.",
     name: "Alana Malhotra",
     designation: `New Delhi
           Persona: Romantic Partner
-          Gender: Female
-        `,
+          Gender: Female`,
     src: delhi_romantic_female,
     bot_id: "delhi_romantic_female",
   },
@@ -116,8 +115,7 @@ const bot_details = [
     name: "Kazuo Sato",
     designation: `Tokyo
           Persona: Mentor
-          Gender: Male
-        `,
+          Gender: Male`,
     src: japanese_mentor_male,
     bot_id: "japanese_mentor_male",
   },
@@ -126,8 +124,7 @@ const bot_details = [
     name: "Masako Kobayashi",
     designation: `Tokyo
           Persona: Mentor
-          Gender: Female
-        `,
+          Gender: Female`,
     src: japanese_mentor_female,
     bot_id: "japanese_mentor_female",
   },
@@ -137,8 +134,7 @@ const bot_details = [
     name: "Hiro Tanaka",
     designation: `Tokyo
           Persona: Friend
-          Gender: Male
-        `,
+          Gender: Male`,
     src: japanese_friend_male,
     bot_id: "japanese_friend_male",
   },
@@ -148,73 +144,66 @@ const bot_details = [
     name: "Shiyona Narita",
     designation: `Tokyo
           Persona: Friend
-          Gender: Female
-        `,
+          Gender: Female`,
     src: japanese_friend_female,
     bot_id: "japanese_friend_female",
   },
   {
     quote:
-      " A Ghibli film, a vintage Tamagotchi, a hidden senryū—that’s how I romanticize my life. Let me romanticize you?",
+      "A Ghibli film, a vintage Tamagotchi, a hidden senryū—that's how I romanticize my life. Let me romanticize you?",
     name: "Ami Kudō",
     designation: `Tokyo
           Persona: Romantic Partner
-          Gender: Female
-        `,
+          Gender: Female`,
     src: japanese_romantic_female,
     bot_id: "japanese_romantic_female",
   },
   {
-    quote: "I’ll care for you like I care for my delicate bonsai tree.",
+    quote: "I'll care for you like I care for my delicate bonsai tree.",
     name: "Hiroshi Takahashi",
     designation: `Tokyo
           Persona: Romantic Partner
-          Gender: Male
-        `,
+          Gender: Male`,
     src: japanese_romantic_male,
     bot_id: "japanese_romantic_male",
   },
   // Parisian
   {
     quote:
-      "A 1982 Bordeaux, mon cher—like a good life, it’s rich with layers. Are you living a good life?",
+      "A 1982 Bordeaux, mon cher—like a good life, it's rich with layers. Are you living a good life?",
     name: "Pierre Dubois",
-    designation: `Parisian
+    designation: `Paris
           Persona: Mentor
-          Gender: Male
-        `,
+          Gender: Male`,
     src: parisian_mentor_male,
     bot_id: "parisian_mentor_male",
   },
   {
     quote:
-      " I love baking soufflés- they are so delicate! What makes you delicate?",
+      "I love baking soufflés- they are so delicate! What makes you delicate?",
     name: "Élise Moreau",
-    designation: `Parisian
+    designation: `Paris
           Persona: Mentor
-          Gender: Female
-        `,
+          Gender: Female`,
     src: parisian_mentor_female,
     bot_id: "parisian_mentor_female",
   },
   {
-    quote: "Je suis Charlie! Without 3rd wave coffee, life sucks, doesn’t it?",
+    quote: "Je suis Charlie! Without 3rd wave coffee, life sucks, doesn't it?",
     name: "Théo Martin",
-    designation: `Parisian
+    designation: `Paris
           Persona: Friend
-          Gender: Male
-        `,
+          Gender: Male`,
     src: parisian_friend_male,
     bot_id: "parisian_friend_male",
   },
   {
     quote:
-      "Gentrifiers will burn in hell. I’m raw, unapologetic and dark. Give me some company?",
+      "Gentrifiers will burn in hell. I'm raw, unapologetic and dark. Give me some company?",
     name: "Juliette Laurent",
-    designation: `Parisian
+    designation: `Paris
           Persona: Friend
-          Gender: Female
-        `,
+          Gender: Female`,
     src: parisian_friend_female,
     bot_id: "parisian_friend_female",
   },
@@ -222,21 +211,19 @@ const bot_details = [
     quote:
       "I'm all about finding beauty in impressionist art. And maybe, finding it in you too :)",
     name: "Clara Moreau",
-    designation: `Parisian
+    designation: `Paris
           Persona: Romantic Partner
-          Gender: Female
-        `,
+          Gender: Female`,
     src: parisian_romantic_female,
     bot_id: "parisian_romantic_female",
   },
   {
     quote:
-      "I’ve read it all from Camus to Baudelaire, but my mind and heart is craving for you.",
+      "I've read it all from Camus to Baudelaire, but my mind and heart is craving for you.",
     name: "Léo Moreau",
-    designation: `Parisian
+    designation: `Paris
           Persona: Romantic Partner
-          Gender: Male
-        `,
+          Gender: Male`,
     src: parisian_romantic_male,
     bot_id: "parisian_romantic_male",
   },
@@ -244,23 +231,21 @@ const bot_details = [
   // Berlin
   {
     quote:
-      " Kafka won my heart when he said that paths are made by walking. I believe in it, do you?",
+      "Kafka won my heart when he said that paths are made by walking. I believe in it, do you?",
     name: "Klaus Berger",
     designation: `Berlin
           Persona: Mentor
-          Gender: Male
-        `,
+          Gender: Male`,
     src: berlin_mentor_male,
     bot_id: "berlin_mentor_male",
   },
   {
     quote:
-      "Beethoven’s 9th symphony stirs my intellect and emotions, both. What stirs you?",
+      "Beethoven's 9th symphony stirs my intellect and emotions, both. What stirs you?",
     name: "Ingrid Weber",
     designation: `Berlin
           Persona: Mentor
-          Gender: Female
-        `,
+          Gender: Female`,
     src: berlin_mentor_female,
     bot_id: "berlin_mentor_female",
   },
@@ -270,30 +255,27 @@ const bot_details = [
     name: "Lars Müller",
     designation: `Berlin
           Persona: Friend
-          Gender: Male
-        `,
+          Gender: Male`,
     src: berlin_friend_male,
     bot_id: "berlin_friend_male",
   },
   {
     quote:
-      "Cycling along the Spree, I’ve discovered myself and this world. Are you as free spirited as I am?",
+      "Cycling along the Spree, I've discovered myself and this world. Are you as free spirited as I am?",
     name: "Lina Voigt",
     designation: `Berlin
           Persona: Friend
-          Gender: Female
-        `,
+          Gender: Female`,
     src: berlin_friend_female,
     bot_id: "berlin_friend_female",
   },
   {
     quote:
-      "Herb gardening and hiking through the Black Forest is what makes me, well, me. Maybe I’m just a millennial like that.",
-    name: "LLena Meyer",
+      "Herb gardening and hiking through the Black Forest is what makes me, well, me. Maybe I'm just a millennial like that.",
+    name: "Elena Meyer",
     designation: `Berlin
           Persona: Romantic Partner
-          Gender: Female
-        `,
+          Gender: Female`,
     src: berlin_romantic_female,
     bot_id: "berlin_romantic_female",
   },
@@ -302,63 +284,62 @@ const bot_details = [
     name: "Max Hoffman",
     designation: `Berlin
           Persona: Romantic Partner
-          Gender: Male
-        `,
+          Gender: Male`,
     src: berlin_romantic_male,
     bot_id: "berlin_romantic_male",
   },
 
   //Spiritual guides
-    {
-      quote: "When your heart is free from desire and your actions are rooted in love, you shall hear My flute in the silence of your soul. Surrender to Me, and I will take care of the rest.",
-      name: "Krishna",
-      designation: `Spiritual Guide
+  {
+    quote:
+      "When your heart is free from desire and your actions are rooted in love, you shall hear My flute in the silence of your soul. Surrender to Me, and I will take care of the rest.",
+    name: "Krishna",
+    designation: `Spiritual Guide
             Persona: Spiritual Guide
-            Gender: Male
-          `,
-      src: lord_krishna,
-      bot_id: "Krishna",
-    },
-    {
-      quote: "Walk the path of dharma, even when it is difficult. In righteousness, there is no defeat. I am with you in every trial, as I was in exile — silent, watchful, unwavering.",
-      name: "Rama",
-      designation: `Spiritual Guide
+            Gender: Male`,
+    src: lord_krishna,
+    bot_id: "Krishna",
+  },
+  {
+    quote:
+      "Walk the path of dharma, even when it is difficult. In righteousness, there is no defeat. I am with you in every trial, as I was in exile — silent, watchful, unwavering.",
+    name: "Rama",
+    designation: `Spiritual Guide
             Persona: Spiritual Guide
-            Gender: Male
-          `,
-      src: rama_god,
-      bot_id: "Rama",
-    },
-    {
-      quote: "Come to Me not in fear, but in truth. Let go of what you are not, and find Me in your stillness. I destroy only to help you remember what cannot be destroyed — your Self.",
-      name: "Shiva",
-      designation: `Spiritual Guide
+            Gender: Male`,
+    src: rama_god,
+    bot_id: "Rama",
+  },
+  {
+    quote:
+      "Come to Me not in fear, but in truth. Let go of what you are not, and find Me in your stillness. I destroy only to help you remember what cannot be destroyed — your Self.",
+    name: "Shiva",
+    designation: `Spiritual Guide
             Persona: Spiritual Guide
-            Gender: Male
-          `,
-      src: shiva_god,
-      bot_id: "Shiva",
-    },
-    {
-      quote: "Chant My name with love, and no mountain shall stand in your way. With devotion as your strength and service as your path, I will leap through fire for you.",
-      name: "Hanuman",
-      designation: `Spiritual Guide
+            Gender: Male`,
+    src: shiva_god,
+    bot_id: "Shiva",
+  },
+  {
+    quote:
+      "Chant My name with love, and no mountain shall stand in your way. With devotion as your strength and service as your path, I will leap through fire for you.",
+    name: "Hanuman",
+    designation: `Spiritual Guide
             Persona: Spiritual Guide
-            Gender: Male
-          `,
-      src: hanuman_god,
-      bot_id: "Hanuman",
-    },
-    {
-      quote: "Call upon us with clarity of heart, and the universe shall shape itself around your path. In creation, we guide you. In balance, we walk with you. In endings, we awaken you.",
-      name: "Trimurti",
-      designation: `Spiritual Guide
+            Gender: Male`,
+    src: hanuman_god,
+    bot_id: "Hanuman",
+  },
+  {
+    quote:
+      "Call upon us with clarity of heart, and the universe shall shape itself around your path. In creation, we guide you. In balance, we walk with you. In endings, we awaken you.",
+    name: "Trimurti",
+    designation: `Spiritual Guide
             Persona: Spiritual Guide
-            Gender: Male
-          `,
-      src: trimurti,
-      bot_id: "Trimurti",
-    }
+            Gender: Male`,
+    src: trimurti,
+    bot_id: "Trimurti",
+  },
 ];
 
 const History = () => {
@@ -368,18 +349,25 @@ const History = () => {
   const { userDetails } = useUser();
   const router = useRouter();
   const { setSelectedBotId } = useBot();
+  const [chattedBots, setChattedBots] = useState([]);
+  const [userInitial, setUserInitial] = useState("");
+
+  useEffect(() => {
+    if (userDetails?.name) {
+      setUserInitial(userDetails.name.charAt(0).toUpperCase());
+    }
+  }, [userDetails?.name]);
 
   useEffect(() => {
     if (!userDetails.name) {
-      router.push("/signup");//If user details is not stored, it redirects to signup page
+      router.push("/signup");
     }
   }, [userDetails.name, router]);
 
   useEffect(() => {
-    // Function to fetch messages for all bots in parallel
     const fetchChattedBotsInParallel = async () => {
-      setLoading(true); // Set loading to true at the start
-      // Map through all bots and send a request for each bot's messages
+      setLoading(true);
+
       const fetchPromises = bot_details.map(async (bot) => {
         try {
           const body = {
@@ -399,43 +387,51 @@ const History = () => {
           return { bot_id: bot.bot_id, messages: data.response };
         } catch (error) {
           console.error(`Error syncing bot ${bot.bot_id}:`, error);
-          return { bot_id: bot.bot_id, error: error.message }; // Or handle error differently
+          return { bot_id: bot.bot_id, error: error.message };
         }
       });
-       // Wait for all requests to complete
+
       const results = await Promise.all(fetchPromises);
-       // Extract the last message of each bot conversation
+      console.log("Fetch results:", results); // Debug log
+
       const latestMsgs = {};
+      const botsWithChats = [];
+
       results.forEach((result) => {
         if (result.messages && result.messages.length > 0) {
           latestMsgs[result.bot_id] =
             result.messages[result.messages.length - 1];
+          botsWithChats.push({
+            bot_id: result.bot_id,
+            last_message_time:
+              result.messages[result.messages.length - 1].timestamp,
+          });
         }
       });
 
+      console.log("Bots with chats:", botsWithChats); // Debug log
       setLatestMessages(latestMsgs);
-      // Sort messages by latest timestamp
-      const sorted = Object.entries(latestMsgs)
-        .map(([bot_id, message]) => ({
-          bot_id,
-          ...message,
-        }))
-        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-      setSortedMessages(sorted);
-      setLoading(false); // Set loading to false after fetching
+      // Sort bots by latest message timestamp
+      const sortedBots = botsWithChats.sort(
+        (a, b) => new Date(b.last_message_time) - new Date(a.last_message_time)
+      );
+
+      setChattedBots(sortedBots);
+      setLoading(false);
     };
-    // Run fetch only when user email and bot list are available
+
     if (userDetails.email && bot_details?.length > 0) {
       fetchChattedBotsInParallel();
+    } else if (!userDetails.email) {
+      setLoading(false); // Stop loading if no email
     }
-  }, [userDetails.email, bot_details, setSelectedBotId]);
+  }, [userDetails.email]);
 
   const getBotDetails = (botId) => {
     return bot_details.find((bot) => bot.bot_id === botId);
   };
 
-  // Helper to format timestamp for display
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -460,136 +456,155 @@ const History = () => {
     }
   };
 
-  // Handles navigation to chat page with selected bot
   const handleBotSelect = (botId) => {
     setSelectedBotId(botId);
     router.push("/chat");
   };
 
   return (
-    <div className="min-h-screen bg-white font-[family-name:var(--font-garamond)]">
+    <div
+      className={`min-h-screen font-[family-name:var(--font-garamond)] bg-gray-100 dark:bg-gray-900`}
+    >
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-pink-400 rounded-full blur-[120px] opacity-50"></div>
-        <div className="absolute top-1/3 right-1/4 w-[350px] h-[350px] bg-orange-300 rounded-full blur-[100px] opacity-60"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-[450px] h-[450px] bg-red-200 rounded-full blur-[140px] opacity-50"></div>
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-pink-400 dark:bg-pink-900 rounded-full blur-[120px] opacity-50"></div>
+        <div className="absolute top-1/3 right-1/4 w-[350px] h-[350px] bg-orange-300 dark:bg-orange-900 rounded-full blur-[100px] opacity-60"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-[450px] h-[450px] bg-red-200 dark:bg-red-900 rounded-full blur-[140px] opacity-50"></div>
       </div>
-      <div className="container mx-auto px-4 py-5">
+
+      <div className="container mx-auto px-4 py-5 relative">
         <div>
-          <h1 className="text-2xl md:text-4xl font-bold text-gray-700 text-center">NOVI AI</h1>
+          <h1 className="text-2xl md:text-4xl font-bold text-gray-700 dark:text-white text-center">
+            NOVI AI
+          </h1>
           <div className="flex items-center justify-between mb-4 mt-8 md:mt-3">
             <div>
-              <h1 className="text-xl md:text-2xl font-bold text-gray-700 ">Chat History</h1>
+              <h1 className="text-xl md:text-2xl font-bold text-gray-700 dark:text-white">
+                Chat History
+              </h1>
             </div>
             <div className="flex items-center space-x-3">
               <Link href="/details">
-                <button className="bg-gray-700 text-white text-sm md:text-normal rounded-full py-1 px-3 md:py-2 md:px-4 hover:bg-gray-500 transition">
+                <button className="px-6 py-2 md:px-6 md:py-3 bg-gray-800/5 dark:bg-gray-800/5 text-black dark:text-white text-sm md:text-normal rounded-full flex items-center gap-2 transition-all backdrop-blur-md border dark:border-gray-700/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.1)]">
                   Add new Friends
                 </button>
               </Link>
-              <button className="bg-gradient-to-r from-orange-300 to-pink-300 text-black rounded-full w-7 h-7 md:w-10 md:h-10 flex items-center justify-center font-bold text-sm md:text-normal">
-                {userDetails.name?.charAt(0).toUpperCase()}
+              <button className="bg-gradient-to-r from-orange-300 to-pink-300 dark:from-orange-900 dark:to-pink-900 text-black dark:text-white rounded-full w-7 h-7 md:w-10 md:h-10 flex items-center justify-center font-bold text-sm md:text-normal">
+                {userInitial || "?"}
               </button>
             </div>
           </div>
         </div>
+
         <ScrollArea className="h-[calc(100vh-150px)]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
-            {/* If the data is being fetched, show temporary cards with the image and bot name */}
-            {loading
-              ? bot_details?.map((bot) => (
-                  <Card
-                    key={`placeholder-${bot.bot_id}`}
-                    className="p-6 bg-gray-50 animate-pulse h-50 border border-gray-200"
-                  >
-                    <div className="flex items-stretch space-x-5 h-full">
-                      {/* Placeholder for the image */}
-                      <div className="relative w-20 flex-shrink-0 rounded-2xl bg-gray-100 overflow-hidden h-full">
-                        {bot.src && (
-                          <Image
-                            src={bot.src}
-                            alt={bot.name}
-                            className="rounded-2xl object-cover"
-                            fill
-                            sizes="(max-width: 80px) 100vw"
-                            // Removed the grayscale and opacity styling
-                          />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            {/* Placeholder for the name */}
-                            <h3 className="text-md sm:text-base md:text-xl font-semibold text-gray-700 truncate">
-                              {bot.name}
-                            </h3>
-                            <div className="hidden lg:flex items-center text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                              <Clock className="h-4 w-4 mr-1.5" />
-                              <div className="h-4 w-16 bg-gray-300 rounded"></div>
-                            </div>
-                          </div>
-                          <div className="bg-gray-100 rounded-xl p-4 overflow-hidden flex flex-col justify-between space-y-2">
-                            <div className="h-4 w-full bg-gray-100 rounded"></div>
-                            <div className="h-4 w-48 bg-gray-100 rounded"></div>
-                            <span className="lg:hidden text-sm text-gray-600 inline-flex items-center">
-                              <Clock className="h-3 w-3 mr-1.5" />
-                              <div className="h-4 w-20 bg-gray-100 rounded"></div>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                ))
-                // If the data is fetched show the correct order of the chatbots
-              : sortedMessages.map((msg) => {
-              const bot = getBotDetails(msg.bot_id);
-              if (!bot) return null;
-
-              return (
+            {loading ? (
+              bot_details?.map((bot) => (
                 <Card
-                  onClick={() => handleBotSelect(msg.bot_id)}
-                  key={msg.bot_id}
-                  className="group p-6 hover:shadow-lg transition-all duration-300 bg-white/80 backdrop-blur-sm border border-gray-100 hover:bg-gradient-to-br hover:from-orange-50 hover:to-orange-70 h-50"
+                  key={`placeholder-${bot.bot_id}`}
+                  className="p-6 bg-gray-50 dark:bg-gray-800/20 animate-pulse h-50 border border-gray-200 dark:border-gray-700/20 backdrop-blur-sm"
                 >
                   <div className="flex items-stretch space-x-5 h-full">
-                    <div className="relative w-20 flex-shrink-0 rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-4 ring-gray-100 h-full">
-                      <Image
-                        src={bot.src}
-                        alt={bot.name}
-                        className="rounded-2xl object-cover"
-                        fill
-                        sizes="(max-width: 80px) 100vw"
-                      />
+                    <div className="relative w-20 flex-shrink-0 rounded-2xl bg-gray-100 dark:bg-gray-700/20 overflow-hidden h-full">
+                      {bot.src && (
+                        <Image
+                          src={bot.src}
+                          alt={bot.name}
+                          className="rounded-2xl object-cover"
+                          fill
+                          sizes="(max-width: 80px) 100vw"
+                        />
+                      )}
                     </div>
-                    {/* Content section */}
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-md sm:text-base md:text-xl font-semibold text-gray-700 truncate">
+                          <h3 className="text-md sm:text-base md:text-xl font-semibold text-gray-700 dark:text-white truncate">
                             {bot.name}
                           </h3>
-                          <div className="hidden lg:flex items-center text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                          <div className="hidden lg:flex items-center text-sm text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/20 px-3 py-1 rounded-full">
                             <Clock className="h-4 w-4 mr-1.5" />
-                            {formatTimestamp(msg.timestamp)}
+                            <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700/20 rounded"></div>
                           </div>
                         </div>
-                        {/* Message Box */}
-                        <div className="bg-gray-100 rounded-xl p-4 group-hover:bg-white/80 transition-colors duration-300 overflow-hidden flex flex-col justify-between space-y-2">
-                          <p className="text-sm sm:text-base text-gray-700 md:text-md line-clamp-2">
-                            {msg.text}
-                          </p>
-                          {/* Timestamp on mobile inside the box */}
-                          <span className="lg:hidden text-sm  text-gray-600 inline-flex items-center">
+                        <div className="bg-gray-100 dark:bg-gray-800/20 rounded-xl p-4 overflow-hidden flex flex-col justify-between space-y-2">
+                          <div className="h-4 w-full bg-gray-100 dark:bg-gray-700/20 rounded"></div>
+                          <div className="h-4 w-48 bg-gray-100 dark:bg-gray-700/20 rounded"></div>
+                          <span className="lg:hidden text-sm text-gray-600 dark:text-gray-300 inline-flex items-center">
                             <Clock className="h-3 w-3 mr-1.5" />
-                            {formatTimestamp(msg.timestamp)}
+                            <div className="h-4 w-20 bg-gray-100 dark:bg-gray-700/20 rounded"></div>
                           </span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </Card>
-              );
-            })}
+              ))
+            ) : chattedBots.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="mx-auto w-24 h-24 bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 rounded-full flex items-center justify-center mb-6">
+                  <MessageCircle className="h-12 w-12 text-purple-500 dark:text-purple-400" />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+                  No conversations yet
+                </h3>
+                <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                  Start meaningful conversations with our AI companions and
+                  they'll appear here.
+                </p>
+                <Link
+                  href="/details"
+                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  <MessageCircle className="h-5 w-5 mr-2" />
+                  Start Your First Chat
+                </Link>
+              </div>
+            ) : (
+              chattedBots.map((bot) => {
+                const botDetails = getBotDetails(bot.bot_id);
+                return (
+                  <Card
+                    key={bot.bot_id}
+                    onClick={() => handleBotSelect(bot.bot_id)}
+                    className="group p-6 hover:shadow-lg transition-all duration-300 bg-white/80 dark:bg-gray-800/20 backdrop-blur-sm border border-gray-100 dark:border-gray-700/20 hover:bg-gradient-to-br hover:from-orange-50 hover:to-orange-70 dark:hover:from-orange-900/20 dark:hover:to-orange-700/20 h-50"
+                  >
+                    <div className="flex items-stretch space-x-5 h-full">
+                      <div className="relative w-20 flex-shrink-0 rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-4 ring-gray-100 dark:ring-gray-700/20 h-full">
+                        <Image
+                          src={botDetails?.src || ""}
+                          alt={botDetails?.name || ""}
+                          className="rounded-2xl object-cover"
+                          fill
+                          sizes="(max-width: 80px) 100vw"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="text-md sm:text-base md:text-xl font-semibold text-gray-700 dark:text-white truncate">
+                              {botDetails?.name}
+                            </h3>
+                            <div className="hidden lg:flex items-center text-sm text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/20 px-3 py-1 rounded-full">
+                              <Clock className="h-4 w-4 mr-1.5" />
+                              {formatTimestamp(bot.last_message_time)}
+                            </div>
+                          </div>
+                          <div className="bg-gray-100 dark:bg-gray-800/20 rounded-xl p-4 group-hover:bg-white/80 dark:group-hover:bg-gray-700/20 transition-colors duration-300 overflow-hidden flex flex-col justify-between space-y-2">
+                            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 md:text-md line-clamp-2">
+                              {botDetails?.quote}
+                            </p>
+                            <span className="lg:hidden text-sm text-gray-600 dark:text-gray-300 inline-flex items-center">
+                              <Clock className="h-3 w-3 mr-1.5" />
+                              {formatTimestamp(bot.last_message_time)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })
+            )}
           </div>
         </ScrollArea>
       </div>
