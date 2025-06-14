@@ -6,6 +6,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-gray-900 text-white',
     backgroundImages: [ '/bg-images/delhi_mentor_male-bg.jpg',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'
   ],
   },
@@ -13,6 +14,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-purple-900 text-white',
     backgroundImages: [ '/bg-images/delhi_mentor_female-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -20,6 +22,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-blue-900 text-white',
     backgroundImages: [ '/bg-images/delhi_friend_male-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -27,6 +30,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-pink-900 text-white',
     backgroundImages: [ '/bg-images/delhi_friend_female-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -34,6 +38,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-red-900 text-white',
     backgroundImages: [ '/bg-images/delhi_romantic_male-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -41,6 +46,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-rose-900 text-white',
     backgroundImages: ['/bg-images/delhi_romantic_female-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -48,6 +54,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/japanmm_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'
   ],
   },
@@ -55,6 +62,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/japanmf_bg.jpeg',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'  
   ],
   },
@@ -62,6 +70,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/japanfm_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png' 
   ],
   },
@@ -69,6 +78,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages:['/photos/japanff_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'
   ],
   },
@@ -76,6 +86,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/japanrm_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'
   ],
   },
@@ -83,6 +94,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/japanrf_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'
   ],
   },
@@ -90,6 +102,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-neutral-900 text-white',
     backgroundImages: ['/bg-images/parisian_mentor_male-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -97,6 +110,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-purple-800 text-white',
     backgroundImages: ['/bg-images/parisian_mentor_female-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -104,6 +118,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-blue-900 text-white',
     backgroundImages: ['/bg-images/parisian_friend_male-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -111,6 +126,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-pink-900 text-white',
     backgroundImages: ['/bg-images/parisian_friend_female-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -118,6 +134,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-red-900 text-white',
     backgroundImages: [ '/bg-images/parisian_romantic_male-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -125,6 +142,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-rose-900 text-white',
     backgroundImages: ['/bg-images/parisian_romantic_female-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -132,6 +150,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/berlinmm_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'  
   ]
   },
@@ -139,6 +158,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/berlinmf_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png' 
   ],
   },
@@ -146,6 +166,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/berlinfm_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'
   ],
   },
@@ -153,6 +174,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/berlinff_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png' 
   ],
   },
@@ -160,6 +182,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-red-900 text-white',
     backgroundImages: ['/bg-images/berlin_romantic_male-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -167,6 +190,7 @@ const botThemes = {
     background: 'bg-gray-50',
     botBubble: 'bg-rose-900 text-white',
     backgroundImages: ['/bg-images/berlin_romantic_female-bg.jpg',
+    '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ],
   },
@@ -175,6 +199,7 @@ const botThemes = {
     botBubble: 'bg-white text-black',
     backgroundImages:[
       '/photos/krishna_bg.jpg',
+      '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
       ],// Place Krishna bg image here
   },
@@ -183,6 +208,7 @@ const botThemes = {
     botBubble: 'bg-white text-black',
     backgroundImages: [
       '/photos/rama_bg.png',
+      '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
     ], // Place Rama bg image here
   },
@@ -190,6 +216,7 @@ const botThemes = {
     background: 'bg-blue-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/shiva_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'   // Place Shiva background image here
   ],
   },  
@@ -197,6 +224,7 @@ const botThemes = {
     background: 'bg-orange-50',
     botBubble: 'bg-white text-black',
     backgroundImages: ['/photos/hanuman_bg.png',
+    '/photos/default_dark_bg.png',
     '/photos/default_bg.png'  ], // Place Hanuman bg image here
   },
   Trimurti: {
@@ -2281,6 +2309,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
       setClearChatCalled={setClearChatCalled} 
       backgroundIndex={backgroundIndex}
       isWhiteIcon = {isWhiteIcon}
+      isDarkTheme = {isDarkMode}
       className="bg-white/40 backdrop-blur-md shadow-lg" 
       />
   
@@ -2312,7 +2341,7 @@ export const LogoIcon = () => {
     </Link>
   );
 };
-const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon}) => {
+const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme}) => {
   const { selectedBotId } = useBot();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
