@@ -1,211 +1,89 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
-// Per-bot theming: assign a light background and a dark chat bubble for each bot
 const botThemes = {
   delhi_mentor_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-gray-900 text-white',
-    backgroundImages: [
-    '/photos/default_bg.png'
-  ],
+    
+    botBubble: 'bg-slate-100 text-black shadow-md',
+    userBubble: 'bg-amber-100 text-black shadow-md',
+    backgroundImage: '/bg-images/delhi_mentor_male-bg.jpg',
   },
   delhi_mentor_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-purple-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
-  },
-  delhi_friend_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-blue-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+    
+    botBubble: 'bg-white text-black  shadow-md',
+    userBubble: 'bg-rose-100 text-black shadow-md',
+    backgroundImage: '/bg-images/delhi_mentor_female-bg.jpg',
+  },  delhi_friend_male: {
+    
+    botBubble: 'bg-amber-200 text-black  shadow-md',
+    userBubble: 'bg-sky-100 text-black shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/delhi_friend_male-bg.jpg',
   },
   delhi_friend_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-pink-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+    
+    botBubble: 'bg-rose-50 text-black shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-emerald-100 text-black shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/delhi_friend_female-bg.jpg',
   },
   delhi_romantic_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-red-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+    
+    botBubble: 'bg-purple-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-yellow-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/delhi_romantic_male-bg.jpg',
   },
   delhi_romantic_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-rose-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
-  },
-  japanese_mentor_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanmm_bg.png',
-    '/photos/default_bg.png'
-  ],
-  },
-  japanese_mentor_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanmf_bg.jpeg',
-    '/photos/default_bg.png'  
-  ],
-  },
-  japanese_friend_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanfm_bg.png',
-    '/photos/default_bg.png' 
-  ],
-  },
-  japanese_friend_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages:['/photos/japanff_bg.png',
-    '/photos/default_bg.png'
-  ],
-  },
-  japanese_romantic_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanrm_bg.png',
-    '/photos/default_bg.png'
-  ],
-  },
-  japanese_romantic_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanrf_bg.png',
-    '/photos/default_bg.png'
-  ],
-  },
-  parisian_mentor_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-neutral-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+    
+    botBubble: 'bg-pink-200 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-yellow-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/delhi_romantic_female-bg.jpg',
+  },  parisian_mentor_male: {
+    
+    botBubble: 'bg-white text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-stone-200 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_mentor_male-bg.jpg',
   },
   parisian_mentor_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-purple-800 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+    
+    botBubble: 'bg-amber-50 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-indigo-50 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_mentor_female-bg.jpg',
   },
   parisian_friend_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-blue-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+    
+    botBubble: 'bg-blue-100 text-blue-900 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-green-100 text-green-900 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_friend_male-bg.jpg',
   },
   parisian_friend_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-pink-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+    
+    botBubble: 'bg-gray-100 text-gray-900 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-indigo-200 text-indigo-900 shadow-md backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_friend_female-bg.jpg',
   },
   parisian_romantic_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-red-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+    
+    botBubble: 'bg-gray-200 text-gray-900 shadow-md',
+    userBubble: 'bg-white text-gray-900 shadow-md',
+    backgroundImage: '/bg-images/parisian_romantic_male-bg.jpg',
   },
   parisian_romantic_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-rose-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+    
+    botBubble: 'bg-rose-200 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
+    userBubble: 'bg-sky-200 text-neutral-800 backdrop-blur-sm border border-white/20',
+    backgroundImage: '/bg-images/parisian_romantic_female-bg.jpg',
   },
-  berlin_mentor_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/berlinmm_bg.png',
-    '/photos/default_bg.png'  
-  ]
-  },
-  berlin_mentor_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/berlinmf_bg.png',
-    '/photos/default_bg.png' 
-  ],
-  },
-  berlin_friend_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/berlinfm_bg.png',
-    '/photos/default_bg.png'
-  ],
-  },
-  berlin_friend_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/berlinff_bg.png',
-    '/photos/default_bg.png' 
-  ],
-  },
+  
   berlin_romantic_male: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-red-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
+   
+    botBubble: 'bg-orange-100 text-black shadow-md',
+    userBubble: 'bg-yellow-100 text-black shadow-md',
+    backgroundImage: '/bg-images/berlin_romantic_male-bg.jpg',
   },
   berlin_romantic_female: {
-    background: 'bg-gray-50',
-    botBubble: 'bg-rose-900 text-white',
-    backgroundImages: [
-      '/photos/default_bg.png'
-    ],
-  },
-  Krishna: {
-    background: 'bg-yellow-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages:[
-      '/photos/krishna_bg.jpg',
-      '/photos/default_bg.png'
-      ],// Place Krishna bg image here
-  },
-  Rama: {
-    background: 'bg-yellow-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: [
-      '/photos/rama_bg.png',
-      '/photos/default_bg.png'
-    ], // Place Rama bg image here
-  },
-  Shiva: {
-    background: 'bg-blue-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/shiva_bg.png',
-    '/photos/default_bg.png'   // Place Shiva background image here
-  ],
-  },  
-  Hanuman: {
-    background: 'bg-orange-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/hanuman_bg.png',
-    '/photos/default_bg.png'  ], // Place Hanuman bg image here
-  },
-  Trimurti: {
-    background: 'bg-indigo-50',
-    botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/trimurthi_bg.png',
-    '/photos/default_bg.png' 
-   ], // Place Trimurti bg image here
+    
+    botBubble: 'bg-orange-200 text-black shadow-md',
+    userBubble: 'bg-orange-100 text-black shadow-md',
+    backgroundImage: '/bg-images/berlin_romantic_female-bg.jpg',
   },
 };
 import Link from "next/link";
@@ -598,6 +476,8 @@ const bot_details = [
     bot_id: "Trimurti",
   },
 ];
+
+
 
 export default function SidebarDemo() {
   const [open, setOpen] = useState(false);
@@ -2836,8 +2716,8 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
             indicates that the code is using asynchronous JavaScript, likely within an async
             function. */
-            const res = await fetch(
-              "https://novi.aigurukul.dev/cv/response/reminder",
+
+            const res = await fetch("https://novi.aigurukul.dev/cv/response/reminder",
               {
                 method: "POST",
                 headers: {
@@ -2848,7 +2728,9 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
             );
 
             const data = await res.json();
+            
             console.log(data);
+            
 
             // Add reminder message to chat
             if (data.error) {
@@ -3107,6 +2989,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
     <div className="reaction-selector absolute -top-10 bg-white/80 backdrop-blur-md rounded-full py-1 px-2 shadow-md border border-gray-200 z-10">
       <div className="flex space-x-2">
         {emoticons.map((emoticon, index) => (
+
           <span
             key={index}
             className="cursor-pointer hover:scale-125 transition-transform duration-200"
@@ -3164,6 +3047,27 @@ return (
             <div className="sticky my-10 top-5 z-10 py-2 mx-auto w-32 bg-white/30 backdrop-blur-md rounded-md shadow-md">
               <p className="text-center text-sm text-gray-600">{date}</p>
             </div>
+return (
+  <div
+    className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${botThemes[selectedBotId]?.background || 'bg-gray-100'}`}
+    style={
+      botThemes[selectedBotId]?.backgroundImage
+        ? {
+            backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }
+        : undefined
+    }
+  >
+    <ScrollArea className="flex-1">
+      <div className="px-1 md:px-2">
+        {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
+          <div key={date}>
+            <div className="sticky my-10 top-5 z-10 py-2 mx-auto w-32 bg-white/30 backdrop-blur-md rounded-md shadow-md">
+              <p className="text-center text-sm text-gray-600">{date}</p>
+            </div>
 
             {messagesOnDate.map((msg, index) => (
               <div key={index} className={`my-2 flex ${msg.sender === 'bot' ? 'justify-start' : 'justify-end'}`}>
@@ -3194,8 +3098,6 @@ return (
                               userSelect: 'none',
                               WebkitUserSelect: 'none',
                               WebkitTouchCallout: 'none',
-                              width: '750px',
-                              minWidth: '400px',
                             }}
                             onTouchStart={(e) => {
                               e.preventDefault();
@@ -3205,7 +3107,7 @@ return (
                             onTouchMove={handleLongPressEnd}
                             onTouchCancel={handleLongPressEnd}
                           >
-                            <motion.p className="text-gray-700 dark:text-gray-700">
+                            <motion.p>
                               {msg.text.split(' ').map((word, i) => (
                                 <motion.span
                                   key={i}
@@ -3213,11 +3115,6 @@ return (
                                   animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
                                   transition={{ duration: 0.2, ease: 'easeInOut', delay: 0.02 * i }}
                                   className="inline-block select-none"
-                                  style={{
-                                    userSelect: 'none',
-                                    WebkitUserSelect: 'none',
-                                    WebkitTouchCallout: 'none',
-                                  }}
                                 >
                                   {word}&nbsp;
                                 </motion.span>
@@ -3227,6 +3124,33 @@ return (
                           <PlayAudio text={msg.text} bot_id={msg.bot_id || selectedBotId} minimal={true} />
                         </>
                       )
+                    ) : (
+                      <div
+                        className={`px-4 py-2 rounded-2xl ${
+                          botThemes[selectedBotId]?.userBubble || 'bg-purple-400/80 text-white'
+                        } border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${
+                          highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
+                        } w-full text-left`}
+                        style={{
+                          userSelect: 'none',
+                          WebkitUserSelect: 'none',
+                          WebkitTouchCallout: 'none',
+                        }}
+                      >
+                        {msg.text}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </ScrollArea>
+  </div>
+);
+
                     ) : (
                       <div
                         className={`px-4 py-2 rounded-2xl bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
@@ -3244,21 +3168,25 @@ return (
                       </div>
                     )}
                   </div>
+                  {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} />}
+                  </div>
 
                   <div className="flex flex-row justify-end">
-                    <span className={`text-xs text-neutral-700 text-left mt-[7px] ${msg.sender === 'user' ? 'mr-3' : ''}`}>
+                    <span className={`text-xs ${msg.sender === 'user' ? 'mr-3' : ''} ${isDarkTheme ? 'text-white' : 'text-neutral-700'} mt-[7px]`}>
                       {formatTime(msg.timestamp)}
                     </span>
 
                     {msg.sender === 'bot' && (
                       <div className="flex justify-end px-2 mr-7 relative">
+                        {/* Reaction selector popup */}
                         {showReactionsFor === msg.id && <ReactionSelector msgId={msg.id} />}
 
                         <div className="gap-3 flex flex-row mt-1">
+                          {/* Reaction button - only show on desktop */}
                           {!isMobile && (
                             <button
                               onClick={() => toggleReactions(msg.id)}
-                              className="cursor-pointer text-black/30 hover:text-purple-400 transition-colors mr-2"
+                              className={`cursor-pointer transition-colors mr-2 ${isDarkTheme ? 'text-white hover:text-white' : 'text-black/30 hover:text-purple-400'}`}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -3270,43 +3198,46 @@ return (
                             </button>
                           )}
 
+                          {/* Thumbs feedback */}
                           {msg.text.trim() === "Sorry, there was an error processing your request. Please try again." ? (
                             <></>
                           ) : msg.feedback === '' ? (
                             <>
                               <ThumbsUp
-                                className="cursor-pointer text-black/30"
+                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
                                 size={18}
                                 onClick={() => handleFeedback('like', msg.id)}
                               />
                               <ThumbsDown
-                                className="cursor-pointer text-black/30"
+                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
                                 size={18}
                                 onClick={() => handleFeedback('dislike', msg.id)}
                               />
                             </>
                           ) : msg.feedback === 'like' ? (
                             <>
-                              <IconThumbUpFilled size={22} className="text-purple-400/100 mt-[-2px]" />
+                              <IconThumbUpFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'} mt-[-2px]`} />
                               <ThumbsDown
-                                className="cursor-pointer text-black/30"
+                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
                                 size={18}
                                 onClick={() => handleFeedback('dislike', msg.id)}
                               />
                             </>
-                          ) : msg.feedback === 'dislike' ? (
+                          ) : (
                             <>
                               <ThumbsUp
-                                className="cursor-pointer text-black/30"
+                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
                                 size={18}
                                 onClick={() => handleFeedback('like', msg.id)}
                               />
-                              <IconThumbDownFilled size={22} className="text-purple-400/100" />
+                              <IconThumbDownFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'}`} />
                             </>
-                          ) : (
-                            <></>
                           )}
                         </div>
+                      </div>
+                    )}
+                  </div>
+
                       </div>
                     )}
                   </div>

@@ -368,7 +368,6 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
         className="flex items-center justify-center rounded-full hover:bg-gray-100 p-2 transition-colors"
         style={{ width: '32px', height: '32px', minWidth: '32px' }}
       >
-
          {isLoading ? (
             <IconLoader 
               size={30} 
