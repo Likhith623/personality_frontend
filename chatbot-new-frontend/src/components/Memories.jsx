@@ -434,7 +434,7 @@ export default function Memories() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-full p-4 md:p-6 rounded-xl shadow-2xl bg-white/70 backdrop-blur">
+    <div className="flex flex-col md:flex-row h-full p-4 md:p-6 rounded-xl shadow-2xl bg-white dark:bg-black">
       {/* Left Panel - Categories */}
       <div className="w-full md:w-1/3 lg:w-1/4 p-4 md:p-6">
         <h1 className="text-lg md:text-2xl font-bold mb-4 md:mb-6 text-gray-800 dark:text-white">
@@ -529,7 +529,7 @@ export default function Memories() {
                       <div
                         key={memory.id}
                         onClick={() => handleMemoryClick(memory, category)}
-                        className={`text-sm sm:text-base md:text-base p-3 md:p-4 rounded-lg bg-gray-100 dark:bg-gray-800 font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 text-gray-800 dark:text-white flex items-center justify-between cursor-pointer ${
+                        className={`text-sm sm:text-base md:text-base p-3 md:p-4 rounded-lg bg-gray-100 dark:bg-gray-900 font-bold hover:bg-gray-200 dark:hover:bg-gray-800 transition-all duration-300 text-gray-800 dark:text-white flex items-center justify-between cursor-pointer ${
                           isEditing &&
                           selectedMemoriesToDelete.includes(memory.id)
                             ? "bg-red-200 dark:bg-red-900"
