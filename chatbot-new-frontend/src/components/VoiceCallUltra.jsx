@@ -171,230 +171,72 @@ const EnhancedBotAvatar = ({ audioLevel = 0, isListening, isSpeaking, isProcessi
 
   return (
     <div className="relative flex items-center justify-center w-[500px] h-[500px]">
-      {/* OUTER PULSE RINGS - WITH DEBUG COLORS */}
-      {[...Array(4)].map((_, ringIndex) => {
-        const isGreenState = isSpeaking;
-        const isBlueState = enhancedAudioLevel > 0.001 && !isProcessing && !isSpeaking;
+      {/* SINGLE CENTERED CONTAINER FOR AVATAR ONLY */}
+      <div className="relative flex items-center justify-center">
         
-        return (
-          <motion.div
-            key={`outer-ring-${ringIndex}`}
-            className="absolute rounded-full border-4"
-            style={{
-              width: `${300 + ringIndex * 40}px`,
-              height: `${300 + ringIndex * 40}px`,
-              borderColor: isGreenState
-                ? `rgba(34, 197, 94, ${1.0 - ringIndex * 0.2})`
-                : isBlueState
-                  ? `rgba(59, 130, 246, ${1.0 - ringIndex * 0.2})`
-                  : `rgba(156, 163, 175, ${0.6 - ringIndex * 0.1})`,
-            }}
-            animate={{
-              scale: isGreenState
-                ? [1, 1.2, 1]
-                : isBlueState
-                  ? [1, 1 + enhancedAudioLevel * 1.5, 1]
-                  : [1, 1.03, 1],
-              opacity: isGreenState
-                ? [1, 0.6, 1]
-                : isBlueState
-                  ? [0.9, 0.4, 0.9]
-                  : [0.5, 0.2, 0.5]
-            }}
-            transition={{
-              duration: isGreenState ? 0.4 : 0.6,
-              repeat: Infinity,
-              delay: ringIndex * 0.1,
-              ease: "easeInOut"
-            }}
+        {/* CENTER AVATAR - WITH GREEN BORDER ONLY */}
+        <motion.div
+          className="relative w-48 h-48 rounded-full overflow-hidden border-4 flex items-center justify-center z-20"
+          style={{
+            borderColor: isSpeaking 
+              ? '#22c55e' 
+              : isProcessing 
+                ? '#f59e0b' 
+                : enhancedAudioLevel > 0.001 && !isProcessing
+                  ? '#3b82f6'
+                  : '#e5e7eb',
+            boxShadow: isSpeaking 
+              ? '0 0 40px rgba(34, 197, 94, 0.7)'
+              : isProcessing 
+                ? '0 0 40px rgba(245, 158, 11, 0.7)'
+                : enhancedAudioLevel > 0.001 && !isProcessing
+                  ? '0 0 30px rgba(59, 130, 246, 0.6)'
+                  : '0 0 20px rgba(0, 0, 0, 0.15)'
+          }}
+          animate={{
+            scale: isSpeaking
+              ? [1, 1.08, 1]
+              : enhancedAudioLevel > 0.001 && !isProcessing
+                ? [1, 1 + enhancedAudioLevel * 0.4, 1]
+                : [1, 1.01, 1]
+          }}
+          transition={{
+            duration: 0.4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <img 
+            src={avatarSrc} 
+            alt="Bot Avatar" 
+            className="w-full h-full object-cover"
           />
-        );
-      })}
-
-      {/* MAIN AUDIO VISUALIZER BARS - WITH DETAILED DEBUG */}
-      <div className="absolute w-80 h-80 rounded-full">
-        {[...Array(barCount)].map((_, i) => {
-          const angle = (i * 360) / barCount;
           
-          let baseHeight = 35;
-          let dynamicHeight = 0;
-          let barColor = 'rgba(156, 163, 175, 0.7)';
-          let barWidth = '8px';
-          let glowEffect = 'none';
-          let debugState = 'IDLE';
-          
-          if (isSpeaking) {
-            // GREEN BARS - Bot speaking
-            debugState = 'GREEN_BOT_SPEAKING';
-            dynamicHeight = 40 + Math.sin(Date.now() / 100 + i * 0.5) * 35;
-            barColor = 'rgba(34, 197, 94, 1)';
-            barWidth = '10px';
-            glowEffect = '0 0 25px rgba(34, 197, 94, 1)';
-          } else if (enhancedAudioLevel > 0.001 && !isProcessing) {
-            // BLUE BARS - User speaking
-            debugState = 'BLUE_USER_SPEAKING';
-            const frequencyVariation = 0.5 + (i % 5) * 0.3;
-            dynamicHeight = 25 + enhancedAudioLevel * 300 * frequencyVariation;
-            barColor = 'rgba(59, 130, 246, 1)';
-            barWidth = '9px';
-            glowEffect = '0 0 20px rgba(59, 130, 246, 0.8)';
-          } else {
-            debugState = 'IDLE_STATE';
-            dynamicHeight = 15 + Math.sin(Date.now() / 3000 + i * 0.1) * 5;
-          }
-
-          const totalHeight = baseHeight + dynamicHeight;
-
-          // Debug logging for first bar only to avoid spam
-          if (i === 0 && (isSpeaking || enhancedAudioLevel > 0.001 || Math.random() < 0.05)) {
-            console.log(`🎨 BAR DEBUG [${i}]:`, {
-              debugState,
-              baseHeight,
-              dynamicHeight: dynamicHeight.toFixed(1),
-              totalHeight: totalHeight.toFixed(1),
-              barColor,
-              isSpeaking,
-              enhancedAudioLevel: enhancedAudioLevel.toFixed(4),
-              conditions: {
-                isSpeaking,
-                audioLevelCheck: enhancedAudioLevel > 0.001,
-                notProcessing: !isProcessing,
-                combined: enhancedAudioLevel > 0.001 && !isProcessing
-              }
-            });
-          }
-
-          return (
+          {/* Status indicator overlay - CENTERED */}
+          <div className="absolute inset-0 flex items-center justify-center">
             <motion.div
-              key={`visualizer-bar-${i}`}
-              className="absolute"
-              style={{
-                height: `${totalHeight}px`,
-                width: barWidth,
-                borderRadius: '12px',
-                background: `linear-gradient(to top, transparent 0%, ${barColor} 10%, ${barColor} 100%)`,
-                transformOrigin: 'bottom center',
-                transform: `rotate(${angle}deg) translateY(-150px)`,
-                boxShadow: glowEffect,
-                filter: 'blur(0.2px)',
-              }}
+              className="text-white/95 drop-shadow-2xl"
               animate={{
-                height: [
-                  `${totalHeight}px`,
-                  `${totalHeight + (isSpeaking ? 30 : enhancedAudioLevel > 0.001 && !isProcessing ? enhancedAudioLevel * 120 : 5)}px`,
-                  `${totalHeight}px`
-                ],
-                opacity: [0.9, 1, 0.9]
+                scale: [0.9, 1.3, 0.9],
+                opacity: [0.8, 1, 0.8]
               }}
               transition={{
-                duration: isSpeaking ? 0.2 : 0.1,
+                duration: 1.2,
                 repeat: Infinity,
-                repeatType: "reverse",
-                delay: i * 0.01,
                 ease: "easeInOut"
               }}
-            />
-          );
-        })}
-      </div>
-
-      {/* CENTER AVATAR WITH DEBUG INFO */}
-      <motion.div
-        className="relative w-48 h-48 rounded-full overflow-hidden border-6 flex items-center justify-center z-20"
-        style={{
-          borderColor: isSpeaking 
-            ? '#22c55e' 
-            : isProcessing 
-              ? '#f59e0b' 
-              : enhancedAudioLevel > 0.001 && !isProcessing
-                ? '#3b82f6'
-                : '#e5e7eb',
-          boxShadow: isSpeaking 
-            ? '0 0 50px rgba(34, 197, 94, 0.8)'
-            : isProcessing 
-              ? '0 0 50px rgba(245, 158, 11, 0.8)'
-              : enhancedAudioLevel > 0.001 && !isProcessing
-                ? '0 0 40px rgba(59, 130, 246, 0.7)'
-                : '0 0 25px rgba(0, 0, 0, 0.2)'
-        }}
-        animate={{
-          scale: isSpeaking
-            ? [1, 1.1, 1]
-            : enhancedAudioLevel > 0.001 && !isProcessing
-              ? [1, 1 + enhancedAudioLevel * 0.5, 1]
-              : [1, 1.02, 1]
-        }}
-        transition={{
-          duration: 0.3,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      >
-        <img 
-          src={avatarSrc} 
-          alt="Bot Avatar" 
-          className="w-full h-full object-cover"
-        />
-        
-        {/* Status indicator overlay with debug info */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            className="text-white/95 drop-shadow-2xl"
-            animate={{
-              scale: [0.8, 1.4, 0.8],
-              opacity: [0.8, 1, 0.8]
-            }}
-            transition={{
-              duration: 1.0,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            {isSpeaking && <Volume2 className="w-14 h-14" />}
-            {isProcessing && <Zap className="w-14 h-14" />}
-            {isListening && !isSpeaking && !isProcessing && enhancedAudioLevel > 0.001 && (
-              <Activity className="w-14 h-14" />
-            )}
-          </motion.div>
-        </div>
-      </motion.div>
-
-      {/* ENHANCED DEBUG STATUS DISPLAY */}
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-16">
-        <div className="bg-black/40 backdrop-blur-sm rounded-lg px-4 py-2">
-          <div className="flex flex-col items-center space-y-2">
-            <div className="text-sm text-white font-bold">
-              {isSpeaking ? '🟢 GREEN - Bot Speaking' : 
-               isProcessing ? '🟡 YELLOW - Processing' : 
-               enhancedAudioLevel > 0.001 ? '🔵 BLUE - User Voice!' : '⚪ IDLE - Ready'}
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs text-gray-300">Raw:</span>
-              <div className="w-16 h-2 bg-gray-600 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-white rounded-full transition-all duration-75"
-                  style={{ width: `${Math.max(audioLevel * 1000, 2)}%` }}
-                />
-              </div>
-              <span className="text-xs text-gray-300">{(audioLevel * 1000).toFixed(1)}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs text-gray-300">Enhanced:</span>
-              <div className="w-16 h-2 bg-gray-600 rounded-full overflow-hidden">
-                <div 
-                  className={`h-full rounded-full transition-all duration-75 ${
-                    isSpeaking ? 'bg-green-500' :
-                    isProcessing ? 'bg-yellow-500' :
-                    enhancedAudioLevel > 0.001 ? 'bg-blue-500' : 'bg-gray-400'
-                  }`}
-                  style={{ width: `${Math.max(enhancedAudioLevel * 100, 2)}%` }}
-                />
-              </div>
-              <span className="text-xs text-gray-300">{(enhancedAudioLevel * 100).toFixed(1)}</span>
-            </div>
+            >
+              
+              {isListening && !isSpeaking && !isProcessing && enhancedAudioLevel > 0.001 && (
+                <Activity className="w-12 h-12" />
+              )}
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
+
       </div>
+
+      
     </div>
   );
 };
@@ -962,34 +804,76 @@ const VoiceCallUltra = ({
     }
   }, [enableAudioForBrowser, setupMicrophone, processWithBackend, startVoiceActivityDetection]);
 
-  const endCall = useCallback(() => {
-    setIsCallActive(false);
-    setIsListening(false);
-    setIsSpeaking(false);
-    setIsProcessing(false);
-    setAudioLevel(0);
-    
-    if (silenceDetectionIntervalRef.current) {
-      clearInterval(silenceDetectionIntervalRef.current);
-      silenceDetectionIntervalRef.current = null;
-    }
-    
-    if (currentAudioRef.current) {
-      currentAudioRef.current.pause();
-      currentAudioRef.current = null;
-    }
-    
-    if (mediaRecorderRef.current?.state === 'recording') {
+ // Replace the endCall function with this improved version:
+
+const endCall = useCallback(() => {
+  console.log('🔴 END CALL: Immediately stopping all audio and activities...');
+  
+  // IMMEDIATELY stop any audio playback
+  if (currentAudioRef.current) {
+    currentAudioRef.current.pause();
+    currentAudioRef.current.currentTime = 0;
+    currentAudioRef.current = null;
+    console.log('🔇 Stopped current audio playback');
+  }
+  
+  // Immediately set all states to stopped
+  setIsCallActive(false);
+  setIsListening(false);
+  setIsSpeaking(false); // Force stop speaking state immediately
+  setIsProcessing(false);
+  setAudioLevel(0);
+  setResponseStarted(false);
+  
+  console.log('🛑 All states set to stopped');
+  
+  // Clear all timers and intervals
+  if (silenceDetectionIntervalRef.current) {
+    clearInterval(silenceDetectionIntervalRef.current);
+    silenceDetectionIntervalRef.current = null;
+    console.log('🔇 Cleared voice detection interval');
+  }
+  
+  // Clear any voice activity timers
+  if (voiceActivityRef.current.silenceTimer) {
+    clearTimeout(voiceActivityRef.current.silenceTimer);
+    voiceActivityRef.current.silenceTimer = null;
+  }
+  
+  // Reset voice activity state
+  voiceActivityRef.current = {
+    isDetected: false,
+    silenceTimer: null,
+    isRecording: false
+  };
+  
+  // Stop any ongoing recording
+  if (mediaRecorderRef.current?.state === 'recording') {
+    try {
       mediaRecorderRef.current.stop();
+      console.log('🎤 Stopped ongoing recording');
+    } catch (error) {
+      console.warn('⚠️ Error stopping recording:', error);
     }
-    
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-      streamRef.current = null;
-    }
-    
-    onClose?.();
-  }, [onClose]);
+  }
+  
+  // Stop microphone stream
+  if (streamRef.current) {
+    streamRef.current.getTracks().forEach(track => {
+      track.stop();
+      console.log('🎤 Stopped microphone track');
+    });
+    streamRef.current = null;
+  }
+  
+  // Reset request progress flag
+  requestInProgress.current = false;
+  
+  console.log('🔴 END CALL: Complete - all audio stopped immediately');
+  
+  // Close the modal
+  onClose?.();
+}, [onClose]);
 
   // =====================================
   // EFFECTS
@@ -1024,56 +908,61 @@ const VoiceCallUltra = ({
         style={{ backgroundColor: '#f8fafc' }}
       >
         {/* Header */}
-        <motion.div
-          className="absolute top-6 left-1/2 transform -translate-x-1/2 z-10"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <div className="text-center">
-            <h1 className="text-gray-700 text-lg font-semibold tracking-wide">
-              {botName}
-            </h1>
-            <div className="flex items-center justify-center mt-1 space-x-2">
-              <div className="w-2 h-2 rounded-full bg-green-400" />
-              <span className="text-xs text-gray-500">
-                {connectionQuality} connection
-              </span>
-            </div>
-          </div>
-        </motion.div>
+  
 
-        {/* Processing indicator */}
-        <AnimatePresence>
-          {(isProcessing || responseStarted) && (
+{/* Header - PERFECTLY CENTERED */}
+<motion.div
+  className="absolute top-6 w-full z-10 flex justify-center"
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.3 }}
+>
+  <div className="text-center">
+    <h1 className="text-gray-700 text-2xl font-bold tracking-wide">
+      {botName}
+    </h1>
+    <div className="flex items-center justify-center mt-1 space-x-2">
+      <div className="w-2 h-2 rounded-full bg-green-400" />
+      <span className="text-xs text-gray-500">
+        {connectionQuality} connection
+      </span>
+    </div>
+  </div>
+</motion.div>
+
+
+
+{/* Processing indicator */}
+<AnimatePresence>
+  {(isProcessing || responseStarted) && (
+    <motion.div
+      className="absolute top-24 w-full z-10 flex justify-center"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+    >
+      <div className="flex items-center space-x-3 px-5 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-xl">
+        <div className="flex space-x-1">
+          {[...Array(3)].map((_, i) => (
             <motion.div
-              className="absolute top-24 left-1/2 transform -translate-x-1/2 z-10"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-            >
-              <div className="flex items-center space-x-3 px-5 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-xl">
-                <div className="flex space-x-1">
-                  {[...Array(3)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="w-2 h-2 bg-white rounded-full"
-                      animate={{ scale: [1, 1.4, 1], opacity: [0.5, 1, 0.5] }}
-                      transition={{ 
-                        duration: 0.6, 
-                        repeat: Infinity, 
-                        delay: i * 0.1 
-                      }}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-medium">
-                  {isProcessing ? 'Processing...' : 'Responding...'}
-                </span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              key={i}
+              className="w-2 h-2 bg-white rounded-full"
+              animate={{ scale: [1, 1.4, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{ 
+                duration: 0.6, 
+                repeat: Infinity, 
+                delay: i * 0.1 
+              }}
+            />
+          ))}
+        </div>
+        <span className="text-sm font-medium">
+          {isProcessing ? 'Processing...' : 'Responding...'}
+        </span>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
         {/* Main avatar */}
         <div className="flex-1 flex items-center justify-center">
@@ -1092,66 +981,57 @@ const VoiceCallUltra = ({
           </motion.div>
         </div>
 
-        {/* Bottom controls */}
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
-          <motion.div
-            className="flex items-center space-x-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setIsMuted(!isMuted)}
-              className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200 shadow-lg ${
-                isMuted 
-                  ? 'bg-red-500 hover:bg-red-600 text-white' 
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
-              }`}
-            >
-              {isMuted ? <MicOff className="w-7 h-7" /> : <Mic className="w-7 h-7" />}
-            </motion.button>
 
-            {/* 🧪 TEST RECORDING BUTTON - REMOVE AFTER TESTING */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={async () => {
-                console.log('🧪 TEST: Manual recording test...');
-                if (mediaRecorderRef.current?.state === 'inactive') {
-                  try {
-                    console.log('🧪 TEST: Starting 3 second recording');
-                    mediaRecorderRef.current.start();
-                    setTimeout(() => {
-                      if (mediaRecorderRef.current?.state === 'recording') {
-                        console.log('🧪 TEST: Stopping recording');
-                        mediaRecorderRef.current.stop();
-                      }
-                    }, 3000);
-                  } catch (error) {
-                    console.error('🧪 TEST: Manual recording failed:', error);
-                  }
-                } else {
-                  console.log('🧪 TEST: MediaRecorder state:', mediaRecorderRef.current?.state);
-                }
-              }}
-              className="w-16 h-16 rounded-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center transition-all duration-200 shadow-lg"
-              title="Test 3s Recording"
-            >
-              🎤
-            </motion.button>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={endCall}
-              className="w-16 h-16 rounded-full bg-gray-800 hover:bg-gray-900 text-white flex items-center justify-center transition-all duration-200 shadow-lg"
-            >
-              <X className="w-7 h-7" />
-            </motion.button>
-          </motion.div>
-        </div>
+
+{/* Bottom controls */}
+<div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
+  <motion.div
+    className="flex items-center space-x-12"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.5 }}
+  >
+    {/* Test Recording Button - Left */}
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={async () => {
+        console.log('🧪 TEST: Manual recording test...');
+        if (mediaRecorderRef.current?.state === 'inactive') {
+          try {
+            console.log('🧪 TEST: Starting 3 second recording');
+            mediaRecorderRef.current.start();
+            setTimeout(() => {
+              if (mediaRecorderRef.current?.state === 'recording') {
+                console.log('🧪 TEST: Stopping recording');
+                mediaRecorderRef.current.stop();
+              }
+            }, 3000);
+          } catch (error) {
+            console.error('🧪 TEST: Manual recording failed:', error);
+          }
+        } else {
+          console.log('🧪 TEST: MediaRecorder state:', mediaRecorderRef.current?.state);
+        }
+      }}
+      className="w-16 h-16 rounded-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center transition-all duration-200 shadow-lg"
+      title="Test 3s Recording"
+    >
+      <Mic className="w-8 h-8" />
+    </motion.button>
+
+    {/* End Call Button - Right (Red X) */}
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={endCall}
+      className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all duration-200 shadow-lg"
+    >
+      <X className="w-7 h-7" />
+    </motion.button>
+  </motion.div>
+</div>
 
         {/* Status indicator */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
@@ -1210,29 +1090,14 @@ const VoiceCallUltra = ({
             </div>
           </div>
         )}
-
-        {/* DEBUG PANEL - Remove after testing */}
-        <div className="absolute top-32 right-4 bg-black/80 text-white p-4 rounded-lg text-xs font-mono max-w-xs">
-          <div className="space-y-1">
-            <div>🎤 Audio Level: {(audioLevel * 1000).toFixed(2)}</div>
-            <div>🔊 Enhanced: {((audioLevel * 50) * 100).toFixed(2)}%</div>
-            <div>🎵 Speaking: {isSpeaking ? 'TRUE' : 'FALSE'}</div>
-            <div>⚡ Processing: {isProcessing ? 'TRUE' : 'FALSE'}</div>
-            <div>👂 Listening: {isListening ? 'TRUE' : 'FALSE'}</div>
-            <div>🎯 Should Show Green: {isSpeaking ? 'YES' : 'NO'}</div>
-            <div>🎯 Should Show Blue: {(audioLevel * 50 > 0.001 && !isProcessing && !isSpeaking) ? 'YES' : 'NO'}</div>
-            <div>🎪 Current State: {
-              isSpeaking ? 'GREEN_BARS' : 
-              (audioLevel * 50 > 0.001 && !isProcessing && !isSpeaking) ? 'BLUE_BARS' : 'IDLE'
-            }</div>
-          </div>
-        </div>
+        
       </motion.div>
     </AnimatePresence>
   );
 };
 
 export default VoiceCallUltra;
+
 
 
 
