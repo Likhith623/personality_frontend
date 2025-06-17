@@ -2186,7 +2186,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
         'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
-        const response = await fetch('http://127.0.0.1:8000/sync', {
+        const response = await fetch('https://novi.aigurukul.dev/sync', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -2386,7 +2386,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
             `https://novi.aigurukul.dev/cv/message/feedback//` with the `msg_id` and
             `feedback` variables interpolated into the URL. The request is using the `fetch` function with the
             `await` keyword to asynchronously send the POST request. The method of the request is set to "POST". */
-      const response = await fetch(`http://127.0.0.1:8000/cv/message/feedback/${msg_id}/${feedback}`, {
+      const response = await fetch(`https://novi.aigurukul.dev/cv/message/feedback/${msg_id}/${feedback}`, {
         method: "POST",
       });
 
@@ -2484,7 +2484,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
             indicates that the code is using asynchronous JavaScript, likely within an async
             function. */
-            const res = await fetch('http://127.0.0.1:8000/cv/response/reminder', {
+            const res = await fetch('https://novi.aigurukul.dev/cv/response/reminder', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -2623,7 +2623,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
       using JSON.stringify. The request is being made using the fetch API with the specified method
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
-      const response = await fetch("http://127.0.0.1:8000/v2/cv/chat", {
+      const response = await fetch("https://novi.aigurukul.dev/v2/cv/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -2791,7 +2791,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled }) => 
 
       // Send to voice call API endpoint - Using local development server
       const response = await Promise.race([
-        fetch('http://127.0.0.1:8000/voice-call', {
+        fetch('https://novi.aigurukul.dev/voice-call', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

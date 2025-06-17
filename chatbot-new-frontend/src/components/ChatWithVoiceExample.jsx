@@ -115,7 +115,7 @@ const ChatInterface = () => {
     const testConnection = async () => {
       try {
         const start = performance.now();
-        const response = await fetch('http://127.0.0.1:8000/voice-call-ultra-fast', {
+        const response = await fetch('https://novi.aigurukul.dev/voice-call-ultra-fast', {
           method: 'OPTIONS'
         });
         const latency = performance.now() - start;
