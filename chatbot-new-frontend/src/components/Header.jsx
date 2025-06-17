@@ -19,10 +19,10 @@ const NavLink = ({ href, children }) => {
         theme === "dark"
           ? isActive
             ? "text-red-400"
-            : "text-gray-300 hover:text-blue-400"
+            : "text-gray-300"
           : isActive
           ? "text-[#1D2939]"
-          : "text-black/50 hover:text-[#1D2939]"
+          : "text-black/50"
       }`}
     >
       {children}
@@ -69,9 +69,7 @@ export default function Header() {
           <Link
             href="/"
             className={`text-xl md:text-2xl font-bold ${
-              theme === "dark"
-                ? "text-blue-300 hover:text-blue-400"
-                : "text-black/50 hover:text-[#1D2939]"
+              theme === "dark" ? "text-gray-300" : "text-black/50"
             }`}
           >
             CultureVo
