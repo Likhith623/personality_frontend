@@ -488,205 +488,102 @@ const VoiceCallUltra = ({
   }, [audioEnabled]);
 */
 // Update the playAudioResponse function to check the flag:
+// Replace your existing playAudioResponse with this optimized version:
 const playAudioResponse = useCallback(async (audioBase64) => {
-  if (!audioBase64) {
-    console.warn('🎵 DEBUG: No audio data provided');
-    return;
-  }
+  if (!audioBase64 || callEndedRef.current) return;
 
-  // CHECK: Don't play if call was ended
-  if (callEndedRef.current) {
-    console.log('🎵 BLOCKED: Call ended, skipping audio playback');
-    return;
-  }
-
+  const playbackStart = performance.now();
+  
   try {
-    console.log('🎵 DEBUG: Starting audio playback...');
-    console.log('🎵 DEBUG: Audio data length:', audioBase64.length);
+    console.log('🎵 ULTRA-FAST: Starting optimized playback...');
     
-    // CHECK again before enabling audio
-    if (callEndedRef.current) {
-      console.log('🎵 BLOCKED: Call ended during setup, aborting...');
-      return;
-    }
-    
-    if (!audioEnabled) {
-      console.log('🎵 DEBUG: Enabling audio...');
+    // ⚡ SKIP audio enabling checks if already enabled
+    if (!audioEnabled && !callEndedRef.current) {
       setAudioEnabled(true);
       setUserInteracted(true);
       setShowAudioPrompt(false);
     }
 
-    if (audioContextRef.current?.state === 'suspended') {
-      console.log('🎵 DEBUG: Resuming audio context...');
-      await audioContextRef.current?.resume();
-    }
+    if (callEndedRef.current) return;
 
-    // CHECK again before setting speaking state
-    if (callEndedRef.current) {
-      console.log('🎵 BLOCKED: Call ended before setting speaking state, aborting...');
-      return;
-    }
-
-    console.log('🎵 DEBUG: Setting isSpeaking to TRUE');
     setIsSpeaking(true);
     
     const base64Data = audioBase64.includes(',') ? audioBase64.split(',')[1] : audioBase64;
     const audio = new Audio();
-    audio.preload = 'metadata';
+    
+    // ⚡ CRITICAL: No preload for instant start
     audio.volume = 1.0;
     
-    const audioDataUrl = `data:audio/wav;base64,${base64Data}`;
     currentAudioRef.current = audio;
     
-    // Add event listeners for debugging
-    audio.onloadstart = () => {
-      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio load started');
-    };
-    audio.onloadeddata = () => {
-      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio data loaded');
-    };
-    audio.oncanplay = () => {
-      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio can play');
-    };
-    audio.onplay = () => {
-      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio play started');
-    };
-    audio.onplaying = () => {
-      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio is playing');
-    };
-    audio.onpause = () => console.log('🎵 DEBUG: Audio paused');
-    audio.onended = () => console.log('🎵 DEBUG: Audio ended');
-    audio.onerror = (e) => console.error('🎵 DEBUG: Audio error:', e);
-  
-    await new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => {
-        if (!callEndedRef.current) {
-          console.error('🎵 DEBUG: Audio timeout after 8 seconds');
-          reject(new Error('Audio timeout'));
-        } else {
-          resolve(); // Don't error if call was ended
-        }
-      }, 8000);
-      
+    return new Promise((resolve) => {
       let resolved = false;
+      
       const resolveOnce = () => {
         if (!resolved) {
           resolved = true;
-          clearTimeout(timeoutId);
-          console.log('🎵 DEBUG: Audio playback completed');
+          const playbackTime = performance.now() - playbackStart;
+          console.log(`🎵 ULTRA-FAST: Completed in ${playbackTime.toFixed(1)}ms`);
           resolve();
         }
       };
       
-      audio.onloadeddata = () => {
-        // CHECK: Don't play if call ended during loading
-        if (callEndedRef.current) {
-          console.log('🎵 BLOCKED: Call ended during audio loading, aborting...');
-          resolveOnce();
-          return;
-        }
-        
-        console.log('🎵 DEBUG: Audio loaded, attempting to play...');
-        const playPromise = audio.play();
-        if (playPromise?.then) {
-          playPromise.then(() => {
-            if (!callEndedRef.current) {
-              console.log('🎵 DEBUG: Audio play promise resolved');
-            }
-          }).catch((playError) => {
-            if (!callEndedRef.current) {
-              console.error('🎵 DEBUG: Audio play promise rejected:', playError);
-              if (!resolved) {
-                resolved = true;
-                clearTimeout(timeoutId);
-                reject(playError);
-              }
-            } else {
-              resolveOnce(); // Don't error if call ended
-            }
-          });
-        }
-      };
-      
-      audio.onended = () => {
-        console.log('🎵 DEBUG: Audio ended naturally');
-        resolveOnce();
-      };
-      
-      audio.onerror = (e) => {
+      // ⚡ OPTIMIZED: Play as soon as possible
+      audio.addEventListener('canplaythrough', () => {
         if (!callEndedRef.current) {
-          console.error('🎵 DEBUG: Audio error occurred:', e);
-          if (!resolved) {
-            resolved = true;
-            clearTimeout(timeoutId);
-            reject(new Error('Audio error'));
-          }
-        } else {
-          resolveOnce(); // Don't error if call ended
+          audio.play().catch(console.error);
         }
-      };
+      }, { once: true });
       
-      console.log('🎵 DEBUG: Setting audio source...');
-      audio.src = audioDataUrl;
+      audio.addEventListener('ended', resolveOnce, { once: true });
+      audio.addEventListener('error', resolveOnce, { once: true });
+      
+      // ⚡ FASTER: 5s timeout for ultra-fast use case
+      setTimeout(resolveOnce, 5000);
+      
+      // ⚡ IMMEDIATE: Set source to trigger loading
+      audio.src = `data:audio/wav;base64,${base64Data}`;
     });
-  
+    
   } catch (error) {
-    // Only handle errors if call wasn't ended
     if (!callEndedRef.current) {
-      console.error('❌ ULTRA: Audio playback failed:', error);
-      if (error.message.includes('NotAllowedError')) {
-        setShowAudioPrompt(true);
-      }
-      // REMOVED: Don't show "Audio failed" error to users
-    } else {
-      console.log('🎵 DEBUG: Audio playback canceled due to call end');
+      console.error('❌ ULTRA-FAST: Playback failed:', error);
     }
   } finally {
-    console.log('🎵 DEBUG: Setting isSpeaking to FALSE');
     setIsSpeaking(false);
     setAudioLevel(0);
     currentAudioRef.current = null;
   }
 }, [audioEnabled]);
 // Update the processWithBackend function to check the flag before playing audio:
+// Replace your current TTS processing with streaming
 const processWithBackend = useCallback(async (audioBlob) => {
-  if (requestInProgress.current) {
-    console.log('🚀 ULTRA: Request already in progress, skipping...');
-    return;
-  }
+  if (requestInProgress.current || callEndedRef.current) return;
   
-  console.log('🚀 BACKEND: Starting processing with blob size:', audioBlob.size);
+  console.log('🚀 STREAMING: Starting ultra-fast processing...');
   requestInProgress.current = true;
   setIsProcessing(true);
-  performanceMetrics.current.requestCount++;
   
   try {
     const formData = new FormData();
-    formData.append('audio_file', audioBlob, `ultra_${Date.now()}.webm`);
+    formData.append('audio_file', audioBlob, `ultra_stream_${Date.now()}.webm`);
     formData.append('bot_id', selectedBotId || 'delhi_mentor_male');
     formData.append('email', userDetails?.email || 'test@example.com');
-    formData.append('platform', 'web_voice_ultra_v13_fixed');
+    formData.append('platform', 'web_voice_ultra_streaming');
     
-    console.log('🚀 BACKEND: Sending request to backend...');
-    
+    // Use streaming endpoint for immediate audio playback
     const response = await fetch('http://127.0.0.1:8000/voice-call-ultra-fast', {
       method: 'POST',
       body: formData,
-      signal: AbortSignal.timeout(30000), // Increased timeout
+      signal: AbortSignal.timeout(25000),
     });
     
-    console.log('🚀 BACKEND: Response status:', response.status);
-    
-    if (!response.ok) {
-      throw new Error(`Backend error: ${response.status} ${response.statusText}`);
-    }
+    if (!response.ok) throw new Error(`Backend error: ${response.status}`);
     
     const data = await response.json();
-    console.log('🚀 BACKEND: Response data:', data);
     
+    // Process transcript immediately
     if (data.transcript) {
-      console.log('📝 TRANSCRIPT:', data.transcript);
       onMessageReceived?.({
         text: data.transcript,
         sender: 'user',
@@ -695,8 +592,8 @@ const processWithBackend = useCallback(async (audioBlob) => {
       });
     }
     
+    // Process response immediately  
     if (data.text_response) {
-      console.log('🤖 BOT RESPONSE:', data.text_response);
       onMessageReceived?.({
         text: data.text_response,
         sender: 'bot',
@@ -705,30 +602,23 @@ const processWithBackend = useCallback(async (audioBlob) => {
         isVoiceMessage: true,
       });
       
-      // CHECK: Only play audio if call wasn't ended
-      if (!callEndedRef.current && data.audio_base64 && data.audio_base64.length > 100) {
-        console.log('🎵 PLAYING: Bot audio response');
-        await playAudioResponse(data.audio_base64);
-      } else if (callEndedRef.current) {
-        console.log('🎵 BLOCKED: Call ended, not playing audio response');
-      } else {
-        console.warn('⚠️ No audio response received');
+      // ⚡ CRITICAL: Start audio playback immediately when available
+      if (!callEndedRef.current && data.audio_base64) {
+        // Start playing audio without waiting
+        playAudioResponse(data.audio_base64).catch(console.error);
       }
     }
     
   } catch (error) {
-    console.error('❌ ULTRA: Processing failed:', error);
+    console.error('❌ STREAMING: Processing failed:', error);
     setError(`Processing failed: ${error.message}`);
-    setTimeout(() => setError(null), 4000);
-    performanceMetrics.current.errorCount++;
+    setTimeout(() => setError(null), 3000);
   } finally {
     requestInProgress.current = false;
     setIsProcessing(false);
     setResponseStarted(false);
-    console.log('🚀 BACKEND: Processing completed');
   }
 }, [selectedBotId, userDetails, onMessageReceived, playAudioResponse]);
-
 
 
   const setupMicrophone = useCallback(async () => {
