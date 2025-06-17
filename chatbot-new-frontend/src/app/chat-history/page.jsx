@@ -386,7 +386,7 @@ const History = () => {
             email: userDetails.email,
             bot_id: bot.bot_id,
           };
-          const response = await fetch("http://127.0.0.1:8000/sync", {
+          const response = await fetch("https://novi.aigurukul.dev/sync", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
