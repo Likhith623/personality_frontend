@@ -324,6 +324,7 @@ const VoiceCallUltra = ({
   const silenceDetectionIntervalRef = useRef(null);
   const processAudioRef = useRef(null);
   const requestInProgress = useRef(false);
+  const callEndedRef = useRef(false);
   
   const voiceActivityRef = useRef({
     isDetected: false,
@@ -375,7 +376,7 @@ const VoiceCallUltra = ({
       return false;
     }
   }, [externalAudioContextRef]);
-
+/*
   const playAudioResponse = useCallback(async (audioBase64) => {
     if (!audioBase64) {
       console.warn('🎵 DEBUG: No audio data provided');
@@ -476,7 +477,7 @@ const VoiceCallUltra = ({
       if (error.message.includes('NotAllowedError')) {
         setShowAudioPrompt(true);
       }
-      setError('Audio failed');
+      
       setTimeout(() => setError(null), 2000);
     } finally {
       console.log('🎵 DEBUG: Setting isSpeaking to FALSE');
@@ -485,82 +486,250 @@ const VoiceCallUltra = ({
       currentAudioRef.current = null;
     }
   }, [audioEnabled]);
+*/
+// Update the playAudioResponse function to check the flag:
+const playAudioResponse = useCallback(async (audioBase64) => {
+  if (!audioBase64) {
+    console.warn('🎵 DEBUG: No audio data provided');
+    return;
+  }
 
-  const processWithBackend = useCallback(async (audioBlob) => {
-    if (requestInProgress.current) {
-      console.log('🚀 ULTRA: Request already in progress, skipping...');
+  // CHECK: Don't play if call was ended
+  if (callEndedRef.current) {
+    console.log('🎵 BLOCKED: Call ended, skipping audio playback');
+    return;
+  }
+
+  try {
+    console.log('🎵 DEBUG: Starting audio playback...');
+    console.log('🎵 DEBUG: Audio data length:', audioBase64.length);
+    
+    // CHECK again before enabling audio
+    if (callEndedRef.current) {
+      console.log('🎵 BLOCKED: Call ended during setup, aborting...');
       return;
     }
     
-    console.log('🚀 BACKEND: Starting processing with blob size:', audioBlob.size);
-    requestInProgress.current = true;
-    setIsProcessing(true);
-    performanceMetrics.current.requestCount++;
+    if (!audioEnabled) {
+      console.log('🎵 DEBUG: Enabling audio...');
+      setAudioEnabled(true);
+      setUserInteracted(true);
+      setShowAudioPrompt(false);
+    }
+
+    if (audioContextRef.current?.state === 'suspended') {
+      console.log('🎵 DEBUG: Resuming audio context...');
+      await audioContextRef.current?.resume();
+    }
+
+    // CHECK again before setting speaking state
+    if (callEndedRef.current) {
+      console.log('🎵 BLOCKED: Call ended before setting speaking state, aborting...');
+      return;
+    }
+
+    console.log('🎵 DEBUG: Setting isSpeaking to TRUE');
+    setIsSpeaking(true);
     
-    try {
-      const formData = new FormData();
-      formData.append('audio_file', audioBlob, `ultra_${Date.now()}.webm`);
-      formData.append('bot_id', selectedBotId || 'delhi_mentor_male');
-      formData.append('email', userDetails?.email || 'test@example.com');
-      formData.append('platform', 'web_voice_ultra_v13_fixed');
+    const base64Data = audioBase64.includes(',') ? audioBase64.split(',')[1] : audioBase64;
+    const audio = new Audio();
+    audio.preload = 'metadata';
+    audio.volume = 1.0;
+    
+    const audioDataUrl = `data:audio/wav;base64,${base64Data}`;
+    currentAudioRef.current = audio;
+    
+    // Add event listeners for debugging
+    audio.onloadstart = () => {
+      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio load started');
+    };
+    audio.onloadeddata = () => {
+      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio data loaded');
+    };
+    audio.oncanplay = () => {
+      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio can play');
+    };
+    audio.onplay = () => {
+      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio play started');
+    };
+    audio.onplaying = () => {
+      if (!callEndedRef.current) console.log('🎵 DEBUG: Audio is playing');
+    };
+    audio.onpause = () => console.log('🎵 DEBUG: Audio paused');
+    audio.onended = () => console.log('🎵 DEBUG: Audio ended');
+    audio.onerror = (e) => console.error('🎵 DEBUG: Audio error:', e);
+  
+    await new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        if (!callEndedRef.current) {
+          console.error('🎵 DEBUG: Audio timeout after 8 seconds');
+          reject(new Error('Audio timeout'));
+        } else {
+          resolve(); // Don't error if call was ended
+        }
+      }, 8000);
       
-      console.log('🚀 BACKEND: Sending request to backend...');
+      let resolved = false;
+      const resolveOnce = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeoutId);
+          console.log('🎵 DEBUG: Audio playback completed');
+          resolve();
+        }
+      };
       
-      const response = await fetch('http://127.0.0.1:8000/voice-call-ultra-fast', {
-        method: 'POST',
-        body: formData,
-        signal: AbortSignal.timeout(30000), // Increased timeout
+      audio.onloadeddata = () => {
+        // CHECK: Don't play if call ended during loading
+        if (callEndedRef.current) {
+          console.log('🎵 BLOCKED: Call ended during audio loading, aborting...');
+          resolveOnce();
+          return;
+        }
+        
+        console.log('🎵 DEBUG: Audio loaded, attempting to play...');
+        const playPromise = audio.play();
+        if (playPromise?.then) {
+          playPromise.then(() => {
+            if (!callEndedRef.current) {
+              console.log('🎵 DEBUG: Audio play promise resolved');
+            }
+          }).catch((playError) => {
+            if (!callEndedRef.current) {
+              console.error('🎵 DEBUG: Audio play promise rejected:', playError);
+              if (!resolved) {
+                resolved = true;
+                clearTimeout(timeoutId);
+                reject(playError);
+              }
+            } else {
+              resolveOnce(); // Don't error if call ended
+            }
+          });
+        }
+      };
+      
+      audio.onended = () => {
+        console.log('🎵 DEBUG: Audio ended naturally');
+        resolveOnce();
+      };
+      
+      audio.onerror = (e) => {
+        if (!callEndedRef.current) {
+          console.error('🎵 DEBUG: Audio error occurred:', e);
+          if (!resolved) {
+            resolved = true;
+            clearTimeout(timeoutId);
+            reject(new Error('Audio error'));
+          }
+        } else {
+          resolveOnce(); // Don't error if call ended
+        }
+      };
+      
+      console.log('🎵 DEBUG: Setting audio source...');
+      audio.src = audioDataUrl;
+    });
+  
+  } catch (error) {
+    // Only handle errors if call wasn't ended
+    if (!callEndedRef.current) {
+      console.error('❌ ULTRA: Audio playback failed:', error);
+      if (error.message.includes('NotAllowedError')) {
+        setShowAudioPrompt(true);
+      }
+      // REMOVED: Don't show "Audio failed" error to users
+    } else {
+      console.log('🎵 DEBUG: Audio playback canceled due to call end');
+    }
+  } finally {
+    console.log('🎵 DEBUG: Setting isSpeaking to FALSE');
+    setIsSpeaking(false);
+    setAudioLevel(0);
+    currentAudioRef.current = null;
+  }
+}, [audioEnabled]);
+// Update the processWithBackend function to check the flag before playing audio:
+const processWithBackend = useCallback(async (audioBlob) => {
+  if (requestInProgress.current) {
+    console.log('🚀 ULTRA: Request already in progress, skipping...');
+    return;
+  }
+  
+  console.log('🚀 BACKEND: Starting processing with blob size:', audioBlob.size);
+  requestInProgress.current = true;
+  setIsProcessing(true);
+  performanceMetrics.current.requestCount++;
+  
+  try {
+    const formData = new FormData();
+    formData.append('audio_file', audioBlob, `ultra_${Date.now()}.webm`);
+    formData.append('bot_id', selectedBotId || 'delhi_mentor_male');
+    formData.append('email', userDetails?.email || 'test@example.com');
+    formData.append('platform', 'web_voice_ultra_v13_fixed');
+    
+    console.log('🚀 BACKEND: Sending request to backend...');
+    
+    const response = await fetch('http://127.0.0.1:8000/voice-call-ultra-fast', {
+      method: 'POST',
+      body: formData,
+      signal: AbortSignal.timeout(30000), // Increased timeout
+    });
+    
+    console.log('🚀 BACKEND: Response status:', response.status);
+    
+    if (!response.ok) {
+      throw new Error(`Backend error: ${response.status} ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    console.log('🚀 BACKEND: Response data:', data);
+    
+    if (data.transcript) {
+      console.log('📝 TRANSCRIPT:', data.transcript);
+      onMessageReceived?.({
+        text: data.transcript,
+        sender: 'user',
+        timestamp: new Date(),
+        isVoiceMessage: true,
+      });
+    }
+    
+    if (data.text_response) {
+      console.log('🤖 BOT RESPONSE:', data.text_response);
+      onMessageReceived?.({
+        text: data.text_response,
+        sender: 'bot',
+        timestamp: new Date(),
+        bot_id: selectedBotId,
+        isVoiceMessage: true,
       });
       
-      console.log('🚀 BACKEND: Response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error(`Backend error: ${response.status} ${response.statusText}`);
+      // CHECK: Only play audio if call wasn't ended
+      if (!callEndedRef.current && data.audio_base64 && data.audio_base64.length > 100) {
+        console.log('🎵 PLAYING: Bot audio response');
+        await playAudioResponse(data.audio_base64);
+      } else if (callEndedRef.current) {
+        console.log('🎵 BLOCKED: Call ended, not playing audio response');
+      } else {
+        console.warn('⚠️ No audio response received');
       }
-      
-      const data = await response.json();
-      console.log('🚀 BACKEND: Response data:', data);
-      
-      if (data.transcript) {
-        console.log('📝 TRANSCRIPT:', data.transcript);
-        onMessageReceived?.({
-          text: data.transcript,
-          sender: 'user',
-          timestamp: new Date(),
-          isVoiceMessage: true,
-        });
-      }
-      
-      if (data.text_response) {
-        console.log('🤖 BOT RESPONSE:', data.text_response);
-        onMessageReceived?.({
-          text: data.text_response,
-          sender: 'bot',
-          timestamp: new Date(),
-          bot_id: selectedBotId,
-          isVoiceMessage: true,
-        });
-        
-        if (data.audio_base64 && data.audio_base64.length > 100) {
-          console.log('🎵 PLAYING: Bot audio response');
-          await playAudioResponse(data.audio_base64);
-        } else {
-          console.warn('⚠️ No audio response received');
-        }
-      }
-      
-    } catch (error) {
-      console.error('❌ ULTRA: Processing failed:', error);
-      setError(`Processing failed: ${error.message}`);
-      setTimeout(() => setError(null), 4000);
-      performanceMetrics.current.errorCount++;
-    } finally {
-      requestInProgress.current = false;
-      setIsProcessing(false);
-      setResponseStarted(false);
-      console.log('🚀 BACKEND: Processing completed');
     }
-  }, [selectedBotId, userDetails, onMessageReceived, playAudioResponse]);
+    
+  } catch (error) {
+    console.error('❌ ULTRA: Processing failed:', error);
+    setError(`Processing failed: ${error.message}`);
+    setTimeout(() => setError(null), 4000);
+    performanceMetrics.current.errorCount++;
+  } finally {
+    requestInProgress.current = false;
+    setIsProcessing(false);
+    setResponseStarted(false);
+    console.log('🚀 BACKEND: Processing completed');
+  }
+}, [selectedBotId, userDetails, onMessageReceived, playAudioResponse]);
+
+
 
   const setupMicrophone = useCallback(async () => {
     try {
@@ -784,30 +953,37 @@ const VoiceCallUltra = ({
   // CALL MANAGEMENT
   // =====================================
 
-  const startCall = useCallback(async () => {
-    try {
-      await enableAudioForBrowser();
-      
-      const micSetup = await setupMicrophone();
-      if (!micSetup) return;
-      
-      processAudioRef.current = processWithBackend;
-      setIsCallActive(true);
-      setIsListening(true);
-      
-      startVoiceActivityDetection();
-      
-    } catch (error) {
-      console.error('❌ ULTRA: Start call failed:', error);
-      setError('Failed to start call');
-      setTimeout(() => setError(null), 3000);
-    }
-  }, [enableAudioForBrowser, setupMicrophone, processWithBackend, startVoiceActivityDetection]);
+const startCall = useCallback(async () => {
+  try {
+    // Reset the flag when starting a new call
+    callEndedRef.current = false;
+    
+    await enableAudioForBrowser();
+    
+    const micSetup = await setupMicrophone();
+    if (!micSetup) return;
+    
+    processAudioRef.current = processWithBackend;
+    setIsCallActive(true);
+    setIsListening(true);
+    
+    startVoiceActivityDetection();
+    
+  } catch (error) {
+    console.error('❌ ULTRA: Start call failed:', error);
+    setError('Failed to start call');
+    setTimeout(() => setError(null), 3000);
+  }
+}, [enableAudioForBrowser, setupMicrophone, processWithBackend, startVoiceActivityDetection]);
 
- // Replace the endCall function with this improved version:
 
+
+// Update the endCall function to set the flag:
 const endCall = useCallback(() => {
   console.log('🔴 END CALL: Immediately stopping all audio and activities...');
+  
+  // CRITICAL: Set the ended flag FIRST
+  callEndedRef.current = true;
   
   // IMMEDIATELY stop any audio playback
   if (currentAudioRef.current) {
@@ -874,6 +1050,7 @@ const endCall = useCallback(() => {
   // Close the modal
   onClose?.();
 }, [onClose]);
+
 
   // =====================================
   // EFFECTS
@@ -1098,13 +1275,4 @@ const endCall = useCallback(() => {
 
 export default VoiceCallUltra;
 
-
-
-
-
-
-
-
-
-
-
+//Likhith
