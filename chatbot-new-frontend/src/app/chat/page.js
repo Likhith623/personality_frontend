@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 const botThemes = {
   delhi_mentor_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-gray-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: [ '/bg-images/delhi_mentor_male-bg.jpg',
     '/photos/default_dark_bg.png',
     '/photos/default_bg.png'
@@ -12,7 +12,7 @@ const botThemes = {
   },
   delhi_mentor_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-purple-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: [ '/bg-images/delhi_mentor_female-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -20,7 +20,7 @@ const botThemes = {
   },
   delhi_friend_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-blue-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: [ '/bg-images/delhi_friend_male-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -28,7 +28,7 @@ const botThemes = {
   },
   delhi_friend_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-pink-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: [ '/bg-images/delhi_friend_female-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -36,7 +36,7 @@ const botThemes = {
   },
   delhi_romantic_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-red-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: [ '/bg-images/delhi_romantic_male-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -44,7 +44,7 @@ const botThemes = {
   },
   delhi_romantic_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-rose-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: ['/bg-images/delhi_romantic_female-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -100,7 +100,7 @@ const botThemes = {
   },
   parisian_mentor_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-neutral-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: ['/bg-images/parisian_mentor_male-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -108,7 +108,7 @@ const botThemes = {
   },
   parisian_mentor_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-purple-800 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: ['/bg-images/parisian_mentor_female-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -116,7 +116,7 @@ const botThemes = {
   },
   parisian_friend_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-blue-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: ['/bg-images/parisian_friend_male-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -124,7 +124,7 @@ const botThemes = {
   },
   parisian_friend_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-pink-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: ['/bg-images/parisian_friend_female-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -132,7 +132,7 @@ const botThemes = {
   },
   parisian_romantic_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-red-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: [ '/bg-images/parisian_romantic_male-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -140,7 +140,7 @@ const botThemes = {
   },
   parisian_romantic_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-rose-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: ['/bg-images/parisian_romantic_female-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -180,7 +180,7 @@ const botThemes = {
   },
   berlin_romantic_male: {
     background: 'bg-gray-50',
-    botBubble: 'bg-red-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: ['/bg-images/berlin_romantic_male-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -188,7 +188,7 @@ const botThemes = {
   },
   berlin_romantic_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-rose-900 text-white',
+    botBubble: 'bg-white text-black',
     backgroundImages: ['/bg-images/berlin_romantic_female-bg.jpg',
     '/photos/default_dark_bg.png',
       '/photos/default_bg.png'
@@ -2531,7 +2531,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
         'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
-        const response = await fetch("https://novi.aigurukul.dev/sync", {
+        const response = await fetch("https://novi.aigurukul.dev/docs", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -3239,7 +3239,7 @@ return (
                             onTouchCancel={handleLongPressEnd}
                           >
                             <motion.p>
-                              {msg.text.split(' ').map((word, i) => (
+                            {(typeof msg.text === "string" ? msg.text : "").split(' ').map((word, i) => (
                                 <motion.span
                                   key={i}
                                   initial={{ filter: 'blur(10px)', opacity: 0, y: 5 }}
@@ -3304,7 +3304,8 @@ return (
                             </button>
                           )}
 
-                          {msg.text.trim() === "Sorry, there was an error processing your request. Please try again." ? null : (
+                          {(typeof msg.text === "string" && msg.text.trim() === "Sorry, there was an error processing your request. Please try again.") ? null : (
+
                             <>
                               {msg.feedback === '' ? (
                                 <>
