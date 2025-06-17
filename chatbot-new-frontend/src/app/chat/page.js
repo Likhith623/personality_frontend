@@ -3,87 +3,236 @@ import React, { useState, useEffect, useRef } from "react";
 
 const botThemes = {
   delhi_mentor_male: {
-    
-    botBubble: 'bg-slate-100 text-black shadow-md',
-    userBubble: 'bg-amber-100 text-black shadow-md',
-    backgroundImage: '/bg-images/delhi_mentor_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [ '/bg-images/delhi_mentor_male-bg.jpg',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'
+  ],
   },
   delhi_mentor_female: {
-    
-    botBubble: 'bg-white text-black  shadow-md',
-    userBubble: 'bg-rose-100 text-black shadow-md',
-    backgroundImage: '/bg-images/delhi_mentor_female-bg.jpg',
-  },  delhi_friend_male: {
-    
-    botBubble: 'bg-amber-200 text-black  shadow-md',
-    userBubble: 'bg-sky-100 text-black shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/delhi_friend_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [ '/bg-images/delhi_mentor_female-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
+  },
+  delhi_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [ '/bg-images/delhi_friend_male-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
   delhi_friend_female: {
-    
-    botBubble: 'bg-rose-50 text-black shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-emerald-100 text-black shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/delhi_friend_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [ '/bg-images/delhi_friend_female-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
   delhi_romantic_male: {
-    
-    botBubble: 'bg-purple-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-yellow-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/delhi_romantic_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [ '/bg-images/delhi_romantic_male-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
   delhi_romantic_female: {
-    
-    botBubble: 'bg-pink-200 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-yellow-100 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/delhi_romantic_female-bg.jpg',
-  },  parisian_mentor_male: {
-    
-    botBubble: 'bg-white text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-stone-200 text-gray-800 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_mentor_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/bg-images/delhi_romantic_female-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
+  },
+  japanese_mentor_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanmm_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  japanese_mentor_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanmf_bg.jpeg',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'  
+  ],
+  },
+  japanese_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanfm_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png' 
+  ],
+  },
+  japanese_friend_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages:['/photos/japanff_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  japanese_romantic_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanrm_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  japanese_romantic_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/japanrf_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  parisian_mentor_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/bg-images/parisian_mentor_male-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_mentor_female: {
-    
-    botBubble: 'bg-amber-50 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-indigo-50 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_mentor_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/bg-images/parisian_mentor_female-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_friend_male: {
-    
-    botBubble: 'bg-blue-100 text-blue-900 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-green-100 text-green-900 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_friend_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/bg-images/parisian_friend_male-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_friend_female: {
-    
-    botBubble: 'bg-gray-100 text-gray-900 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-indigo-200 text-indigo-900 shadow-md backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_friend_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/bg-images/parisian_friend_female-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_romantic_male: {
-    
-    botBubble: 'bg-gray-200 text-gray-900 shadow-md',
-    userBubble: 'bg-white text-gray-900 shadow-md',
-    backgroundImage: '/bg-images/parisian_romantic_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [ '/bg-images/parisian_romantic_male-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
   parisian_romantic_female: {
-    
-    botBubble: 'bg-rose-200 text-neutral-800 shadow-md backdrop-blur-sm border border-white/20',
-    userBubble: 'bg-sky-200 text-neutral-800 backdrop-blur-sm border border-white/20',
-    backgroundImage: '/bg-images/parisian_romantic_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/bg-images/parisian_romantic_female-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
-  
+  berlin_mentor_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinmm_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'  
+  ]
+  },
+  berlin_mentor_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinmf_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png' 
+  ],
+  },
+  berlin_friend_male: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinfm_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'
+  ],
+  },
+  berlin_friend_female: {
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/berlinff_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png' 
+  ],
+  },
   berlin_romantic_male: {
-   
-    botBubble: 'bg-orange-100 text-black shadow-md',
-    userBubble: 'bg-yellow-100 text-black shadow-md',
-    backgroundImage: '/bg-images/berlin_romantic_male-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/bg-images/berlin_romantic_male-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
   },
   berlin_romantic_female: {
-    
-    botBubble: 'bg-orange-200 text-black shadow-md',
-    userBubble: 'bg-orange-100 text-black shadow-md',
-    backgroundImage: '/bg-images/berlin_romantic_female-bg.jpg',
+    background: 'bg-gray-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/bg-images/berlin_romantic_female-bg.jpg',
+    '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ],
+  },
+  Krishna: {
+    background: 'bg-yellow-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages:[
+      '/photos/krishna_bg.jpg',
+      '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+      ],// Place Krishna bg image here
+  },
+  Rama: {
+    background: 'bg-yellow-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      '/photos/rama_bg.png',
+      '/photos/default_dark_bg.png',
+      '/photos/default_bg.png'
+    ], // Place Rama bg image here
+  },
+  Shiva: {
+    background: 'bg-blue-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/shiva_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'   // Place Shiva background image here
+  ],
+  },  
+  Hanuman: {
+    background: 'bg-orange-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/hanuman_bg.png',
+    '/photos/default_dark_bg.png',
+    '/photos/default_bg.png'  ], // Place Hanuman bg image here
+  },
+  Trimurti: {
+    background: 'bg-indigo-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: ['/photos/trimurthi_bg.png',
+    '/photos/default_bg.png' 
+   ], // Place Trimurti bg image here
   },
 };
 import Link from "next/link";
@@ -2160,6 +2309,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
       setClearChatCalled={setClearChatCalled} 
       backgroundIndex={backgroundIndex}
       isWhiteIcon = {isWhiteIcon}
+      isDarkTheme = {isDarkMode}
       className="bg-white/40 backdrop-blur-md shadow-lg" 
       />
   
@@ -2191,7 +2341,7 @@ export const LogoIcon = () => {
     </Link>
   );
 };
-const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon}) => {
+const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme}) => {
   const { selectedBotId } = useBot();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -2381,7 +2531,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
         'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
-        const response = await fetch("https://novi.aigurukul.dev/sync", {
+        const response = await fetch("https://novi.aigurukul.dev/docs", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -3002,8 +3152,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
     </div>
   );
 
-  // Component for removal tooltip
-  const RemovalTooltip = ({ msgId }) => (
+const RemovalTooltip = ({ msgId }) => (
   <div className="absolute -top-10 left-0 bg-white/90 backdrop-blur-md rounded-lg py-1 px-3 shadow-md border border-gray-200 z-10 text-sm text-gray-700 whitespace-nowrap">
     Tap to remove
   </div>
@@ -3014,7 +3163,7 @@ console.log("All chat messages:", messages);
 return (
   <div
     className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
-      botThemes[selectedBotId]?.background || "bg-gray-100"
+      botThemes[selectedBotId]?.background || 'bg-gray-100'
     }`}
     style={
       botThemes[selectedBotId]?.backgroundImages
@@ -3028,35 +3177,17 @@ return (
                 backgroundRepeat: "no-repeat",
               };
             } else if (bg.startsWith("radial-gradient")) {
-              return {
-                backgroundImage: bg,
-              };
+              return { backgroundImage: bg };
             } else {
-              return {
-                backgroundColor: bg,
-              };
+              return { backgroundColor: bg };
             }
           })()
-        : undefined
-    }
-  >
-    <ScrollArea className="flex-1">
-      <div className="px-1 md:px-2">
-        {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
-          <div key={date}>
-            <div className="sticky my-10 top-5 z-10 py-2 mx-auto w-32 bg-white/30 backdrop-blur-md rounded-md shadow-md">
-              <p className="text-center text-sm text-gray-600">{date}</p>
-            </div>
-return (
-  <div
-    className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${botThemes[selectedBotId]?.background || 'bg-gray-100'}`}
-    style={
-      botThemes[selectedBotId]?.backgroundImage
+        : botThemes[selectedBotId]?.backgroundImage
         ? {
             backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
           }
         : undefined
     }
@@ -3091,7 +3222,7 @@ return (
                           <div
                             className={`px-4 py-2 rounded-2xl ${
                               botThemes[selectedBotId]?.botBubble || 'bg-white/20 text-gray-900'
-                            } border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${
+                            } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
                               highlightedMessage === msg.id ? 'bg-orange-200/30' : ''
                             } w-full text-left`}
                             style={{
@@ -3108,7 +3239,7 @@ return (
                             onTouchCancel={handleLongPressEnd}
                           >
                             <motion.p>
-                              {msg.text.split(' ').map((word, i) => (
+                            {(typeof msg.text === "string" ? msg.text : "").split(' ').map((word, i) => (
                                 <motion.span
                                   key={i}
                                   initial={{ filter: 'blur(10px)', opacity: 0, y: 5 }}
@@ -3128,7 +3259,7 @@ return (
                       <div
                         className={`px-4 py-2 rounded-2xl ${
                           botThemes[selectedBotId]?.userBubble || 'bg-purple-400/80 text-white'
-                        } border border-white/20 backdrop-blur-sm shadow-md rounded-6xl placeholder-gray-200 ${
+                        } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
                           highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
                         } w-full text-left`}
                         style={{
@@ -3141,52 +3272,27 @@ return (
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </ScrollArea>
-  </div>
-);
-
-                    ) : (
-                      <div
-                        className={`px-4 py-2 rounded-2xl bg-purple-400/80 border border-white/20 backdrop-blur-sm shadow-md rounded-6xl text-white placeholder-gray-200 ${
-                          highlightedMessage === msg.id ? 'bg-orange-200/90' : ''
-                        } w-full text-left`}
-                        style={{
-                          userSelect: 'none',
-                          WebkitUserSelect: 'none',
-                          WebkitTouchCallout: 'none',
-                          maxWidth: '800px',
-                          width: '100%',
-                        }}
-                      >
-                        <span className="text-right ml-auto">{msg.text}</span>
-                      </div>
-                    )}
-                  </div>
-                  {msg.sender === 'bot' && <PlayAudio text={msg.text} bot_id={selectedBotId} />}
-                  </div>
 
                   <div className="flex flex-row justify-end">
-                    <span className={`text-xs ${msg.sender === 'user' ? 'mr-3' : ''} ${isDarkTheme ? 'text-white' : 'text-neutral-700'} mt-[7px]`}>
+                    <span
+                      className={`text-xs mt-[7px] ${msg.sender === 'user' ? 'mr-3' : ''} ${
+                        isDarkTheme ? 'text-white' : 'text-neutral-700'
+                      }`}
+                    >
                       {formatTime(msg.timestamp)}
                     </span>
 
                     {msg.sender === 'bot' && (
                       <div className="flex justify-end px-2 mr-7 relative">
-                        {/* Reaction selector popup */}
                         {showReactionsFor === msg.id && <ReactionSelector msgId={msg.id} />}
 
                         <div className="gap-3 flex flex-row mt-1">
-                          {/* Reaction button - only show on desktop */}
                           {!isMobile && (
                             <button
                               onClick={() => toggleReactions(msg.id)}
-                              className={`cursor-pointer transition-colors mr-2 ${isDarkTheme ? 'text-white hover:text-white' : 'text-black/30 hover:text-purple-400'}`}
+                              className={`cursor-pointer transition-colors mr-2 ${
+                                isDarkTheme ? 'text-white hover:text-white' : 'text-black/30 hover:text-purple-400'
+                              }`}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -3198,46 +3304,44 @@ return (
                             </button>
                           )}
 
-                          {/* Thumbs feedback */}
-                          {msg.text.trim() === "Sorry, there was an error processing your request. Please try again." ? (
-                            <></>
-                          ) : msg.feedback === '' ? (
+                          {(typeof msg.text === "string" && msg.text.trim() === "Sorry, there was an error processing your request. Please try again.") ? null : (
+
                             <>
-                              <ThumbsUp
-                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
-                                size={18}
-                                onClick={() => handleFeedback('like', msg.id)}
-                              />
-                              <ThumbsDown
-                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
-                                size={18}
-                                onClick={() => handleFeedback('dislike', msg.id)}
-                              />
-                            </>
-                          ) : msg.feedback === 'like' ? (
-                            <>
-                              <IconThumbUpFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'} mt-[-2px]`} />
-                              <ThumbsDown
-                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
-                                size={18}
-                                onClick={() => handleFeedback('dislike', msg.id)}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <ThumbsUp
-                                className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
-                                size={18}
-                                onClick={() => handleFeedback('like', msg.id)}
-                              />
-                              <IconThumbDownFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'}`} />
+                              {msg.feedback === '' ? (
+                                <>
+                                  <ThumbsUp
+                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    size={18}
+                                    onClick={() => handleFeedback('like', msg.id)}
+                                  />
+                                  <ThumbsDown
+                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    size={18}
+                                    onClick={() => handleFeedback('dislike', msg.id)}
+                                  />
+                                </>
+                              ) : msg.feedback === 'like' ? (
+                                <>
+                                  <IconThumbUpFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'} mt-[-2px]`} />
+                                  <ThumbsDown
+                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    size={18}
+                                    onClick={() => handleFeedback('dislike', msg.id)}
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <ThumbsUp
+                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    size={18}
+                                    onClick={() => handleFeedback('like', msg.id)}
+                                  />
+                                  <IconThumbDownFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'}`} />
+                                </>
+                              )}
                             </>
                           )}
                         </div>
-                      </div>
-                    )}
-                  </div>
-
                       </div>
                     )}
                   </div>
@@ -3261,7 +3365,7 @@ return (
       />
       <button
         type="submit"
-        className="p-5 py-2 hover:opacity-60 cursor-pointer md: bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+        className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
       >
         Send
       </button>
@@ -3271,4 +3375,5 @@ return (
       Novi can make mistakes, it's constantly learning from you, please be kind!!
     </p>
   </div>
-)};
+);
+}
