@@ -141,7 +141,7 @@ export default function Home() {
             <button
               className={`mt-20 sm:mt-20 px-6 py-3 rounded-full text-white text-sm sm:text-base transition-all backdrop-blur-md border ${
                 theme === "dark"
-                  ? "bg-gray-800/5 border-gray-700/20"
+                  ? "bg-gradient-to-r from-purple-400/40 via-pink-400/40 to-orange-400/40 border-gray-700/20 hover:from-purple-400/60 hover:via-pink-400/60 hover:to-orange-400/60"
                   : "bg-[#242124] hover:bg-gradient-to-r from-pink-400 to-orange-400"
               }`}
             >
