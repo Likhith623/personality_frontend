@@ -3521,7 +3521,7 @@ return (
             <path d="M8 22h8"/>
           </svg>
         </button>
-        <button type="submit" className="p-5 py-2 hover:opacity-60 cursor-pointer md: bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]" >
+        <button type="submit" className="p-5 py-2 hover:opacity-60 cursor-pointer md:bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]" >
           Send
         </button>
       </form>
