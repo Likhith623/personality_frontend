@@ -2312,6 +2312,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
       backgroundIndex={backgroundIndex}
       isWhiteIcon = {isWhiteIcon}
       isDarkTheme = {isDarkMode}
+      selectedBotDetails={selectedBotDetails}
       className="bg-white/40 backdrop-blur-md shadow-lg" 
       />
   
@@ -2343,7 +2344,7 @@ export const LogoIcon = () => {
     </Link>
   );
 };
-const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme}) => {
+const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails}) => {
   const { selectedBotId } = useBot();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -2361,7 +2362,6 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
   const [highlightedMessage, setHighlightedMessage] = useState(null);
   // Define available emoticons
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
-  
   // Helper: decide if a bot reply should be voice-only
   function isVoiceOnlyBotReply(msg) {
     return msg.voice_only === true;
@@ -2534,7 +2534,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
         'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
-        const response = await fetch("https://novi.aigurukul.dev/cv/sync", {
+        const response = await fetch("https://novi.aigurukul.dev/sync", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -3003,26 +3003,30 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
       - `previous_con */
 
       const payload = {
-        message:
-          e.reminder == true ? `User asked to remind: ${e.message}` : input,
+        user_message: e.reminder === true ? `User asked to remind: ${e.message}` : input,
+        rephrased_user_message: "", // Or some rephrased value
         bot_id: selectedBotId,
-        bot_prompt: editablePrompts[selectedBotId],
-        previous_conversation: convertToOpenAIFormat(messages),
-        email: userDetails.email,
+        bot_prompt_f: editablePrompts[selectedBotId],
+        previous_conversation: convertToOpenAIFormat(messages), // Must return array of {role, content}
+        memory: "", // Optional, can be empty
         request_time: new Date().toString(),
-        platform: "web",
-        user_name: userDetails.name,
-        user_gender: userDetails.gender,
+        username: userDetails.name,
+        gender: userDetails.gender,
+        botname: selectedBotDetails?.name || "DefaultBot"
+       
       };
+      
+      
 
-      console.log(payload);
+      console.log("Payload", JSON.stringify(payload, null, 2));
+
 
       /* The above code is making a POST request to the URL "https://novi.aigurukul.dev/cv/chat" with a
       JSON payload. The payload is being sent in the body of the request after being stringified
       using JSON.stringify. The request is being made using the fetch API with the specified method
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
-      const response = await fetch("https://novi-be.aigurukul.dev/docs#/default/generate_response_generate_response__post", {
+      const response = await fetch("https://novi-be.aigurukul.dev/generate-response/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
