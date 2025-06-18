@@ -1,14 +1,14 @@
 "use client";
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useUser } from '@/support/UserContext';
-import { Textarea } from '../ui/textarea';
-import { Button } from '../ui/button';
-import { useBot } from '@/support/BotContext';
-import {supabase} from '../../../supabaseClient'
-import { 
-  IconLoader, 
-  IconExclamationCircle, 
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/support/UserContext";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
+import { useBot } from "@/support/BotContext";
+import { supabase } from "../../../supabaseClient";
+import {
+  IconLoader,
+  IconExclamationCircle,
   IconProgressCheck,
   IconUser,
   IconLock,
@@ -18,23 +18,121 @@ import {
   IconLogout,
   IconCalendar,
   IconGenderMale,
-  IconGenderFemale
-} from '@tabler/icons-react';
+  IconGenderFemale,
+} from "@tabler/icons-react";
 
 function Profile() {
   const router = useRouter();
   const { userDetails } = useUser();
-  const [session, setSession] = useState(); 
+  const [session, setSession] = useState();
   const { selectedBotId } = useBot();
-  const [text, setText] = useState("")
-  const [status, setStatus] = useState("")
-  const [activeTab, setActiveTab] = useState('profile')
-  const [dateOfBirth, setDateOfBirth] = useState(userDetails.date_of_birth || '')
-  const [gender, setGender] = useState(userDetails.gender || '')
-  const [isEditing, setIsEditing] = useState(false)
+  const [text, setText] = useState("");
+  const [status, setStatus] = useState("");
+  const [activeTab, setActiveTab] = useState("profile");
+  const [dateOfBirth, setDateOfBirth] = useState(
+    userDetails.date_of_birth || ""
+  );
+  const [gender, setGender] = useState(userDetails.gender || "");
+  const [isEditing, setIsEditing] = useState(false);
+  const [pushNotificationsEnabled, setPushNotificationsEnabled] =
+    useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  useEffect(() => {
+    const registerServiceWorker = async () => {
+      try {
+        if ("serviceWorker" in navigator) {
+          const registration = await navigator.serviceWorker.register("/sw.js");
+          console.log(
+            "Service Worker registered with scope:",
+            registration.scope
+          );
+
+          // Check if user has already subscribed
+          const subscription = await registration.pushManager.getSubscription();
+          setPushNotificationsEnabled(!!subscription);
+        }
+      } catch (error) {
+        console.error("Service Worker registration failed:", error);
+      }
+    };
+
+    registerServiceWorker();
+  }, []);
+
+  const handlePushNotificationToggle = async () => {
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      alert("Push notifications are not supported in your browser");
+      return;
+    }
+
+    setIsSubscribing(true);
+    try {
+      const registration = await navigator.serviceWorker.ready;
+
+      if (!pushNotificationsEnabled) {
+        // Request notification permission
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") {
+          throw new Error("Notification permission denied");
+        }
+
+        // Convert VAPID public key to Uint8Array
+        const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+        if (!vapidPublicKey) {
+          throw new Error("VAPID public key is not configured");
+        }
+
+        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+
+        // Subscribe to push notifications
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidKey,
+        });
+
+        console.log("Push Notification subscription:", subscription);
+
+        // Store subscription in localStorage
+        localStorage.setItem("pushSubscription", JSON.stringify(subscription));
+
+        setPushNotificationsEnabled(true);
+      } else {
+        // Unsubscribe from push notifications
+        const subscription = await registration.pushManager.getSubscription();
+
+        if (subscription) {
+          await subscription.unsubscribe();
+          localStorage.removeItem("pushSubscription");
+          setPushNotificationsEnabled(false);
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling push notifications:", error);
+      alert("Failed to update push notification settings: " + error.message);
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
+  // Helper function to convert VAPID key
+  function urlBase64ToUint8Array(base64String) {
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, "+")
+      .replace(/_/g, "/");
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
 
   const handleLogout = async () => {
-    localStorage.removeItem('userDetails');
+    localStorage.removeItem("userDetails");
     await supabase.auth.signOut();
     setSession(null);
     window.location.reload();
@@ -44,171 +142,261 @@ function Profile() {
   const handleUpdateProfile = async () => {
     try {
       const { error } = await supabase
-        .from('profiles')
-        .update({ 
+        .from("profiles")
+        .update({
           date_of_birth: dateOfBirth,
-          gender: gender
+          gender: gender,
         })
-        .eq('id', userDetails.id)
+        .eq("id", userDetails.id);
 
-      if (error) throw error
-      
-      setIsEditing(false)
+      if (error) throw error;
+
+      setIsEditing(false);
       // Update local user details
-      const updatedUserDetails = { ...userDetails, date_of_birth: dateOfBirth, gender: gender }
-      localStorage.setItem('userDetails', JSON.stringify(updatedUserDetails))
+      const updatedUserDetails = {
+        ...userDetails,
+        date_of_birth: dateOfBirth,
+        gender: gender,
+      };
+      localStorage.setItem("userDetails", JSON.stringify(updatedUserDetails));
     } catch (error) {
-      console.error('Error updating profile:', error)
+      console.error("Error updating profile:", error);
     }
-  }
+  };
 
   const renderProfileContent = () => {
-    switch(activeTab) {
-      case 'profile':
+    switch (activeTab) {
+      case "profile":
         return (
           <div className="space-y-6">
             <div className="flex flex-col items-center">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 flex items-center justify-center text-3xl font-bold text-white mb-4 shadow-lg backdrop-blur-sm border border-white/20">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 flex items-center justify-center text-3xl font-bold text-white mb-4 shadow-lg backdrop-blur-sm border border-white/20 dark:border-gray-700/20">
                 {userDetails.name?.charAt(0).toUpperCase()}
               </div>
-              <h2 className="text-xl font-semibold text-gray-800">{userDetails.name}</h2>
-              <p className="text-sm text-gray-600">{userDetails.email}</p>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                {userDetails.name}
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {userDetails.email}
+              </p>
             </div>
             <div className="space-y-4">
-              <div className="p-6 bg-white/30 backdrop-blur-md rounded-xl shadow-lg border border-white/20">
+              <div className="p-6 bg-gray-300 dark:bg-gray-900 rounded-xl shadow-lg border border-gray-400 dark:border-gray-700">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-medium text-gray-800">Personal Information</h3>
-                  <button 
+                  <h3 className="font-medium text-gray-800 dark:text-gray-200">
+                    Personal Information
+                  </h3>
+                  <button
                     onClick={() => setIsEditing(!isEditing)}
-                    className="text-sm text-purple-600 hover:text-purple-700"
+                    className="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
                   >
-                    {isEditing ? 'Cancel' : 'Edit'}
+                    {isEditing ? "Cancel" : "Edit"}
                   </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-sm text-gray-600 flex items-center gap-2">
+                    <label className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
                       <IconCalendar size={16} />
                       Date of Birth
                     </label>
                     {isEditing ? (
-                      <input 
-                        type="date" 
+                      <input
+                        type="date"
                         value={dateOfBirth}
                         onChange={(e) => setDateOfBirth(e.target.value)}
-                        className="w-full p-3 mt-1 rounded-lg bg-white/90 border border-gray-200 backdrop-blur-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-gray-800"
-                        max={new Date().toISOString().split('T')[0]}
+                        className="w-full p-3 mt-1 rounded-lg bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-gray-800 dark:text-gray-200"
+                        max={new Date().toISOString().split("T")[0]}
                       />
                     ) : (
-                      <div className="mt-1 p-3 rounded-lg bg-white/20 border border-white/20">
-                        <p className="text-sm text-gray-800">
-                          {dateOfBirth ? new Date(dateOfBirth).toLocaleDateString() : 'Not set'}
+                      <div className="mt-1 p-3 rounded-lg bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600">
+                        <p className="text-sm text-gray-800 dark:text-gray-200">
+                          {dateOfBirth
+                            ? new Date(dateOfBirth).toLocaleDateString()
+                            : "Not set"}
                         </p>
                       </div>
                     )}
                   </div>
                   <div>
-                    <label className="text-sm text-gray-600 flex items-center gap-2">
+                    <label className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
                       <IconGenderMale size={16} />
                       Gender
                     </label>
                     {isEditing ? (
-                      <select 
+                      <select
                         value={gender}
                         onChange={(e) => setGender(e.target.value)}
-                        className="w-full p-3 mt-1 rounded-lg bg-white/90 border border-gray-200 backdrop-blur-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-gray-800"
+                        className="w-full p-3 mt-1 rounded-lg bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-gray-800 dark:text-gray-200"
                       >
-                        <option value="" className="text-gray-800">Select gender</option>
-                        <option value="male" className="text-gray-800">Male</option>
-                        <option value="female" className="text-gray-800">Female</option>
-                        <option value="other" className="text-gray-800">Other</option>
-                        <option value="prefer_not_to_say" className="text-gray-800">Prefer not to say</option>
+                        <option
+                          value=""
+                          className="text-gray-800 dark:text-gray-200"
+                        >
+                          Select gender
+                        </option>
+                        <option
+                          value="male"
+                          className="text-gray-800 dark:text-gray-200"
+                        >
+                          Male
+                        </option>
+                        <option
+                          value="female"
+                          className="text-gray-800 dark:text-gray-200"
+                        >
+                          Female
+                        </option>
+                        <option
+                          value="other"
+                          className="text-gray-800 dark:text-gray-200"
+                        >
+                          Other
+                        </option>
+                        <option
+                          value="prefer_not_to_say"
+                          className="text-gray-800 dark:text-gray-200"
+                        >
+                          Prefer not to say
+                        </option>
                       </select>
                     ) : (
-                      <div className="mt-1 p-3 rounded-lg bg-white/20 border border-white/20">
-                        <p className="text-sm text-gray-800">
-                          {gender ? gender.charAt(0).toUpperCase() + gender.slice(1) : 'Not set'}
+                      <div className="mt-1 p-3 rounded-lg bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600">
+                        <p className="text-sm text-gray-800 dark:text-gray-200">
+                          {gender
+                            ? gender.charAt(0).toUpperCase() + gender.slice(1)
+                            : "Not set"}
                         </p>
                       </div>
                     )}
                   </div>
                 </div>
                 {isEditing && (
-                  <Button 
+                  <Button
                     onClick={handleUpdateProfile}
-                    className="w-full mt-6 bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-lg shadow-lg backdrop-blur-sm border border-white/20 transition-all duration-300"
+                    className="w-full mt-6 bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 hover:from-purple-500 hover:via-pink-500 hover:to-orange-500 text-white rounded-lg shadow-lg border border-white/20 dark:border-gray-700/20 transition-all duration-300"
                   >
                     Save Changes
                   </Button>
                 )}
               </div>
-              <div className="p-6 bg-white/30 backdrop-blur-md rounded-xl shadow-lg border border-white/20">
-                <h3 className="font-medium mb-2 text-gray-800">About</h3>
-                <p className="text-sm text-gray-600">Member since {new Date(userDetails.created_at).toLocaleDateString()}</p>
+              <div className="p-6 bg-gray-300 dark:bg-gray-900 rounded-xl shadow-lg border border-gray-400 dark:border-gray-700">
+                <h3 className="font-medium mb-2 text-gray-800 dark:text-gray-200">
+                  About
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Member since{" "}
+                  {new Date(userDetails.created_at).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </div>
         );
-      case 'security':
+      case "security":
         return (
           <div className="space-y-6">
-            <div className="p-6 bg-white/30 backdrop-blur-md rounded-xl shadow-lg border border-white/20">
-              <h3 className="font-medium mb-4 text-gray-800">Security Settings</h3>
+            <div className="p-6 bg-gray-300 dark:bg-gray-900 rounded-xl shadow-lg border border-gray-400 dark:border-gray-700">
+              <h3 className="font-medium mb-4 text-gray-800 dark:text-gray-200">
+                Security Settings
+              </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-gray-600">Change Password</label>
-                  <input type="password" className="w-full p-3 mt-1 rounded-lg bg-white/20 border border-white/20 backdrop-blur-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50" placeholder="New Password" />
+                  <label className="text-sm text-gray-600 dark:text-gray-400">
+                    Change Password
+                  </label>
+                  <input
+                    type="password"
+                    className="w-full p-3 mt-1 rounded-lg bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-gray-800 dark:text-gray-200"
+                    placeholder="New Password"
+                  />
                 </div>
                 <div>
-                  <label className="text-sm text-gray-600">Confirm Password</label>
-                  <input type="password" className="w-full p-3 mt-1 rounded-lg bg-white/20 border border-white/20 backdrop-blur-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50" placeholder="Confirm New Password" />
+                  <label className="text-sm text-gray-600 dark:text-gray-400">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    className="w-full p-3 mt-1 rounded-lg bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400/50 text-gray-800 dark:text-gray-200"
+                    placeholder="Confirm New Password"
+                  />
                 </div>
-                <Button className="w-full bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-lg shadow-lg backdrop-blur-sm border border-white/20 transition-all duration-300">
+                <Button className="w-full bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 hover:from-purple-500 hover:via-pink-500 hover:to-orange-500 text-white rounded-lg shadow-lg border border-white/20 dark:border-gray-700/20 transition-all duration-300">
                   Update Password
                 </Button>
               </div>
             </div>
           </div>
         );
-      case 'preferences':
+      case "preferences":
         return (
           <div className="space-y-6">
-            <div className="p-6 bg-white/30 backdrop-blur-md rounded-xl shadow-lg border border-white/20">
-              <h3 className="font-medium mb-4 text-gray-800">Notification Preferences</h3>
+            <div className="p-6 bg-gray-300 dark:bg-gray-900 rounded-xl shadow-lg border border-gray-400 dark:border-gray-700">
+              <h3 className="font-medium mb-4 text-gray-800 dark:text-gray-200">
+                Notification Preferences
+              </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Email Notifications</span>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-400/80 peer-checked:via-pink-400/80 peer-checked:to-orange-400/80"></div>
-                  </label>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Push Notifications
+                  </span>
+                  <button
+                    onClick={handlePushNotificationToggle}
+                    disabled={isSubscribing}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:ring-offset-2 ${
+                      pushNotificationsEnabled
+                        ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400"
+                        : "bg-gray-400 dark:bg-gray-700"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        pushNotificationsEnabled
+                          ? "translate-x-6"
+                          : "translate-x-1"
+                      }`}
+                    />
+                  </button>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Push Notifications</span>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" />
-                    <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-400/80 peer-checked:via-pink-400/80 peer-checked:to-orange-400/80"></div>
-                  </label>
-                </div>
+                {isSubscribing && (
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Updating notification settings...
+                  </p>
+                )}
+                {!isSubscribing && (
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {pushNotificationsEnabled
+                      ? "Push notifications are enabled"
+                      : "Push notifications are disabled"}
+                  </p>
+                )}
               </div>
             </div>
           </div>
         );
-      case 'subscription':
+      case "subscription":
         return (
           <div className="space-y-6">
-            <div className="p-6 bg-white/30 backdrop-blur-md rounded-xl shadow-lg border border-white/20">
-              <h3 className="font-medium mb-4 text-gray-800">Subscription Details</h3>
+            <div className="p-6 bg-gray-300 dark:bg-gray-900 rounded-xl shadow-lg border border-gray-400 dark:border-gray-700">
+              <h3 className="font-medium mb-4 text-gray-800 dark:text-gray-200">
+                Subscription Details
+              </h3>
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-white/20 rounded-lg">
-                  <span className="text-sm text-gray-600">Current Plan</span>
-                  <span className="text-sm font-medium text-gray-800">Free Plan</span>
+                <div className="flex items-center justify-between p-3 bg-gray-200 dark:bg-gray-800 rounded-lg border border-gray-400 dark:border-gray-700">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Current Plan
+                  </span>
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    Free Plan
+                  </span>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-white/20 rounded-lg">
-                  <span className="text-sm text-gray-600">Next Billing Date</span>
-                  <span className="text-sm text-gray-800">-</span>
+                <div className="flex items-center justify-between p-3 bg-gray-200 dark:bg-gray-800 rounded-lg border border-gray-400 dark:border-gray-700">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    Next Billing Date
+                  </span>
+                  <span className="text-sm text-gray-800 dark:text-gray-200">
+                    -
+                  </span>
                 </div>
-                <Button className="w-full bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-lg shadow-lg backdrop-blur-sm border border-white/20 transition-all duration-300">
+                <Button className="w-full bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 hover:from-purple-500 hover:via-pink-500 hover:to-orange-500 text-white rounded-lg shadow-lg border border-white/20 dark:border-gray-700/20 transition-all duration-300">
                   Upgrade Plan
                 </Button>
               </div>
@@ -221,49 +409,52 @@ function Profile() {
   };
 
   return (
-    <div suppressHydrationWarning className='bg-white/20 backdrop-blur-md p-8 rounded-xl shadow-lg border border-white/20 h-[600px] w-[600px] md:w-[800px] overflow-hidden'>
+    <div
+      suppressHydrationWarning
+      className="bg-gray-200 dark:bg-gray-800 backdrop-blur-md p-8 rounded-xl shadow-lg border border-gray-300 dark:border-gray-700 h-[600px] w-[600px] md:w-[800px] overflow-hidden"
+    >
       <div className="flex flex-col md:flex-row gap-8 h-full">
         {/* Sidebar Navigation */}
         <div className="w-full md:w-48 space-y-2 overflow-y-auto">
           <button
-            onClick={() => setActiveTab('profile')}
+            onClick={() => setActiveTab("profile")}
             className={`w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 ${
-              activeTab === 'profile' 
-                ? 'bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 text-white shadow-lg' 
-                : 'hover:bg-white/20 text-gray-600'
+              activeTab === "profile"
+                ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 text-white shadow-lg"
+                : "hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
             }`}
           >
             <IconUser size={20} />
             <span>Profile</span>
           </button>
           <button
-            onClick={() => setActiveTab('security')}
+            onClick={() => setActiveTab("security")}
             className={`w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 ${
-              activeTab === 'security' 
-                ? 'bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 text-white shadow-lg' 
-                : 'hover:bg-white/20 text-gray-600'
+              activeTab === "security"
+                ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 text-white shadow-lg"
+                : "hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
             }`}
           >
             <IconLock size={20} />
             <span>Security</span>
           </button>
           <button
-            onClick={() => setActiveTab('preferences')}
+            onClick={() => setActiveTab("preferences")}
             className={`w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 ${
-              activeTab === 'preferences' 
-                ? 'bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 text-white shadow-lg' 
-                : 'hover:bg-white/20 text-gray-600'
+              activeTab === "preferences"
+                ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 text-white shadow-lg"
+                : "hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
             }`}
           >
             <IconBell size={20} />
             <span>Preferences</span>
           </button>
           <button
-            onClick={() => setActiveTab('subscription')}
+            onClick={() => setActiveTab("subscription")}
             className={`w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 ${
-              activeTab === 'subscription' 
-                ? 'bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 text-white shadow-lg' 
-                : 'hover:bg-white/20 text-gray-600'
+              activeTab === "subscription"
+                ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 text-white shadow-lg"
+                : "hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
             }`}
           >
             <IconCreditCard size={20} />
@@ -271,7 +462,7 @@ function Profile() {
           </button>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 hover:bg-red-500/20 text-red-500 hover:shadow-lg"
+            className="w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 hover:shadow-lg"
           >
             <IconLogout size={20} />
             <span>Log out</span>
@@ -279,9 +470,7 @@ function Profile() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto">
-          {renderProfileContent()}
-        </div>
+        <div className="flex-1 overflow-y-auto">{renderProfileContent()}</div>
       </div>
     </div>
   );

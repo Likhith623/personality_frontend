@@ -1,4 +1,4 @@
-# 🧠 Chatbot Frontend – CI/CD Deployment Guide
+# 🧠 Chatbot Frontend –CI/CD Deployment Guide
 
 This repository contains the frontend for the chatbot application, automatically deployed to **Google Cloud Run** using **GitHub Actions**.
 

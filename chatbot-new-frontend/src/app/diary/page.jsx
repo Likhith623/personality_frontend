@@ -54,7 +54,7 @@ function Diary() {
         }
     }
     return (
-        <div className="min-h-screen w-full flex items-center justify-center p-4">
+        <div className="min-h-screen w-full flex items-center justify-center p-4 ">
             <div className='w-full md:max-w-lg bg-neutral-800 rounded p-5'>
                 <div className="w-full">
                     <h2 className="font-bold text-xl">Diary</h2>

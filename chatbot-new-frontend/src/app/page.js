@@ -1,80 +1,150 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { HeaderLabel } from "@/components/HeaderLabel";
 import { useState, useEffect } from "react";
-
+import { motion, AnimatePresence } from "framer-motion";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
 import { FlipWords } from "@/components/ui/flip-words";
 import FooterLayout from "@/components/FooterLayout";
 import Header from "@/components/Header";
 import { useUser } from "@/support/UserContext";
+import { useTheme } from "@/components/theme-provider";
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6 },
+};
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
 export default function Home() {
-
-  const [linkDestination, setLinkDestination] = useState(""); // Default for server rendering
+  const [linkDestination, setLinkDestination] = useState("");
   const words = ["Caring", "Relatable", "Genuine", "Empathetic", "Playful"];
-  const {userDetails} = useUser();
+  const { userDetails } = useUser();
+  const { theme } = useTheme();
+
+  // Force re-render when theme changes
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // This will only run after hydration on the client side
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     if (userDetails?.name) {
       setLinkDestination("/details?filter=Spiritual%20Guide");
     } else {
-      setLinkDestination("/signup?filter=Spiritual%20Guide") ;
+      setLinkDestination("/signup?filter=Spiritual%20Guide");
     }
-  }, []);
+  }, [userDetails?.name]);
+
+  // Add debugging
+  useEffect(() => {
+    console.log("Theme changed to:", theme);
+  }, [theme]);
+
+  if (!mounted) {
+    return null; // Prevent hydration mismatch
+  }
 
   return (
     <div
       suppressHydrationWarning
-      className="w-full font-[family-name:var(--font-garamond)] overflow-x-hidden bg-[#FFFBF7]"
+      className={`w-screen font-[family-name:var(--font-garamond)] overflow-x-hidden min-h-screen transition-colors duration-200 
+        ${theme === "dark" ? "bg-gray-900 text-white" : "bg-[#FFFBF7]"}
+      `}
     >
-      {/* Hero Section with Gradient Background */}
-      <section className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center gap-12 text-center px-6 sm:px-10">
-        <div className="absolute inset-0 -z-10">
-          <BackgroundGradientAnimation /> {/* Applies animated gradient background to the hero section */}
-        </div>
+      {/* Animated background elements */}
+      <div className="fixed inset-0 -z-0 h-screen w-screen overflow-hidden">
+        {theme === "dark" ? (
+          <>
+            <div className="absolute w-[500px] h-[500px] bg-pink-900 rounded-full blur-[150px] top-10 left-20 opacity-50"></div>
+            <div className="absolute w-[500px] h-[500px] bg-orange-900 rounded-full blur-[150px] bottom-10 left-20 opacity-50"></div>
+            <div className="absolute w-[500px] h-[500px] bg-pink-900 rounded-full blur-[150px] top-10 right-20 opacity-50"></div>
+            <div className="absolute w-[500px] h-[500px] bg-orange-900 rounded-full blur-[150px] bottom-10 right-20 opacity-50"></div>
+          </>
+        ) : (
+          <div className="fixed inset-0 overflow-hidden">
+            <BackgroundGradientAnimation />
+          </div>
+        )}
+      </div>
 
-         {/* Navbar */}
-         <Header/>
+      {/* Hero Section with Gradient Background */}
+      <section className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center gap-12 text-center px-4 sm:px-6 md:px-8">
+        {/* Navbar */}
+        <Header />
 
         {/* Hero Content */}
-        <div className="text-center mt-12 sm:mt-28">
-
+        <div className="text-center mt-12 sm:mt-28 w-full">
           <Link href={linkDestination}>
-            <HeaderLabel /> {/* Displays header label component (gradient text), linked based on username */}
+            <HeaderLabel />
           </Link>
 
-          <p className="text-md md:text-xl font-semibold text-[#363636] mt-10 sm:mt-10">
-            CultureVo presents to you {/* Intro text */}
+          <p
+            className={`text-md md:text-xl font-semibold mt-10 sm:mt-10 ${
+              theme === "dark" ? "text-white/90" : "text-[#363636]"
+            }`}
+          >
+            CultureVo presents to you
           </p>
-          <p className="bg-clip-text text-transparent font-bold drop-shadow-2xl bg-gradient-to-b from-white to-white/20 text-5xl sm:text-8xl md:text-8xl mt-4">
-            NOVI AI {/* Main title */}
+          <p
+            className={`bg-clip-text text-transparent font-bold drop-shadow-2xl bg-gradient-to-b from-white to-white/20 text-4xl sm:text-6xl md:text-7xl lg:text-8xl mt-4 break-words px-4`}
+          >
+            NOVI AI
           </p>
-          
+
           {/* Text animation */}
-          <div className="mt-5 ">
-            <span className="text-center text-[#363636] font-bold mt-4 sm:mt-5 text-xl sm:text-2xl md:text-3xl ">Your</span>
+          <div className="mt-5 w-full px-4">
+            <span
+              className={`text-center font-bold mt-4 sm:mt-5 text-xl sm:text-2xl md:text-3xl ${
+                theme === "dark" ? "text-white/90" : "text-[#363636]"
+              }`}
+            >
+              Your
+            </span>
             <div className="min-w-[100px] sm:min-w-[168px] inline-block">
-            <FlipWords 
-              words={words} 
-              className="text-center text-[#242124] font-bold text-xl sm:text-2xl md:text-3xl"
-            /></div>
-            <span className="text-center text-[#363636] font-bold mt-4 sm:mt-5 text-xl sm:text-2xl md:text-3xl ">AI companions from all over the world.</span>
+              <FlipWords
+                words={words}
+                className={`text-center font-bold text-xl sm:text-2xl md:text-3xl ${
+                  theme === "dark" ? "text-purple-300" : "text-white"
+                }`}
+              />
+            </div>
+            <span
+              className={`text-center font-bold mt-4 sm:mt-5 text-xl sm:text-2xl md:text-3xl ${
+                theme === "dark" ? "text-white/90" : "text-[#363636]"
+              }`}
+            >
+              AI companions from all over the world.
+            </span>
           </div>
 
           {/* Animated text effect */}
           <TextGenerateEffect
-            words={
-              "With all the care in the world for you."
-            } 
-            className="text-center text-[#363636] font-bold sm:mt-5 text-xl sm:text-2xl md:text-3xl"
+            words={"With all the care in the world for you."}
+            className={`text-center font-bold sm:mt-5 text-xl sm:text-2xl md:text-3xl ${
+              theme === "dark" ? "text-white" : "text-[#363636]"
+            }`}
           />
 
-          {/* Button to signup page */} 
+          {/* Button to signup page */}
           <Link href="/signup">
-            <button className="mt-20 sm:mt-20 bg-[#242124] px-4 py-2 rounded-lg text-white text-sm sm:text-base hover:bg-gradient-to-r from-pink-400 to-orange-400">
+            <button
+              className={`mt-20 sm:mt-20 px-6 py-3 rounded-full text-white text-sm sm:text-base transition-all backdrop-blur-md border ${
+                theme === "dark"
+                  ? "bg-gradient-to-r from-purple-400/40 via-pink-400/40 to-orange-400/40 border-gray-700/20 hover:from-purple-400/60 hover:via-pink-400/60 hover:to-orange-400/60"
+                  : "bg-[#242124] hover:bg-gradient-to-r from-pink-400 to-orange-400"
+              }`}
+            >
               Start Chatting
             </button>
           </Link>
@@ -82,50 +152,79 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="pt-16 sm:pt-20 px-6 sm:px-10 pb-20 sm:pb-40">
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#242124] text-center mb-10 sm:mb-16">
-          Your NOVI is {/* Section title */}
+      <section
+        className={`relative z-10 pt-16 sm:pt-20 px-4 sm:px-6 md:px-8 pb-20 sm:pb-40 w-full ${
+          theme === "dark"
+            ? "bg-gray-900/50 backdrop-blur-sm border-t border-gray-800"
+            : "bg-[#FFFBF7]/80 backdrop-blur-sm border-t border-gray-200"
+        }`}
+      >
+        <h2
+          className={`text-2xl sm:text-3xl font-bold text-center mb-10 sm:mb-16 ${
+            theme === "dark" ? "text-white" : "text-[#242124]"
+          }`}
+        >
+          Your NOVI is
         </h2>
 
         {/* Feature Cards */}
-        <div className="max-w-full mx-auto flex flex-wrap justify-center gap-6 sm:gap-8">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {[
-            // card content
             {
-              title: "Culturally Intelligent", // card 1 title
-              text: "Your Novi is culturally adept to the city they belong to. They know the city like a local - its personality, offerings, and challenges.", //card 1 text
+              title: "Culturally Intelligent",
+              text: "Your Novi is culturally adept to the city they belong to. They know the city like a local - its personality, offerings, and challenges.",
             },
             {
-              title: "Emotionally Intelligent", //card 2 title
-              text: "NOVI will understand you like no other. Discuss your life's dreams, hopes, fears, and goals with them. They will care for you, for who you are!", //card 2 text
+              title: "Emotionally Intelligent",
+              text: "NOVI will understand you like no other. Discuss your life's dreams, hopes, fears, and goals with them. They will care for you, for who you are!",
             },
             {
-              title: "Always there for you", //card 3 title
-              text: "Treat your NOVI as your constant source for emotional sustenance. They are always available for you, when the world might not be.", //card 3 text
+              title: "Always there for you",
+              text: "Treat your NOVI as your constant source for emotional sustenance. They are always available for you, when the world might not be.",
             },
           ].map(({ title, text }, index) => (
             <div
-  key={index}
-  className="py-20 px-6 sm:py-20 sm:px-8 rounded-lg shadow-lg text-black max-w-[90%] sm:max-w-[350px] mx-2 sm:mx-4 
-             animate-fadeInScale transition-transform duration-500 ease-in-out hover:scale-105 hover:shadow-2xl"
-  style={{
-    background: `
-      radial-gradient(circle at 20% 30%, #FDECEF 30%, transparent 60%), 
-      radial-gradient(circle at 80% 20%, #EAF9F0 30%, transparent 60%), 
-      radial-gradient(circle at 40% 80%, #F1E8FA 30%, transparent 60%), 
-      linear-gradient(to bottom right, #FDECEF, #EAF9F0, #F1E8FA)`,
-  }}
->
-  <h3 className="font-semibold text-center text-xl mb-4">{title}</h3>
-  <p className="text-lg sm:text-lg">{text}</p>
-</div>
-
+              key={index}
+              className={`py-8 sm:py-12 px-6 sm:px-8 md:px-10 rounded-xl shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-2xl
+                ${
+                  theme === "dark"
+                    ? "bg-gray-800/80 backdrop-blur-md border border-gray-700/50 text-white"
+                    : "bg-white/90 backdrop-blur-sm border border-gray-200/50 text-gray-800"
+                }`}
+            >
+              <h3
+                className={`font-semibold text-center text-xl mb-4 ${
+                  theme === "dark" ? "text-white" : "text-gray-800"
+                }`}
+              >
+                {title}
+              </h3>
+              <p
+                className={`text-base sm:text-lg ${
+                  theme === "dark" ? "text-gray-200" : "text-gray-600"
+                }`}
+              >
+                {text}
+              </p>
+            </div>
           ))}
         </div>
       </section>
 
       {/* Footer */}
-      <FooterLayout/>
+      <FooterLayout />
+      <style jsx global>{`
+        .theme-toggle {
+          z-index: 9999 !important;
+          pointer-events: auto !important;
+        }
+        html,
+        body {
+          overflow-x: hidden;
+          width: 100%;
+          position: relative;
+        }
+      `}</style>
     </div>
   );
 }

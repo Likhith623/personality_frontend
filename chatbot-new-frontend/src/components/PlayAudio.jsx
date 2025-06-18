@@ -4,7 +4,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { motion, AnimatePresence } from "framer-motion";
-import { IconLoader } from '@tabler/icons-react';
+import { IconLoader, IconPlayerPlayFilled, IconPlayerPauseFilled } from '@tabler/icons-react';
+
 
 // Import avatar images from src/photos
 import delhi_mentor_male from "@/photos/delhi_mentor_male.jpeg";
@@ -97,10 +98,8 @@ const LoadingWaveform = () => {
       {[...Array(12)].map((_, i) => (
         <motion.div
           key={i}
-          className="w-1 bg-gradient-to-t from-pink-300 to-pink-500 rounded-full"
-          style={{
-            height: Math.random() * 20 + 8,
-          }}
+          className="w-1 rounded-full bg-purple-400/90"
+          style={{ height: Math.random() * 20 + 8 }}
           animate={{
             height: [
               Math.random() * 20 + 8,
@@ -121,6 +120,7 @@ const LoadingWaveform = () => {
   );
 };
 
+
 // Pulsing Loading Dots Component
 const LoadingDots = () => {
   return (
@@ -128,7 +128,7 @@ const LoadingDots = () => {
       {[...Array(3)].map((_, i) => (
         <motion.div
           key={i}
-          className="w-1.5 h-1.5 bg-pink-400 rounded-full"
+          className="w-1.5 h-1.5 bg-purple-400/90 rounded-full"
           animate={{
             scale: [1, 1.3, 1],
             opacity: [0.5, 1, 0.5],
@@ -146,7 +146,8 @@ const LoadingDots = () => {
 };
 
 // PlayAudio component: Plays the bot's voice for a given message
-const PlayAudio = ({ text, bot_id, minimal = false }) => {
+const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -253,8 +254,8 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
       }
       wavesurfer.current = WaveSurfer.create({
         container: waveformRef.current,
-        waveColor: 'rgba(255, 255, 255, 0.5)',
-        progressColor: '#FF69B4',
+        waveColor: "rgba(255, 255, 255, 0.3)",
+        progressColor: "#c084fc",
         height: 40,
         barWidth: 2,
         barGap: 2,
@@ -269,9 +270,8 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
         interact: true,
         hideScrollbar: true,
         autoCenter: true,
-        dragToSeek: true
+        dragToSeek: true,
       });
-      
       wavesurfer.current.load(audioUrl);
 
       wavesurfer.current.on('ready', () => {
@@ -366,22 +366,22 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
         className="flex items-center justify-center rounded-full hover:bg-gray-100 p-2 transition-colors"
         style={{ width: '32px', height: '32px', minWidth: '32px' }}
       >
-        {isLoading ? (
-          <motion.div 
-            className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-        ) : isPlaying ? (
-          <svg width="18" height="18" viewBox="0 0 22 22">
-            <rect x="5" y="4" width="3" height="12" rx="1.2" fill="#888" />
-            <rect x="12" y="4" width="3" height="12" rx="1.2" fill="#888" />
-          </svg>
-        ) : (
-          <svg width="18" height="18" viewBox="0 0 22 22">
-            <polygon points="6,4 16,11 6,18" fill="#888" />
-          </svg>
-        )}
+         {isLoading ? (
+            <IconLoader 
+              size={30} 
+              className="text-'purple-400/90', mt-[-2px] animate-spin"
+            />
+          ) : isPlaying ? (
+            <IconPlayerPauseFilled 
+              size={22} 
+              className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
+            />
+          ) : (
+            <IconPlayerPlayFilled 
+              size={22} 
+              className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
+            />
+          )}
         <audio
           ref={audioElement}
           src={audioUrl}
@@ -410,7 +410,7 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
       className="inline-flex items-center shadow-lg min-h-[32px] relative px-4 py-2 rounded-2xl border border-white/30 backdrop-blur-sm transition-all"
       style={{
         boxShadow: '0 8px 32px -4px rgba(0,0,0,0.1)',
-        background: 'linear-gradient(135deg, rgba(255,224,236,0.95) 0%, rgba(251,238,230,0.95) 100%)',
+        background: 'white',
         width: '620px',
         minWidth: '320px',
         maxWidth: '800px',
@@ -428,7 +428,7 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
           alt="Bot Avatar"
           className="w-14 h-14 rounded-full transition-transform duration-200 group-hover:scale-105"
           style={{
-            border: '3px solid rgba(255,255,255,0.9)',
+            border: '3px solid rgba(192,132,252,0.9)',
             boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
           }}
         />
@@ -437,11 +437,11 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
           animate={{ scale: 1 }}
           transition={{ delay: 0.1, type: "spring", stiffness: 500 }}
           className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center bg-white/90 backdrop-blur-sm"
-          style={{ boxShadow: '0 3px 8px rgba(0,0,0,0.12)' }}
+          style={{ boxShadow: '0 3px 8px rgba(192,132,252,0.9)' }}
         >
           {isLoading ? (
             <motion.div 
-              className="w-3 h-3 border border-pink-400 border-t-transparent rounded-full"
+              className="w-3 h-3 border border-purple-400 border-t-transparent rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             />
@@ -449,14 +449,14 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
               <path
                 d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
-                stroke="#FF69B4"
+                stroke="#C084FC"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"
-                stroke="#FF69B4"
+                stroke="#C084FC"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -465,41 +465,33 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
           )}
         </motion.div>
       </div>
-
+  
       {/* Play/Pause Button */}
       <motion.button
         onClick={handlePlayPause}
         disabled={isLoading}
         whileTap={{ scale: 0.95 }}
         className="mr-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200 hover:shadow-lg"
-        style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
+        style={{ boxShadow: '0 2px 8px rgba(192,132,252,0.9)' }}
       >
         {isLoading ? (
           <motion.div 
-            className="w-5 h-5 border-3 border-pink-200 border-t-pink-400 rounded-full"
+            className="w-5 h-5 border-3 border-purple-400 border-t-pink-400 rounded-full"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
         ) : isPlaying ? (
-          <svg 
-            width="20" 
-            height="20" 
-            viewBox="0 0 22 22"
-          >
-            <rect x="5" y="4" width="3" height="12" rx="1.2" fill="#FF69B4" />
-            <rect x="12" y="4" width="3" height="12" rx="1.2" fill="#FF69B4" />
+          <svg width="20" height="20" viewBox="0 0 22 22">
+            <rect x="5" y="4" width="3" height="12" rx="1.2" fill="#C084FC" />
+            <rect x="12" y="4" width="3" height="12" rx="1.2" fill="#C084FC" />
           </svg>
         ) : (
-          <svg 
-            width="22" 
-            height="22" 
-            viewBox="0 0 22 22"
-          >
-            <polygon points="6,4 16,11 6,18" fill="#FF69B4" />
+          <svg width="22" height="22" viewBox="0 0 22 22">
+            <polygon points="6,4 16,11 6,18" fill="#C084FC" />
           </svg>
         )}
       </motion.button>
-
+  
       {/* Waveform and progress dot */}
       <div className="flex-1 relative flex flex-col justify-center min-h-[44px] mx-2">
         <div className="flex items-center w-full" style={{ minHeight: 28 }}>
@@ -509,7 +501,6 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
             style={{ position: 'relative', minHeight: 28 }}
             onClick={handleWaveformClick}
           >
-            {/* Enhanced Loading Animation Overlay */}
             <AnimatePresence>
               {isLoading && (
                 <motion.div 
@@ -523,8 +514,7 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
               )}
             </AnimatePresence>
           </div>
-          
-          {/* Progress dot - only show when not loading */}
+  
           <AnimatePresence>
             {!isLoading && (
               <motion.div
@@ -553,7 +543,7 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
                 <motion.span 
                   className="block w-4 h-4 rounded-full border-2 border-white shadow-lg" 
                   style={{ 
-                    background: 'linear-gradient(135deg, #FF69B4, #c3a0ff)',
+                    background: 'linear-gradient(135deg, rgba(192,132,252,1), rgba(255,255,255,0.9))',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.15)' 
                   }}
                   animate={{ 
@@ -570,14 +560,14 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
           </AnimatePresence>
         </div>
       </div>
-
+  
       {/* Duration */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="ml-5 text-sm font-medium flex-shrink-0 min-w-[90px] text-right px-3 py-1 rounded-full bg-white/30 flex items-center justify-center"
         style={{ 
-          color: '#FF69B4',
+          color: 'rgba(192,132,252,0.9)',
           textShadow: '0 1px 2px rgba(0,0,0,0.05)'
         }}
       >
@@ -608,7 +598,7 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
           )}
         </AnimatePresence>
       </motion.div>
-
+  
       {/* Hidden audio element */}
       <audio
         ref={audioElement}
@@ -622,6 +612,6 @@ const PlayAudio = ({ text, bot_id, minimal = false }) => {
       />
     </motion.div>
   );
-};
-
-export default PlayAudio;
+  }
+  export default PlayAudio;
+  
