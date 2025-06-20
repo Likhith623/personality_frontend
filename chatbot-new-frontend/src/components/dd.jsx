@@ -170,7 +170,7 @@ function Diary() {
   }
 
   return (
-    <div className="h-full max-w-7xl mx-auto p-2 bg-white/70 backdrop-blur">
+    <div className="h-full max-w-7xl mx-auto p-2 bg-white dark:bg-black">
       {/* Mobile Detail View */}
       <div
         className={`fixed inset-0 bg-white dark:bg-black z-50 md:hidden ${
@@ -319,7 +319,7 @@ function Diary() {
                   <h2 className="text-3xl md:text-2xl font-bold text-gray-800 dark:text-white mb-4">
                     {selectedLog.date}
                   </h2>
-                  <p className="text-md text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                  <p className="text-md text-gray-700 dark:text-white whitespace-pre-line">
                     {selectedLog.content}
                   </p>
                 </div>

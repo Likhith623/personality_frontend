@@ -1,5 +1,66 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import { logClientError } from "@/lib/logClientError";
+import { systemPatterns, isSystemMessageContent } from "@/constants/identifiers";
+
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useBot } from "@/support/BotContext";
+import { useTraits } from "@/support/TraitsContext";
+import { useUser } from "@/support/UserContext";
+import { useRouter } from "next/navigation";
+import { Bot, ThumbsDown, ThumbsUp } from "lucide-react";
+import {
+  IconThumbDownFilled,
+  IconThumbUpFilled,
+  IconCalendarDot,
+} from "@tabler/icons-react";
+
+import delhi_mentor_male from "@/photos/delhi_mentor_male.jpeg";
+import delhi_mentor_female from "@/photos/delhi_mentor_female.jpeg";
+import delhi_friend_male from "@/photos/delhi_friend_male.jpeg";
+import delhi_friend_female from "@/photos/delhi_friend_female.jpeg";
+import delhi_romantic_male from "@/photos/delhi_romantic_male.jpeg";
+import delhi_romantic_female from "@/photos/delhi_romantic_female.jpeg";
+
+import japanese_mentor_male from "@/photos/japanese_mentor_male.jpeg";
+import japanese_mentor_female from "@/photos/japanese_mentor_female.jpeg";
+import japanese_friend_male from "@/photos/japanese_friend_male.jpeg";
+import japanese_friend_female from "@/photos/japanese_friend_female.jpeg";
+import japanese_romantic_male from "@/photos/japanese_romantic_male.jpeg";
+import japanese_romantic_female from "@/photos/japanese_romantic_female.jpeg";
+
+import parisian_friend_male from "@/photos/parisian_friend_male.jpg";
+import parisian_friend_female from "@/photos/parisian_friend_female.jpg";
+import parisian_romantic_male from "@/photos/parisian_romantic_male.jpg";
+import parisian_romantic_female from "@/photos/parisian_romantic_female.png";
+import parisian_mentor_male from "@/photos/parisian_mentor_male.jpg";
+import parisian_mentor_female from "@/photos/parisian_mentor_female.png";
+
+import berlin_friend_male from "@/photos/berlin_friend_male.jpeg";
+import berlin_friend_female from "@/photos/berlin_friend_female.jpeg";
+import berlin_romantic_male from "@/photos/berlin_romantic_male.jpeg";
+import berlin_romantic_female from "@/photos/berlin_romantic_female.jpeg";
+import berlin_mentor_male from "@/photos/berlin_mentor_male.jpeg";
+import berlin_mentor_female from "@/photos/berlin_mentor_female.jpeg";
+
+import lord_krishna from "@/photos/lord_krishna.jpg";
+import hanuman_god from "@/photos/hanuman_god.jpeg";
+import shiva_god from "@/photos/shiva_god.jpeg";
+import rama_god from "@/photos/rama_god.jpeg";
+import trimurti from "@/photos/trimurti.jpg";
+
+import BotCustomization from "@/components/CoustomBot";
+import PlayAudio from "@/components/PlayAudio";
+import VoiceCallUltra from "@/components/VoiceCallUltra";
+import { FloatingDockDemo } from "@/components/BottomMenuBar";
+import { Input } from "@/components/ui/input";
+import CustomModal from "@/components/CustomModal";
+import Memories from "@/components/Memories";
+import Diary from "@/components/dd";
 
 const botThemes = {
   delhi_mentor_male: {
@@ -553,66 +614,7 @@ const botThemes = {
   ],
   },
 };
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
-import { logClientError } from "@/lib/logClientError";
-import { systemPatterns, isSystemMessageContent } from "@/constants/identifiers";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useBot } from "@/support/BotContext";
-import { useTraits } from "@/support/TraitsContext";
-import { useUser } from "@/support/UserContext";
-import { useRouter } from "next/navigation";
-import { Bot, ThumbsDown, ThumbsUp } from "lucide-react";
-import {
-  IconThumbDownFilled,
-  IconThumbUpFilled,
-  IconCalendarDot,
-} from "@tabler/icons-react";
-
-import delhi_mentor_male from "@/photos/delhi_mentor_male.jpeg";
-import delhi_mentor_female from "@/photos/delhi_mentor_female.jpeg";
-import delhi_friend_male from "@/photos/delhi_friend_male.jpeg";
-import delhi_friend_female from "@/photos/delhi_friend_female.jpeg";
-import delhi_romantic_male from "@/photos/delhi_romantic_male.jpeg";
-import delhi_romantic_female from "@/photos/delhi_romantic_female.jpeg";
-
-import japanese_mentor_male from "@/photos/japanese_mentor_male.jpeg";
-import japanese_mentor_female from "@/photos/japanese_mentor_female.jpeg";
-import japanese_friend_male from "@/photos/japanese_friend_male.jpeg";
-import japanese_friend_female from "@/photos/japanese_friend_female.jpeg";
-import japanese_romantic_male from "@/photos/japanese_romantic_male.jpeg";
-import japanese_romantic_female from "@/photos/japanese_romantic_female.jpeg";
-
-import parisian_friend_male from "@/photos/parisian_friend_male.jpg";
-import parisian_friend_female from "@/photos/parisian_friend_female.jpg";
-import parisian_romantic_male from "@/photos/parisian_romantic_male.jpg";
-import parisian_romantic_female from "@/photos/parisian_romantic_female.png";
-import parisian_mentor_male from "@/photos/parisian_mentor_male.jpg";
-import parisian_mentor_female from "@/photos/parisian_mentor_female.png";
-
-import berlin_friend_male from "@/photos/berlin_friend_male.jpeg";
-import berlin_friend_female from "@/photos/berlin_friend_female.jpeg";
-import berlin_romantic_male from "@/photos/berlin_romantic_male.jpeg";
-import berlin_romantic_female from "@/photos/berlin_romantic_female.jpeg";
-import berlin_mentor_male from "@/photos/berlin_mentor_male.jpeg";
-import berlin_mentor_female from "@/photos/berlin_mentor_female.jpeg";
-
-import lord_krishna from "@/photos/lord_krishna.jpg";
-import hanuman_god from "@/photos/hanuman_god.jpeg";
-import shiva_god from "@/photos/shiva_god.jpeg";
-import rama_god from "@/photos/rama_god.jpeg";
-import trimurti from "@/photos/trimurti.jpg";
-
-import BotCustomization from "@/components/CoustomBot";
-import PlayAudio from "@/components/PlayAudio";
-import { FloatingDockDemo } from "@/components/BottomMenuBar";
-import { Input } from "@/components/ui/input";
-import CustomModal from "@/components/CustomModal";
-import Memories from "@/components/Memories";
-import Diary from "@/components/dd";
 
 /* The code defines an array of objects called `bot_details` which contains information about
 different bots. Each object in the array represents a specific bot with properties such as `quote`,
@@ -2444,7 +2446,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
       Avoid using quotation marks around words or phrases, except when you’re in roleplay. Keep emphasis natural and tone literal.
       `,
     }));
-  }, [selectedBotId, customName, selectedTraits, selectedLanguage]);
+  }, [selectedBotId, customName, selectedTraits, selectedLanguage, languageString, traitsString, userDetails.gender, userDetails.name]);
 
   /**
    * The function `handleBotCustomization` sets a custom name for a bot based on the provided
@@ -2668,6 +2670,7 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isVoiceCallOpen, setIsVoiceCallOpen] = useState(false);
   const messagesEndRef = useRef(null);
   const router = useRouter();
   const { userDetails } = useUser();
@@ -3444,9 +3447,139 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
     scrollToBottom();
   };
 
+  const handleVoiceCallMessage = async (message) => {
+    if (!message) return;
+
+    try {
+      // Add the message to chat (this comes from VoiceCall's processVoiceInput)
+      const currentTime = new Date();
+      const messageWithTimestamp = {
+        ...message,
+        timestamp: message.timestamp || currentTime
+      };
+
+      console.log("Adding voice call message to chat:", messageWithTimestamp);
+      
+      setMessages(prev => [...prev, messageWithTimestamp]);
+      scrollToBottom();
+
+    } catch (error) {
+      logClientError(error, { source: 'Voice Call Message Handler' });
+      console.error("Error handling voice call message:", error);
+    }
+  };
+
   /**
-   * The TypingIndicator function creates a visual typing indicator with animated bouncing dots.
+   * Legacy function for handling transcribed text (kept for backwards compatibility)
+   * @param {string} transcribedText - The transcribed text from voice input
    */
+  const handleTranscribedTextMessage = async (transcribedText) => {
+    if (!transcribedText?.trim()) return;
+
+    const currentTime = new Date();
+
+    try {
+      // Add user's voice message to chat
+      setMessages(prev => [...prev, { 
+        text: transcribedText, 
+        sender: 'user', 
+        timestamp: currentTime,
+        feedback: "",
+        reaction: "",
+        isVoiceMessage: true
+      }]);
+
+      setIsTyping(true);
+      scrollToBottom();
+
+      // Convert messages to OpenAI format
+      const convertToOpenAIFormat = (msgs) => msgs.map(msg => ({
+        role: msg.sender === 'bot' ? 'assistant' : 'user',
+        content: msg.text
+      }));
+
+      // Create payload for voice call API
+      const payload = {
+        message: transcribedText,
+        bot_id: selectedBotId,
+        bot_prompt: editablePrompts[selectedBotId],
+        user_name: userDetails.name,
+        history: convertToOpenAIFormat(messages),
+        isVoiceCall: true
+      };
+
+      console.log("Voice call payload:", payload);
+
+      // Send to voice call API endpoint - Using local development server
+      const response = await Promise.race([
+        fetch('https://novi.aigurukul.dev/voice-call', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Voice call request timeout')), 30000)
+        )
+      ]);
+
+      if (!response.ok) {
+        throw new Error(`Voice call API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Voice call response:", data);
+
+      setIsTyping(false);
+
+      // Add bot's response to chat
+      if (data.response) {
+        const shouldBeSystemMessage = isSystemMessageContent(data.response);
+        
+        setMessages(prev => [...prev, {
+          text: data.response,
+          sender: 'bot',
+          id: data.message_id || `voice_${Date.now()}`,
+          feedback: "",
+          reaction: "",
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: shouldBeSystemMessage,
+          voice_only: true, // Mark as voice-only response
+          audioUrl: data.audioUrl // If the API returns audio URL
+        }]);
+      }
+
+      scrollToBottom();
+      return data; // Return the response for the VoiceCall component
+
+    } catch (error) {
+      logClientError(error, { source: 'Voice Call API' });
+      console.error("Voice call error:", error);
+      setIsTyping(false);
+      
+      const errorMessage = "Sorry, there was an error processing your voice message. Please try again.";
+      setMessages(prev => [...prev, {
+        text: errorMessage,
+        sender: 'bot',
+        id: `error_${Date.now()}`,
+        feedback: "",
+        reaction: "",
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: true
+      }]);
+      
+      scrollToBottom();
+      throw error; // Re-throw for VoiceCall component to handle
+    }
+  };
+
+  /**
+ * The TypingIndicator function creates a visual typing indicator with animated bouncing dots.
+ */
+
   const TypingIndicator = () => (
     <div className="flex justify-start my-4">
       <div className="px-4 py-2 rounded-2xl">
@@ -3674,34 +3807,51 @@ return (
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        ))}
-        {isTyping && <TypingIndicator />}
-        <div ref={messagesEndRef} />
-      </div>
-    </ScrollArea>
-
-    <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
-      <Input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full  ${isDarkTheme ? textColorClass : textColorClass} placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
-        placeholder="Type your message..."
-      />
-      <button
-        type="submit"
-        className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-      >
-        Send
-      </button>
-    </form>
-
-    <p className={`text-xs text-center py-2 ${isDarkTheme ? `${textColorClass}` : `${textColorClass}`}`}>
-      Novi can make mistakes, it's constantly learning from you, please be kind!!
-    </p>
-  </div>
-);
-}
-
+             ))}
+            </div>
+          ))}
+          {isTyping && <TypingIndicator />}
+          <div ref={messagesEndRef} />
+        </div>
+      </ScrollArea>
+      <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
+        <Input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-gray-900 placeholder-gray-200"
+          placeholder="Type your message..."
+        />
+        <button 
+          type="button"
+          onClick={() => setIsVoiceCallOpen(true)}
+          className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+          title="Start Voice Call"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <path d="M12 19v3"/>
+            <path d="M8 22h8"/>
+          </svg>
+        </button>
+        <button type="submit" className="p-5 py-2 hover:opacity-60 cursor-pointer md:bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]" >
+          Send
+        </button>
+      </form>
+      <p className="text-xs text-center py-2 text-gray-900">
+        Novi can make mistakes, it's constantly learning from you, please be kind!!
+      </p>
+      
+      {/* Voice Call Component */}
+      {isVoiceCallOpen && (
+        <VoiceCallUltra
+          isOpen={isVoiceCallOpen}
+          onClose={() => setIsVoiceCallOpen(false)}
+          onMessageReceived={handleVoiceCallMessage}
+          messages={messages}
+        />
+      )}
+    </div>
+  );
+};
