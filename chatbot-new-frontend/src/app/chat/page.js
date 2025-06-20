@@ -5,234 +5,552 @@ const botThemes = {
   delhi_mentor_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: [ '/bg-images/delhi_mentor_male-bg.jpg',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'
-  ],
+    backgroundImages: [
+      {
+        url: '/bg-images/delhi_mentor_male-bg.jpg',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
+    ]
   },
   delhi_mentor_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: [ '/bg-images/delhi_mentor_female-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/delhi_mentor_female-bg.jpg',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   delhi_friend_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: [ '/bg-images/delhi_friend_male-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/delhi_friend_male-bg.jpg',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   delhi_friend_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: [ '/bg-images/delhi_friend_female-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages:
+    [
+      {
+        url: '/bg-images/delhi_friend_female-bg.jpg',
+        textColor: 'text-black'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   delhi_romantic_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: [ '/bg-images/delhi_romantic_male-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/delhi_romantic_male-bg.jpg',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   delhi_romantic_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/bg-images/delhi_romantic_female-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/delhi_romantic_female-bg.jpg',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   japanese_mentor_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanmm_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'
+    backgroundImages: 
+  [
+    {
+      url: '/photos/japanmm_bg.png',
+      textColor: 'text-black'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },
   japanese_mentor_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanmf_bg.jpeg',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'  
+    backgroundImages: 
+  [
+    {
+      url: '/photos/japanmf_bg.jpeg',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },
   japanese_friend_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanfm_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png' 
+    backgroundImages: 
+  [
+    {
+      url: '/photos/japanfm_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },
   japanese_friend_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages:['/photos/japanff_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'
+    backgroundImages:
+  [
+    {
+      url: '/photos/japanff_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },
   japanese_romantic_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanrm_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'
+    backgroundImages: 
+  [
+    {
+      url: '/photos/japanrm_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },
   japanese_romantic_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/japanrf_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'
+    backgroundImages: 
+  [
+    {
+      url: '/photos/japanrf_bg.png',
+      textColor: 'text-black'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },
   parisian_mentor_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/bg-images/parisian_mentor_male-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/parisian_mentor_male-bg.jpg',
+        textColor: 'text-black'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   parisian_mentor_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/bg-images/parisian_mentor_female-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/parisian_mentor_female-bg.jpg',
+        textColor: 'text-black'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   parisian_friend_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/bg-images/parisian_friend_male-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/parisian_friend_male-bg.jpg',
+        textColor: 'text-black'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   parisian_friend_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/bg-images/parisian_friend_female-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/parisian_friend_female-bg.jpg',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   parisian_romantic_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: [ '/bg-images/parisian_romantic_male-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/parisian_romantic_male-bg.jpg',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   parisian_romantic_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/bg-images/parisian_romantic_female-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/parisian_romantic_female-bg.jpg',
+        textColor: 'text-black'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   berlin_mentor_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/berlinmm_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'  
-  ]
+    backgroundImages: 
+  [
+    {
+      url: '/photos/berlinmm_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
+  ],
   },
   berlin_mentor_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/berlinmf_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png' 
+    backgroundImages: 
+  [
+    {
+      url: '/photos/berlinmf_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },
   berlin_friend_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/berlinfm_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'
+    backgroundImages:
+  [
+    {
+      url: '/photos/berlinfm_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },
   berlin_friend_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/berlinff_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png' 
+    backgroundImages: 
+  [
+    {
+      url: '/photos/berlinff_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },
   berlin_romantic_male: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/bg-images/berlin_romantic_male-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/berlin_romantic_male-bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   berlin_romantic_female: {
     background: 'bg-gray-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/bg-images/berlin_romantic_female-bg.jpg',
-    '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
+    backgroundImages: 
+    [
+      {
+        url: '/bg-images/berlin_romantic_female-bg.jpg',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
     ],
   },
   Krishna: {
     background: 'bg-yellow-50',
     botBubble: 'bg-white text-black',
-    backgroundImages:[
-      '/photos/krishna_bg.jpg',
-      '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
-      ],// Place Krishna bg image here
+    backgroundImages:
+      [
+        {
+          url: '/photos/krishna_bg.jpg',
+          textColor: 'text-black'
+        },
+        {
+          url: '/photos/default_dark_bg.png',
+          textColor: 'text-white'
+        },
+        {
+          url: '/photos/default_bg.png',
+          textColor: 'text-black'
+        }
+      ],
   },
   Rama: {
     background: 'bg-yellow-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: [
-      '/photos/rama_bg.png',
-      '/photos/default_dark_bg.png',
-      '/photos/default_bg.png'
-    ], // Place Rama bg image here
+    backgroundImages: 
+    [
+      {
+        url:'/photos/rama_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
+    ],
   },
   Shiva: {
     background: 'bg-blue-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/shiva_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'   // Place Shiva background image here
+    backgroundImages: 
+  [
+    {
+      url: '/photos/shiva_bg.png',
+      textColor: 'text-black'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
   ],
   },  
   Hanuman: {
     background: 'bg-orange-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/hanuman_bg.png',
-    '/photos/default_dark_bg.png',
-    '/photos/default_bg.png'  ], // Place Hanuman bg image here
+    backgroundImages:
+    [
+      {
+        url: '/photos/hanuman_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_dark_bg.png',
+        textColor: 'text-white'
+      },
+      {
+        url: '/photos/default_bg.png',
+        textColor: 'text-black'
+      }
+    ],
   },
   Trimurti: {
     background: 'bg-indigo-50',
     botBubble: 'bg-white text-black',
-    backgroundImages: ['/photos/trimurthi_bg.png',
-    '/photos/default_bg.png' 
-   ], // Place Trimurti bg image here
+    backgroundImages: 
+   [
+    {
+      url: '/photos/trimurthi_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_dark_bg.png',
+      textColor: 'text-white'
+    },
+    {
+      url: '/photos/default_bg.png',
+      textColor: 'text-black'
+    }
+  ],
   },
 };
 import Link from "next/link";
@@ -646,7 +964,8 @@ if (Array.isArray(currentTheme.backgroundImages)) {
     setBackgroundIndex((prev) => (prev + 1) % images.length);
     setIsWhiteIcon((prev) => !prev); // 🔄 toggle icon color
   };
-  
+  const backgroundImage = currentBgImage.url;
+  const textColorClass = currentBgImage.textColor;
   const { selectedTraits, selectedLanguage } = useTraits();
   console.log(selectedBotId);
   console.log("Using background:", currentBgImage);
@@ -2311,6 +2630,8 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
       isWhiteIcon = {isWhiteIcon}
       isDarkTheme = {isDarkMode}
       selectedBotDetails={selectedBotDetails}
+      backgroundImage = {backgroundImage}
+      textColorClass = {textColorClass}
       className="bg-white/40 backdrop-blur-md shadow-lg" 
       />
   
@@ -2342,7 +2663,7 @@ export const LogoIcon = () => {
     </Link>
   );
 };
-const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails}) => {
+const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails,backgroundImage,textColorClass}) => {
   const { selectedBotId } = useBot();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -3173,9 +3494,11 @@ return (
       botThemes[selectedBotId]?.backgroundImages
         ? (() => {
             const bg = botThemes[selectedBotId].backgroundImages[backgroundIndex];
-            if (bg.startsWith("http") || bg.startsWith("/")) {
+
+
+            if (bg.url.startsWith("http")|| bg.url.startsWith("/")) {
               return {
-                backgroundImage: `url('${bg}')`,
+                backgroundImage: `url('${bg.url}')`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
@@ -3200,8 +3523,8 @@ return (
       <div className="px-1 md:px-2">
         {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
           <div key={date}>
-            <div className="sticky my-10 top-5 z-10 py-2 mx-auto w-32 bg-white/30 backdrop-blur-md rounded-md shadow-md">
-              <p className="text-center text-sm text-gray-600">{date}</p>
+            <div className="sticky top-5 z-10 my-10 py-2 mx-auto w-32 bg-gray-200/40 backdrop-blur-sm backdrop-saturate-150 rounded-md shadow-md">
+              <p className={`text-center text-sm ${isDarkTheme ? `${textColorClass}` : `${textColorClass}`}`}>{date}</p>
             </div>
 
             {messagesOnDate.map((msg, index) => (
@@ -3280,14 +3603,14 @@ return (
                   <div className="flex flex-row justify-end">
                     <span
                       className={`text-xs mt-[7px] ${msg.sender === 'user' ? 'mr-3' : ''} ${
-                        isDarkTheme ? 'text-white' : 'text-neutral-700'
+                        isDarkTheme ? `${textColorClass}` : `${textColorClass}`
                       }`}
                     >
                       {formatTime(msg.timestamp)}
                     </span>
 
                     {msg.sender === 'bot' && (
-                      <div className="flex justify-end px-2 mr-7 relative">
+                      <div className="flex justify-end px-2 mr-7 relative text-white">
                         {showReactionsFor === msg.id && <ReactionSelector msgId={msg.id} />}
 
                         <div className="gap-3 flex flex-row mt-1">
@@ -3295,7 +3618,7 @@ return (
                             <button
                               onClick={() => toggleReactions(msg.id)}
                               className={`cursor-pointer transition-colors mr-2 ${
-                                isDarkTheme ? 'text-white hover:text-white' : 'text-black/30 hover:text-purple-400'
+                                isDarkTheme ? `${textColorClass}` : `${textColorClass}`
                               }`}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -3314,21 +3637,21 @@ return (
                               {msg.feedback === '' ? (
                                 <>
                                   <ThumbsUp
-                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    className={`cursor-pointer ${isDarkTheme ? `${textColorClass}` : `${textColorClass}`}`}
                                     size={18}
                                     onClick={() => handleFeedback('like', msg.id)}
                                   />
                                   <ThumbsDown
-                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    className={`cursor-pointer ${isDarkTheme ? `${textColorClass}` : `${textColorClass}`}`}
                                     size={18}
                                     onClick={() => handleFeedback('dislike', msg.id)}
                                   />
                                 </>
                               ) : msg.feedback === 'like' ? (
                                 <>
-                                  <IconThumbUpFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'} mt-[-2px]`} />
+                                  <IconThumbUpFilled size={22} className={`${isDarkTheme ? `${textColorClass}` : `${textColorClass}`} mt-[-2px]`} />
                                   <ThumbsDown
-                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    className={`cursor-pointer ${isDarkTheme ? `${textColorClass}` : `${textColorClass}`}`}
                                     size={18}
                                     onClick={() => handleFeedback('dislike', msg.id)}
                                   />
@@ -3336,11 +3659,11 @@ return (
                               ) : (
                                 <>
                                   <ThumbsUp
-                                    className={`cursor-pointer ${isDarkTheme ? 'text-white' : 'text-black/30'}`}
+                                    className={`cursor-pointer ${isDarkTheme ? `${textColorClass}` : `${textColorClass}`}`}
                                     size={18}
                                     onClick={() => handleFeedback('like', msg.id)}
                                   />
-                                  <IconThumbDownFilled size={22} className={`${isDarkTheme ? 'text-white' : 'text-purple-400/100'}`} />
+                                  <IconThumbDownFilled size={22} className={`${isDarkTheme ? `${textColorClass}` : `${textColorClass}`}`} />
                                 </>
                               )}
                             </>
@@ -3364,7 +3687,7 @@ return (
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        className="flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-gray-900 placeholder-gray-200"
+        className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full  ${isDarkTheme ? textColorClass : textColorClass} placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
         placeholder="Type your message..."
       />
       <button
@@ -3375,9 +3698,10 @@ return (
       </button>
     </form>
 
-    <p className="text-xs text-center py-2 text-gray-900">
+    <p className={`text-xs text-center py-2 ${isDarkTheme ? `${textColorClass}` : `${textColorClass}`}`}>
       Novi can make mistakes, it's constantly learning from you, please be kind!!
     </p>
   </div>
 );
 }
+
