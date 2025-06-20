@@ -193,7 +193,15 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ transcript: text, bot_id: bot_id }),
+          body: JSON.stringify({
+            transcript: text,
+            bot_id: bot_id,
+            output_format: {
+              container: "wav",
+              encoding: "pcm_s16le",
+              sample_rate: 22050
+            }
+          })
         });
         if (!response.ok) throw new Error('Failed to generate audio');
         const data = await response.json();
@@ -368,18 +376,18 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
       >
          {isLoading ? (
             <IconLoader 
-              size={30} 
-              className="text-'purple-400/90', mt-[-2px] animate-spin"
+              size={36} 
+              className="text-'white', mt-[-2px] animate-spin"
             />
           ) : isPlaying ? (
             <IconPlayerPauseFilled 
-              size={22} 
-              className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
+              size={30} 
+              className={`${isWhiteIcon ? 'text-white' : 'text-white'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
             />
           ) : (
             <IconPlayerPlayFilled 
-              size={22} 
-              className={`${isWhiteIcon ? 'text-white' : 'text-purple-400/90'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
+              size={30} 
+              className={`${isWhiteIcon ? 'text-white' : 'text-white'} mt-[-2px] cursor-pointer hover:scale-125 transition-transform`}
             />
           )}
         <audio
