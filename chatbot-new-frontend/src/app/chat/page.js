@@ -69,15 +69,18 @@ const botThemes = {
     backgroundImages: [
       {
         url: '/bg-images/delhi_mentor_male-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ]
   },
@@ -88,15 +91,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_mentor_female-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-black'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -107,15 +113,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_friend_male-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -126,15 +135,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_friend_female-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -145,15 +157,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_romantic_male-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -164,15 +179,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_romantic_female-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -183,15 +201,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanmm_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -202,15 +223,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanmf_bg.jpeg',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -221,15 +245,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanfm_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -240,15 +267,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanff_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -259,15 +289,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanrm_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -278,15 +311,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanrf_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -297,34 +333,40 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_mentor_male-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
   parisian_mentor_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
+    botBubble: 'bg-white text-white',
     backgroundImages: 
     [
       {
         url: '/bg-images/parisian_mentor_female-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -335,15 +377,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_friend_male-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -354,15 +399,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_friend_female-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -373,15 +421,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_romantic_male-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -392,15 +443,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_romantic_female-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -411,15 +465,18 @@ const botThemes = {
   [
     {
       url: '/photos/berlinmm_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -430,15 +487,18 @@ const botThemes = {
   [
     {
       url: '/photos/berlinmf_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -449,15 +509,18 @@ const botThemes = {
   [
     {
       url: '/photos/berlinfm_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -468,15 +531,18 @@ const botThemes = {
   [
     {
       url: '/photos/berlinff_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -487,15 +553,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/berlin_romantic_male-bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -506,15 +575,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/berlin_romantic_female-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -525,15 +597,18 @@ const botThemes = {
       [
         {
           url: '/photos/krishna_bg.jpg',
-          textColor: 'text-black'
+          textColor: 'text-black',
+          b_color: 'text-white'
         },
         {
           url: '/photos/default_dark_bg.png',
-          textColor: 'text-white'
+          textColor: 'text-white',
+          b_color: 'text-white'
         },
         {
           url: '/photos/default_bg.png',
-          textColor: 'text-black'
+          textColor: 'text-black',
+          b_color: 'text-black'
         }
       ],
   },
@@ -544,15 +619,18 @@ const botThemes = {
     [
       {
         url:'/photos/rama_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -563,15 +641,18 @@ const botThemes = {
   [
     {
       url: '/photos/shiva_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },  
@@ -582,15 +663,18 @@ const botThemes = {
     [
       {
         url: '/photos/hanuman_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -601,15 +685,18 @@ const botThemes = {
    [
     {
       url: '/photos/trimurthi_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -968,6 +1055,7 @@ if (Array.isArray(currentTheme.backgroundImages)) {
   };
   const backgroundImage = currentBgImage.url;
   const textColorClass = currentBgImage.textColor;
+  const b_color = currentBgImage.b_color;
   const { selectedTraits, selectedLanguage } = useTraits();
   console.log(selectedBotId);
   console.log("Using background:", currentBgImage);
@@ -2634,6 +2722,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
       selectedBotDetails={selectedBotDetails}
       backgroundImage = {backgroundImage}
       textColorClass = {textColorClass}
+      b_color = {b_color}
       className="bg-white/40 backdrop-blur-md shadow-lg" 
       />
   
@@ -2665,7 +2754,7 @@ export const LogoIcon = () => {
     </Link>
   );
 };
-const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails,backgroundImage,textColorClass}) => {
+const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails,backgroundImage,textColorClass,b_color}) => {
   const { selectedBotId } = useBot();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -3807,51 +3896,58 @@ return (
                   </div>
                 </div>
               </div>
-             ))}
-            </div>
-          ))}
-          {isTyping && <TypingIndicator />}
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
-      <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
-        <Input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-gray-900 placeholder-gray-200"
-          placeholder="Type your message..."
-        />
-        <button 
-          type="button"
-          onClick={() => setIsVoiceCallOpen(true)}
-          className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-          title="Start Voice Call"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-            <path d="M12 19v3"/>
-            <path d="M8 22h8"/>
-          </svg>
-        </button>
-        <button type="submit" className="p-5 py-2 hover:opacity-60 cursor-pointer md:bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]" >
-          Send
-        </button>
-      </form>
-      <p className="text-xs text-center py-2 text-gray-900">
-        Novi can make mistakes, it's constantly learning from you, please be kind!!
-      </p>
-      
-      {/* Voice Call Component */}
-      {isVoiceCallOpen && (
-        <VoiceCallUltra
-          isOpen={isVoiceCallOpen}
-          onClose={() => setIsVoiceCallOpen(false)}
-          onMessageReceived={handleVoiceCallMessage}
-          messages={messages}
-        />
-      )}
-    </div>
+            ))}
+          </div>
+        ))}
+        {isTyping && <TypingIndicator />}
+        <div ref={messagesEndRef} />
+      </div>
+    </ScrollArea>
+
+<form onSubmit={handleSend} className="flex items-center px-2 pt-2">
+  <Input
+    type="text"
+    value={input}
+    onChange={(e) => setInput(e.target.value)}
+    className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${isDarkTheme ? textColorClass : textColorClass} placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
+    placeholder="Type your message..."
+  />
+
+  <button 
+    type="button"
+    onClick={() => setIsVoiceCallOpen(true)}
+    className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+    title="Start Voice Call"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      <path d="M12 19v3"/>
+      <path d="M8 22h8"/>
+    </svg>
+  </button>
+
+  <button
+    type="submit"
+    className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+  >
+    Send
+  </button>
+</form>
+
+<p className={`text-xs text-center py-2 ${isDarkTheme ? b_color : b_color}`}>
+  Novi can make mistakes, it's constantly learning from you, please be kind!!
+</p>
+
+{/* Voice Call Component */}
+{isVoiceCallOpen && (
+  <VoiceCallUltra
+    isOpen={isVoiceCallOpen}
+    onClose={() => setIsVoiceCallOpen(false)}
+    onMessageReceived={handleVoiceCallMessage}
+    messages={messages}
+  />
+)}
+</div>
   );
 };
