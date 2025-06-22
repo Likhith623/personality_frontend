@@ -8,15 +8,18 @@ const botThemes = {
     backgroundImages: [
       {
         url: '/bg-images/delhi_mentor_male-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ]
   },
@@ -27,15 +30,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_mentor_female-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-black'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -46,15 +52,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_friend_male-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -65,15 +74,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_friend_female-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -84,15 +96,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_romantic_male-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -103,15 +118,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/delhi_romantic_female-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -122,15 +140,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanmm_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -141,15 +162,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanmf_bg.jpeg',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -160,15 +184,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanfm_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -179,15 +206,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanff_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -198,15 +228,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanrm_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -217,15 +250,18 @@ const botThemes = {
   [
     {
       url: '/photos/japanrf_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -236,34 +272,40 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_mentor_male-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
   parisian_mentor_female: {
     background: 'bg-gray-50',
-    botBubble: 'bg-white text-black',
+    botBubble: 'bg-white text-white',
     backgroundImages: 
     [
       {
         url: '/bg-images/parisian_mentor_female-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -274,15 +316,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_friend_male-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -293,15 +338,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_friend_female-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -312,15 +360,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_romantic_male-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -331,15 +382,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/parisian_romantic_female-bg.jpg',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -350,15 +404,18 @@ const botThemes = {
   [
     {
       url: '/photos/berlinmm_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -369,15 +426,18 @@ const botThemes = {
   [
     {
       url: '/photos/berlinmf_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -388,15 +448,18 @@ const botThemes = {
   [
     {
       url: '/photos/berlinfm_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -407,15 +470,18 @@ const botThemes = {
   [
     {
       url: '/photos/berlinff_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -426,15 +492,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/berlin_romantic_male-bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -445,15 +514,18 @@ const botThemes = {
     [
       {
         url: '/bg-images/berlin_romantic_female-bg.jpg',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -464,15 +536,18 @@ const botThemes = {
       [
         {
           url: '/photos/krishna_bg.jpg',
-          textColor: 'text-black'
+          textColor: 'text-black',
+          b_color: 'text-white'
         },
         {
           url: '/photos/default_dark_bg.png',
-          textColor: 'text-white'
+          textColor: 'text-white',
+          b_color: 'text-white'
         },
         {
           url: '/photos/default_bg.png',
-          textColor: 'text-black'
+          textColor: 'text-black',
+          b_color: 'text-black'
         }
       ],
   },
@@ -483,15 +558,18 @@ const botThemes = {
     [
       {
         url:'/photos/rama_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -502,15 +580,18 @@ const botThemes = {
   [
     {
       url: '/photos/shiva_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },  
@@ -521,15 +602,18 @@ const botThemes = {
     [
       {
         url: '/photos/hanuman_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_dark_bg.png',
-        textColor: 'text-white'
+        textColor: 'text-white',
+        b_color: 'text-white'
       },
       {
         url: '/photos/default_bg.png',
-        textColor: 'text-black'
+        textColor: 'text-black',
+        b_color: 'text-black'
       }
     ],
   },
@@ -540,15 +624,18 @@ const botThemes = {
    [
     {
       url: '/photos/trimurthi_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_dark_bg.png',
-      textColor: 'text-white'
+      textColor: 'text-white',
+      b_color: 'text-white'
     },
     {
       url: '/photos/default_bg.png',
-      textColor: 'text-black'
+      textColor: 'text-black',
+      b_color: 'text-black'
     }
   ],
   },
@@ -966,6 +1053,7 @@ if (Array.isArray(currentTheme.backgroundImages)) {
   };
   const backgroundImage = currentBgImage.url;
   const textColorClass = currentBgImage.textColor;
+  const b_color = currentBgImage.b_color;
   const { selectedTraits, selectedLanguage } = useTraits();
   console.log(selectedBotId);
   console.log("Using background:", currentBgImage);
@@ -2632,6 +2720,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
       selectedBotDetails={selectedBotDetails}
       backgroundImage = {backgroundImage}
       textColorClass = {textColorClass}
+      b_color = {b_color}
       className="bg-white/40 backdrop-blur-md shadow-lg" 
       />
   
@@ -2663,7 +2752,7 @@ export const LogoIcon = () => {
     </Link>
   );
 };
-const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails,backgroundImage,textColorClass}) => {
+const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails,backgroundImage,textColorClass,b_color}) => {
   const { selectedBotId } = useBot();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -3698,7 +3787,7 @@ return (
       </button>
     </form>
 
-    <p className={`text-xs text-center py-2 ${isDarkTheme ? `${textColorClass}` : `${textColorClass}`}`}>
+    <p className={`text-xs text-center py-2 ${isDarkTheme ? `${b_color}` : `${b_color}`}`}>
       Novi can make mistakes, it's constantly learning from you, please be kind!!
     </p>
   </div>

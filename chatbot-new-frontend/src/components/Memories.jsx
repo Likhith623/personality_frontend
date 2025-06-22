@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useBot } from "@/support/BotContext";
 import { useUser } from "@/support/UserContext";
 import { XMarkIcon } from "@heroicons/react/24/outline"; // Using a more appropriate close icon
+import { supabase } from "../../supabaseClient"; 
+
 
 export default function Memories() {
   const [selectedCategory, setSelectedCategory] = useState("Background");
@@ -28,6 +30,9 @@ export default function Memories() {
   const [selectedMemoriesToDelete, setSelectedMemoriesToDelete] = useState([]); // Array of memory IDs to delete
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const categoryDropdownRef = useRef(null);
+  const [currentMemory, setCurrentMemory] = useState(null);
+  const [previousMemory, setPreviousMemory] = useState(null);
+
 
   //toggles the category dropdown while adding or editing a category
   const toggleCategoryDropdown = () => {
@@ -68,39 +73,35 @@ export default function Memories() {
 
   //Fetches memories when the component mounts
   useEffect(() => {
-    // an async function to fetch memories from the backend
     const fetchMemories = async () => {
       if (!userDetails?.email || !selectedBotId) return;
-
+  
+      const categorizedMemories = {};
+      categoryOrder.forEach((category) => {
+        categorizedMemories[category] = [];
+      });
+  
       try {
-        // API request to fetch memories based on user email and bot ID
+        // 1. Fetch memories from API
         const response = await fetch(
           `https://novi.aigurukul.dev/get_persona?email=${encodeURIComponent(
             userDetails.email
           )}&bot_id=${encodeURIComponent(selectedBotId)}`
         );
+  
         if (!response.ok) throw new Error("Failed to fetch memories");
-        // Parsing the response data
         const data = await response.json();
         console.log("API Response:", data);
-
-        const categorizedMemories = {};
-        categoryOrder.forEach((category) => {
-          categorizedMemories[category] = [];
-        });
-
+  
         data.forEach((memory) => {
           const category = memory.category;
-          if (!categorizedMemories[category]) {
-            categorizedMemories[category] = [];
-          }
-
-          // Replace 'user1' with the user's actual name
           const updatedText = memory.memory.replace(
             /User1/g,
             userDetails?.name || "User"
           );
-
+          if (!categorizedMemories[category]) {
+            categorizedMemories[category] = [];
+          }
           categorizedMemories[category].push({
             id: memory.id,
             text: updatedText,
@@ -109,15 +110,43 @@ export default function Memories() {
             created_at: memory.created_at,
           });
         });
-
-        setMemories(categorizedMemories);
       } catch (error) {
-        console.error("Error fetching memories:", error);
+        console.error("Error fetching API memories:", error);
       }
+  
+      try {
+        // 2. Fetch delta memories from Supabase
+        const { data: deltaData, error } = await supabase
+          .from("delta_category")
+          .select("*")
+          .eq("email", userDetails.email)
+          .eq("bot_id", selectedBotId)
+          .order("timestamp", { ascending: true });
+  
+        if (error) throw error;
+  
+        deltaData.forEach((item) => {
+          const cat = item.category || "Others";
+          const formatted = {
+            id: `delta-${item.id}`,
+            text: `Δ ${item.output}`,
+            categories: [cat],
+            relation: item.relation,
+            created_at: item.timestamp,
+          };
+          categorizedMemories[cat].push(formatted);
+        });
+      } catch (err) {
+        console.error("Error fetching delta results:", err);
+      }
+  
+      // 3. Finally, update state
+      setMemories(categorizedMemories);
     };
-
+  
     fetchMemories();
   }, [userDetails?.email, selectedBotId]);
+  
 
   //Scrolls to the selected category
   const scrollToCategory = (category) => {
@@ -149,11 +178,15 @@ export default function Memories() {
     if (isEditing) {
       handleSelectMemoryToDelete(memory.id);
     } else {
+      setPreviousMemory(currentMemory); // update previous
+      setCurrentMemory(memory);         // set new current
+  
       setSelectedMemory(memory);
       setEditText(memory.text);
       setEditCategories(memory.categories || [category]);
     }
   };
+  
 
   //Closes the add and edit sidebar
   const handleCloseSidebar = () => {
@@ -432,6 +465,37 @@ export default function Memories() {
       console.error("Error deleting memories:", error);
     }
   };
+   //Fetching The Delta Categorizer memory
+
+  const getDeltaFromBackend = async (inputData) => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/delta", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputData),
+      });
+  
+      const result = await response.json();
+      return result.delta;
+    } catch (error) {
+      console.error("Error fetching delta:", error);
+      return null;
+    }
+  };
+  const [delta, setDelta] = useState(null);
+
+  useEffect(() => {
+    if (currentMemory && previousMemory) {
+      const inputData = {
+        user_input: currentMemory.text,
+        previous_input: previousMemory.text,
+      };
+      getDeltaFromBackend(inputData).then(setDelta);
+    }
+  }, [currentMemory, previousMemory]);
+  
 
   return (
     <div className="flex flex-col md:flex-row h-full p-4 md:p-6 rounded-xl shadow-2xl bg-white/70 backdrop-blur">
@@ -517,6 +581,10 @@ export default function Memories() {
                 ref={(el) => (categoryRefs.current[category] = el)}
                 className="relative p-4 rounded-xl"
               >
+                <div>
+                  <h2>Output:</h2>
+                  <pre>{JSON.stringify(delta, null, 2)}</pre>
+                </div>
                 <h2 className="text-sm sm:text-base md:text-base font-semibold text-gray-800 dark:text-white mb-3 md:mb-4">
                   {replaceUnderscoreWithSpace(category)}{" "}
                   {/* Display category title */}
