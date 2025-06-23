@@ -99,7 +99,7 @@ function FooterLayout() {
         Terms and Conditions
       </Link>
       <p className="text-xs sm:text-sm mt-4">
-        ©2024 CultureVo AI. All rights reserved.
+        ©2025 CultureVo AI. All rights reserved.
       </p>
     </footer>
   );
