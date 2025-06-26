@@ -3403,7 +3403,7 @@ function containsUrl(text) {
   // 2. If message contains a URL, use /api/news
   if (containsUrl(userMessage)) {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/news', {
+      const res = await fetch('https://novi-be.aigurukul.dev/api/news', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
