@@ -2776,6 +2776,12 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
   function isVoiceOnlyBotReply(msg) {
     return msg.voice_only === true;
   }
+
+  // Utility to detect URLs (simple version)
+function containsUrl(text) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return urlRegex.test(text);
+}
   
   /*
   // Helper: inject voice_only property for bot replies based on index
@@ -3370,9 +3376,84 @@ const Dashboard = ({ editablePrompts, clearChatCalled, setClearChatCalled,backgr
    * a chatbot API, handling reminders, updating state variables, and displaying messages based on the
    * API response.
    */
-  const handleSend = async (e) => {
-    e.reminder == undefined && e.preventDefault();
-    if (!input.trim() && e.reminder != true) return;
+ const handleSend = async (e) => {
+  e.reminder == undefined && e.preventDefault();
+  if (!input.trim() && e.reminder != true) return;
+
+  const userMessage = input.trim();
+
+  // 1. Add user message to chat
+  if (e.reminder == undefined) {
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: userMessage,
+        sender: "user",
+        timestamp: new Date(),
+        feedback: "",
+        reaction: "",
+      },
+    ]);
+  }
+
+  setInput("");
+  setIsTyping(true);
+  scrollToBottom();
+
+  // 2. If message contains a URL, use /api/news
+  if (containsUrl(userMessage)) {
+    try {
+      const res = await fetch('https://novi-be.aigurukul.dev/api/news', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: userMessage,
+          bot_id: selectedBotId,
+          user_email: userDetails?.email || 'anonymous@example.com',
+          // conversation_id: currentConversationId || null, // add if you have this
+        }),
+      });
+      const data = await res.json();
+
+      // Only show ai_response as bot message
+      if (data.status === 'success' && data.ai_response) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: data.ai_response,
+            sender: 'bot',
+            timestamp: new Date(),
+            bot_id: selectedBotId,
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: data.result || 'Sorry, I could not summarize that link.',
+            sender: 'bot',
+            timestamp: new Date(),
+            bot_id: selectedBotId,
+          },
+        ]);
+      }
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: 'Sorry, there was an error processing your link.',
+          sender: 'bot',
+          timestamp: new Date(),
+          bot_id: selectedBotId,
+        },
+      ]);
+    }
+    setIsTyping(false);
+    scrollToBottom();
+    return;
+  }
+
+
 
     const currentTime = new Date();
 
