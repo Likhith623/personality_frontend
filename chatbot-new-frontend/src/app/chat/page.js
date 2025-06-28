@@ -3517,7 +3517,7 @@ function containsUrl(text) {
       using JSON.stringify. The request is being made using the fetch API with the specified method
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
-      const response = await fetch("https://novi-be.aigurukul.dev/generate-response/", {
+      const response = await fetch("https://novi-vi.aigurukul.dev/cv/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
