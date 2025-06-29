@@ -3458,20 +3458,7 @@ function containsUrl(text) {
     const currentTime = new Date();
 
     try {
-      e.reminder == undefined &&
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: input,
-            sender: "user",
-            timestamp: currentTime,
-            feedback: "",
-            reaction: "",
-          },
-        ]);
-      setInput("");
-      setIsTyping(true);
-      scrollToBottom();
+
 
       /**
        * The function `convertToOpenAIFormat` takes an array of messages and converts them into an
