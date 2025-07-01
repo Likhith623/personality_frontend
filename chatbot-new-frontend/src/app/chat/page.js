@@ -2940,6 +2940,7 @@ function containsUrl(text) {
         const body = {
           email: userDetails.email,
           bot_id: selectedBotId,
+          messages_id: "",
           // No lastMessageId included to force full refresh
         };
 
@@ -2950,7 +2951,7 @@ function containsUrl(text) {
         'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
-        const response = await fetch("https://novi.aigurukul.dev/sync", {
+        const response = await fetch("https://novi-vi.aigurukul.dev/sync", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -3494,18 +3495,19 @@ function containsUrl(text) {
       - `previous_con */
 
       const payload = {
-        user_message: e.reminder === true ? `User asked to remind: ${e.message}` : input,
-        rephrased_user_message: "", // Or some rephrased value
+        message: e.reminder === true ? `User asked to remind: ${e.message}` : input,
         bot_id: selectedBotId,
-        bot_prompt_f: editablePrompts[selectedBotId],
-        previous_conversation: convertToOpenAIFormat(messages), // Must return array of {role, content}
-        memory: "", // Optional, can be empty
-        request_time: new Date().toString(),
-        username: userDetails.name,
-        gender: userDetails.gender,
-        botname: selectedBotDetails?.name || "DefaultBot"
-       
+        custom_bot_name: selectedBotDetails?.name || "",
+        user_name: userDetails.name || "",
+        user_gender: userDetails.gender || "",
+        language: "", // You can set dynamically if needed
+        traits: "", // Optional: add if user has traits like "funny", "serious", etc.
+        previous_conversation: convertToOpenAIFormat(messages),
+        email: userDetails.email || "", // Optional: provide if available
+        request_time: new Date().toISOString(),
+        platform: "web" // or mobile, etc.
       };
+      
       
       
 

@@ -19,7 +19,7 @@ const logClientError = async (error, context = {}) => {
       console.log(logData)
       
       // Send the log data to the backend API endpoint
-      const response = await fetch('https://novi.aigurukul.dev/api/logs/frontend-error', {
+      const response = await fetch('https://novi-vi.aigurukul.dev/api/logs/frontend-error', {
         // Adjust the API endpoint
         method: 'POST',
         headers: {
