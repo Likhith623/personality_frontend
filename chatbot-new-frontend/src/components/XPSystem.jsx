@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'; // ✅ ADD useMemo here
 import CustomModal from './customforxp';
 
-// XP Animation Styles Component
+// XP Animation Styles Component(to be clealry separated)
 const XPAnimationStyles = () => (
   <style jsx>{`
     @keyframes flyToXP {
