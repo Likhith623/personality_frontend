@@ -373,8 +373,9 @@ const History = () => {
           const body = {
             email: userDetails.email,
             bot_id: bot.bot_id,
+            messages_id: "",
           };
-          const response = await fetch("https://novi.aigurukul.dev/sync", {
+          const response = await fetch("https://novi-vi.aigurukul.dev/sync", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
