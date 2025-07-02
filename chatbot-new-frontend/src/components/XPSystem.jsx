@@ -154,7 +154,7 @@ const XPDetailsModal = ({
     const fetchAllXP = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://127.0.0.1:8000/user-xp-current/${userDetails.email}/${selectedBotId}`);
+        const response = await fetch(`https://novi-vi.aigurukul.dev/user-xp-current/${userDetails.email}/${selectedBotId}`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -417,7 +417,7 @@ const fetchTotalXPAllBots = useCallback(async () => {
     
     const allXPPromises = allBotIds.map(async (botId) => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/user-xp-current/${userDetails.email}/${botId}`);
+        const response = await fetch(`https://novi-vi.aigurukul.dev/user-xp-current/${userDetails.email}/${botId}`);
         
         if (!response.ok) {
           return { xp: 0 };
@@ -462,7 +462,7 @@ const fetchCurrentXP = useCallback(async () => {
     console.log("🎯 Fetching current bot XP for:", userDetails.email, selectedBotId);
     
     // Fetch current bot XP only
-    const response = await fetch(`http://127.0.0.1:8000/user-xp-current/${userDetails.email}/${selectedBotId}`);
+    const response = await fetch(`https://novi-vi.aigurukul.dev/user-xp-current/${userDetails.email}/${selectedBotId}`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

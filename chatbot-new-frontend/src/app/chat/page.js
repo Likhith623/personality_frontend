@@ -3516,7 +3516,7 @@ function containsUrl(text) {
 
 
   
-    const response = await fetch("http://127.0.0.1:8000/cv/chat", {
+    const response = await fetch("https://novi-vi.aigurukul.dev/cv/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
