@@ -61,6 +61,7 @@ import { Input } from "@/components/ui/input";
 import CustomModal from "@/components/CustomModal";
 import Memories from "@/components/Memories";
 import Diary from "@/components/dd";
+import XPSystem from "@/components/XPSystem";
 
 const botThemes = {
   delhi_mentor_male: {
@@ -2703,6 +2704,12 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                 {/* <ShinyButton className="mt-3 bg-purple-800 w-full mb-10" onClick={() => clearChat()}>
                   Clear Chat
                 </ShinyButton> */}
+                <XPSystem 
+                  selectedBotDetails={selectedBotDetails}
+                  selectedBotId={selectedBotId}
+                  userDetails={userDetails}
+                />
+
               </div>
             </div>
             <FloatingDockDemo />
@@ -3506,34 +3513,65 @@ function containsUrl(text) {
       using JSON.stringify. The request is being made using the fetch API with the specified method
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
-      const response = await fetch("https://novi-vi.aigurukul.dev/cv/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
 
-      const data = await response.json();
 
-      setIsTyping(false);
-      /* The above JavaScript code is checking if the `data` object has an `error` property. If the
-      `error` property exists and is truthy, it adds a new message object to the `messages` array.
-      The new message object contains a specific text message, sender information, an empty ID,
-      feedback, and a timestamp. This code snippet is likely part of a function or component that
-      handles error messages in a chat or messaging application. */
-      if (data.error) {
-        const errorMessage = "Sorry, there was an error processing your request. Please try again.";
-        setMessages(prev => [...prev, {
-          text: errorMessage,
-          sender: 'bot',
-          id: "",
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime,
-          bot_id: selectedBotId,
-          isSystemMessage: isSystemMessageContent(errorMessage)
-        }]);
+  
+    const response = await fetch("https://novi-vi.aigurukul.dev/cv/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
+    if (data.xp_data) {
+      console.log("🎯 XP data found in response:", data.xp_data);
+      
+      // Call the global updateXPFromResponse function
+      if (typeof window.updateXPFromResponse === 'function') {
+        console.log("✅ Calling updateXPFromResponse with:", data.xp_data);
+        window.updateXPFromResponse(data.xp_data);
+      } else {
+        console.error("❌ window.updateXPFromResponse is not available");
       }
 
+      // ✅ TRIGGER FLYING STARS ANIMATION
+      if (data.xp_data.immediate_xp_awarded > 0) {
+        console.log("🌟 XP was awarded, triggering flying stars animation");
+        setTimeout(() => {
+          // Find the last bot message element that was just added
+          const allBotMessages = document.querySelectorAll('[data-sender="bot"]');
+          const lastBotMessage = allBotMessages[allBotMessages.length - 1];
+          
+          if (lastBotMessage && typeof window.createFlyingStars === 'function') {
+            console.log("🌟 Creating flying stars from bot message");
+            window.createFlyingStars(lastBotMessage);
+          } else {
+            console.warn("❌ Could not find last bot message or createFlyingStars function");
+          }
+        }, 1000); // Wait for the message to render
+      }
+    } else {
+      console.warn("⚠️ No XP data found in response");
+    }
+
+    setIsTyping(false);
+
+    // ✅ Add bot message with XP info
+    if (data.error) {
+      const errorMessage = "Sorry, there was an error processing your request. Please try again.";
+      setMessages(prev => [...prev, {
+        text: errorMessage,
+        sender: 'bot',
+        id: "",
+        feedback: "",
+        reaction: "",
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: isSystemMessageContent(errorMessage)
+      }]);
+    } 
       else if (data.reminder?.response && data.reminder?.task && data.reminder?.created_at) {
         console.log("This is reminder block", data.reminder)
 
@@ -3839,6 +3877,7 @@ return (
                       ) : (
                         <>
                           <div
+                           data-sender="bot"
                             className={`px-4 py-2 rounded-2xl ${
                               botThemes[selectedBotId]?.botBubble || 'bg-white/20 text-gray-900'
                             } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
@@ -3876,6 +3915,7 @@ return (
                       )
                     ) : (
                       <div
+                       data-sender="user" 
                         className={`px-4 py-2 rounded-2xl ${
                           botThemes[selectedBotId]?.userBubble || 'bg-purple-400/80 text-white'
                         } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
