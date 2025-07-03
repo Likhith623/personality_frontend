@@ -582,6 +582,30 @@ const processWithBackend = useCallback(async (audioBlob) => {
     
     const data = await response.json();
     
+
+
+    // ✅ NEW: Process XP data immediately when response is received
+    if (data.xp_data) {
+      console.log("🎯 Voice Call XP data found:", data.xp_data);
+      
+      // Call the global updateXPFromResponse function
+      if (typeof window.updateXPFromResponse === 'function') {
+        console.log("✅ Calling updateXPFromResponse with voice call XP:", data.xp_data);
+        window.updateXPFromResponse(data.xp_data);
+      } else {
+        console.error("❌ window.updateXPFromResponse is not available for voice call");
+      }
+    } else {
+      console.warn("⚠️ No XP data found in voice call response");
+    }
+    
+
+
+
+
+
+
+
     // Process transcript immediately
     if (data.transcript) {
       onMessageReceived?.({
