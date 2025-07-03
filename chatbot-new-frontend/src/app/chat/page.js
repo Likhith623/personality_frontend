@@ -3525,36 +3525,23 @@ function containsUrl(text) {
     const data = await response.json();
 
     // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
-    if (data.xp_data) {
-      console.log("🎯 XP data found in response:", data.xp_data);
-      
-      // Call the global updateXPFromResponse function
-      if (typeof window.updateXPFromResponse === 'function') {
-        console.log("✅ Calling updateXPFromResponse with:", data.xp_data);
-        window.updateXPFromResponse(data.xp_data);
-      } else {
-        console.error("❌ window.updateXPFromResponse is not available");
-      }
+// In your handleSend function, update the XP processing section:
+// ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
+if (data.xp_data) {
+  console.log("🎯 XP data found in response:", data.xp_data);
+  
+  // Call the global updateXPFromResponse function
+  if (typeof window.updateXPFromResponse === 'function') {
+    console.log("✅ Calling updateXPFromResponse with:", data.xp_data);
+    window.updateXPFromResponse(data.xp_data);
+  } else {
+    console.error("❌ window.updateXPFromResponse is not available");
+  }
 
-      // ✅ TRIGGER FLYING STARS ANIMATION
-      if (data.xp_data.immediate_xp_awarded > 0) {
-        console.log("🌟 XP was awarded, triggering flying stars animation");
-        setTimeout(() => {
-          // Find the last bot message element that was just added
-          const allBotMessages = document.querySelectorAll('[data-sender="bot"]');
-          const lastBotMessage = allBotMessages[allBotMessages.length - 1];
-          
-          if (lastBotMessage && typeof window.createFlyingStars === 'function') {
-            console.log("🌟 Creating flying stars from bot message");
-            window.createFlyingStars(lastBotMessage);
-          } else {
-            console.warn("❌ Could not find last bot message or createFlyingStars function");
-          }
-        }, 1000); // Wait for the message to render
-      }
-    } else {
-      console.warn("⚠️ No XP data found in response");
-    }
+  // ✅ REMOVED: Flying stars animation code
+} else {
+  console.warn("⚠️ No XP data found in response");
+}
 
     setIsTyping(false);
 

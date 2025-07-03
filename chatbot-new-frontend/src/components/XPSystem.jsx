@@ -22,15 +22,19 @@ const XPAnimationStyles = () => (
     
     @keyframes flyStarsToXP {
       0% {
-        transform: translate(0, 0) scale(1);
+        transform: translate(0, 0) scale(1) rotate(0deg);
         opacity: 1;
+      }
+      30% {
+        opacity: 1;
+        transform: scale(1.2) rotate(90deg);
       }
       70% {
         opacity: 0.9;
-        transform: scale(1.1);
+        transform: scale(1.1) rotate(270deg);
       }
       100% {
-        transform: translate(var(--target-x), var(--target-y)) scale(0.3);
+        transform: translate(var(--target-x), var(--target-y)) scale(0.8) rotate(360deg);
         opacity: 0;
       }
     }
@@ -44,17 +48,37 @@ const XPAnimationStyles = () => (
       }
     }
     
-    @keyframes xpButtonGlow {
+    @keyframes xpButtonStarGlow {
       0% {
         box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        transform: scale(1);
+      }
+      25% {
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), 0 0 35px rgba(255, 215, 0, 0.4);
+        transform: scale(1.03);
       }
       50% {
-        box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 0 0 35px rgba(255, 215, 0, 0.6);
-        transform: scale(1.02);
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.6), 0 0 80px rgba(255, 215, 0, 0.3);
+        transform: scale(1.05);
+      }
+      75% {
+        box-shadow: 0 0 35px rgba(255, 215, 0, 0.8), 0 0 50px rgba(255, 215, 0, 0.5);
+        transform: scale(1.03);
       }
       100% {
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
         transform: scale(1);
+      }
+    }
+    
+    @keyframes starPulse {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.3);
       }
     }
     
@@ -62,8 +86,12 @@ const XPAnimationStyles = () => (
       animation: xpGlow 2s ease-in-out;
     }
     
-    .xp-button-glow {
-      animation: xpButtonGlow 1.5s ease-in-out;
+    .xp-button-star-glow {
+      animation: xpButtonStarGlow 2.5s ease-in-out;
+    }
+    
+    .star-pulse {
+      animation: starPulse 0.8s ease-in-out infinite;
     }
   `}</style>
 );
@@ -99,17 +127,17 @@ const FlyingStars = ({ startX, startY, targetX, targetY, onComplete }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onComplete();
-    }, 1200);
+    }, 2500); // ✅ INCREASED: from 1200ms to 2500ms for slower animation
 
     return () => clearTimeout(timer);
   }, [onComplete]);
 
-  // Generate 3-5 stars with slight randomness
-  const stars = Array.from({ length: Math.floor(Math.random() * 3) + 3 }, (_, i) => ({
+  // Generate 4-6 stars with slight randomness
+  const stars = Array.from({ length: Math.floor(Math.random() * 3) + 4 }, (_, i) => ({
     id: i,
-    delay: i * 100,
-    offsetX: (Math.random() - 0.5) * 20,
-    offsetY: (Math.random() - 0.5) * 20,
+    delay: i * 150, // ✅ INCREASED: delay between stars
+    offsetX: (Math.random() - 0.5) * 30, // ✅ INCREASED: more spread
+    offsetY: (Math.random() - 0.5) * 30,
   }));
 
   return (
@@ -117,15 +145,16 @@ const FlyingStars = ({ startX, startY, targetX, targetY, onComplete }) => {
       {stars.map((star) => (
         <div
           key={star.id}
-          className="absolute text-yellow-400"
+          className="absolute text-yellow-400 star-pulse" // ✅ ADDED: pulse effect
           style={{
             left: startX + star.offsetX,
             top: startY + star.offsetY,
             '--target-x': `${targetX - startX - star.offsetX}px`,
             '--target-y': `${targetY - startY - star.offsetY}px`,
-            animation: `flyStarsToXP 1.2s ease-out forwards`,
+            animation: `flyStarsToXP 2.5s ease-in-out forwards, starPulse 0.8s ease-in-out infinite`, // ✅ SLOWER: 2.5s instead of 1.2s
             animationDelay: `${star.delay}ms`,
-            fontSize: '12px',
+            fontSize: '16px', // ✅ BIGGER: more visible stars
+            filter: 'drop-shadow(0 0 3px rgba(255, 255, 0, 0.8))', // ✅ ADDED: glow effect
           }}
         >
           ⭐
@@ -490,52 +519,8 @@ const fetchCurrentXP = useCallback(async () => {
   }
 }, [userDetails.email, selectedBotId]);
 
-  // ✅ FIXED: Update the updateXPFromResponse function
-const updateXPFromResponse = useCallback((xpData) => {
-  console.log("🎯 updateXPFromResponse called with:", xpData);
-  
-  if (!xpData || typeof xpData !== 'object') {
-    console.warn("Invalid XP data received:", xpData);
-    return;
-  }
-  
-  // ✅ FIXED: Use correct property name from backend
-  if (xpData.xp_calculation_success) {
-    const immediateXP = xpData.immediate_xp_awarded || 0;
-    const newCurrentXP = xpData.current_total_xp || 0;
-    
-    // ✅ FIXED: Calculate coins based on XP (1 coin per 10 XP)
-    const newCurrentCoins = Math.floor(newCurrentXP / 10);
-    
-    // Update current bot XP and coins
-    setCurrentXP(newCurrentXP);
-    setCurrentCoins(newCurrentCoins);
-    
-    // ✅ FIXED: Update total XP correctly
-    setTotalXPAllBots(prev => {
-      const newTotalXP = prev + immediateXP;
-      
-      // ✅ FIXED: Calculate total coins based on the NEW total XP
-      setTotalCoinsAllBots(Math.floor(newTotalXP / 10));
-      
-      return newTotalXP;
-    });
-    
-    // Trigger animation if XP was gained
-    if (immediateXP > 0) {
-      triggerXPAnimation(immediateXP);
-    }
-    
-    console.log("✅ XP updated successfully:", {
-      immediateXP,
-      newCurrentXP,
-      newCurrentCoins: newCurrentCoins,
-      coinsCalculation: `${newCurrentXP} XP ÷ 10 = ${newCurrentCoins} coins`
-    });
-  } else {
-    console.warn("XP calculation was not successful:", xpData);
-  }
-}, []);
+
+
 
   // ✅ FIXED: Stable animation function
   const triggerXPAnimation = useCallback((xpGained) => {
@@ -555,6 +540,69 @@ const updateXPFromResponse = useCallback((xpData) => {
       setXpAnimation(false);
     }, 2000);
   }, []);
+
+
+// ✅ ENHANCED: Update the updateXPFromResponse function to handle both chat and voice call XP
+const updateXPFromResponse = useCallback((xpData) => {
+  console.log("🎯 updateXPFromResponse called with:", xpData);
+  
+  if (!xpData || typeof xpData !== 'object') {
+    console.warn("Invalid XP data received:", xpData);
+    return;
+  }
+  
+  // ✅ ENHANCED: Handle both voice call and chat XP data formats
+  if (xpData.xp_calculation_success || xpData.success) {
+    const immediateXP = xpData.immediate_xp_awarded || 0;
+    const newCurrentXP = xpData.current_total_xp || 0;
+    
+    // ✅ FIXED: Calculate coins based on XP (1 coin per 10 XP)
+    const newCurrentCoins = Math.floor(newCurrentXP / 10);
+    
+    // Update current bot XP and coins
+    setCurrentXP(newCurrentXP);
+    setCurrentCoins(newCurrentCoins);
+    
+    // ✅ FIXED: Update total XP correctly
+    setTotalXPAllBots(prev => {
+      const newTotalXP = prev + immediateXP;
+      
+      // ✅ FIXED: Calculate total coins based on the NEW total XP
+      setTotalCoinsAllBots(Math.floor(newTotalXP / 10));
+      
+      return newTotalXP;
+    });
+
+     // Trigger animation if XP was gained
+    if (immediateXP > 0) {
+      triggerXPAnimation(immediateXP);
+      
+      // ✅ NEW: Trigger flying stars animation for voice calls too
+      setTimeout(() => {
+        // For voice calls, we can trigger stars from the voice call interface
+        if (typeof window.createFlyingStars === 'function') {
+          // Find any bot message element or create a dummy one
+          const voiceCallElement = document.querySelector('[data-sender="bot"]');
+          if (voiceCallElement) {
+            console.log("🌟 Creating flying stars from voice call");
+            window.createFlyingStars(voiceCallElement);
+          }
+        }
+      }, 500);
+    }
+    
+    console.log("✅ Voice Call XP updated successfully:", {
+      immediateXP,
+      newCurrentXP,
+      newCurrentCoins: newCurrentCoins,
+      source: 'voice_call'
+    });
+  } else {
+    console.warn("XP calculation was not successful:", xpData);
+  }
+}, [triggerXPAnimation]);
+
+
 
   // ✅ FIXED: Stable flying coin function
   const createFlyingCoin = useCallback((messageElement) => {
@@ -630,21 +678,23 @@ const createFlyingStars = useCallback((messageElement) => {
   
   setFlyingStars(prev => [...prev, newStars]);
   
-  // Trigger button glow when stars start flying
+  // ✅ ENHANCED: Trigger button glow when stars are about to arrive (2 seconds after start)
   setTimeout(() => {
-    console.log("✨ Triggering button glow");
+    console.log("✨ Stars arriving - triggering button glow");
     setButtonGlow(true);
     
-    // Stop glow after animation
+    // ✅ LONGER: Keep glow active for longer
     setTimeout(() => {
       setButtonGlow(false);
-    }, 1500);
-  }, 800); // Glow starts partway through animation
+      console.log("✨ Button glow ended");
+    }, 2500); // Glow for 2.5 seconds
+  }, 2000); // Start glow 2 seconds after stars start (when they're close to arriving)
   
   // Remove stars after animation completes
   setTimeout(() => {
     setFlyingStars(prev => prev.filter(stars => stars.id !== starsId));
-  }, 2000);
+    console.log("🌟 Stars animation completed and cleaned up");
+  }, 3000); // ✅ INCREASED: cleanup time
 }, []);
 
 // ✅ PERFECT: Remove function dependencies to prevent infinite loop
@@ -727,7 +777,7 @@ useEffect(() => {
       <button
         onClick={() => setIsXPModalOpen(true)}
         disabled={isLoading}
-        className={`mt-3 p-3 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-yellow-400/80 via-orange-400/80 to-red-400/80 hover:from-yellow-400/90 hover:via-orange-400/90 hover:to-red-400/90 text-white rounded-full flex flex-col justify-center items-center gap-1 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] relative overflow-hidden ${xpAnimation ? 'animate-pulse ring-4 ring-yellow-300' : ''} ${isLoading ? 'opacity-50' : ''} ${buttonGlow ? 'xp-button-glow' : ''}`}
+        className={`mt-3 p-3 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-yellow-400/80 via-orange-400/80 to-red-400/80 hover:from-yellow-400/90 hover:via-orange-400/90 hover:to-red-400/90 text-white rounded-full flex flex-col justify-center items-center gap-1 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] relative overflow-hidden ${xpAnimation ? 'animate-pulse ring-4 ring-yellow-300' : ''} ${isLoading ? 'opacity-50' : ''} ${buttonGlow ? 'xp-button-star-glow' : ''}`} // ✅ CHANGED: use new glow class
         id="xp-button"
       >
         {/* Current Bot XP */}
@@ -751,12 +801,20 @@ useEffect(() => {
           </div>
         )}
         
-        {/* Sparkle Animation Overlay */}
-        {xpAnimation && (
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-yellow-300 rounded-full animate-ping"></div>
-            <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-white rounded-full animate-ping delay-100"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-1 h-1 bg-white rounded-full animate-ping delay-200"></div>
+        {/* ✅ ENHANCED: Better sparkle animation overlay */}
+        {(xpAnimation || buttonGlow) && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-yellow-300 rounded-full animate-ping"></div>
+            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white rounded-full animate-ping delay-100"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-white rounded-full animate-ping delay-200"></div>
+            <div className="absolute top-3/4 left-3/4 w-1 h-1 bg-yellow-200 rounded-full animate-ping delay-300"></div>
+            {/* ✅ ADDED: Extra sparkles during glow */}
+            {buttonGlow && (
+              <>
+                <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-yellow-400 rounded-full animate-ping delay-150"></div>
+                <div className="absolute bottom-1/3 left-1/3 w-2 h-2 bg-orange-300 rounded-full animate-ping delay-250"></div>
+              </>
+            )}
           </div>
         )}
       </button>
