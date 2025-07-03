@@ -69,7 +69,7 @@ const botThemes = {
     botBubble: 'bg-white text-black',
     backgroundImages: [
       {
-        url: '/bg-images/delhi_mentor_male-bg.jpg',
+        url: '/photos/delhi_mentor_male.png',
         textColor: 'text-white',
         b_color: 'text-white'
       },
