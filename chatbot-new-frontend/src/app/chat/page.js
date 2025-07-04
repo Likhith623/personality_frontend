@@ -1037,6 +1037,7 @@ const bot_details = [
 
 
 export default function SidebarDemo() {
+  const [messages, setMessages] = useState([]);
   const [open, setOpen] = useState(false);
   const { selectedBotId } = useBot();
   const currentTheme = botThemes[selectedBotId] || {};
@@ -2543,11 +2544,27 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
     setCustomName(customizations.name);
   };
 
-  const clearChat = () => {
+  const clearChat = async () => {
+    const response = await fetch("https://novi.aigurukul.dev/clear-chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email_id: userDetails.email,
+        bot_id: selectedBotId,
+      }),
+    });
+
+    const data = await response.json(); 
+    console.log("Response body:", data); 
+
     localStorage.removeItem(`chat_${selectedBotId}`);
-    console.log("Cleared chat");
+    setMessages([]);
     setClearChatCalled(true);
   };
+
+
 
   return (
     <div
@@ -2644,7 +2661,6 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                 >
                   {isDarkMode ? "🌙" : "☀️"}
                 </button>
-
               </div>
               {/* <div className="w-full max-w-3xl mt-3">
                 <h2 className="font-bold">Personality</h2>
@@ -2704,12 +2720,19 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                 {/* <ShinyButton className="mt-3 bg-purple-800 w-full mb-10" onClick={() => clearChat()}>
                   Clear Chat
                 </ShinyButton> */}
-                <XPSystem 
+                <XPSystem
                   selectedBotDetails={selectedBotDetails}
                   selectedBotId={selectedBotId}
                   userDetails={userDetails}
                 />
-
+              </div>
+              <div>
+                <button
+                  onClick={clearChat}
+                  className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+                >
+                  Clear Chat
+                </button>
               </div>
             </div>
             <FloatingDockDemo />
@@ -2729,6 +2752,8 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
         backgroundImage={backgroundImage}
         textColorClass={textColorClass}
         b_color={b_color}
+        messages={messages}
+        setMessages={setMessages}
         className="bg-white/40 backdrop-blur-md shadow-lg"
       />
     </div>
@@ -2759,9 +2784,9 @@ export const LogoIcon = () => {
     </Link>
   );
 };
-const Dashboard = ({ clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails,backgroundImage,textColorClass,b_color}) => {
+const Dashboard = ({ clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails,backgroundImage,textColorClass,b_color,messages,setMessages}) => {
   const { selectedBotId } = useBot();
-  const [messages, setMessages] = useState([]);
+  //const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isVoiceCallOpen, setIsVoiceCallOpen] = useState(false);
