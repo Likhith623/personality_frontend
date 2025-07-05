@@ -1747,18 +1747,19 @@ const startActivity = (activityId) => {
   
   // Add bot's initial response to chat
   const currentTime = new Date();
-  const activityMessage = {
-    text: response,
-    sender: 'bot',
-    id: `activity_${Date.now()}`,
-    feedback: "",
-    reaction: "",
-    timestamp: currentTime,
-    bot_id: selectedBotId,
-    isSystemMessage: true,
-    isActivityMessage: true,
-    activityId: activityId
-  };
+const activityMessage = {
+  text: response,
+  sender: 'bot',
+  id: `activity_${Date.now()}`,
+  feedback: "",
+  reaction: "",
+  timestamp: currentTime,
+  bot_id: selectedBotId,
+  isSystemMessage: true,
+  isActivityMessage: true,  // ✅ CRITICAL: Mark as activity message
+  activityId: activityId,
+  voice_only: false  // ✅ CRITICAL: Force text-only
+};
 
   setMessages(prev => [...prev, activityMessage]);
   
@@ -1772,12 +1773,15 @@ const startActivity = (activityId) => {
 
 // ...existing code...
 // Function to end current activity
+// ...existing code...
+
+// Function to end current activity
 const endActivity = () => {
   if (!currentActivity) return;
 
   const currentTime = new Date();
   
-  // Calculate XP based on activity difficulty (optional)
+  // Calculate XP based on activity difficulty
   let xpMessage = "";
   const activityDetail = Object.values(ACTIVITY_CATEGORIES)
     .flatMap(category => [...category.light, ...category.medium, ...category.deep])
@@ -1790,24 +1794,30 @@ const endActivity = () => {
   }
 
   const endMessage = {
-    text: `Activity completed!${xpMessage} Back to normal chat. What else would you like to talk about?`,
+    text: `🎉 Activity "${currentActivity.replace(/_/g, ' ')}" completed!${xpMessage}\n\nBack to normal chat mode. Voice messages are now available again. What else would you like to talk about?`,
     sender: 'bot',
     id: `activity_end_${Date.now()}`,
     feedback: "",
     reaction: "",
     timestamp: currentTime,
     bot_id: selectedBotId,
-    isSystemMessage: true
+    isSystemMessage: true,
+    voice_only: false // This will be normal text message with audio option
   };
 
   setMessages(prev => [...prev, endMessage]);
   setCurrentActivity(null);
   setActivityHistory([]);
   scrollToBottom();
+  
+  // Optional: Show a toast notification
+  console.log("✅ Activity ended, returning to normal chat mode");
 };
 
 
+
 // ...existing code...
+
 // Function to handle activity-specific messages
 const handleActivityMessage = async (userMessage) => {
   if (!currentActivity) return;
@@ -1832,7 +1842,7 @@ const handleActivityMessage = async (userMessage) => {
 
     console.log("Activity payload:", payload);
 
-    // Call the gaming agent API
+    // Call the gaming agent API - FIXED URL
     const response = await fetch("http://127.0.0.1:8000/chat", {
       method: "POST",
       headers: {
@@ -1842,6 +1852,7 @@ const handleActivityMessage = async (userMessage) => {
     });
 
     const data = await response.json();
+    console.log("🎯 Full activity response:", data); // Debug log
     setIsTyping(false);
 
     if (data.error) {
@@ -1858,9 +1869,12 @@ const handleActivityMessage = async (userMessage) => {
       }]);
       endActivity();
     } else {
+      // ✅ FIXED: Extract response from the correct path
+      const botResponseText = data.reply?.raw || data.response || "Sorry, I didn't get a proper response.";
+      
       // Add bot response to chat
       const botResponse = {
-        text: data.response,
+        text: botResponseText,
         sender: 'bot',
         id: data.message_id || `activity_${Date.now()}`,
         feedback: "",
@@ -1868,14 +1882,15 @@ const handleActivityMessage = async (userMessage) => {
         timestamp: currentTime,
         bot_id: selectedBotId,
         isSystemMessage: true,
-        isActivityMessage: true,
-        activityId: currentActivity
+        isActivityMessage: true,  // ✅ CRITICAL: This marks it as activity message
+        activityId: currentActivity,
+        voice_only: false  // ✅ CRITICAL: Force text-only for activity messages
       };
 
       setMessages(prev => [...prev, botResponse]);
       
       // Add bot response to activity history
-      setActivityHistory(prev => [...prev, `Bot: ${data.response}`]);
+      setActivityHistory(prev => [...prev, `Bot: ${botResponseText}`]);
     }
 
   } catch (error) {
@@ -1899,8 +1914,6 @@ const handleActivityMessage = async (userMessage) => {
 
   scrollToBottom();
 };
-
-
 
 
 
@@ -1975,24 +1988,48 @@ function containsUrl(text) {
     */
   // Helper function to detect if a message should be treated as a system message.
   // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
-  //This function helps the chat interface determine which bot responses should be displayed as voice-only messages (with audio controls but no text bubble) versus regular text messages (with both text and a small play button).
-  function processBotMessages(messages) {
-    let botReplyCount = 0;
-    return messages.map((msg) => {
-      if (msg.sender === 'bot') {
-        botReplyCount++;
 
-        // Check if this is a system message either by explicit flag OR by content pattern
-        const isSystemMsg = (msg.isSystemMessage === true) || isSystemMessageContent(msg.text);
 
-        // Force voice-only for system/proactive messages, otherwise use the regular pattern
-        const voice_only = isSystemMsg ? true : ((botReplyCount - 1) % 3 === 2);
+// ✅ FIXED: Update the processBotMessages function 
+function processBotMessages(messages) {
+  let botReplyCount = {}; // ✅ Changed back to object to track per bot
+  
+  return messages.map((msg) => {
+    if (msg.sender === 'bot') {
+      const botId = msg.bot_id || selectedBotId || 'default';
+      
+      // Check if this is a system message either by explicit flag OR by content pattern
+      const isSystemMsg = (msg.isSystemMessage === true) || isSystemMessageContent(msg.text);
+      
+      // ✅ NEW: Check if this is an activity message
+      const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
 
-        return { ...msg, voice_only, isSystemMessage: isSystemMsg };
+      // ✅ CRITICAL FIX: Only count non-system, non-activity bot messages for the sequence
+      if (!isSystemMsg && !isActivityMsg) {
+        if (!botReplyCount[botId]) botReplyCount[botId] = 0;
+        botReplyCount[botId]++;
       }
-      return msg;
-    });
-  }
+
+      // ✅ UPDATED: Proper voice_only logic
+      let voice_only = false;
+      
+      if (isActivityMsg) {
+        // ✅ Activity messages are ALWAYS text-only (text bubble with small play button)
+        voice_only = false;
+      } else if (isSystemMsg) {
+        // System messages (reminders, proactive messages) are ALWAYS voice-only
+        voice_only = true;
+      } else {
+        // ✅ FIXED: Normal chat sequence - every 3rd normal bot message should be voice-only
+        const currentBotCount = botReplyCount[botId] || 0;
+        voice_only = (currentBotCount % 3 === 0);
+      }
+
+      return { ...msg, voice_only, isSystemMessage: isSystemMsg };
+    }
+    return msg;
+  });
+}
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (showReactionsFor && !e.target.closest(".reaction-selector")) {
@@ -3044,7 +3081,6 @@ return (
         ? (() => {
             const bg = botThemes[selectedBotId].backgroundImages[backgroundIndex];
 
-
             if (bg.url.startsWith("http")|| bg.url.startsWith("/")) {
               return {
                 backgroundImage: `url('${bg.url}')`,
@@ -3068,26 +3104,30 @@ return (
         : undefined
     }
   >
-    <ScrollArea className="flex-1">
-
-{currentActivity && (
-  <div className="px-4 py-2 bg-blue-100/80 backdrop-blur-sm border-l-4 border-blue-500 mb-4 mx-2">
-    <div className="flex justify-between items-center">
-      <div>
-        <p className="text-blue-800 font-medium">
-          🎮 Activity: {currentActivity.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-        </p>
-        <p className="text-blue-600 text-sm">Type 'exit', 'stop', or 'end' to finish this activity</p>
+    {/* ✅ ENHANCED: Always visible activity banner at the very top */}
+    {currentActivity && (
+      <div className="sticky top-0 z-50 px-4 py-3 bg-gradient-to-r from-red-500/95 to-pink-500/95 backdrop-blur-md border-b-2 border-white/30 shadow-lg">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg"></div>
+            <div>
+              <p className="text-white font-bold text-lg drop-shadow-md">
+                🎮 ACTIVITY MODE: {currentActivity.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              </p>
+            
+            </div>
+          </div>
+          <button
+            onClick={endActivity}
+            className="px-6 py-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-lg border-2 border-white/50 hover:border-white font-bold text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            END ACTIVITY
+          </button>
+        </div>
       </div>
-      <button
-        onClick={endActivity}
-        className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm"
-      >
-        End Activity
-      </button>
-    </div>
-  </div>
-)}
+    )}
+
+    <ScrollArea className="flex-1">
       <div className="px-1 md:px-2">
         {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
           <div key={date}>
@@ -3247,66 +3287,103 @@ return (
             ))}
           </div>
         ))}
+   
+
+
+
+
+
+
+
         {isTyping && <TypingIndicator />}
         <div ref={messagesEndRef} />
       </div>
     </ScrollArea>
 
-<form onSubmit={handleSend} className="flex items-center px-2 pt-2">
-  <Input
-    type="text"
-    value={input}
-    onChange={(e) => setInput(e.target.value)}
-    className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${isDarkTheme ? textColorClass : textColorClass} placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
-    placeholder="Type your message..."
-  />
+    {/* ✅ ENHANCED: Modified form to show activity status */}
+    <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
+      <Input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${isDarkTheme ? textColorClass : textColorClass} placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
+        placeholder={currentActivity ? `Activity mode: ${currentActivity.replace(/_/g, ' ')}...` : "Type your message..."}
+      />
 
-  <button
-    type="button"
-    onClick={() => setIsVoiceCallOpen(true)}
-    className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-    title="Start Voice Call"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
-      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-      <path d="M12 19v3"/>
-      <path d="M8 22h8"/>
-    </svg>
-  </button>
+      {/* ✅ CONDITIONAL: Hide voice call button during activities */}
+      {!currentActivity && (
+        <button
+          type="button"
+          onClick={() => setIsVoiceCallOpen(true)}
+          className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+          title="Start Voice Call"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <path d="M12 19v3"/>
+            <path d="M8 22h8"/>
+          </svg>
+        </button>
+      )}
 
-  <button
-    type="submit"
-    className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-  >
-    Send
-  </button>
-</form>
+      {/* ✅ CONDITIONAL: Show activity end button instead of voice button during activities */}
+      {currentActivity && (
+        <button
+          type="button"
+          onClick={endActivity}
+          className="p-3 mr-2 hover:opacity-80 cursor-pointer bg-gradient-to-r from-red-400/80 via-pink-400/80 to-red-500/80 hover:from-red-400/90 hover:via-pink-400/90 hover:to-red-500/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+          title="End Activity"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="m15 9-6 6"/>
+            <path d="m9 9 6 6"/>
+          </svg>
+        </button>
+      )}
 
-<p className={`text-xs text-center py-2 ${isDarkTheme ? b_color : b_color}`}>
-  Novi can make mistakes, it's constantly learning from you, please be kind!!
-</p>
+      <button
+        type="submit"
+        className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+      >
+        Send
+      </button>
+    </form>
 
-{/* Voice Call Component */}
-{isVoiceCallOpen && (
-  <VoiceCallUltra
-    isOpen={isVoiceCallOpen}
-    onClose={() => setIsVoiceCallOpen(false)}
-    onMessageReceived={handleVoiceCallMessage}
-    messages={messages}
-  />
-)}
+    <p className={`text-xs text-center py-2 ${isDarkTheme ? b_color : b_color}`}>
+      {currentActivity 
+        ? "🎮 Activity mode active - Voice messages disabled during activities" 
+        : "Novi can make mistakes, it's constantly learning from you, please be kind!!"
+      }
+    </p>
 
+    {/* Voice Call Component - Only show when not in activity mode */}
+    {isVoiceCallOpen && !currentActivity && (
+      <VoiceCallUltra
+        isOpen={isVoiceCallOpen}
+        onClose={() => setIsVoiceCallOpen(false)}
+        onMessageReceived={handleVoiceCallMessage}
+        messages={messages}
+      />
+    )}
 
-{/* Activities Modal */}
-<ActivitiesModal
-  isOpen={isActivitiesOpen}
-  onClose={() => setIsActivitiesOpen(false)}
-  onActivityStart={startActivity}
-  selectedBotId={selectedBotId}
-/>
-
-
-</div>
-  );
+    {/* Activities Modal */}
+    <ActivitiesModal
+      isOpen={isActivitiesOpen}
+      onClose={() => setIsActivitiesOpen(false)}
+      onActivityStart={startActivity}
+      selectedBotId={selectedBotId}
+    />
+  </div>
+);
 };
+
+
+
+
+
+
+
+
+    
