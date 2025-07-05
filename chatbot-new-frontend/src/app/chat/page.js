@@ -1698,7 +1698,7 @@ export const LogoIcon = () => {
 
 
 
-const Dashboard = ({ clearChatCalled, setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails,backgroundImage,textColorClass,b_color,messages,setMessages,isActivitiesOpen,setIsActivitiesOpen}) => {
+const Dashboard = ({ clearChatCalled,setClearChatCalled,backgroundIndex,isWhiteIcon,isDarkTheme,selectedBotDetails,backgroundImage,textColorClass,b_color,messages,setMessages,isActivitiesOpen,setIsActivitiesOpen}) => {
   const { selectedBotId } = useBot();
   //const [messages, setMessages] = useState([]);
 
@@ -1725,123 +1725,6 @@ const Dashboard = ({ clearChatCalled, setClearChatCalled,backgroundIndex,isWhite
   const [highlightedMessage, setHighlightedMessage] = useState(null);
   // Define available emoticons
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
-  // Helper: decide if a bot reply should be voice-only
-  function isVoiceOnlyBotReply(msg) {
-    return msg.voice_only === true;
-  }
-
-  // Utility to detect URLs (simple version)
-function containsUrl(text) {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return urlRegex.test(text);
-}
-
-  /*
-  // Helper: inject voice_only property for bot replies based on index
-  function processBotMessages(messages) {
-    let botReplyCount = {};
-    return messages.map((msg, idx) => {
-      if (msg.sender !== 'bot') return msg;
-      const botId = msg.bot_id || 'default';
-      if (!botReplyCount[botId]) botReplyCount[botId] = 0;
-      botReplyCount[botId]++;
-      let voice_only = false;
-      if (botReplyCount[botId] === 3) {
-        voice_only = true;
-      } else if (botReplyCount[botId] > 3) {
-        // Randomly assign voice_only for subsequent replies (50% chance)
-        voice_only = Math.random() < 0.5;
-      }
-      return { ...msg, voice_only };
-    });
-  }
-    */
-  // Helper function to detect if a message should be treated as a system message.
-  // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
-  //This function helps the chat interface determine which bot responses should be displayed as voice-only messages (with audio controls but no text bubble) versus regular text messages (with both text and a small play button).
-  function processBotMessages(messages) {
-    let botReplyCount = 0;
-    return messages.map((msg) => {
-      if (msg.sender === 'bot') {
-        botReplyCount++;
-
-        // Check if this is a system message either by explicit flag OR by content pattern
-        const isSystemMsg = (msg.isSystemMessage === true) || isSystemMessageContent(msg.text);
-
-        // Force voice-only for system/proactive messages, otherwise use the regular pattern
-        const voice_only = isSystemMsg ? true : ((botReplyCount - 1) % 3 === 2);
-
-        return { ...msg, voice_only, isSystemMessage: isSystemMsg };
-      }
-      return msg;
-    });
-  }
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (showReactionsFor && !e.target.closest(".reaction-selector")) {
-        setShowReactionsFor(null);
-        setHighlightedMessage(null); // Clear highlight when clicking outside
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
-    };
-  }, [showReactionsFor]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{currentActivity && (
-  <div className="px-4 py-2 bg-blue-100/80 backdrop-blur-sm border-l-4 border-blue-500 mb-4">
-    <div className="flex justify-between items-center">
-      <div>
-        <p className="text-blue-800 font-medium">
-          🎮 Activity: {currentActivity.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-        </p>
-        <p className="text-blue-600 text-sm">Type 'exit', 'stop', or 'end' to finish this activity</p>
-      </div>
-      <button
-        onClick={endActivity}
-        className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm"
-      >
-        End Activity
-      </button>
-    </div>
-  </div>
-)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // Function to start an activity
 // ...existing code...
@@ -2016,6 +1899,151 @@ const handleActivityMessage = async (userMessage) => {
 
   scrollToBottom();
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  // Helper: decide if a bot reply should be voice-only
+  function isVoiceOnlyBotReply(msg) {
+    return msg.voice_only === true;
+  }
+
+  // Utility to detect URLs (simple version)
+function containsUrl(text) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return urlRegex.test(text);
+}
+
+  /*
+  // Helper: inject voice_only property for bot replies based on index
+  function processBotMessages(messages) {
+    let botReplyCount = {};
+    return messages.map((msg, idx) => {
+      if (msg.sender !== 'bot') return msg;
+      const botId = msg.bot_id || 'default';
+      if (!botReplyCount[botId]) botReplyCount[botId] = 0;
+      botReplyCount[botId]++;
+      let voice_only = false;
+      if (botReplyCount[botId] === 3) {
+        voice_only = true;
+      } else if (botReplyCount[botId] > 3) {
+        // Randomly assign voice_only for subsequent replies (50% chance)
+        voice_only = Math.random() < 0.5;
+      }
+      return { ...msg, voice_only };
+    });
+  }
+    */
+  // Helper function to detect if a message should be treated as a system message.
+  // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
+  //This function helps the chat interface determine which bot responses should be displayed as voice-only messages (with audio controls but no text bubble) versus regular text messages (with both text and a small play button).
+  function processBotMessages(messages) {
+    let botReplyCount = 0;
+    return messages.map((msg) => {
+      if (msg.sender === 'bot') {
+        botReplyCount++;
+
+        // Check if this is a system message either by explicit flag OR by content pattern
+        const isSystemMsg = (msg.isSystemMessage === true) || isSystemMessageContent(msg.text);
+
+        // Force voice-only for system/proactive messages, otherwise use the regular pattern
+        const voice_only = isSystemMsg ? true : ((botReplyCount - 1) % 3 === 2);
+
+        return { ...msg, voice_only, isSystemMessage: isSystemMsg };
+      }
+      return msg;
+    });
+  }
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (showReactionsFor && !e.target.closest(".reaction-selector")) {
+        setShowReactionsFor(null);
+        setHighlightedMessage(null); // Clear highlight when clicking outside
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [showReactionsFor]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3041,27 +3069,25 @@ return (
     }
   >
     <ScrollArea className="flex-1">
-        {/* Add this activity status indicator */}
-  {currentActivity && (
-    <div className="px-4 py-2 bg-blue-100/80 backdrop-blur-sm border-l-4 border-blue-500 mb-4 mx-2">
-      <div className="flex justify-between items-center">
-        <div>
-          <p className="text-blue-800 font-medium">
-            🎮 Activity: {currentActivity.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-          </p>
-          <p className="text-blue-600 text-sm">Type 'exit', 'stop', or 'end' to finish this activity</p>
-        </div>
-        <button
-          onClick={endActivity}
-          className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm"
-        >
-          End Activity
-        </button>
-      </div>
-    </div>
-  )}
-  
 
+{currentActivity && (
+  <div className="px-4 py-2 bg-blue-100/80 backdrop-blur-sm border-l-4 border-blue-500 mb-4 mx-2">
+    <div className="flex justify-between items-center">
+      <div>
+        <p className="text-blue-800 font-medium">
+          🎮 Activity: {currentActivity.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+        </p>
+        <p className="text-blue-600 text-sm">Type 'exit', 'stop', or 'end' to finish this activity</p>
+      </div>
+      <button
+        onClick={endActivity}
+        className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm"
+      >
+        End Activity
+      </button>
+    </div>
+  </div>
+)}
       <div className="px-1 md:px-2">
         {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
           <div key={date}>
