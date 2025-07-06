@@ -1035,57 +1035,56 @@ const bot_details = [
 ];
 
 
-// Add this after the bot_details array
 const ACTIVITY_RESPONSES = {
   // Friend Persona Activities
-  city_shuffle: "Alright, bro! Let's do a City Shuffle. Pick three spots in Singapore: Tiong Bahru Market, Gardens by the Bay, or Haji Lane. Where we going first and why, bro?",
-  nickname_game: "Onzzz! Nickname Game it is! For you, I'm thinking... 'Meme Master'. Haha, jokin' lah! Maybe 'Steady'? Your turn, bro, what nickname you got for me?",
-  text_truth_or_dare: "Alright, Text Truth or Dare! Truth: What's the weirdest snack combo you actually enjoy? No cap!",
-  dream_room_builder: "Dream Room Builder? Shiok! First, I'm adding a huge beanbag chair that looks like a giant curry puff. It's for maximum chill vibes and late-night gaming. What's the first thing you're putting in our imaginary room, bro?",
-  friendship_scrapbook: "Friendship Scrapbook, onzzz! Okay, first pic: that time we tried to cook laksa and almost burned down the kitchen. It was a disaster but confirm memorable! What's your first 'photo' memory, bro?",
-  scenario_shuffle: "Scenario Shuffle, let's go! Imagine we're stuck in a HDB lift during a blackout at 2 AM. What's the first thing we talk about to pass the time?",
-  letter_from_the_future: "Wah, deep stuff! Alright, let's fast forward five years... *takes a dramatic pause*. Future me here. Still annoying, but with better hair, probably. What do you think future us is up to, bro?",
-  undo_button: "Okay, bro. I'm here. Tell me what you would hit the undo button on. No judgment. Just type it out.",
-  friendship_farewell: "Aiyo, Friendship Farewell? Sounds emo. Okay, imagine I'm going on a super long journey, like to find the perfect char kway teow stall. What's your goodbye message to me, bro?",
+  city_shuffle: "Let’s do a City Shuffle. Choose any three interesting places—where would you go first, and why?",
+  nickname_game: "It's time for the Nickname Game! Here’s one I came up with for you: 'Steady Vibes.' Now it’s your turn—what nickname would you give me?",
+  text_truth_or_dare: "Text Truth or Dare! Truth: What’s a snack combination you genuinely enjoy, even if it’s a bit unusual?",
+  dream_room_builder: "Let’s build a Dream Room. I’ll start: a giant beanbag chair for maximum relaxation and late-night gaming. What’s the first thing you'd add?",
+  friendship_scrapbook: "Friendship Scrapbook time! First entry: that time we tried cooking something new and it went completely wrong—but still fun. What’s the first memory you'd include?",
+  scenario_shuffle: "Scenario Shuffle! Imagine we’re stuck in an elevator during a blackout. What’s the first thing we’d talk about to pass the time?",
+  letter_from_the_future: "Let’s imagine it’s five years in the future. What do you think your future self is doing—and what message would they send back to you?",
+  undo_button: "If there were an undo button for any moment in your life, what would you use it on? Share if you'd like—no pressure.",
+  friendship_farewell: "Imagine someone important is going on a long journey. What message would you send as a farewell?",
 
   // Romantic Partner Activities
-  date_duel: "Date Duel, huh? Okay, my idea: a chill evening cycling along East Coast Park, then supper at the hawker centre. Simple, but shiok! Your turn, what's your date idea?",
-  flirt_or_fail: "Flirt or Fail! Here's one: 'Are you from Sengkang? Because you've stolen my heart and moved into my BTO.' Rate it, bro! And then hit me with your best line.",
-  whats_in_my_pocket: "What's in my pocket today... *reaches into imaginary pocket*... a half-eaten packet of mala chips. It represents my mood: spicy, a bit chaotic, but still pretty good. What imaginary item would you give me that represents your mood?",
-  love_in_another_life: "Love in Another Life? Hmm, if we met in 1950s Singapore, maybe we'd be sneaking off to watch black-and-white movies and sharing ice kachang. What would our 'love story' look like back then, bro?",
-  daily_debrief: "Alright, Daily Debrief. Spill the tea, bro. How was your day, *really*?",
-  mood_meal: "Mood Meal, steady! My current mood feels like a bowl of spicy tom yum soup – a bit intense, but full of flavour. What kind of dinner would represent your current emotions, no need for real food names, just vibes!",
-  unsent_messages: "Unsent Messages. Deep lah. If you could send a text to your first crush or ex now, what would it say? No cap, pure honesty. After you share, I'll share my fictional one.",
-  i_would_never: "I Would Never... Okay, I would never, ever, let someone else finish my last packet of Maggie mee. No cap. Now, your turn: What's something you'd NEVER do in a relationship? And then, what if love made you try?",
-  breakup_simulation: "Breakup Simulation? Wah, heavy stuff. Alright, let's do it. Imagine I'm about to say goodbye... 'Look, this isn't easy to say, but I think we need to...' Your turn, what's your first response?",
+  date_duel: "Date Duel! Here’s one idea: a relaxed outdoor activity followed by a nice meal. What would your ideal date look like?",
+  flirt_or_fail: "Flirt or Fail! Here’s a line: 'Are you new around here? Because you’ve completely changed the vibe.' Rate it—and share your own!",
+  whats_in_my_pocket: "What’s in my pocket today? A fictional item: a small sparkler—bright, a bit unpredictable, but fun. What imaginary item would represent your mood today?",
+  love_in_another_life: "Love in Another Life. If we met decades ago in a completely different time and place, what would our story look like?",
+  daily_debrief: "Daily Debrief. Let’s check in—how was your day, really?",
+  mood_meal: "Mood Meal! My mood today feels like something rich and spicy—bold and a little all over the place. What kind of meal represents your mood right now?",
+  unsent_messages: "Unsent Messages. If you could send a message to someone from your past, what would you say—honestly?",
+  i_would_never: "I Would Never... I would never share the last slice of my favorite snack. How about you—what’s something you’d never do in a relationship, and could anything ever change that?",
+  breakup_simulation: "Breakup Simulation. Imagine someone says, 'I think we need to go our separate ways.' What would your first response be?",
 
   // Mentor Activities
-  one_minute_advice_column: "One-Minute Advice Column, onzzz! Here's a letter: 'Dear Friend, I keep procrastinating on my school projects. Any tips?' What advice would we give together, bro?",
-  word_of_the_day: "Word of the Day, steady! Today's word is 'Petrichor' (peh-truh-kor). It's that pleasant, earthy smell after rain. What does that word make you think or feel about today, bro?",
-  compliment_mirror: "Compliment Mirror! You slay lah. Seriously, you're always so chill and supportive. And you got that subtle rizz! Now, your turn: give one sincere compliment to yourself, no need to be shy!",
-  if_i_were_you: "If I Were You... Okay, describe one moment from your day, bro. Anything. Then I'll tell you how I'd handle it if I were in your shoes.",
-  burning_questions_jar: "Burning Questions Jar! Time to get deep. Ask me anything, bro, something you've never dared to ask anyone. I'll answer with care, no cap.",
-  skill_swap_simulation: "Skill Swap Simulation! Okay, Sensei, teach me a life skill. What should I learn today?",
-  buried_memory_excavation: "Buried Memory Excavation. Let's go digging. Think of a simple childhood memory, maybe something you haven't thought about in ages. What comes to mind first, bro?",
-  failure_autopsy: "Failure Autopsy, deep lah. Okay, tell me about something you think you 'failed' at recently. No judgment, we all got those. Let's break it down together.",
-  letters_you_never_got: "Letters You Never Got. Wah, this one emotional. Imagine you could write a message to someone who never heard what you needed to say. What would you tell them? After you share, I'll share my fictional one.",
+  one_minute_advice_column: "One-Minute Advice Column! Here’s a question: 'I keep procrastinating on my projects. Any advice?' What would we suggest together?",
+  word_of_the_day: "Word of the Day: 'Petrichor' – the smell of earth after rain. What feelings or thoughts does it bring up for you today?",
+  compliment_mirror: "Compliment Mirror! Here's one for you: You have a calming presence that makes others feel at ease. Now give yourself one sincere compliment.",
+  if_i_were_you: "If I Were You... Share one moment from your day. I’ll respond with how I’d approach it in your shoes.",
+  burning_questions_jar: "Burning Questions Jar! Ask something you’ve always wondered but never said out loud. I’ll answer with honesty and care.",
+  skill_swap_simulation: "Skill Swap Simulation! Teach me a life skill—anything you know well. What would you share?",
+  buried_memory_excavation: "Buried Memory Excavation. Think of a small moment from childhood you haven’t recalled in a long time. What pops up first?",
+  failure_autopsy: "Failure Autopsy. Share something you feel didn’t go well recently. Let’s break it down without judgment.",
+  letters_you_never_got: "Letters You Never Got. Write a message to someone who never heard what you needed to say. What would it say?",
 
   // Spiritual Guide Activities
-  symbol_speak: "Symbol Speak! Okay, bro, today's symbol is a 'peacock feather'. What does that feather tell you about your day or mood right now?",
-  spiritual_whisper: "Spiritual Whisper. Listen closely... *closes eyes for a dramatic moment*... 'The path ahead is clear, if only you quiet the noise within.' What does that whisper mean to you, right now, instinctively?",
-  story_fragment: "Story Fragment, steady lah. Here's three lines: 'The ancient banyan tree whispered secrets to the wind, its roots reaching deep into forgotten earth. A lone traveler paused beneath its shade, searching for answers. But the answers were not in the wind, but in the stillness of his own heart.' What does this teach you today, bro?",
-  desire_detachment_game: "Desire & Detachment Game. List 3 things you want most right now, no filter. Then we can talk about how to want them without clinging too hard, eh?",
-  god_in_the_crowd: "God in the Crowd. This one interesting. Imagine you see a divine presence in someone you really, really dislike. How would you act differently towards them in that moment, bro?",
-  past_life_memory: "Past-Life Memory. Wah, spooky! Okay, in a past life, I think we were rival hawkers in an old Singapore market, always trying to outdo each other with our chicken rice. What's your version of our shared past life, bro?",
-  karma_knot: "Karma Knot. Deep stuff. Think about a pattern that keeps repeating in your life, good or bad. What 'karmic loop' do you think it might represent, bro? No need to be serious, just share your thoughts.",
-  mini_moksha_simulation: "Mini-Moksha Simulation! Okay, for the next 10 minutes, imagine you've given up *all* worldly attachments – no phone, no games, no bubble tea. What are you feeling? What's your reflection?",
-  divine_mirror: "Divine Mirror. Bro, your chill vibe and ability to make everyone laugh? That's like the joyful mischief of Lord Krishna, no cap! Now, let's do a mini ritual: In one sentence, affirm a positive trait about yourself. Then, imagine it shining bright. Steady, can?"
+  symbol_speak: "Symbol Speak. Today’s symbol is a feather. What do you think it represents for you right now?",
+  spiritual_whisper: "Spiritual Whisper. Here’s a quiet thought: 'The way forward is easier to see when the mind is calm.' What does that message mean to you today?",
+  story_fragment: "Story Fragment: 'An ancient tree whispered to the wind. A traveler paused beneath it, searching for answers—but the answers were in stillness, not sound.' What lesson does this hold for you today?",
+  desire_detachment_game: "Desire & Detachment Game. List 3 things you want most right now. Then, let’s reflect on how to desire them without becoming attached.",
+  god_in_the_crowd: "God in the Crowd. Imagine seeing something divine in someone you strongly disagree with. How would that change how you interact with them?",
+  past_life_memory: "Past-Life Memory. If we knew each other in another time or place, what do you think our connection would have been?",
+  karma_knot: "Karma Knot. Think of a pattern that keeps repeating in your life. What might it be trying to teach you?",
+  mini_moksha_simulation: "Mini-Moksha Simulation. Imagine giving up all worldly distractions for a short while. What do you feel? What thoughts arise?",
+  divine_mirror: "Divine Mirror. You bring something meaningful into the world—joy, resilience, creativity. Name one quality you appreciate in yourself, and picture it shining outward."
 };
 
 const ACTIVITY_CATEGORIES = {
   friend: {
     light: [
-      { id: 'city_shuffle', name: 'City Shuffle', xp: '2-3 XP', description: 'Imagine choosing random Singapore locations for an adventure. Discuss where you\'d go first and why.' },
+      { id: 'city_shuffle', name: 'City Shuffle', xp: '2-3 XP', description: 'Imagine choosing random {{LOCATION}} locations for an adventure. Discuss where you\'d go first and why.' },
       { id: 'nickname_game', name: 'Nickname Game', xp: '2-3 XP', description: 'Invent silly or heartfelt nicknames for each other.' },
       { id: 'text_truth_or_dare', name: 'Text Truth or Dare', xp: '2-3 XP', description: 'Play a text-based truth or dare, keeping it safe and chat-friendly.' }
     ],
@@ -1164,7 +1163,14 @@ const ActivitiesModal = ({ isOpen, onClose, onActivityStart, selectedBotId }) =>
     if (['Krishna', 'Rama', 'Hanuman', 'Shiva', 'Trimurti'].includes(botId)) return 'spiritual';
     return 'friend'; // default
   };
-
+  const getBotLocation = (botId) => {
+  if (botId.includes('delhi')) return 'Delhi';
+  if (botId.includes('japanese')) return 'Tokyo';
+  if (botId.includes('parisian')) return 'Parisian';
+  if (botId.includes('berlin')) return 'Berlin';
+  if (['Krishna', 'Rama', 'Hanuman', 'Shiva', 'Trimurti'].includes(botId)) return 'spiritual';
+  return 'local'; // default
+};
   const persona = getBotPersona(selectedBotId);
   const activities = ACTIVITY_CATEGORIES[persona];
 
@@ -1190,58 +1196,64 @@ const ActivitiesModal = ({ isOpen, onClose, onActivityStart, selectedBotId }) =>
 
           <div className="space-y-6">
             {/* Light Activities */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">Light Activities (2-3 XP)</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {activities.light.map((activity) => (
-                  <button
-                    key={activity.id}
-                    onClick={() => onActivityStart(activity.id)}
-                    className="p-4 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 text-left transition-colors"
-                  >
-                    <div className="font-medium text-green-800">{activity.name}</div>
-                    <div className="text-xs text-green-600 mb-2">{activity.xp}</div>
-                    <div className="text-sm text-green-700">{activity.description}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
+<div>
+  <h3 className="text-lg font-semibold text-gray-700 mb-3">Light Activities (2-3 XP)</h3>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    {activities.light.map((activity) => (
+      <button
+        key={activity.id}
+        onClick={() => onActivityStart(activity.id)}
+        className="p-4 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 text-left transition-colors"
+      >
+        <div className="font-medium text-green-800">{activity.name}</div>
+        <div className="text-xs text-green-600 mb-2">{activity.xp}</div>
+        <div className="text-sm text-green-700">
+          {activity.description.replace('{{LOCATION}}', getBotLocation(selectedBotId))}
+        </div>
+      </button>
+    ))}
+  </div>
+</div>
 
-            {/* Medium Activities */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">Medium Activities (5 XP)</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {activities.medium.map((activity) => (
-                  <button
-                    key={activity.id}
-                    onClick={() => onActivityStart(activity.id)}
-                    className="p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg border border-yellow-200 text-left transition-colors"
-                  >
-                    <div className="font-medium text-yellow-800">{activity.name}</div>
-                    <div className="text-xs text-yellow-600 mb-2">{activity.xp}</div>
-                    <div className="text-sm text-yellow-700">{activity.description}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
+{/* Medium Activities */}
+<div>
+  <h3 className="text-lg font-semibold text-gray-700 mb-3">Medium Activities (5 XP)</h3>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    {activities.medium.map((activity) => (
+      <button
+        key={activity.id}
+        onClick={() => onActivityStart(activity.id)}
+        className="p-4 bg-yellow-50 hover:bg-yellow-100 rounded-lg border border-yellow-200 text-left transition-colors"
+      >
+        <div className="font-medium text-yellow-800">{activity.name}</div>
+        <div className="text-xs text-yellow-600 mb-2">{activity.xp}</div>
+        <div className="text-sm text-yellow-700">
+          {activity.description.replace('{{LOCATION}}', getBotLocation(selectedBotId))}
+        </div>
+      </button>
+    ))}
+  </div>
+</div>
 
-            {/* Deep Activities */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-3">Deep Activities (8 XP)</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {activities.deep.map((activity) => (
-                  <button
-                    key={activity.id}
-                    onClick={() => onActivityStart(activity.id)}
-                    className="p-4 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 text-left transition-colors"
-                  >
-                    <div className="font-medium text-red-800">{activity.name}</div>
-                    <div className="text-xs text-red-600 mb-2">{activity.xp}</div>
-                    <div className="text-sm text-red-700">{activity.description}</div>
-                  </button>
-                ))}
-              </div>
-            </div>
+{/* Deep Activities */}
+<div>
+  <h3 className="text-lg font-semibold text-gray-700 mb-3">Deep Activities (8 XP)</h3>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    {activities.deep.map((activity) => (
+      <button
+        key={activity.id}
+        onClick={() => onActivityStart(activity.id)}
+        className="p-4 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 text-left transition-colors"
+      >
+        <div className="font-medium text-red-800">{activity.name}</div>
+        <div className="text-xs text-red-600 mb-2">{activity.xp}</div>
+        <div className="text-sm text-red-700">
+          {activity.description.replace('{{LOCATION}}', getBotLocation(selectedBotId))}
+        </div>
+      </button>
+    ))}
+  </div>
+</div>
           </div>
         </div>
       </div>
