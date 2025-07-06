@@ -1037,7 +1037,7 @@ const bot_details = [
 
 const ACTIVITY_RESPONSES = {
   // Friend Persona Activities
-  city_shuffle: "Let’s do a City Shuffle. Choose any three interesting places—where would you go first, and why?",
+  city_shuffle: "Let's do a City Shuffle! Here are three interesting {{LOCATION}} places to choose from:\n\n{{LOCATION_LIST}}\n\nWhich one would you visit first, and why? What draws you to that place?",
   nickname_game: "It's time for the Nickname Game! Here’s one I came up with for you: 'Steady Vibes.' Now it’s your turn—what nickname would you give me?",
   text_truth_or_dare: "Text Truth or Dare! Truth: What’s a snack combination you genuinely enjoy, even if it’s a bit unusual?",
   dream_room_builder: "Let’s build a Dream Room. I’ll start: a giant beanbag chair for maximum relaxation and late-night gaming. What’s the first thing you'd add?",
@@ -1737,14 +1737,40 @@ const Dashboard = ({ clearChatCalled,setClearChatCalled,backgroundIndex,isWhiteI
   const [highlightedMessage, setHighlightedMessage] = useState(null);
   // Define available emoticons
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
-
+  // ✅ ADD: Bot location function
+  const getBotLocation = (botId) => {
+    if (botId.includes('delhi')) return 'Delhi';
+    if (botId.includes('japanese')) return 'Tokyo';
+    if (botId.includes('parisian')) return 'Parisian';
+    if (botId.includes('berlin')) return 'Berlin';
+    if (['Krishna', 'Rama', 'Hanuman', 'Shiva', 'Trimurti'].includes(botId)) return 'spiritual';
+    return 'local'; // default
+  };
   // Function to start an activity
 // ...existing code...
 // Function to start an activity
 const startActivity = (activityId) => {
   let response = ACTIVITY_RESPONSES[activityId];
   if (!response) return;
-
+  // ✅ ADD: Replace location placeholder for city_shuffle
+  // ✅ ENHANCED: Replace location placeholder with specific places for city_shuffle
+  if (activityId === 'city_shuffle') {
+    const botLocation = getBotLocation(selectedBotId);
+    
+    // Define specific locations for each city
+    const locationLists = {
+      'Delhi': '1. 🏛️ Red Fort - Historic Mughal fortress\n2. 🌸 Lodhi Gardens - Beautiful parks and tombs\n3. 🛍️ Chandni Chowk - Bustling traditional market',
+      'Tokyo': '1. 🌸 Shibuya Crossing - World\'s busiest intersection\n2. 🏯 Senso-ji Temple - Ancient Buddhist temple\n3. 🗼 Tokyo Skytree - Modern observation tower',
+      'Parisian': '1. 🗼 Eiffel Tower - Iconic iron lattice tower\n2. 🎨 Louvre Museum - World\'s largest art museum\n3. 🥐 Montmartre - Artistic hilltop district',
+      'Berlin': '1. 🚪 Brandenburg Gate - Historic neoclassical monument\n2. 🎨 East Side Gallery - Longest remaining Berlin Wall section\n3. 🏛️ Museum Island - UNESCO World Heritage site',
+      'spiritual': '1. 🕉️ Sacred meditation space - Inner temple of the heart\n2. 🌸 Garden of detachment - Where desires dissolve\n3. 🔥 Fire of transformation - Where ego burns away'
+    };
+    
+    const locationList = locationLists[botLocation] || '1. Local park\n2. City center\n3. Historic district';
+    
+    response = response.replace('{{LOCATION}}', botLocation);
+    response = response.replace('{{LOCATION_LIST}}', locationList);
+  }
   // Handle template responses that need username interpolation
   if (activityId === 'nickname_game') {
     response = `Onzzz! Nickname Game it is! For you, I'm thinking... 'Meme Master ${userDetails?.name || 'User'}'. Haha, jokin' lah! Maybe 'Steady ${userDetails?.name || 'User'}'? Your turn, bro, what nickname you got for me?`;
