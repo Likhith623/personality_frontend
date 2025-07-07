@@ -62,7 +62,7 @@ const UserDetails = ({ filter }) => {
     const formData = new FormData(e.target);
     const name = formData.get("name");
     const gender = formData.get("gender");
-    // const city = formData.get("city");
+    const city = formData.get("city");
 
     const {
       data: { user },
@@ -78,7 +78,7 @@ const UserDetails = ({ filter }) => {
         gender,
         email,
         auth_provider: authProvider,
-        city: "",
+        city,
       };
 
       // Store details in database
@@ -168,19 +168,19 @@ const UserDetails = ({ filter }) => {
           </Select>
         </LabelInputContainer>
 
-        {/* <LabelInputContainer className="mb-8">
+        <LabelInputContainer className="mb-8">
           <Label htmlFor="city" className="text-lg text-black/70">
-            What do you want your Novi to be from?
+            Enter your Location
           </Label>
-          <Select className="" id="city" name="city" disabled={!emailVerified}>
-            <SelectTrigger className="border text-black/70 border-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400">
-              <SelectValue placeholder="Select city of your Novi" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Delhi">Delhi</SelectItem>
-            </SelectContent>
-          </Select>
-        </LabelInputContainer> */}
+          <Input
+            id="city"
+            name="city"
+            placeholder="Enter your city"
+            type="text"
+            className="border text-black/70 border-gray-700 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
+            disabled={!emailVerified}
+          />
+        </LabelInputContainer>
 
         <button
           className="px-6 py-2 md:px-6 md:py-3 bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-xl flex justify-center items-center text-lg gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] w-full"
