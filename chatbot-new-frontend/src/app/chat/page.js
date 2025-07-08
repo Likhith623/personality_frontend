@@ -1417,16 +1417,19 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
 
 
   const clearChat = async () => {
-    const response = await fetch("https://novi.aigurukul.dev/clear-chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email_id: userDetails.email,
-        bot_id: selectedBotId,
-      }),
-    });
+    const response = await fetch(
+      "https://novi.aigurukul.dev/updated-clear-chat",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email_id: userDetails.email,
+          bot_id: selectedBotId,
+        }),
+      }
+    );
 
     const data = await response.json(); 
     console.log("Response body:", data); 
@@ -1436,7 +1439,25 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
     setClearChatCalled(true);
   };
 
+const forgetFriend = async () => {
+  const response = await fetch("https://novi.aigurukul.dev/clear-chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email_id: userDetails.email,
+      bot_id: selectedBotId,
+    }),
+  });
 
+  const data = await response.json();
+  console.log("Response body:", data);
+
+  localStorage.removeItem(`chat_${selectedBotId}`);
+  setMessages([]);
+  setClearChatCalled(true);
+};
 
   return (
     <div
@@ -1604,6 +1625,12 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                   className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
                 >
                   Clear Chat
+                </button>
+                <button
+                  onClick={forgetFriend}
+                  className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+                >
+                  Forget Friend
                 </button>
               </div>
 
