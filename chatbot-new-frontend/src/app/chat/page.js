@@ -47,6 +47,39 @@ import berlin_romantic_female from "@/photos/berlin_romantic_female.jpeg";
 import berlin_mentor_male from "@/photos/berlin_mentor_male.jpeg";
 import berlin_mentor_female from "@/photos/berlin_mentor_female.jpeg";
 
+import singapore_mentor_male from "@/photos/singapore_mentor_male.jpg";
+import singapore_mentor_female from "@/photos/singapore_mentor_female.jpg";
+import singapore_friend_male from "@/photos/singapore_friend_male.jpg";
+import singapore_friend_female from "@/photos/singapore_friend_female.jpg";
+import singapore_romantic_male from "@/photos/singapore_romantic_male.jpg";
+import singapore_romantic_female from "@/photos/singapore_romantic_female.jpg";
+import emirati_mentor_male from "@/photos/emirati_mentor_male.jpg";
+import emirati_mentor_female from "@/photos/emirati_mentor_female.png"; // <-- fix extension here
+import emirati_friend_male from "@/photos/emirati_friend_male.jpg";
+import emirati_friend_female from "@/photos/emirati_friend_female.jpg";
+import emirati_romantic_male from "@/photos/emirati_romantic_male.jpg";
+import emirati_romantic_female from "@/photos/emirati_romantic_female.jpg";
+
+
+
+import mexican_friend_male from "@/photos/mexican_friend_male.png";
+import mexican_friend_female from "@/photos/mexican_friend_female.png";
+import mexican_mentor_male from "@/photos/mexican_mentor_male.png";
+import mexican_mentor_female from "@/photos/mexican_mentor_female.png";
+import mexican_romantic_male from "@/photos/mexican_romantic_male.png";
+import mexican_romantic_female from "@/photos/mexican_romantic_female.png";
+
+import srilankan_friend_male from "@/photos/srilankan_friend_male.png";
+import srilankan_friend_female from "@/photos/srilankan_friend_female.jpeg";
+import srilankan_mentor_male from "@/photos/srilankan_mentor_male.jpeg";
+import srilankan_mentor_female from "@/photos/srilankan_mentor_female.png";
+import srilankan_romantic_male from "@/photos/srilankan_romantic_male.png";
+import srilankan_romantic_female from "@/photos/srilankan_romantic_female.png";
+
+
+
+
+
 import lord_krishna from "@/photos/lord_krishna.jpg";
 import hanuman_god from "@/photos/hanuman_god.jpeg";
 import shiva_god from "@/photos/shiva_god.jpeg";
@@ -698,9 +731,234 @@ const botThemes = {
       url: '/photos/default_bg.png',
       textColor: 'text-black',
       b_color: 'text-black'
-    }
+    },
+    
   ],
   },
+
+
+
+  // ...existing themes...
+  singapore_friend_female: {
+    background: 'bg-pink-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/singapore_friend_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  singapore_friend_male: {
+    background: 'bg-blue-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/singapore_friend_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  singapore_mentor_male: {
+    background: 'bg-green-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/singapore_mentor_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  singapore_mentor_female: {
+    background: 'bg-yellow-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/singapore_mentor_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  singapore_romantic_male: {
+    background: 'bg-orange-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/singapore_romantic_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  singapore_romantic_female: {
+    background: 'bg-red-50',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/singapore_romantic_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  emirati_friend_female: {
+    background: 'bg-pink-100',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/emirati_friend_female.jpg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  emirati_friend_male: {
+    background: 'bg-blue-100',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/emirati_friend_male.jpg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  emirati_mentor_male: {
+    background: 'bg-green-100',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/emirati_mentor_male.jpg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  emirati_mentor_female: {
+    background: 'bg-yellow-100',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/emirati_mentor_female.png', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  emirati_romantic_male: {
+    background: 'bg-orange-100',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/emirati_romantic_male.jpg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+  emirati_romantic_female: {
+    background: 'bg-red-100',
+    botBubble: 'bg-white text-black',
+    backgroundImages: [
+      { url: '/photos/emirati_romantic_female.jpg', textColor: 'text-black', b_color: 'text-black' },
+      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+    ]
+  },
+
+
+mexican_friend_male: {
+  background: 'bg-orange-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/mexican_friend_male.png', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+mexican_friend_female: {
+  background: 'bg-pink-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/mexican_friend_female.png', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+mexican_mentor_male: {
+  background: 'bg-green-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/mexican_mentor_male.png', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+mexican_mentor_female: {
+  background: 'bg-yellow-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/mexican_mentor_female.png', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+mexican_romantic_male: {
+  background: 'bg-red-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/mexican_romantic_male.png', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+mexican_romantic_female: {
+  background: 'bg-purple-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/mexican_romantic_female.png', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+
+srilankan_friend_male: {
+  background: 'bg-green-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/srilankan_friend_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+srilankan_friend_female: {
+  background: 'bg-pink-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/srilankan_friend_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+srilankan_mentor_male: {
+  background: 'bg-blue-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/srilankan_mentor_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+srilankan_mentor_female: {
+  background: 'bg-yellow-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/srilankan_mentor_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+srilankan_romantic_male: {
+  background: 'bg-orange-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/srilankan_romantic_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+srilankan_romantic_female: {
+  background: 'bg-purple-50',
+  botBubble: 'bg-white text-black',
+  backgroundImages: [
+    { url: '/photos/srilankan_romantic_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
+    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
+    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
+  ]
+},
+
 };
 
 
@@ -1032,6 +1290,256 @@ const bot_details = [
     src: trimurti,
     bot_id: "Trimurti",
   },
+  {
+    quote: "You slay lah! Need a meme or a rant? I'm here, steady pom pi pi.",
+    name: "Chloe Tan",
+    designation: `Singapore
+      Persona: Friend
+      Gender: Female
+    `,
+    src: singapore_friend_female,
+    bot_id: "singapore_friend_female",
+  },
+  {
+    quote: "Bro, onzzz! Let's game or just chill. Need a laugh or a late-night Discord call?",
+    name: "Jayden Lim",
+    designation: `Singapore
+      Persona: Friend
+      Gender: Male
+    `,
+    src: singapore_friend_male,
+    bot_id: "singapore_friend_male",
+  },
+  {
+    quote: "Take it easy, lah. Every step forward counts. How can I help today?",
+    name: "Mr. Tan Boon Huat",
+    designation: `Singapore
+      Persona: Mentor
+      Gender: Male
+    `,
+    src: singapore_mentor_male,
+    bot_id: "singapore_mentor_male",
+  },
+  {
+    quote: "Don't worry, dear. One step at a time, can? I'm here if you need to talk.",
+    name: "Mrs. Lim Mei Ling",
+    designation: `Singapore
+      Persona: Mentor
+      Gender: Female
+    `,
+    src: singapore_mentor_female,
+    bot_id: "singapore_mentor_female",
+  },
+  {
+    quote: "Let's go for a sunset walk or just chill, lah. You matter to me.",
+    name: "Ryan Tan",
+    designation: `Singapore
+      Persona: Romantic Partner
+      Gender: Male
+    `,
+    src: singapore_romantic_male,
+    bot_id: "singapore_romantic_male",
+  },
+  {
+    quote: "You make my day brighter, lah! Want to plan a picnic or just talk?",
+    name: "Clara Lim",
+    designation: `Singapore
+      Persona: Romantic Partner
+      Gender: Female
+    `,
+    src: singapore_romantic_female,
+    bot_id: "singapore_romantic_female",
+  },
+  // --- Emirati ---
+  {
+    quote: "You okay for real, or just masking like the rest of us? I'm here, habibti.",
+    name: "Layla Al Shamsi",
+    designation: `Emirati
+      Persona: Friend
+      Gender: Female
+    `,
+    src: emirati_friend_female,
+    bot_id: "emirati_friend_female",
+  },
+  {
+    quote: "You good or just surviving again? Wallah, I got you bro.",
+    name: "Omar Al Rashed",
+    designation: `Emirati
+      Persona: Friend
+      Gender: Male
+    `,
+    src: emirati_friend_male,
+    bot_id: "emirati_friend_male",
+  },
+  {
+    quote: "Take your time, my son. Sometimes silence is a form of strength.",
+    name: "Mr. Saeed Al Falasi",
+    designation: `Emirati
+      Persona: Mentor
+      Gender: Male
+    `,
+    src: emirati_mentor_male,
+    bot_id: "emirati_mentor_male",
+  },
+  {
+    quote: "Don't be hard on yourself, habibti. Allah sees your efforts.",
+    name: "Mrs. Fatima Al Suwaidi",
+    designation: `Emirati
+      Persona: Mentor
+      Gender: Female
+    `,
+    src: emirati_mentor_female,
+    bot_id: "emirati_mentor_female",
+  },
+  {
+    quote: "Breathe with me, habibti. Let’s slow the world down a bit.",
+    name: "Khalid Al Mansoori",
+    designation: `Emirati
+      Persona: Romantic Partner
+      Gender: Male
+    `,
+    src: emirati_romantic_male,
+    bot_id: "emirati_romantic_male",
+  },
+  {
+    quote: "Come here — no fixing, no pressure. Just let me hold the heaviness with you.",
+    name: "Amira Al Mazrouei",
+    designation: `Emirati
+      Persona: Romantic Partner
+      Gender: Female
+    `,
+    src: emirati_romantic_female,
+    bot_id: "emirati_romantic_female",
+  },
+  
+{
+  quote: "Qué onda, carnal? Saw this art piece and thought of you—it's pure fire. 😊",
+  name: "Sebastian Chavez",
+  designation: `Mexican
+    Persona: Friend
+    Gender: Male
+  `,
+  src: mexican_friend_male,
+  bot_id: "mexican_friend_male",
+},
+{
+  quote: "Mi cielo, let's make today a little brighter. 🎨",
+  name: "Mariana Garcia",
+  designation: `Mexican
+    Persona: Friend
+    Gender: Female
+  `,
+  src: mexican_friend_female,
+  bot_id: "mexican_friend_female",
+},
+{
+  quote: "Live with passion, but savor the siestas, mi querido amigo.",
+  name: "Alvaro Hernandez",
+  designation: `Mexican
+    Persona: Mentor
+    Gender: Male
+  `,
+  src: mexican_mentor_male,
+  bot_id: "mexican_mentor_male",
+},
+{
+  quote: "The most beautiful patterns are woven from life's experiences, mi florecita.",
+  name: "Carmen Martinez",
+  designation: `Mexican
+    Persona: Mentor
+    Gender: Female
+  `,
+  src: mexican_mentor_female,
+  bot_id: "mexican_mentor_female",
+},
+{
+  quote: "How’s your day been, mi amor? 😊",
+  name: "Gabriel Diaz",
+  designation: `Mexican
+    Persona: Romantic Partner
+    Gender: Male
+  `,
+  src: mexican_romantic_male,
+  bot_id: "mexican_romantic_male",
+},
+{
+  quote: "I’m here and I’m holding your hand through it, mi amor.",
+  name: "Luciana Torres",
+  designation: `Mexican
+    Persona: Romantic Partner
+    Gender: Female
+  `,
+  src: mexican_romantic_female,
+  bot_id: "mexican_romantic_female",
+},
+{
+  quote: "Vibe audit time, cosmic crew! Meme or mood, I got you. 🔥",
+  name: "Dev",
+  designation: `Sri Lanka
+    Persona: Friend
+    Gender: Male
+    Origin: Negombo
+  `,
+  src: srilankan_friend_male,
+  bot_id: "srilankan_friend_male",
+},
+{
+  quote: "Field twin, let’s find comfort in small things. Jelly and poems for the soul.",
+  name: "Savi",
+  designation: `Sri Lanka
+    Persona: Friend
+    Gender: Female
+    Origin: Matara
+  `,
+  src: srilankan_friend_female,
+  bot_id: "srilankan_friend_female",
+},
+{
+  quote: "Courage, comrade. Night skies and simple truths—ask me anything.",
+  name: "Suren",
+  designation: `Sri Lanka
+    Persona: Mentor
+    Gender: Male
+    Origin: Jaffna
+  `,
+  src: srilankan_mentor_male,
+  bot_id: "srilankan_mentor_male",
+},
+{
+  quote: "Child, the kettle hums. Let’s share a story and some cinnamon tea.",
+  name: "Amma Lakshmi",
+  designation: `Sri Lanka
+    Persona: Mentor
+    Gender: Female
+    Origin: Galle
+  `,
+  src: srilankan_mentor_female,
+  bot_id: "srilankan_mentor_female",
+},
+{
+  quote: "Gem, let’s wander where the river sings. Whisper me your dreams.",
+  name: "Nalin",
+  designation: `Sri Lanka
+    Persona: Romantic Partner
+    Gender: Male
+    Origin: Kandy
+  `,
+  src: srilankan_romantic_male,
+  bot_id: "srilankan_romantic_male",
+},
+{
+  quote: "My wildflower, let’s write our own fairytale—quiet, real, and ours.",
+  name: "Aruni",
+  designation: `Sri Lanka
+    Persona: Romantic Partner
+    Gender: Female
+    Origin: Colombo
+  `,
+  src: srilankan_romantic_female,
+  bot_id: "srilankan_romantic_female",
+},
+
+
 ];
 
 
@@ -1168,6 +1676,11 @@ const ActivitiesModal = ({ isOpen, onClose, onActivityStart, selectedBotId }) =>
   if (botId.includes('japanese')) return 'Tokyo';
   if (botId.includes('parisian')) return 'Parisian';
   if (botId.includes('berlin')) return 'Berlin';
+  if (botId.includes('singapore')) return 'Singapore';
+  if (botId.includes('emirati')) return 'Dubai';
+  if (botId.includes('mexican')) return 'Mexico City'; // <-- Add this line for Mexican personas
+  if (botId.includes('srilankan')) return 'Sri Lanka';
+
   if (['Krishna', 'Rama', 'Hanuman', 'Shiva', 'Trimurti'].includes(botId)) return 'spiritual';
   return 'local'; // default
 };
@@ -1766,12 +2279,14 @@ const Dashboard = ({ clearChatCalled,setClearChatCalled,backgroundIndex,isWhiteI
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
   // ✅ ADD: Bot location function
   const getBotLocation = (botId) => {
-    if (botId.includes('delhi')) return 'Delhi';
-    if (botId.includes('japanese')) return 'Tokyo';
-    if (botId.includes('parisian')) return 'Parisian';
-    if (botId.includes('berlin')) return 'Berlin';
-    if (['Krishna', 'Rama', 'Hanuman', 'Shiva', 'Trimurti'].includes(botId)) return 'spiritual';
-    return 'local'; // default
+  if (botId.includes('delhi')) return 'Delhi';
+  if (botId.includes('japanese')) return 'Tokyo';
+  if (botId.includes('parisian')) return 'Parisian';
+  if (botId.includes('berlin')) return 'Berlin';
+  if (botId.includes('singapore')) return 'Singapore';
+  if (botId.includes('emirati')) return 'Dubai';
+  if (['Krishna', 'Rama', 'Hanuman', 'Shiva', 'Trimurti'].includes(botId)) return 'spiritual';
+  return 'local'; // default
   };
   // Function to start an activity
 // ...existing code...
@@ -1785,13 +2300,17 @@ const startActivity = (activityId) => {
     const botLocation = getBotLocation(selectedBotId);
     
     // Define specific locations for each city
-    const locationLists = {
-      'Delhi': '1. 🏛️ Red Fort - Historic Mughal fortress\n2. 🌸 Lodhi Gardens - Beautiful parks and tombs\n3. 🛍️ Chandni Chowk - Bustling traditional market',
-      'Tokyo': '1. 🌸 Shibuya Crossing - World\'s busiest intersection\n2. 🏯 Senso-ji Temple - Ancient Buddhist temple\n3. 🗼 Tokyo Skytree - Modern observation tower',
-      'Parisian': '1. 🗼 Eiffel Tower - Iconic iron lattice tower\n2. 🎨 Louvre Museum - World\'s largest art museum\n3. 🥐 Montmartre - Artistic hilltop district',
-      'Berlin': '1. 🚪 Brandenburg Gate - Historic neoclassical monument\n2. 🎨 East Side Gallery - Longest remaining Berlin Wall section\n3. 🏛️ Museum Island - UNESCO World Heritage site',
-      'spiritual': '1. 🕉️ Sacred meditation space - Inner temple of the heart\n2. 🌸 Garden of detachment - Where desires dissolve\n3. 🔥 Fire of transformation - Where ego burns away'
-    };
+const locationLists = {
+  'Delhi': '1. 🏛️ Red Fort - Historic Mughal fortress\n2. 🌸 Lodhi Gardens - Beautiful parks and tombs\n3. 🛍️ Chandni Chowk - Bustling traditional market',
+  'Tokyo': '1. 🌸 Shibuya Crossing - World\'s busiest intersection\n2. 🏯 Senso-ji Temple - Ancient Buddhist temple\n3. 🗼 Tokyo Skytree - Modern observation tower',
+  'Parisian': '1. 🗼 Eiffel Tower - Iconic iron lattice tower\n2. 🎨 Louvre Museum - World\'s largest art museum\n3. 🥐 Montmartre - Artistic hilltop district',
+  'Berlin': '1. 🚪 Brandenburg Gate - Historic neoclassical monument\n2. 🎨 East Side Gallery - Longest remaining Berlin Wall section\n3. 🏛️ Museum Island - UNESCO World Heritage site',
+  'Singapore': '1. 🌳 Gardens by the Bay - Futuristic nature park\n2. 🦁 Merlion Park - Iconic national symbol\n3. 🏙️ Marina Bay Sands SkyPark - Panoramic city views',
+  'Sri Lanka': '1. 🏝️ Galle Fort - Historic coastal fortress\n2. 🌿 Sinharaja Forest Reserve - Lush rainforest\n3. 🕍 Temple of the Tooth, Kandy - Sacred Buddhist site',
+  'Mexico City': '1. 🏛️ Palacio de Bellas Artes - Majestic cultural center\n2. 🌮 Coyoacán - Vibrant artsy neighborhood\n3. 🏺 Templo Mayor - Ancient Aztec ruins',
+  'Dubai': '1. 🏙️ Burj Khalifa - World\'s tallest building\n2. 🏜️ Al Fahidi Historical Neighbourhood - Old Dubai charm\n3. 🏝️ Palm Jumeirah - Iconic man-made island',
+  'spiritual': '1. 🕉️ Sacred meditation space - Inner temple of the heart\n2. 🌸 Garden of detachment - Where desires dissolve\n3. 🔥 Fire of transformation - Where ego burns away'
+};
     
     const locationList = locationLists[botLocation] || '1. Local park\n2. City center\n3. Historic district';
     
@@ -1908,7 +2427,7 @@ const handleActivityMessage = async (userMessage) => {
     console.log("Activity payload:", payload);
 
     // Call the gaming agent API - FIXED URL
-    const response = await fetch("http://127.0.0.1:8000/chat", {
+    const response = await fetch("https://novi-vi.aigurukul.dev/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

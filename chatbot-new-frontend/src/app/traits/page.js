@@ -36,7 +36,8 @@ const TraitsPage = () => {
   const [languages, setLanguages] = useState([]);
   const { selectedBotId } = useBot();
 
-  useEffect(() => {
+
+useEffect(() => {
     // checks the selected bot's origin from the bot_id and sets the languages based on it
     if (selectedBotId.includes("delhi")) {
       setLanguages(["English", "Hinglish"]);
@@ -46,10 +47,20 @@ const TraitsPage = () => {
       setLanguages(["English", "German"]);
     } else if (selectedBotId.includes("parisian")) {
       setLanguages(["English", "French"]);
+    } else if (selectedBotId.includes("singapore")) {
+      setLanguages(["English", "Mandarin"]);
+    } else if (selectedBotId.includes("emirati")) {
+      setLanguages(["English", "Arabic"]);
+    } else if (selectedBotId.includes("mexican")) {
+      setLanguages(["English", "Spanish"]);
+    } else if (selectedBotId.includes("srilankan")) {
+      setLanguages(["English", "Sinhala", "Tamil", "Hindi"]);
     } else {
       setLanguages(["English"]); // Default language if filter doesn't match
     }
   }, [selectedBotId, setLanguages]);
+
+
 
   const toggleTrait = (trait) => {
     setSelectedTraits((prevTraits) => {
