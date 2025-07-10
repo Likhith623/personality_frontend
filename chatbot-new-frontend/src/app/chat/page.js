@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
 import { systemPatterns, isSystemMessageContent } from "@/constants/identifiers";
-
+import StripeCheckoutButton from "@/components/StripeCheckoutButton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBot } from "@/support/BotContext";
 import { useTraits } from "@/support/TraitsContext";
@@ -2131,6 +2131,7 @@ const forgetFriend = async () => {
                   selectedBotId={selectedBotId}
                   userDetails={userDetails}
                 />
+
               </div>
               <div>
                 <button
@@ -2170,7 +2171,11 @@ const forgetFriend = async () => {
 >
   🎮 Activities
 </button>
-
+<div className="mt-4">
+  {userDetails.subscription_status !== "Premium" && (
+    <StripeCheckoutButton amount={499} email={userDetails.email} />
+  )}
+</div>
             </div>
             <FloatingDockDemo />
           </div>
