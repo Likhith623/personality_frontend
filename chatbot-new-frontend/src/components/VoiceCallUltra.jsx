@@ -42,6 +42,35 @@ import shiva_god from "@/photos/shiva_god.jpeg";
 import trimurti from "@/photos/trimurti.jpg";
 import hanuman_god from "@/photos/hanuman_god.jpeg";
 
+
+import singapore_mentor_male from "@/photos/singapore_mentor_male.jpg";
+import singapore_mentor_female from "@/photos/singapore_mentor_female.jpg";
+import singapore_friend_male from "@/photos/singapore_friend_male.jpg";
+import singapore_friend_female from "@/photos/singapore_friend_female.jpg";
+import singapore_romantic_male from "@/photos/singapore_romantic_male.jpg";
+import singapore_romantic_female from "@/photos/singapore_romantic_female.jpg";
+
+import emirati_mentor_male from "@/photos/emirati_mentor_male.jpg";
+import emirati_mentor_female from "@/photos/emirati_mentor_female.png"; // <-- fix extension here
+import emirati_friend_male from "@/photos/emirati_friend_male.jpg";
+import emirati_friend_female from "@/photos/emirati_friend_female.jpg";
+import emirati_romantic_male from "@/photos/emirati_romantic_male.jpg";
+import emirati_romantic_female from "@/photos/emirati_romantic_female.jpg";
+
+import mexican_friend_male from "@/photos/mexican_friend_male.png";
+import mexican_friend_female from "@/photos/mexican_friend_female.png";
+import mexican_mentor_male from "@/photos/mexican_mentor_male.png";
+import mexican_mentor_female from "@/photos/mexican_mentor_female.png";
+import mexican_romantic_male from "@/photos/mexican_romantic_male.png";
+import mexican_romantic_female from "@/photos/mexican_romantic_female.png";
+
+import srilankan_friend_male from "@/photos/srilankan_friend_male.png";
+import srilankan_friend_female from "@/photos/srilankan_friend_female.jpeg";
+import srilankan_mentor_male from "@/photos/srilankan_mentor_male.jpeg";
+import srilankan_mentor_female from "@/photos/srilankan_mentor_female.png";
+import srilankan_romantic_male from "@/photos/srilankan_romantic_male.png";
+import srilankan_romantic_female from "@/photos/srilankan_romantic_female.png";
+
 import defaultAvatar from "@/photos/defaultforvoice.png";
 
 // ===========================================
@@ -93,6 +122,30 @@ const BOT_DETAILS = [
   { bot_id: "berlin_friend_female", name: "Lina Voigt" },
   { bot_id: "berlin_romantic_male", name: "Max Hoffman" },
   { bot_id: "berlin_romantic_female", name: "Lena Meyer" },
+  { bot_id: "singapore_mentor_male", name: "Wei Ming Tan" },
+  { bot_id: "singapore_mentor_female", name: "Li Ling Chen" },
+  { bot_id: "singapore_friend_male", name: "Jun Kai Lim" },
+  { bot_id: "singapore_friend_female", name: "Mei Yee Ong" },
+  { bot_id: "singapore_romantic_male", name: "Darren Lee" },
+  { bot_id: "singapore_romantic_female", name: "Rachel Tan" },
+  { bot_id: "emirati_mentor_male", name: "Omar Al-Farsi" },
+  { bot_id: "emirati_mentor_female", name: "Fatima Al-Mansoori" },
+  { bot_id: "emirati_friend_male", name: "Saeed Al-Nuaimi" },
+  { bot_id: "emirati_friend_female", name: "Aisha Al-Suwaidi" },
+  { bot_id: "emirati_romantic_male", name: "Khalid Al-Mazrouei" },
+  { bot_id: "emirati_romantic_female", name: "Layla Al-Qasimi" },
+  { bot_id: "mexican_friend_male", name: "Sebastian Chavez" },
+  { bot_id: "mexican_friend_female", name: "Mariana Garcia" },
+  { bot_id: "mexican_mentor_male", name: "Alvaro Hernandez" },
+  { bot_id: "mexican_mentor_female", name: "Carmen Martinez" },
+  { bot_id: "mexican_romantic_male", name: "Gabriel Diaz" },
+  { bot_id: "mexican_romantic_female", name: "Luciana Torres" },
+  { bot_id: "srilankan_friend_male", name: "Dev" },
+  { bot_id: "srilankan_friend_female", name: "Savi" },
+  { bot_id: "srilankan_mentor_male", name: "Suren" },
+  { bot_id: "srilankan_mentor_female", name: "Amma Lakshmi" },
+  { bot_id: "srilankan_romantic_male", name: "Nalin" },
+  { bot_id: "srilankan_romantic_female", name: "Aruni" },
   { bot_id: "Krishna", name: "Krishna" },
   { bot_id: "Rama", name: "Rama" },
   { bot_id: "Shiva", name: "Shiva" },
@@ -138,6 +191,30 @@ const EnhancedBotAvatar = ({ audioLevel = 0, isListening, isSpeaking, isProcessi
       'Shiva': shiva_god?.default || shiva_god?.src || shiva_god,
       'Trimurti': trimurti?.default || trimurti?.src || trimurti,
       'Hanuman': hanuman_god?.default || hanuman_god?.src || hanuman_god,
+      'singapore_mentor_male': singapore_mentor_male?.default || singapore_mentor_male?.src || singapore_mentor_male,
+      'singapore_mentor_female': singapore_mentor_female?.default || singapore_mentor_female?.src || singapore_mentor_female,
+      'singapore_friend_male': singapore_friend_male?.default || singapore_friend_male?.src || singapore_friend_male,
+      'singapore_friend_female': singapore_friend_female?.default || singapore_friend_female?.src || singapore_friend_female,
+      'singapore_romantic_male': singapore_romantic_male?.default || singapore_romantic_male?.src || singapore_romantic_male,
+      'singapore_romantic_female': singapore_romantic_female?.default || singapore_romantic_female?.src || singapore_romantic_female,
+      'emirati_mentor_male': emirati_mentor_male?.default || emirati_mentor_male?.src || emirati_mentor_male,
+      'emirati_mentor_female': emirati_mentor_female?.default || emirati_mentor_female?.src || emirati_mentor_female,
+      'emirati_friend_male': emirati_friend_male?.default || emirati_friend_male?.src || emirati_friend_male,
+      'emirati_friend_female': emirati_friend_female?.default || emirati_friend_female?.src || emirati_friend_female,
+      'emirati_romantic_male': emirati_romantic_male?.default || emirati_romantic_male?.src || emirati_romantic_male,
+      'emirati_romantic_female': emirati_romantic_female?.default || emirati_romantic_female?.src || emirati_romantic_female,
+      'mexican_friend_male': mexican_friend_male?.default || mexican_friend_male?.src || mexican_friend_male,
+      'mexican_friend_female': mexican_friend_female?.default || mexican_friend_female?.src || mexican_friend_female,
+      'mexican_mentor_male': mexican_mentor_male?.default || mexican_mentor_male?.src || mexican_mentor_male,
+      'mexican_mentor_female': mexican_mentor_female?.default || mexican_mentor_female?.src || mexican_mentor_female,
+      'mexican_romantic_male': mexican_romantic_male?.default || mexican_romantic_male?.src || mexican_romantic_male,
+      'mexican_romantic_female': mexican_romantic_female?.default || mexican_romantic_female?.src || mexican_romantic_female,
+      'srilankan_friend_male': srilankan_friend_male?.default || srilankan_friend_male?.src || srilankan_friend_male,
+      'srilankan_friend_female': srilankan_friend_female?.default || srilankan_friend_female?.src || srilankan_friend_female,
+      'srilankan_mentor_male': srilankan_mentor_male?.default || srilankan_mentor_male?.src || srilankan_mentor_male,
+      'srilankan_mentor_female': srilankan_mentor_female?.default || srilankan_mentor_female?.src || srilankan_mentor_female,
+      'srilankan_romantic_male': srilankan_romantic_male?.default || srilankan_romantic_male?.src || srilankan_romantic_male,
+      'srilankan_romantic_female': srilankan_romantic_female?.default || srilankan_romantic_female?.src || srilankan_romantic_female,
     };
     
     return avatarMap[botId] || defaultAvatar;

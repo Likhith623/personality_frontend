@@ -428,10 +428,45 @@ const allBotIds = useMemo(() => [
   'parisian_friend_female', 'parisian_friend_male',
   'parisian_romantic_female', 'parisian_romantic_male', // ✅ ADDED: was missing
   
+
+
+  // Singapore bots
+  'singapore_mentor_male',
+  'singapore_mentor_female',
+  'singapore_friend_male',
+  'singapore_friend_female',
+  'singapore_romantic_male',
+  'singapore_romantic_female',
+
+  // Emirati bots
+  'emirati_mentor_male',
+  'emirati_mentor_female',
+  'emirati_friend_male',
+  'emirati_friend_female',
+  'emirati_romantic_male',
+  'emirati_romantic_female',
+
+  
   // Berlin bots
   'berlin_mentor_female', 'berlin_mentor_male', 
   'berlin_friend_female', 'berlin_friend_male',
   'berlin_romantic_female', 'berlin_romantic_male',
+
+    // Mexican bots
+  'mexican_friend_male',
+  'mexican_friend_female',
+  'mexican_mentor_male',
+  'mexican_mentor_female',
+  'mexican_romantic_male',
+  'mexican_romantic_female',
+
+    // Sri Lankan bots
+  'srilankan_friend_male',
+  'srilankan_friend_female',
+  'srilankan_mentor_male',
+  'srilankan_mentor_female',
+  'srilankan_romantic_male',
+  'srilankan_romantic_female',
   
   // ✅ ADDED: Spiritual guides (these were completely missing!)
   'Krishna', 'Rama', 'Shiva', 'Hanuman', 'Trimurti'
