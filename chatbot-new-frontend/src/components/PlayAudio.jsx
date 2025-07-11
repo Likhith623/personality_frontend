@@ -36,6 +36,36 @@ import berlin_friend_female from "@/photos/berlin_friend_female.jpeg";
 import berlin_romantic_male from "@/photos/berlin_romantic_male.jpeg";
 import berlin_romantic_female from "@/photos/berlin_romantic_female.jpeg";
 
+
+
+import singapore_mentor_male from "@/photos/singapore_mentor_male.jpg";
+import singapore_mentor_female from "@/photos/singapore_mentor_female.jpg";
+import singapore_friend_male from "@/photos/singapore_friend_male.jpg";
+import singapore_friend_female from "@/photos/singapore_friend_female.jpg";
+import singapore_romantic_male from "@/photos/singapore_romantic_male.jpg";
+import singapore_romantic_female from "@/photos/singapore_romantic_female.jpg";
+
+import emirati_mentor_male from "@/photos/emirati_mentor_male.jpg";
+import emirati_mentor_female from "@/photos/emirati_mentor_female.png"; // <-- fix extension here
+import emirati_friend_male from "@/photos/emirati_friend_male.jpg";
+import emirati_friend_female from "@/photos/emirati_friend_female.jpg";
+import emirati_romantic_male from "@/photos/emirati_romantic_male.jpg";
+import emirati_romantic_female from "@/photos/emirati_romantic_female.jpg";
+
+import mexican_friend_male from "@/photos/mexican_friend_male.png";
+import mexican_friend_female from "@/photos/mexican_friend_female.png";
+import mexican_mentor_male from "@/photos/mexican_mentor_male.png";
+import mexican_mentor_female from "@/photos/mexican_mentor_female.png";
+import mexican_romantic_male from "@/photos/mexican_romantic_male.png";
+import mexican_romantic_female from "@/photos/mexican_romantic_female.png";
+
+import srilankan_friend_male from "@/photos/srilankan_friend_male.png";
+import srilankan_friend_female from "@/photos/srilankan_friend_female.jpeg";
+import srilankan_mentor_male from "@/photos/srilankan_mentor_male.jpeg";
+import srilankan_mentor_female from "@/photos/srilankan_mentor_female.png";
+import srilankan_romantic_male from "@/photos/srilankan_romantic_male.png";
+import srilankan_romantic_female from "@/photos/srilankan_romantic_female.png";
+
 import lord_krishna from "@/photos/lord_krishna.jpg";
 import rama_god from "@/photos/rama_god.jpeg";
 import shiva_god from "@/photos/shiva_god.jpeg";
@@ -72,6 +102,42 @@ const avatarMap = {
   berlin_friend_female,
   berlin_romantic_male,
   berlin_romantic_female,
+
+    // Add Singapore personas
+  singapore_mentor_male,
+  singapore_mentor_female,
+  singapore_friend_male,
+  singapore_friend_female,
+  singapore_romantic_male,
+  singapore_romantic_female,
+
+  // Add Emirati personas
+  emirati_mentor_male,
+  emirati_mentor_female,
+  emirati_friend_male,
+  emirati_friend_female,
+  emirati_romantic_male,
+  emirati_romantic_female,
+
+
+    // Mexican personas
+  mexican_friend_male,
+  mexican_friend_female,
+  mexican_mentor_male,
+  mexican_mentor_female,
+  mexican_romantic_male,
+  mexican_romantic_female,
+
+
+    // Sri Lankan personas
+  srilankan_friend_male,
+  srilankan_friend_female,
+  srilankan_mentor_male,
+  srilankan_mentor_female,
+  srilankan_romantic_male,
+  srilankan_romantic_female,
+
+
 
   Krishna: lord_krishna,
   Rama: rama_god,
