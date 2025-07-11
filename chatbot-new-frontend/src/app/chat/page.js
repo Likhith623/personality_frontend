@@ -1991,15 +1991,6 @@ const getBotLocation = (botId) => {
 
 const CATEGORY_ORDER = ["AI Art", "AI Fiction", "Entertainment"];
 
-const getBotPersona = (botId) => {
-  if (!botId) return "friend";
-  if (botId.includes("friend")) return "friend";
-  if (botId.includes("romantic")) return "romantic";
-  if (botId.includes("mentor")) return "mentor";
-  if (["Krishna", "Rama", "Hanuman", "Shiva", "Trimurti"].includes(botId))
-    return "spiritual";
-  return "friend"; // default
-};
 
 const CATEGORY_DISPLAY_ORDER = ["AI Art", "AI Fiction", "Entertainment"];
 const CATEGORY_DISPLAY_LABELS = {
@@ -2671,63 +2662,31 @@ const endActivity = () => {
   console.log("✅ Activity ended, returning to normal chat mode");
 };
 
+  // ...existing code...
 
-      const locationList =
-        locationLists[botLocation] ||
-        "1. Local park\n2. City center\n3. Historic district";
+  // Function to handle activity-specific messages
+  const handleActivityMessage = async (userMessage) => {
+  if (!currentActivity) return;
 
-      response = response.replace("{{LOCATION}}", botLocation);
-      response = response.replace("{{LOCATION_LIST}}", locationList);
-    }
-    // Handle template responses that need username interpolation
-    if (activityId === "nickname_game") {
-      response = `Onzzz! Nickname Game it is! For you, I'm thinking... 'Meme Master ${
-        userDetails?.name || "User"
-      }'. Haha, jokin' lah! Maybe 'Steady ${
-        userDetails?.name || "User"
-      }'? Your turn, bro, what nickname you got for me?`;
-    } else if (activityId === "compliment_mirror") {
-      response = `Compliment Mirror! You slay lah, ${
-        userDetails?.name || "User"
-      }. Seriously, you're always so chill and supportive. And you got that subtle rizz! Now, your turn: give one sincere compliment to yourself, no need to be shy!`;
-    } else if (activityId === "skill_swap_simulation") {
-      response = `Skill Swap Simulation! Okay, Sensei ${
-        userDetails?.name || "User"
-      }, teach me a life skill. What should I learn today?`;
-    }
+  const currentTime = new Date();
+  
+  // Add user message to activity history in the correct format
+  const userHistoryEntry = `User: ${userMessage}`;
+  setActivityHistory(prev => [...prev, userHistoryEntry]);
 
-    // Set current activity
-    setCurrentActivity(activityId);
+  try {
+    setIsTyping(true);
 
-    // Add bot's initial response to chat
-    const currentTime = new Date();
-    const activityMessage = {
-      text: response,
-      sender: "bot",
-      id: `activity_${Date.now()}`,
-      feedback: "",
-      reaction: "",
-      timestamp: currentTime,
-      bot_id: selectedBotId,
-      isSystemMessage: true,
-      isActivityMessage: true, // ✅ CRITICAL: Mark as activity message
-      activityId: activityId,
-      voice_only: false, // ✅ CRITICAL: Force text-only
+    // Prepare payload for gaming agent - Fixed format
+    const payload = {
+      persona: selectedBotId,
+      activity: currentActivity,
+      user_input: userMessage,
+      username: userDetails?.name || "User",
+      history: [...activityHistory, userHistoryEntry] // Include the current message
     };
 
-    setMessages((prev) => [...prev, activityMessage]);
-
-    // Initialize activity history with the bot's opening message
-    setActivityHistory([`Bot: ${response}`]);
-
-    setIsActivitiesOpen(false);
-    scrollToBottom();
-  };
-
-  // ...existing code...
-  // Function to end current activity
-  // ...existing code...
-
+    console.log("Activity payload:", payload);
 
     // Call the gaming agent API - FIXED URL
     const response = await fetch("https://novi-vi.aigurukul.dev/chat", {
@@ -2738,157 +2697,69 @@ const endActivity = () => {
       body: JSON.stringify(payload),
     });
 
+    const data = await response.json();
+    console.log("🎯 Full activity response:", data); // Debug log
+    setIsTyping(false);
 
-    const currentTime = new Date();
+    if (data.error) {
+      const errorMessage = "Sorry, there was an error with the activity. Let's continue our chat normally.";
+      setMessages(prev => [...prev, {
+        text: errorMessage,
+        sender: 'bot',
+        id: `activity_error_${Date.now()}`,
+        feedback: "",
+        reaction: "",
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: true
+      }]);
+      endActivity();
+    } else {
+      // ✅ FIXED: Extract response from the correct path
+      const botResponseText = data.reply?.raw || data.response || "Sorry, I didn't get a proper response.";
+      
+      // Add bot response to chat
+      const botResponse = {
+        text: botResponseText,
+        sender: 'bot',
+        id: data.message_id || `activity_${Date.now()}`,
+        feedback: "",
+        reaction: "",
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: true,
+        isActivityMessage: true,  // ✅ CRITICAL: This marks it as activity message
+        activityId: currentActivity,
+        voice_only: false  // ✅ CRITICAL: Force text-only for activity messages
+      };
 
-    // Calculate XP based on activity difficulty
-    let xpMessage = "";
-    const activityDetail = Object.values(ACTIVITY_CATEGORIES)
-      .flatMap((category) => [
-        ...category.light,
-        ...category.medium,
-        ...category.deep,
-      ])
-      .find((activity) => activity.id === currentActivity);
-
-    if (activityDetail) {
-      if (activityDetail.xp.includes("2-3")) xpMessage = " +3 XP earned! 🌟";
-      else if (activityDetail.xp.includes("5")) xpMessage = " +5 XP earned! 🌟";
-      else if (activityDetail.xp.includes("8")) xpMessage = " +8 XP earned! 🌟";
+      setMessages(prev => [...prev, botResponse]);
+      
+      // Add bot response to activity history
+      setActivityHistory(prev => [...prev, `Bot: ${botResponseText}`]);
     }
 
-    const endMessage = {
-      text: `🎉 Activity "${currentActivity.replace(
-        /_/g,
-        " "
-      )}" completed!${xpMessage}\n\nBack to normal chat mode. Voice messages are now available again. What else would you like to talk about?`,
-      sender: "bot",
-      id: `activity_end_${Date.now()}`,
+  } catch (error) {
+    logClientError(error, { source: 'Gaming Agent API' });
+    console.error("Activity error:", error);
+    setIsTyping(false);
+    
+    const errorMessage = "Sorry, there was an error with the activity. Let's continue our chat normally.";
+    setMessages(prev => [...prev, {
+      text: errorMessage,
+      sender: 'bot',
+      id: `activity_error_${Date.now()}`,
       feedback: "",
       reaction: "",
       timestamp: currentTime,
       bot_id: selectedBotId,
-      isSystemMessage: true,
-      voice_only: false, // This will be normal text message with audio option
-    };
+      isSystemMessage: true
+    }]);
+    endActivity();
+  }
 
-    setMessages((prev) => [...prev, endMessage]);
-    setCurrentActivity(null);
-    setActivityHistory([]);
-    scrollToBottom();
-
-    // Optional: Show a toast notification
-    console.log("✅ Activity ended, returning to normal chat mode");
-  };
-
-  // ...existing code...
-
-  // Function to handle activity-specific messages
-  const handleActivityMessage = async (userMessage) => {
-    if (!currentActivity) return;
-
-    const currentTime = new Date();
-
-    // Add user message to activity history in the correct format
-    const userHistoryEntry = `User: ${userMessage}`;
-    setActivityHistory((prev) => [...prev, userHistoryEntry]);
-
-    try {
-      setIsTyping(true);
-
-      // Prepare payload for gaming agent - Fixed format
-      const payload = {
-        persona: selectedBotId,
-        activity: currentActivity,
-        user_input: userMessage,
-        username: userDetails?.name || "User",
-        history: [...activityHistory, userHistoryEntry], // Include the current message
-      };
-
-      console.log("Activity payload:", payload);
-
-      // Call the gaming agent API - FIXED URL
-      const response = await fetch("http://127.0.0.1:8000/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-      console.log("🎯 Full activity response:", data); // Debug log
-      setIsTyping(false);
-
-      if (data.error) {
-        const errorMessage =
-          "Sorry, there was an error with the activity. Let's continue our chat normally.";
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: errorMessage,
-            sender: "bot",
-            id: `activity_error_${Date.now()}`,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: true,
-          },
-        ]);
-        endActivity();
-      } else {
-        // ✅ FIXED: Extract response from the correct path
-        const botResponseText =
-          data.reply?.raw ||
-          data.response ||
-          "Sorry, I didn't get a proper response.";
-
-        // Add bot response to chat
-        const botResponse = {
-          text: botResponseText,
-          sender: "bot",
-          id: data.message_id || `activity_${Date.now()}`,
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime,
-          bot_id: selectedBotId,
-          isSystemMessage: true,
-          isActivityMessage: true, // ✅ CRITICAL: This marks it as activity message
-          activityId: currentActivity,
-          voice_only: false, // ✅ CRITICAL: Force text-only for activity messages
-        };
-
-        setMessages((prev) => [...prev, botResponse]);
-
-        // Add bot response to activity history
-        setActivityHistory((prev) => [...prev, `Bot: ${botResponseText}`]);
-      }
-    } catch (error) {
-      logClientError(error, { source: "Gaming Agent API" });
-      console.error("Activity error:", error);
-      setIsTyping(false);
-
-      const errorMessage =
-        "Sorry, there was an error with the activity. Let's continue our chat normally.";
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: errorMessage,
-          sender: "bot",
-          id: `activity_error_${Date.now()}`,
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime,
-          bot_id: selectedBotId,
-          isSystemMessage: true,
-        },
-      ]);
-      endActivity();
-    }
-
-    scrollToBottom();
-  };
+  scrollToBottom();
+};
 
   // Helper: decide if a bot reply should be voice-only
   function isVoiceOnlyBotReply(msg) {
