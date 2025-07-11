@@ -61,8 +61,6 @@ jobs:
               "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/novi-804%40cvoapi.iam.gserviceaccount.com",
               "universe_domain": "googleapis.com"
             }
-
-
   deploy-dev:
     needs: build
     runs-on: ubuntu-latest
@@ -95,10 +93,6 @@ jobs:
               "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/novi-804%40cvoapi.iam.gserviceaccount.com",
               "universe_domain": "googleapis.com"
             }
-
-      - name: Set GCP project
-        run: gcloud config set project novife
-
       - name: Deploy to Cloud Run dev
         run: |
           gcloud run deploy novife-frontend-dev \
@@ -106,6 +100,7 @@ jobs:
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated \
+            --project=novife \
             --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
 
   approval:
@@ -151,9 +146,6 @@ jobs:
               "universe_domain": "googleapis.com"
             }
 
-      - name: Set GCP project
-        run: gcloud config set project novife
-
       - name: Deploy to Cloud Run prod
         run: |
           gcloud run deploy novife-frontend-prod \
@@ -161,5 +153,6 @@ jobs:
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated \
-            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }} \
-            --project=novife
+            --project=novife \
+            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
+
