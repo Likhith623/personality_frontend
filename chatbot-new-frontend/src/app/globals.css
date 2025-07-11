@@ -191,3 +191,12 @@
 .spinner {
   @apply border-gray-200 dark:border-gray-700 border-t-purple-500 dark:border-t-purple-400;
 }
+
+/* Hide scrollbar for ActivitiesModal */
+.activities-modal {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.activities-modal::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
