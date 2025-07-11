@@ -116,4 +116,4 @@ jobs:
             --platform=managed \
             --allow-unauthenticated \
             --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }} \
-            --project=novife. keep iit like this just tell me which places to changes for json thingy 
+            --project=novife
