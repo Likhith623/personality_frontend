@@ -43,6 +43,10 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
+          #workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          #service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
+          #audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+
           credentials_json: |
             {
               "type": "service_account",
@@ -73,6 +77,10 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
+          #workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          #service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
+          #audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+
           credentials_json: |
             {
               "type": "service_account",
@@ -124,6 +132,10 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
+          #workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          #service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
+          #audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+
           credentials_json: |
             {
               "type": "service_account",
