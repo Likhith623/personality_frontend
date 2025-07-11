@@ -43,24 +43,10 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          #workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
-          #service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
-          #audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
+          audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
 
-          credentials_json: |
-            {
-              "type": "service_account",
-              "project_id": "cvoapi",
-              "private_key_id": "163115bde1acb5072ccc521cf6658add9ccfa3e7",
-              "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCK00j8+kDfLbnO\na06v44cyCnKGWrnu1pDR3nCs+PaMJNNtog5rpS7om9u6M33hultd8Wir39KQsgHO\n0Y9D/EWExsEP35xbIsuO0yAR/9bGV9sHGSvIQG/G3Te0o4462hJrGSjA1jFwxyS2\nuL0eHp9AUBtKTEL1z735OD/YAZKw/FVbqes07On0WPMYcGihPE51No4779tyq81p\nViPE/gNyO5XmbMgWEjG81gh73xP/hjwO6I+4f6kNKZAXjxb5hq8JHgl20mlH+JB9\nNyPxGyCZYRhfPXDN1uts52/NGFs81D6wibBtkqw77A5ibkWzIXi53+zxLElKfFov\n9Kb9nsCjAgMBAAECggEAKVOTf0eqRyXwEaxtHLwxc2qbxDY+8oQqUWeUCFIG5xpR\nXGopO89NIw6+vvP0Ld3RtCoY3E2Be/SZyC0nJnhzY37dWzHYdGLr0QU1n1YXZC0k\nNT0/hNn1zG/vVNV5kjh30i0Hrjw1NJr76W8eUViRVM5kCV6hclaY+ZdOnil9tzS+\nmSh+SuCQXeRSDHmVAq9dHJcG0gVDaiYhpSdae0WZLWHN2KtyE+8V5kWvTdlYeKjP\n6LdaXo9M4QcG/62d3Vs3mOP68Ykmr368h6u72dn0fc2uFGf1u8ixy/kSgCElsdOG\nrifLjrREtiPkHqOta0xOrAzJTKwSyzAxQwXUOEMYlQKBgQDA4WlbgZJo6zBiq6rK\nrqeYZ5c/MM8/1Lwknw32y0um4gEgEfJZAHziRmR4ZaTOmLtwSQJSWrhCYwi28vVN\nC9C6Bc5NiTcbjEoz5ve2CFHepXYV2CsVbJcJ6ubOP/+JaOrhgzU9xAOxZEwvLyGQ\nPWTTiNiCbHS+FvLumnpw7JxR9QKBgQC4QWTozlPJ/l6vlClyqxhMohgCzG4lQLYu\nk5BiHEqU8rUy3qaAEnOYmVVZlb5ReTl/THrUem9J8yH7n9iJZwOok7PvNuxtJROW\n7X3B9cDIcq+Cs0qsh03Bkt2fVmWQmy0wxuvHaoe5fzH8hUtAZNv5V/STPGeB+SbH\nFgYm8uxxNwKBgFhoOVlm94u9mUzwsHT8PvddK/cb0TLJuH70pHrlTcStPKTNdQ6U\naalxaGXC+Rp06R0bacQDrwdGy1zH2eW5r69EL/5cEXVABVbq28mE4Lmzj3+NuJm2\nTziNgcMxlFgQTfCVqlaoPKUXes/5w2GQsmE/DTYirhPfAvSYu9x8p13tAoGBAJeR\nu8fCyqxUImG+uKXKVw/bG3NZ5ZWhePwxiUkbysJiMWpqO38JLqwuHka2Zruww/qS\n2Evnd5rWdXL/F+pXomvPLOowPSa/pDC4poWienap2PTkNh5cozsEbGkBckUVUYRZ\nbmU5nfKazmzS3YdYMJgZoWho/SCu6xZEaMUrehLbAoGBAKc+ncnZLNtEeV13oFJA\n4GVfMUYsyEtm4TxmLnxc2RTL3A2NVWxPpQsucCCgkcC53nKZzgDVSNyi6Be/poTt\nctMR6m2vV0yfdVhyzhHXXRFHR5ysk6phRt7NQlzvHmvZ+BB3H8u8JUw3kLcpk0Kg\nHq05pNXLOOHVx6382ygxXJ15\n-----END PRIVATE KEY-----\n",
-              "client_email": "novi-804@cvoapi.iam.gserviceaccount.com",
-              "client_id": "100051186252473870677",
-              "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-              "token_uri": "https://oauth2.googleapis.com/token",
-              "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-              "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/novi-804%40cvoapi.iam.gserviceaccount.com",
-              "universe_domain": "googleapis.com"
-            }
   deploy-dev:
     needs: build
     runs-on: ubuntu-latest
@@ -75,24 +61,13 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          #workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
-          #service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
-          #audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
+          audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
 
-          credentials_json: |
-            {
-              "type": "service_account",
-              "project_id": "cvoapi",
-              "private_key_id": "163115bde1acb5072ccc521cf6658add9ccfa3e7",
-              "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCK00j8+kDfLbnO\na06v44cyCnKGWrnu1pDR3nCs+PaMJNNtog5rpS7om9u6M33hultd8Wir39KQsgHO\n0Y9D/EWExsEP35xbIsuO0yAR/9bGV9sHGSvIQG/G3Te0o4462hJrGSjA1jFwxyS2\nuL0eHp9AUBtKTEL1z735OD/YAZKw/FVbqes07On0WPMYcGihPE51No4779tyq81p\nViPE/gNyO5XmbMgWEjG81gh73xP/hjwO6I+4f6kNKZAXjxb5hq8JHgl20mlH+JB9\nNyPxGyCZYRhfPXDN1uts52/NGFs81D6wibBtkqw77A5ibkWzIXi53+zxLElKfFov\n9Kb9nsCjAgMBAAECggEAKVOTf0eqRyXwEaxtHLwxc2qbxDY+8oQqUWeUCFIG5xpR\nXGopO89NIw6+vvP0Ld3RtCoY3E2Be/SZyC0nJnhzY37dWzHYdGLr0QU1n1YXZC0k\nNT0/hNn1zG/vVNV5kjh30i0Hrjw1NJr76W8eUViRVM5kCV6hclaY+ZdOnil9tzS+\nmSh+SuCQXeRSDHmVAq9dHJcG0gVDaiYhpSdae0WZLWHN2KtyE+8V5kWvTdlYeKjP\n6LdaXo9M4QcG/62d3Vs3mOP68Ykmr368h6u72dn0fc2uFGf1u8ixy/kSgCElsdOG\nrifLjrREtiPkHqOta0xOrAzJTKwSyzAxQwXUOEMYlQKBgQDA4WlbgZJo6zBiq6rK\nrqeYZ5c/MM8/1Lwknw32y0um4gEgEfJZAHziRmR4ZaTOmLtwSQJSWrhCYwi28vVN\nC9C6Bc5NiTcbjEoz5ve2CFHepXYV2CsVbJcJ6ubOP/+JaOrhgzU9xAOxZEwvLyGQ\nPWTTiNiCbHS+FvLumnpw7JxR9QKBgQC4QWTozlPJ/l6vlClyqxhMohgCzG4lQLYu\nk5BiHEqU8rUy3qaAEnOYmVVZlb5ReTl/THrUem9J8yH7n9iJZwOok7PvNuxtJROW\n7X3B9cDIcq+Cs0qsh03Bkt2fVmWQmy0wxuvHaoe5fzH8hUtAZNv5V/STPGeB+SbH\nFgYm8uxxNwKBgFhoOVlm94u9mUzwsHT8PvddK/cb0TLJuH70pHrlTcStPKTNdQ6U\naalxaGXC+Rp06R0bacQDrwdGy1zH2eW5r69EL/5cEXVABVbq28mE4Lmzj3+NuJm2\nTziNgcMxlFgQTfCVqlaoPKUXes/5w2GQsmE/DTYirhPfAvSYu9x8p13tAoGBAJeR\nu8fCyqxUImG+uKXKVw/bG3NZ5ZWhePwxiUkbysJiMWpqO38JLqwuHka2Zruww/qS\n2Evnd5rWdXL/F+pXomvPLOowPSa/pDC4poWienap2PTkNh5cozsEbGkBckUVUYRZ\nbmU5nfKazmzS3YdYMJgZoWho/SCu6xZEaMUrehLbAoGBAKc+ncnZLNtEeV13oFJA\n4GVfMUYsyEtm4TxmLnxc2RTL3A2NVWxPpQsucCCgkcC53nKZzgDVSNyi6Be/poTt\nctMR6m2vV0yfdVhyzhHXXRFHR5ysk6phRt7NQlzvHmvZ+BB3H8u8JUw3kLcpk0Kg\nHq05pNXLOOHVx6382ygxXJ15\n-----END PRIVATE KEY-----\n",
-              "client_email": "novi-804@cvoapi.iam.gserviceaccount.com",
-              "client_id": "100051186252473870677",
-              "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-              "token_uri": "https://oauth2.googleapis.com/token",
-              "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-              "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/novi-804%40cvoapi.iam.gserviceaccount.com",
-              "universe_domain": "googleapis.com"
-            }
+      - name: Set GCP project
+        run: gcloud config set project novife
+
       - name: Deploy to Cloud Run dev
         run: |
           gcloud run deploy novife-frontend-dev \
@@ -100,7 +75,6 @@ jobs:
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated \
-            --project=novife \
             --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
 
   approval:
@@ -127,24 +101,12 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          #workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
-          #service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
-          #audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          workload_identity_provider: "projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
+          service_account: "github-actions-sa@novife.iam.gserviceaccount.com"
+          audience: "https://iam.googleapis.com/projects/283192146773/locations/global/workloadIdentityPools/github-actions-pool/providers/new-github-provider"
 
-          credentials_json: |
-            {
-              "type": "service_account",
-              "project_id": "cvoapi",
-              "private_key_id": "163115bde1acb5072ccc521cf6658add9ccfa3e7",
-              "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCK00j8+kDfLbnO\na06v44cyCnKGWrnu1pDR3nCs+PaMJNNtog5rpS7om9u6M33hultd8Wir39KQsgHO\n0Y9D/EWExsEP35xbIsuO0yAR/9bGV9sHGSvIQG/G3Te0o4462hJrGSjA1jFwxyS2\nuL0eHp9AUBtKTEL1z735OD/YAZKw/FVbqes07On0WPMYcGihPE51No4779tyq81p\nViPE/gNyO5XmbMgWEjG81gh73xP/hjwO6I+4f6kNKZAXjxb5hq8JHgl20mlH+JB9\nNyPxGyCZYRhfPXDN1uts52/NGFs81D6wibBtkqw77A5ibkWzIXi53+zxLElKfFov\n9Kb9nsCjAgMBAAECggEAKVOTf0eqRyXwEaxtHLwxc2qbxDY+8oQqUWeUCFIG5xpR\nXGopO89NIw6+vvP0Ld3RtCoY3E2Be/SZyC0nJnhzY37dWzHYdGLr0QU1n1YXZC0k\nNT0/hNn1zG/vVNV5kjh30i0Hrjw1NJr76W8eUViRVM5kCV6hclaY+ZdOnil9tzS+\nmSh+SuCQXeRSDHmVAq9dHJcG0gVDaiYhpSdae0WZLWHN2KtyE+8V5kWvTdlYeKjP\n6LdaXo9M4QcG/62d3Vs3mOP68Ykmr368h6u72dn0fc2uFGf1u8ixy/kSgCElsdOG\nrifLjrREtiPkHqOta0xOrAzJTKwSyzAxQwXUOEMYlQKBgQDA4WlbgZJo6zBiq6rK\nrqeYZ5c/MM8/1Lwknw32y0um4gEgEfJZAHziRmR4ZaTOmLtwSQJSWrhCYwi28vVN\nC9C6Bc5NiTcbjEoz5ve2CFHepXYV2CsVbJcJ6ubOP/+JaOrhgzU9xAOxZEwvLyGQ\nPWTTiNiCbHS+FvLumnpw7JxR9QKBgQC4QWTozlPJ/l6vlClyqxhMohgCzG4lQLYu\nk5BiHEqU8rUy3qaAEnOYmVVZlb5ReTl/THrUem9J8yH7n9iJZwOok7PvNuxtJROW\n7X3B9cDIcq+Cs0qsh03Bkt2fVmWQmy0wxuvHaoe5fzH8hUtAZNv5V/STPGeB+SbH\nFgYm8uxxNwKBgFhoOVlm94u9mUzwsHT8PvddK/cb0TLJuH70pHrlTcStPKTNdQ6U\naalxaGXC+Rp06R0bacQDrwdGy1zH2eW5r69EL/5cEXVABVbq28mE4Lmzj3+NuJm2\nTziNgcMxlFgQTfCVqlaoPKUXes/5w2GQsmE/DTYirhPfAvSYu9x8p13tAoGBAJeR\nu8fCyqxUImG+uKXKVw/bG3NZ5ZWhePwxiUkbysJiMWpqO38JLqwuHka2Zruww/qS\n2Evnd5rWdXL/F+pXomvPLOowPSa/pDC4poWienap2PTkNh5cozsEbGkBckUVUYRZ\nbmU5nfKazmzS3YdYMJgZoWho/SCu6xZEaMUrehLbAoGBAKc+ncnZLNtEeV13oFJA\n4GVfMUYsyEtm4TxmLnxc2RTL3A2NVWxPpQsucCCgkcC53nKZzgDVSNyi6Be/poTt\nctMR6m2vV0yfdVhyzhHXXRFHR5ysk6phRt7NQlzvHmvZ+BB3H8u8JUw3kLcpk0Kg\nHq05pNXLOOHVx6382ygxXJ15\n-----END PRIVATE KEY-----\n",
-              "client_email": "novi-804@cvoapi.iam.gserviceaccount.com",
-              "client_id": "100051186252473870677",
-              "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-              "token_uri": "https://oauth2.googleapis.com/token",
-              "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-              "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/novi-804%40cvoapi.iam.gserviceaccount.com",
-              "universe_domain": "googleapis.com"
-            }
+      - name: Set GCP project
+        run: gcloud config set project novife
 
       - name: Deploy to Cloud Run prod
         run: |
@@ -153,6 +115,5 @@ jobs:
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated \
-            --project=novife \
-            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
-
+            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }} \
+            --project=novife. keep iit like this just tell me which places to changes for json thingy 
