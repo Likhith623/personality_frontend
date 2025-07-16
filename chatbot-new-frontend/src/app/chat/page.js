@@ -2091,6 +2091,16 @@ const ActivitiesModal = ({
   );
 };
 
+
+
+
+
+
+
+
+
+
+
 export default function SidebarDemo() {
   const [messages, setMessages] = useState([]);
   const [open, setOpen] = useState(false);
@@ -2526,6 +2536,144 @@ const Dashboard = ({
   isActivitiesOpen,
   setIsActivitiesOpen,
 }) => {
+
+
+
+
+
+
+
+
+
+const [selectedImage, setSelectedImage] = useState(null);
+const [isImageUploading, setIsImageUploading] = useState(false);
+const fileInputRef = useRef(null);
+
+
+
+// Add this function to handle image upload and analysis
+// ...existing code...
+
+// Update the handleImageUpload function
+const handleImageUpload = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    alert('Please select a valid image file.');
+    return;
+  }
+
+  // Validate file size (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    alert('File size should be less than 10MB.');
+    return;
+  }
+
+  setIsImageUploading(true);
+  setIsTyping(true);
+
+  try {
+    const currentTime = new Date();
+
+    // Create image URL for display
+    const imageUrl = URL.createObjectURL(file);
+
+    // Add user's image message to chat immediately
+    const userImageMessage = {
+      text: "",
+      sender: "user",
+      timestamp: currentTime,
+      feedback: "",
+      reaction: "",
+      isImageMessage: true,
+      imageFile: file,
+      imageUrl: imageUrl, // Add this for display
+    };
+
+    setMessages((prev) => [...prev, userImageMessage]);
+    scrollToBottom();
+
+    // Create FormData for API
+    const formData = new FormData();
+    formData.append('image', file);
+    formData.append('bot_id', selectedBotId);
+
+    console.log('Uploading image for analysis...');
+
+    // Send to image analysis API
+    const response = await fetch('/analyze_image_with_file', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+    console.log('Image analysis response:', data);
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    // Add bot's response to chat using final_response
+    const botResponse = {
+      text: data.final_response || "I can see your image, but I'm having trouble describing it right now.",
+      sender: "bot",
+      id: `image_analysis_${Date.now()}`,
+      feedback: "",
+      reaction: "",
+      timestamp: currentTime,
+      bot_id: selectedBotId,
+      isSystemMessage: false,
+      imageAnalysis: {
+        description: data.image_description,
+        summary: data.image_summary,
+        bot_used: data.bot_used,
+      }
+    };
+
+    setMessages((prev) => [...prev, botResponse]);
+
+  } catch (error) {
+    console.error('Image upload error:', error);
+    
+    const errorMessage = "Sorry, I couldn't analyze your image right now. Please try again later.";
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: errorMessage,
+        sender: "bot",
+        id: `image_error_${Date.now()}`,
+        feedback: "",
+        reaction: "",
+        timestamp: new Date(),
+        bot_id: selectedBotId,
+        isSystemMessage: true,
+      },
+    ]);
+  } finally {
+    setIsImageUploading(false);
+    setIsTyping(false);
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    scrollToBottom();
+  }
+};
+
+
+// Add this function to trigger file input
+const handleImageButtonClick = () => {
+  if (fileInputRef.current) {
+    fileInputRef.current.click();
+  }
+};
+
+
+
+
+
   const { selectedBotId } = useBot();
   //const [messages, setMessages] = useState([]);
 
@@ -3938,114 +4086,137 @@ const endActivity = () => {
                 </p>
               </div>
 
-              {messagesOnDate.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`my-2 flex ${
-                    msg.sender === "bot" ? "justify-start" : "justify-end"
-                  }`}
-                >
-                  <div className="max-w-[80%] min-w-16 relative">
-                    {msg.sender === "bot" && msg.reaction && (
-                      <div
-                        className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
-                        onClick={() => toggleRemovalTooltip(msg.id)}
-                      >
-                        <span className="text-lg">{msg.reaction}</span>
-                        {showRemoveTooltip === msg.id && (
-                          <RemovalTooltip msgId={msg.id} />
-                        )}
-                      </div>
-                    )}
 
-                    <div className="flex flex-row items-center gap-2">
-                      {msg.sender === "bot" ? (
-                        msg.voice_only ? (
-                          <PlayAudio
-                            text={msg.text}
-                            bot_id={msg.bot_id || selectedBotId}
-                          />
-                        ) : (
-                          <>
-                            <div
-                              data-sender="bot"
-                              className={`px-4 py-2 rounded-2xl ${
-                                botThemes[selectedBotId]?.botBubble ||
-                                "bg-white/20 text-gray-900"
-                              } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
-                                highlightedMessage === msg.id
-                                  ? "bg-orange-200/30"
-                                  : ""
-                              } w-full text-left`}
-                              style={{
-                                userSelect: "none",
-                                WebkitUserSelect: "none",
-                                WebkitTouchCallout: "none",
-                              }}
-                              onTouchStart={(e) => {
-                                e.preventDefault();
-                                handleLongPressStart(msg.id);
-                              }}
-                              onTouchEnd={handleLongPressEnd}
-                              onTouchMove={handleLongPressEnd}
-                              onTouchCancel={handleLongPressEnd}
-                            >
-                              <motion.p>
-                                {(typeof msg.text === "string" ? msg.text : "")
-                                  .split(" ")
-                                  .map((word, i) => (
-                                    <motion.span
-                                      key={i}
-                                      initial={{
-                                        filter: "blur(10px)",
-                                        opacity: 0,
-                                        y: 5,
-                                      }}
-                                      animate={{
-                                        filter: "blur(0px)",
-                                        opacity: 1,
-                                        y: 0,
-                                      }}
-                                      transition={{
-                                        duration: 0.2,
-                                        ease: "easeInOut",
-                                        delay: 0.02 * i,
-                                      }}
-                                      className="inline-block select-none"
-                                    >
-                                      {word}&nbsp;
-                                    </motion.span>
-                                  ))}
-                              </motion.p>
-                            </div>
-                            <PlayAudio
-                              text={msg.text}
-                              bot_id={msg.bot_id || selectedBotId}
-                              minimal={true}
-                            />
-                          </>
-                        )
-                      ) : (
-                        <div
-                          data-sender="user"
-                          className={`px-4 py-2 rounded-2xl ${
-                            botThemes[selectedBotId]?.userBubble ||
-                            "bg-purple-400/80 text-white"
-                          } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
-                            highlightedMessage === msg.id
-                              ? "bg-orange-200/90"
-                              : ""
-                          } w-full text-left`}
-                          style={{
-                            userSelect: "none",
-                            WebkitUserSelect: "none",
-                            WebkitTouchCallout: "none",
-                          }}
-                        >
-                          {msg.text}
-                        </div>
-                      )}
-                    </div>
+{messagesOnDate.map((msg, index) => (
+  <div
+    key={index}
+    className={`my-2 flex ${
+      msg.sender === "bot" ? "justify-start" : "justify-end"
+    }`}
+  >
+    <div className="max-w-[80%] min-w-16 relative">
+      {msg.sender === "bot" && msg.reaction && (
+        <div
+          className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
+          onClick={() => toggleRemovalTooltip(msg.id)}
+        >
+          <span className="text-lg">{msg.reaction}</span>
+          {showRemoveTooltip === msg.id && (
+            <RemovalTooltip msgId={msg.id} />
+          )}
+        </div>
+      )}
+
+      <div className="flex flex-row items-center gap-2">
+        {msg.sender === "bot" ? (
+          msg.voice_only ? (
+            <PlayAudio
+              text={msg.text}
+              bot_id={msg.bot_id || selectedBotId}
+            />
+          ) : (
+            <>
+              <div
+                data-sender="bot"
+                className={`px-4 py-2 rounded-2xl ${
+                  botThemes[selectedBotId]?.botBubble ||
+                  "bg-white/20 text-gray-900"
+                } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
+                  highlightedMessage === msg.id
+                    ? "bg-orange-200/30"
+                    : ""
+                } w-full text-left`}
+                style={{
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                  WebkitTouchCallout: "none",
+                }}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  handleLongPressStart(msg.id);
+                }}
+                onTouchEnd={handleLongPressEnd}
+                onTouchMove={handleLongPressEnd}
+                onTouchCancel={handleLongPressEnd}
+              >
+                <motion.p>
+                  {(typeof msg.text === "string" ? msg.text : "")
+                    .split(" ")
+                    .map((word, i) => (
+                      <motion.span
+                        key={i}
+                        initial={{
+                          filter: "blur(10px)",
+                          opacity: 0,
+                          y: 5,
+                        }}
+                        animate={{
+                          filter: "blur(0px)",
+                          opacity: 1,
+                          y: 0,
+                        }}
+                        transition={{
+                          duration: 0.2,
+                          ease: "easeInOut",
+                          delay: 0.02 * i,
+                        }}
+                        className="inline-block select-none"
+                      >
+                        {word}&nbsp;
+                      </motion.span>
+                    ))}
+                </motion.p>
+              </div>
+              <PlayAudio
+                text={msg.text}
+                bot_id={msg.bot_id || selectedBotId}
+                minimal={true}
+              />
+            </>
+          )
+        ) : (
+<div
+  data-sender="user"
+  className={`px-4 py-2 rounded-2xl ${
+    msg.isImageMessage 
+      ? "bg-transparent border-none shadow-none" // No background for images
+      : botThemes[selectedBotId]?.userBubble || "bg-purple-400/80 text-white"
+  } ${
+    !msg.isImageMessage 
+      ? "border border-white/20 backdrop-blur-sm shadow-md" 
+      : ""
+  } placeholder-gray-200 ${
+    highlightedMessage === msg.id
+      ? "bg-orange-200/90"
+      : ""
+  } w-full text-left`}
+  style={{
+    userSelect: "none",
+    WebkitUserSelect: "none",
+    WebkitTouchCallout: "none",
+  }}
+>
+{msg.isImageMessage ? (
+  <div className="flex flex-col gap-2">
+    <img
+      src={msg.imageUrl || (msg.imageFile ? URL.createObjectURL(msg.imageFile) : '')}
+      alt="Shared image"
+      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+      onLoad={() => scrollToBottom()}
+      style={{ backgroundColor: 'transparent' }}
+    />
+    {msg.text && (
+      <span className="text-sm">{msg.text}</span>
+    )}
+  </div>
+) : (
+  msg.text
+)}
+          </div>
+        )}
+      </div>
+
+
 
                     <div className="flex flex-row justify-end">
                       <span
@@ -4201,6 +4372,59 @@ const endActivity = () => {
               : "Type your message..."
           }
         />
+
+
+
+
+
+
+
+
+
+
+
+
+        {/* Hidden file input for image upload */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
+        />
+
+        {/* ✅ NEW: Image upload button */}
+        {!currentActivity && (
+          <button
+            type="button"
+            onClick={handleImageButtonClick}
+            disabled={isImageUploading}
+            className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-orange-400/80 via-yellow-400/80 to-orange-400/80 hover:from-orange-400/90 hover:via-yellow-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Upload and analyze image"
+          >
+            {isImageUploading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+            )}
+          </button>
+        )}
+
+
+
 
         {/* ✅ CONDITIONAL: Hide voice call button during activities */}
         {!currentActivity && (
