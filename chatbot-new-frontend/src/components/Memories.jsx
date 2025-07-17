@@ -84,38 +84,31 @@ export default function Memories() {
       try {
         // 1. Fetch memories from API
         const response = await fetch(
-          `https://novi-vi.aigurukul.dev/get_persona?email=${encodeURIComponent(
+          `https://novi.aigurukul.dev/get_persona?email=${encodeURIComponent(
             userDetails.email
           )}&bot_id=${encodeURIComponent(selectedBotId)}`
         );
+  
         if (!response.ok) throw new Error("Failed to fetch memories");
         const data = await response.json();
         console.log("API Response:", data);
   
         data.forEach((memory) => {
-          const rawCategory = memory.category || "Others";
-        
-          // Normalize casing and fallback to 'Others' if not found
-          const category = categoryOrder.find(
-            (cat) => cat.toLowerCase() === rawCategory.toLowerCase()
-          ) || "Others";
-        
+          const category = memory.category;
           const updatedText = memory.memory.replace(
             /User1/g,
             userDetails?.name || "User"
           );
-        
           if (!categorizedMemories[category]) {
             categorizedMemories[category] = [];
           }
-        
           categorizedMemories[category].push({
             id: memory.id,
             text: updatedText,
             categories: [category],
             relation_id: memory.relation_id,
             created_at: memory.created_at,
-          });      
+          });
         });
       } catch (error) {
         console.error("Error fetching API memories:", error);
@@ -153,9 +146,7 @@ export default function Memories() {
   
     fetchMemories();
   }, [userDetails?.email, selectedBotId]);
-  console.log("Email:", userDetails?.email);
-  console.log("Bot ID:", selectedBotId);
-
+  
 
   //Scrolls to the selected category
   const scrollToCategory = (category) => {
@@ -220,17 +211,15 @@ export default function Memories() {
     try {
       // Updated payload structure for add_persona endpoint
       const payload = {
-        user_name: userDetails.name,
         email: userDetails.email,
         bot_id: selectedBotId,
         memory: newMemoryText,
         category: selectedCategory,
         redundant: false,
       };
-      console.log("Sending data to API:", payload);
 
       // Send a POST request to the backend to add the new memory using add_persona endpoint
-      const response = await fetch("http://127.0.0.1:8080/add_persona", {
+      const response = await fetch("https://novi.aigurukul.dev/add_persona", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -299,7 +288,7 @@ export default function Memories() {
       const memoryIdToUpdate = selectedMemory.id; // Get the memory ID
       // Make an asynchronous API call to update the memory.
       const response = await fetch(
-        `https://novi-vi.aigurukul.dev/update_persona?id=${memoryIdToUpdate}`, // Include ID in query
+        `https://novi.aigurukul.dev/update_persona?id=${memoryIdToUpdate}`, // Include ID in query
         {
           method: "PUT", // Changed to PUT as per API
           headers: {
@@ -392,7 +381,7 @@ export default function Memories() {
 
     try {
       const memoryIdToDelete = selectedMemory.id;
-      const deleteUrl = `https://novi-vi.aigurukul.dev/delete_persona?id=${memoryIdToDelete}`;
+      const deleteUrl = `https://novi.aigurukul.dev/delete_persona?id=${memoryIdToDelete}`;
       // Make an asynchronous API call to delete the current memory ID.
       const response = await fetch(deleteUrl, {
         method: "DELETE",
@@ -433,7 +422,7 @@ export default function Memories() {
     try {
       // Loop through the array of selected memory IDs
       for (const memoryIdToDelete of selectedMemoriesToDelete) {
-        const deleteUrl = `https://novi-vi.aigurukul.dev/delete_persona?id=${memoryIdToDelete}`;
+        const deleteUrl = `https://novi.aigurukul.dev/delete_persona?id=${memoryIdToDelete}`;
         // Make an asynchronous API call to delete the current memory ID.
         const response = await fetch(deleteUrl, {
           method: "DELETE",
@@ -592,6 +581,10 @@ export default function Memories() {
                 ref={(el) => (categoryRefs.current[category] = el)}
                 className="relative p-4 rounded-xl"
               >
+                <div>
+                  <h2>Output:</h2>
+                  <pre>{JSON.stringify(delta, null, 2)}</pre>
+                </div>
                 <h2 className="text-sm sm:text-base md:text-base font-semibold text-gray-800 dark:text-white mb-3 md:mb-4">
                   {replaceUnderscoreWithSpace(category)}{" "}
                   {/* Display category title */}
