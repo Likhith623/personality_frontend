@@ -2603,7 +2603,7 @@ const handleImageUpload = async (event) => {
     console.log('Uploading image for analysis...');
 
     // Send to image analysis API
-    const response = await fetch('/analyze_image_with_file', {
+    const response = await fetch('https://fastapi-image-personality-233451779807.us-central1.run.app/analyze_image_with_file', {
       method: 'POST',
       body: formData,
     });
