@@ -649,7 +649,7 @@ const processWithBackend = useCallback(async (audioBlob) => {
     formData.append('platform', 'web_voice_ultra_streaming');
     
     // Use streaming endpoint for immediate audio playback
-    const response = await fetch('https://novi-vi.aigurukul.dev/voice-call-ultra-fast', {
+    const response = await fetch('https://novibe-backend-233451779807.us-central1.run.app/voice-call-ultra-fast', {
       method: 'POST',
       body: formData,
       signal: AbortSignal.timeout(25000),

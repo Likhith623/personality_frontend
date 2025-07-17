@@ -35,7 +35,7 @@ function Diary() {
                 bot_id: selectedBotId,
                 text: text
             }
-            const response = await fetch("https://novi.aigurukul.dev/cv/notes", {
+            const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/cv/notes", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

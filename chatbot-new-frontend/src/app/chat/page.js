@@ -2844,7 +2844,7 @@ const endActivity = () => {
     console.log("Activity payload:", payload);
 
     // Call the gaming agent API - FIXED URL
-    const response = await fetch("https://novi-vi.aigurukul.dev/chat", {
+    const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/cv/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -3118,14 +3118,14 @@ const endActivity = () => {
         'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
-        const response = await fetch("https://novi-vi.aigurukul.dev/sync", {
+        const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/sync", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(body),
         });
-
+    
         if (!response.ok) throw new Error("Failed to fetch messages");
 
         const newMessages = await response.json();
@@ -3361,7 +3361,7 @@ const endActivity = () => {
             `feedback` variables interpolated into the URL. The request is using the `fetch` function with the
             `await` keyword to asynchronously send the POST request. The method of the request is set to "POST". */
       const response = await fetch(
-        `https://novi-vi.aigurukul.dev/cv/message/feedback/${msg_id}/${feedback}`,
+        `https://novibe-backend-233451779807.us-central1.run.app/cv/message/feedback/${msg_id}/${feedback}`,
         {
           method: "POST",
         }
@@ -3463,7 +3463,7 @@ const endActivity = () => {
             function. */
 
             const res = await fetch(
-              "https://novi-vi.aigurukul.dev/cv/response/reminder",
+              "https://novibe-backend-233451779807.us-central1.run.app/cv/response/reminder",
               {
                 method: "POST",
                 headers: {
@@ -3605,7 +3605,7 @@ const endActivity = () => {
     // 2. If message contains a URL, use /api/news
     if (containsUrl(userMessage)) {
       try {
-        const res = await fetch("https://novi-vi.aigurukul.dev/api/news", {
+        const res = await fetch("https://novibe-backend-233451779807.us-central1.run.app/api/news", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -3700,7 +3700,7 @@ const endActivity = () => {
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
 
-      const response = await fetch("https://novi-vi.aigurukul.dev/cv/chat", {
+      const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/cv/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -3899,7 +3899,7 @@ const endActivity = () => {
 
       // Send to voice call API endpoint - Using local development server
       const response = await Promise.race([
-        fetch("https://novi-vi.aigurukul.dev/voice-call", {
+        fetch("https://novibe-backend-233451779807.us-central1.run.app/voice-call", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
