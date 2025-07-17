@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
-import {
-  systemPatterns,
-  isSystemMessageContent,
-} from "@/constants/identifiers";
+
+import { systemPatterns, isSystemMessageContent } from "@/constants/identifiers";
+import StripeCheckoutButton from "@/components/StripeCheckoutButton";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBot } from "@/support/BotContext";
 import { useTraits } from "@/support/TraitsContext";
@@ -55,9 +55,8 @@ import singapore_friend_male from "@/photos/singapore_friend_male.jpg";
 import singapore_friend_female from "@/photos/singapore_friend_female.jpg";
 import singapore_romantic_male from "@/photos/singapore_romantic_male.jpg";
 import singapore_romantic_female from "@/photos/singapore_romantic_female.jpg";
-
 import emirati_mentor_male from "@/photos/emirati_mentor_male.jpg";
-import emirati_mentor_female from "@/photos/emirati_mentor_female.png"; 
+import emirati_mentor_female from "@/photos/emirati_mentor_female.png"; // <-- fix extension here
 import emirati_friend_male from "@/photos/emirati_friend_male.jpg";
 import emirati_friend_female from "@/photos/emirati_friend_female.jpg";
 import emirati_romantic_male from "@/photos/emirati_romantic_male.jpg";
@@ -78,6 +77,10 @@ import srilankan_mentor_male from "@/photos/srilankan_mentor_male.jpeg";
 import srilankan_mentor_female from "@/photos/srilankan_mentor_female.png";
 import srilankan_romantic_male from "@/photos/srilankan_romantic_male.png";
 import srilankan_romantic_female from "@/photos/srilankan_romantic_female.png";
+
+
+
+
 
 import lord_krishna from "@/photos/lord_krishna.jpg";
 import hanuman_god from "@/photos/hanuman_god.jpeg";
@@ -188,19 +191,16 @@ const botThemes = {
         url: "/bg-images/delhi_romantic_male-bg.jpg",
         textColor: "text-white",
         b_color: "text-white",
-        p_color: "text-black",
       },
       {
         url: "/photos/default_dark_bg.png",
         textColor: "text-white",
         b_color: "text-white",
-        p_color: "text-white",
       },
       {
         url: "/photos/default_bg.png",
         textColor: "text-black",
         b_color: "text-black",
-        p_color: "text-black",
       },
     ],
   },
@@ -2151,22 +2151,7 @@ export default function SidebarDemo() {
     }
     return false;
   });
-  const currentBotTheme = botThemes[selectedBotId];
-  const currentBg = currentBotTheme?.backgroundImages[backgroundIndex];
-  const placeholderMap = {
-    "text-white": "placeholder:text-white",
-    "text-black": "placeholder:text-black",
-  };
-  const placeholderClassMap = {
-    "text-white": "placeholder:text-white",
-    "text-black": "placeholder:text-black",
-    "text-gray-800": "placeholder:text-gray-800",
-    // Add more if needed
-  };
-  
-  const placeholderClass =
-    placeholderClassMap[textColorClass] || "placeholder:text-gray-400";
-  
+
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
@@ -2505,9 +2490,6 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
         setMessages={setMessages}
         isActivitiesOpen={isActivitiesOpen}
         setIsActivitiesOpen={setIsActivitiesOpen}
-        currentBg={currentBg}
-        placeholderMap={placeholderMap}
-        placeholderClass={placeholderClass}
         className="bg-white/40 backdrop-blur-md shadow-lg"
       />
     </div>
@@ -2549,14 +2531,10 @@ const Dashboard = ({
   backgroundImage,
   textColorClass,
   b_color,
-  p_color,
   messages,
   setMessages,
   isActivitiesOpen,
   setIsActivitiesOpen,
-  currentBg,
-  placeholderClass,
-  placeholderMap,
 }) => {
 
 
@@ -2715,9 +2693,6 @@ const handleImageButtonClick = () => {
   const longPressTimerRef = useRef(null); // Reference for the long press timer
   const [groupedMessages, setGroupedMessages] = useState({});
   const [highlightedMessage, setHighlightedMessage] = useState(null);
-  const inputRef = useRef(null);
-
-
   // Define available emoticons
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
   // ✅ ADD: Bot location function
@@ -3119,104 +3094,93 @@ const endActivity = () => {
     return messages.filter((msg) => msg.text && msg.text.trim() !== "");
   };
 
+  // Sync the messages with the server
   useEffect(() => {
     const fetchMessages = async () => {
       try {
+        // Clear existing messages first when bot changes
         setMessages([]);
         setGroupedMessages({});
-  
+
+        // When bot changes, we want to get all messages, not just new ones
+        // Prepare request body - intentionally NOT including the last message ID
         const body = {
           email: userDetails.email,
           bot_id: selectedBotId,
           messages_id: "",
+          // No lastMessageId included to force full refresh
         };
-  
+
+        // Fetch messages from server
+        /* The POST request to the URL 'http://127.0.0.1:8000/sync' with
+        a JSON payload specified in the `body` variable. The `fetch` function is used to send the request
+        asynchronously. The request includes the method 'POST' and sets the 'Content-Type' header to
+        'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
+        JSON string before sending it in the request body. The `await` keyword is used to wait for the
+        response from the server before proceeding. */
         const response = await fetch("https://novi-vi.aigurukul.dev/sync", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(body),
         });
-  
+
         if (!response.ok) throw new Error("Failed to fetch messages");
-  
+
         const newMessages = await response.json();
+        console.log("New messages from server:", newMessages.response);
+
         const rawMessages = newMessages.response || [];
+        // Format timestamps and filter empty messages
+        /* The code is taking an array of messages from `newMessages.response`, mapping over each
+        message to format the timestamp using `toLocaleTimeString` method to display the time in a
+        specific format (hour:minute AM/PM) in the 'en-US' locale. It then filters out any empty
+        messages using the `filterEmptyMessages` function and stores the formatted messages in the
+        `formattedMessages` array. */
         const formattedMessages = filterEmptyMessages(
           rawMessages.map((msg) => ({
             ...msg,
             timestamp: new Date(msg.timestamp),
           }))
         );
-  
-        let proactiveGreeting = null;
-  
-        // Step 1: Check proactive festival message
-        try {
-          const proactiveResp = await fetch("https://festival-agent-283192146773.us-central1.run.app/festivals/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              user_email: userDetails.email,
-              bot_id: selectedBotId,
-              user_name: userDetails.name || "User",
-              user_location: userDetails.location || "Hyderabad",
-              bot_location:
-                bot_details.find((b) => b.bot_id === selectedBotId)?.designation || "Unknown",
-            }),
-          });
-  
-          if (proactiveResp.ok) {
-            const { message } = await proactiveResp.json();
-            if (message?.trim()) {
-              proactiveGreeting = {
-                text: message,
-                sender: "bot",
-                timestamp: new Date(),
-                feedback: "",
-                reaction: "",
-                bot_id: selectedBotId,
-                isSystemMessage: isSystemMessageContent(message),
-              };
-            }
-          }
-        } catch (err) {
-          console.warn("Festival API failed:", err);
-        }
-  
+
         const defaultMessageText =
-          bot_details.find((bot) => bot.bot_id === selectedBotId)?.quote ||
+          bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
           "Hello, how are you feeling today?";
-  
         const defaultMessage = [
           {
             text: defaultMessageText,
             sender: "bot",
             timestamp: new Date(),
-            feedback: "",
-            reaction: "",
+            feedback: "", // Add feedback (empty initially)
+            reaction: "", // Add reaction field (empty initially)
             bot_id: selectedBotId,
             isSystemMessage: isSystemMessageContent(defaultMessageText),
           },
         ];
-  
+
         let messagesWithReactions = [];
-  
+
+        /* The code is checking if the `formattedMessages` array has a length greater than 0. If
+        it does, it sets the messages directly from the server response and stores them in the local
+        storage. If `formattedMessages` is empty, it sets a default message "Hello, how are you
+        feeling today?" from a bot and stores it in the local storage. The code ensures that the
+        chat messages are either refreshed from the server response or set to a default message if
+        no messages are available. */
         if (formattedMessages.length > 0) {
+          // Get stored reactions from localStorage
           const storedReactions = JSON.parse(
             localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
           );
-  
+
+          // Apply stored reactions to messages
           messagesWithReactions = formattedMessages.map((msg) => ({
             ...msg,
             reaction: storedReactions[msg.id] || "",
             bot_id: msg.bot_id || selectedBotId,
           }));
-  
-          // Optional: add proactiveGreeting on top or bottom
-          if (proactiveGreeting) {
-            messagesWithReactions.push(proactiveGreeting);
-          }
-  
+
           setMessages(messagesWithReactions);
           localStorage.setItem(
             `chat_${selectedBotId}`,
@@ -3228,13 +3192,12 @@ const endActivity = () => {
             )
           );
         } else {
-          // No messages — show proactive or fallback
-          const messageToShow = proactiveGreeting ? [proactiveGreeting] : defaultMessage;
-          setMessages(messageToShow);
+          // If no messages from server and no stored messages, set default message
+          setMessages(defaultMessage);
           localStorage.setItem(
             `chat_${selectedBotId}`,
             JSON.stringify(
-              messageToShow.map((msg) => ({
+              defaultMessage.map((msg) => ({
                 ...msg,
                 timestamp: msg.timestamp.toISOString(),
               }))
@@ -3244,7 +3207,7 @@ const endActivity = () => {
       } catch (error) {
         logClientError(error, { source: "sync API Call" });
         console.error("Error fetching messages:", error);
-  
+        // Set default message if fetch fails
         const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
         if (loadedMessages) {
           setMessages(
@@ -3254,8 +3217,9 @@ const endActivity = () => {
             }))
           );
         } else {
+          // If nothing in localStorage either, show default message
           const defaultMessageText =
-            bot_details.find((bot) => bot.bot_id === selectedBotId)?.quote ||
+            bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
             "Hello, how are you feeling today?";
           const defaultMessage = [
             {
@@ -3272,12 +3236,11 @@ const endActivity = () => {
         }
       }
     };
-  
+
+    // Reset messages state before fetching new ones
     fetchMessages();
     setClearChatCalled(false);
   }, [selectedBotId, userDetails.email]);
-  
-  
 
   // Save the messages to localStorage when they change
   useEffect(() => {
@@ -3306,7 +3269,7 @@ const endActivity = () => {
     }
   }, [messages, selectedBotId]);
 
-
+  // Handle reaction selection for a message
   // Handle reaction selection for a message
   const handleReaction = (msgId, reaction) => {
     setMessages((prevMessages) =>
@@ -3597,14 +3560,14 @@ const endActivity = () => {
    * declared with the `async` keyword. The function performs various tasks such as sending a message to
    * a chatbot API, handling reminders, updating state variables, and displaying messages based on the
    * API response.
-   **/
+   */
   const handleSend = async (e) => {
-    e?.reminder === undefined && e.preventDefault();
-    if (!input.trim() && e?.reminder !== true) return;
-  
+    e.reminder == undefined && e.preventDefault();
+    if (!input.trim() && e.reminder != true) return;
+
     const userMessage = input.trim();
-    const currentTime = new Date();
-  
+
+    // Check if user wants to end activity
     if (
       currentActivity &&
       ["exit", "stop", "end"].includes(userMessage.toLowerCase())
@@ -3613,82 +3576,184 @@ const endActivity = () => {
       setInput("");
       return;
     }
-  
-    if (e?.reminder === undefined) {
+
+    // 1. Add user message to chat
+    if (e.reminder == undefined) {
       setMessages((prev) => [
         ...prev,
         {
           text: userMessage,
           sender: "user",
-          timestamp: currentTime,
+          timestamp: new Date(),
           feedback: "",
           reaction: "",
         },
       ]);
     }
-  
+
     setInput("");
-    setIsTyping(true);
-    await new Promise((resolve) => setTimeout(resolve, 20));
-    scrollToBottom();
-  
+
+    // Handle activity-specific messages
     if (currentActivity) {
       await handleActivityMessage(userMessage);
-      setIsTyping(false);
       return;
     }
-  
-    const convertToOpenAIFormat = (msgs) =>
-      msgs.map((msg) => ({
-        role: msg.sender === "bot" ? "assistant" : "user",
-        content: msg.text,
-      }));
-  
-    const payload = {
-      message:
-        e?.reminder === true
-          ? `User asked to remind: ${e.message}`
-          : userMessage,
-      bot_id: selectedBotId,
-      custom_bot_name: selectedBotDetails?.name || "",
-      user_name: userDetails.name || "",
-      user_gender: userDetails.gender || "",
-      language: "",
-      traits: "",
-      previous_conversation: convertToOpenAIFormat(messages),
-      email: userDetails.email || "",
-      request_time: currentTime.toISOString(),
-      platform: "web",
-    };
-  
-    console.log("📤 Sending to LLM:", payload);
-  
+
+    setIsTyping(true);
+    scrollToBottom();
+
+    // 2. If message contains a URL, use /api/news
+    if (containsUrl(userMessage)) {
+      try {
+        const res = await fetch("https://novi-vi.aigurukul.dev/api/news", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: userMessage,
+            bot_id: selectedBotId,
+            user_email: userDetails?.email || "anonymous@example.com",
+            // conversation_id: currentConversationId || null, // add if you have this
+          }),
+        });
+        const data = await res.json();
+
+        // Only show ai_response as bot message
+        if (data.status === "success" && data.ai_response) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              text: data.ai_response,
+              sender: "bot",
+              timestamp: new Date(),
+              bot_id: selectedBotId,
+            },
+          ]);
+        } else {
+          setMessages((prev) => [
+            ...prev,
+            {
+              text: data.result || "Sorry, I could not summarize that link.",
+              sender: "bot",
+              timestamp: new Date(),
+              bot_id: selectedBotId,
+            },
+          ]);
+        }
+      } catch (err) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: "Sorry, there was an error processing your link.",
+            sender: "bot",
+            timestamp: new Date(),
+            bot_id: selectedBotId,
+          },
+        ]);
+      }
+      setIsTyping(false);
+      scrollToBottom();
+      return;
+    }
+
+    const currentTime = new Date();
+
     try {
+      /**
+       * The function `convertToOpenAIFormat` takes an array of messages and converts them into an
+       * OpenAI format object with role and content properties.
+       * @param msgs - The `msgs` parameter is an array of messages that contains information about the
+       * sender and the text content of each message.
+       */
+      const convertToOpenAIFormat = (msgs) =>
+        msgs.map((msg) => ({
+          role: msg.sender === "bot" ? "assistant" : "user",
+          content: msg.text,
+        }));
+
+      /* The above code is creating a JavaScript object named `payload` with the following properties:
+      - `message`: It is set to a ternary expression that checks if `e.reminder` is true. If true, it sets
+      the message to "User asked to remind: " followed by the value of `e.message`. If false, it sets the
+      message to the value of `input`.
+      - `bot_id`: It is set to the value of `selectedBotId`.
+      - `previous_con */
+
+      const payload = {
+        message:
+          e.reminder === true ? `User asked to remind: ${e.message}` : input,
+        bot_id: selectedBotId,
+        custom_bot_name: selectedBotDetails?.name || "",
+        user_name: userDetails.name || "",
+        user_gender: userDetails.gender || "",
+        language: "", // You can set dynamically if needed
+        traits: "", // Optional: add if user has traits like "funny", "serious", etc.
+        previous_conversation: convertToOpenAIFormat(messages),
+        email: userDetails.email || "", // Optional: provide if available
+        request_time: new Date().toISOString(),
+        platform: "web", // or mobile, etc.
+      };
+
+      console.log("Payload", JSON.stringify(payload, null, 2));
+
+      /* The above code is making a POST request to the URL "http://127.0.0.1:8000/cv/chat" with a
+      JSON payload. The payload is being sent in the body of the request after being stringified
+      using JSON.stringify. The request is being made using the fetch API with the specified method
+      and headers. The response from the server is being stored in the variable `response` using the
+      `await` keyword, indicating that the fetch operation is asynchronous. */
+
       const response = await fetch("https://novi-vi.aigurukul.dev/cv/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-  
+
       const data = await response.json();
-      console.log("🧠 LLM Response Data:", data);
-  
-      if (data.xp_data && typeof window.updateXPFromResponse === "function") {
-        window.updateXPFromResponse(data.xp_data);
+
+      // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
+
+      // In your handleSend function, update the XP processing section:
+      // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
+      if (data.xp_data) {
+        console.log("🎯 XP data found in response:", data.xp_data);
+
+        // Call the global updateXPFromResponse function
+        if (typeof window.updateXPFromResponse === "function") {
+          console.log("✅ Calling updateXPFromResponse with:", data.xp_data);
+          window.updateXPFromResponse(data.xp_data);
+        } else {
+          console.error("❌ window.updateXPFromResponse is not available");
+        }
+
+        // ✅ REMOVED: Flying stars animation code
+      } else {
+        console.warn("⚠️ No XP data found in response");
       }
-  
-      let finalMessage = data.response;
-  
-      if (!finalMessage) {
-        console.warn("⚠️ LLM response is empty. Using fallback.");
-        finalMessage = "Sorry, I couldn't generate a reply.";
-      }
-  
-      if (
+
+      setIsTyping(false);
+
+      // ✅ Add bot message with XP info
+      if (data.error) {
+        const errorMessage =
+          "Sorry, there was an error processing your request. Please try again.";
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: errorMessage,
+            sender: "bot",
+            id: "",
+            feedback: "",
+            reaction: "",
+            timestamp: currentTime,
+            bot_id: selectedBotId,
+            isSystemMessage: isSystemMessageContent(errorMessage),
+          },
+        ]);
+      } else if (
         data.reminder?.response &&
         data.reminder?.task &&
         data.reminder?.created_at
       ) {
+        console.log("This is reminder block", data.reminder);
+
         const reminder = {
           response: data.reminder.response,
           task: data.reminder.task,
@@ -3696,18 +3761,26 @@ const endActivity = () => {
           remind_on: data.reminder.remind_on,
           category: "Reminder",
         };
-  
+
+        console.log("Add reminder", reminder);
+        console.log("Reminders before adding", reminders);
+
+        // Create the new reminders array
         const updatedReminders = [...reminders, reminder];
+        console.log("New reminders array", updatedReminders);
+
+        // Update state
         setReminders(updatedReminders);
+
         localStorage.setItem(
           `reminders-${selectedBotId}`,
           JSON.stringify(updatedReminders)
         );
-  
+
         setMessages((prev) => [
           ...prev,
           {
-            text: finalMessage,
+            text: data.response,
             sender: "bot",
             id: data.message_id,
             feedback: "",
@@ -3718,12 +3791,13 @@ const endActivity = () => {
           },
         ]);
       } else {
-        const shouldBeSystemMessage = isSystemMessageContent(finalMessage);
-  
+        // Check if this response should be treated as a system message based on content
+        const shouldBeSystemMessage = isSystemMessageContent(data.response);
+
         setMessages((prev) => [
           ...prev,
           {
-            text: finalMessage,
+            text: data.response,
             sender: "bot",
             id: data.message_id,
             feedback: "",
@@ -3735,7 +3809,10 @@ const endActivity = () => {
         ]);
       }
     } catch (error) {
-      console.error("❌ Error calling LLM:", error);
+      logClientError(error, { source: "API Call" });
+      console.log(error);
+      console.error(error);
+      setIsTyping(false);
       const errorMessage =
         "Sorry, there was an error processing your request. Please try again.";
       setMessages((prev) => [
@@ -3743,61 +3820,18 @@ const endActivity = () => {
         {
           text: errorMessage,
           sender: "bot",
+          id: "",
+          feedback: "",
+          reaction: "",
           timestamp: currentTime,
           bot_id: selectedBotId,
           isSystemMessage: isSystemMessageContent(errorMessage),
         },
       ]);
     }
-  
-    setIsTyping(false);
     scrollToBottom();
-  
-    // ⬇️ Run Delta Categorizer after LLM response
-    try {
-      const deltaPayload = {
-        email: userDetails?.email || "anonymous@example.com",
-        bot_id: selectedBotId,
-        memory: userMessage,
-        user_name: userDetails?.name || "Unknown",
-      };
-  
-      console.log("📤 Delta Payload:", deltaPayload);
-  
-      const deltaRes = await fetch("http://127.0.0.1:8080/delta_categorizer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(deltaPayload),
-      });
-  
-      const deltaData = await deltaRes.json();
-      console.log("🔁 Delta Categorizer Result:", deltaData);
-  
-      if (!deltaData?.handled_by_delta) {
-        await fetch("http://127.0.0.1:8080/store-message", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: userDetails?.email || "anonymous@example.com",
-            bot_id: selectedBotId,
-            message: userMessage,
-            user_name: userDetails?.name || "Unknown",
-          }),
-        });
-      }
-    } catch (err) {
-      console.error("❌ Error with Delta Categorizer:", err);
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: `⚠️ Memory update failed.`,
-          sender: "system",
-          timestamp: new Date(),
-        },
-      ]);
-    }
   };
-  
+
   const handleVoiceCallMessage = async (message) => {
     if (!message) return;
 
@@ -3971,11 +4005,11 @@ const endActivity = () => {
     </div>
   );
 
-const RemovalTooltip = ({ msgId }) => (
-  <div className="absolute -top-10 left-0 bg-white/90 backdrop-blur-md rounded-lg py-1 px-3 shadow-md border border-gray-200 z-10 text-sm text-gray-700 whitespace-nowrap">
-    Tap to remove
-  </div>
-);
+  const RemovalTooltip = ({ msgId }) => (
+    <div className="absolute -top-10 left-0 bg-white/90 backdrop-blur-md rounded-lg py-1 px-3 shadow-md border border-gray-200 z-10 text-sm text-gray-700 whitespace-nowrap">
+      Tap to remove
+    </div>
+  );
 
   console.log("All chat messages:", messages);
 
@@ -4325,18 +4359,19 @@ const RemovalTooltip = ({ msgId }) => (
 
       {/* ✅ ENHANCED: Modified form to show activity status */}
       <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
-      <Input
-  type="text"
-  value={input}
-  onChange={(e) => setInput(e.target.value)}
-  className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${textColorClass} ${placeholderClass}`}
-  placeholder={
-    currentActivity
-      ? `Activity mode: ${currentActivity.replace(/_/g, " ")}...`
-      : "Type your message..."
-  }
-/>
-
+        <Input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${
+            isDarkTheme ? textColorClass : textColorClass
+          } placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
+          placeholder={
+            currentActivity
+              ? `Activity mode: ${currentActivity.replace(/_/g, " ")}...`
+              : "Type your message..."
+          }
+        />
 
 
 
