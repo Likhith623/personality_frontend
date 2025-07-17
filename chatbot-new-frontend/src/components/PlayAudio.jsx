@@ -254,7 +254,7 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
         setIsLoading(true);
         setShouldAutoPlay(true); // Set flag to auto-play after load
         // Always fetch new audio for each click
-        const response = await fetch('https://novi-vi.aigurukul.dev/generate-audio', {
+        const response = await fetch('https://novibe-backend-233451779807.us-central1.run.app/generate-audio', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

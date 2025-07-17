@@ -672,7 +672,7 @@ const History = () => {
             bot_id: bot.bot_id,
             messages_id: "",
           };
-          const response = await fetch("https://novi-vi.aigurukul.dev/sync", {
+          const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/sync", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
