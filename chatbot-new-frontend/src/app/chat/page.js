@@ -6,7 +6,10 @@ import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
 
-import { systemPatterns, isSystemMessageContent } from "@/constants/identifiers";
+import {
+  systemPatterns,
+  isSystemMessageContent,
+} from "@/constants/identifiers";
 import StripeCheckoutButton from "@/components/StripeCheckoutButton";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -62,8 +65,6 @@ import emirati_friend_female from "@/photos/emirati_friend_female.jpg";
 import emirati_romantic_male from "@/photos/emirati_romantic_male.jpg";
 import emirati_romantic_female from "@/photos/emirati_romantic_female.jpg";
 
-
-
 import mexican_friend_male from "@/photos/mexican_friend_male.png";
 import mexican_friend_female from "@/photos/mexican_friend_female.png";
 import mexican_mentor_male from "@/photos/mexican_mentor_male.png";
@@ -77,10 +78,6 @@ import srilankan_mentor_male from "@/photos/srilankan_mentor_male.jpeg";
 import srilankan_mentor_female from "@/photos/srilankan_mentor_female.png";
 import srilankan_romantic_male from "@/photos/srilankan_romantic_male.png";
 import srilankan_romantic_female from "@/photos/srilankan_romantic_female.png";
-
-
-
-
 
 import lord_krishna from "@/photos/lord_krishna.jpg";
 import hanuman_god from "@/photos/hanuman_god.jpeg";
@@ -688,251 +685,534 @@ const botThemes = {
     ],
   },
   Trimurti: {
-background: 'bg-indigo-50',
-botBubble: 'bg-white text-black',
-backgroundImages: [
-  {
-    url: '/photos/trimurthi_bg.png',
-    textColor: 'text-white',
-    b_color: 'text-white',
+    background: "bg-indigo-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/trimurthi_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
-  {
-    url: '/photos/default_dark_bg.png',
-    textColor: 'text-white',
-    b_color: 'text-white',
-  },
-  {
-    url: '/photos/default_bg.png',
-    textColor: 'text-black',
-    b_color: 'text-black',
-  },
-],
-
-  },
-
-
 
   // ...existing themes...
   singapore_friend_female: {
-    background: 'bg-pink-50',
-    botBubble: 'bg-white text-black',
+    background: "bg-pink-50",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/singapore_friend_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/singapore_friend_female.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   singapore_friend_male: {
-    background: 'bg-blue-50',
-    botBubble: 'bg-white text-black',
+    background: "bg-blue-50",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/singapore_friend_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/singapore_friend_male.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   singapore_mentor_male: {
-    background: 'bg-green-50',
-    botBubble: 'bg-white text-black',
+    background: "bg-green-50",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/singapore_mentor_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/singapore_mentor_male.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   singapore_mentor_female: {
-    background: 'bg-yellow-50',
-    botBubble: 'bg-white text-black',
+    background: "bg-yellow-50",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/singapore_mentor_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/singapore_mentor_female.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   singapore_romantic_male: {
-    background: 'bg-orange-50',
-    botBubble: 'bg-white text-black',
+    background: "bg-orange-50",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/singapore_romantic_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/singapore_romantic_male.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   singapore_romantic_female: {
-    background: 'bg-red-50',
-    botBubble: 'bg-white text-black',
+    background: "bg-red-50",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/singapore_romantic_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/singapore_romantic_female.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   emirati_friend_female: {
-    background: 'bg-pink-100',
-    botBubble: 'bg-white text-black',
+    background: "bg-pink-100",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/emirati_friend_female.jpg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/emirati_friend_female.jpg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   emirati_friend_male: {
-    background: 'bg-blue-100',
-    botBubble: 'bg-white text-black',
+    background: "bg-blue-100",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/emirati_friend_male.jpg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/emirati_friend_male.jpg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   emirati_mentor_male: {
-    background: 'bg-green-100',
-    botBubble: 'bg-white text-black',
+    background: "bg-green-100",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/emirati_mentor_male.jpg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/emirati_mentor_male.jpg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   emirati_mentor_female: {
-    background: 'bg-yellow-100',
-    botBubble: 'bg-white text-black',
+    background: "bg-yellow-100",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/emirati_mentor_female.png', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/emirati_mentor_female.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   emirati_romantic_male: {
-    background: 'bg-orange-100',
-    botBubble: 'bg-white text-black',
+    background: "bg-orange-100",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/emirati_romantic_male.jpg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/emirati_romantic_male.jpg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
   emirati_romantic_female: {
-    background: 'bg-red-100',
-    botBubble: 'bg-white text-black',
+    background: "bg-red-100",
+    botBubble: "bg-white text-black",
     backgroundImages: [
-      { url: '/photos/emirati_romantic_female.jpg', textColor: 'text-black', b_color: 'text-black' },
-      { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-      { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-    ]
+      {
+        url: "/photos/emirati_romantic_female.jpg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
   },
 
+  mexican_friend_male: {
+    background: "bg-orange-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/mexican_friend_male.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  mexican_friend_female: {
+    background: "bg-pink-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/mexican_friend_female.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  mexican_mentor_male: {
+    background: "bg-green-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/mexican_mentor_male.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  mexican_mentor_female: {
+    background: "bg-yellow-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/mexican_mentor_female.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  mexican_romantic_male: {
+    background: "bg-red-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/mexican_romantic_male.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  mexican_romantic_female: {
+    background: "bg-purple-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/mexican_romantic_female.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
 
-mexican_friend_male: {
-  background: 'bg-orange-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/mexican_friend_male.png', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-mexican_friend_female: {
-  background: 'bg-pink-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/mexican_friend_female.png', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-mexican_mentor_male: {
-  background: 'bg-green-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/mexican_mentor_male.png', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-mexican_mentor_female: {
-  background: 'bg-yellow-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/mexican_mentor_female.png', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-mexican_romantic_male: {
-  background: 'bg-red-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/mexican_romantic_male.png', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-mexican_romantic_female: {
-  background: 'bg-purple-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/mexican_romantic_female.png', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-
-srilankan_friend_male: {
-  background: 'bg-green-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/srilankan_friend_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-srilankan_friend_female: {
-  background: 'bg-pink-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/srilankan_friend_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-srilankan_mentor_male: {
-  background: 'bg-blue-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/srilankan_mentor_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-srilankan_mentor_female: {
-  background: 'bg-yellow-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/srilankan_mentor_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-srilankan_romantic_male: {
-  background: 'bg-orange-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/srilankan_romantic_male.jpeg', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-srilankan_romantic_female: {
-  background: 'bg-purple-50',
-  botBubble: 'bg-white text-black',
-  backgroundImages: [
-    { url: '/photos/srilankan_romantic_female.jpeg', textColor: 'text-black', b_color: 'text-black' },
-    { url: '/photos/default_dark_bg.png', textColor: 'text-white', b_color: 'text-white' },
-    { url: '/photos/default_bg.png', textColor: 'text-black', b_color: 'text-black' }
-  ]
-},
-
+  srilankan_friend_male: {
+    background: "bg-green-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/srilankan_friend_male.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  srilankan_friend_female: {
+    background: "bg-pink-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/srilankan_friend_female.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  srilankan_mentor_male: {
+    background: "bg-blue-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/srilankan_mentor_male.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  srilankan_mentor_female: {
+    background: "bg-yellow-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/srilankan_mentor_female.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  srilankan_romantic_male: {
+    background: "bg-orange-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/srilankan_romantic_male.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
+  srilankan_romantic_female: {
+    background: "bg-purple-50",
+    botBubble: "bg-white text-black",
+    backgroundImages: [
+      {
+        url: "/photos/srilankan_romantic_female.jpeg",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+      {
+        url: "/photos/default_dark_bg.png",
+        textColor: "text-white",
+        b_color: "text-white",
+      },
+      {
+        url: "/photos/default_bg.png",
+        textColor: "text-black",
+        b_color: "text-black",
+      },
+    ],
+  },
 };
 
 /* The code defines an array of objects called `bot_details` which contains information about
@@ -1274,7 +1554,8 @@ const bot_details = [
     bot_id: "singapore_friend_female",
   },
   {
-    quote: "Bro, onzzz! Let's game or just chill. Need a laugh or a late-night Discord call?",
+    quote:
+      "Bro, onzzz! Let's game or just chill. Need a laugh or a late-night Discord call?",
     name: "Jayden Lim",
     designation: `Singapore
       Persona: Friend
@@ -1284,7 +1565,8 @@ const bot_details = [
     bot_id: "singapore_friend_male",
   },
   {
-    quote: "Take it easy, lah. Every step forward counts. How can I help today?",
+    quote:
+      "Take it easy, lah. Every step forward counts. How can I help today?",
     name: "Mr. Tan Boon Huat",
     designation: `Singapore
       Persona: Mentor
@@ -1294,7 +1576,8 @@ const bot_details = [
     bot_id: "singapore_mentor_male",
   },
   {
-    quote: "Don't worry, dear. One step at a time, can? I'm here if you need to talk.",
+    quote:
+      "Don't worry, dear. One step at a time, can? I'm here if you need to talk.",
     name: "Mrs. Lim Mei Ling",
     designation: `Singapore
       Persona: Mentor
@@ -1325,7 +1608,8 @@ const bot_details = [
   },
   // --- Emirati ---
   {
-    quote: "You okay for real, or just masking like the rest of us? I'm here, habibti.",
+    quote:
+      "You okay for real, or just masking like the rest of us? I'm here, habibti.",
     name: "Layla Al Shamsi",
     designation: `Emirati
       Persona: Friend
@@ -1375,7 +1659,8 @@ const bot_details = [
     bot_id: "emirati_romantic_male",
   },
   {
-    quote: "Come here — no fixing, no pressure. Just let me hold the heaviness with you.",
+    quote:
+      "Come here — no fixing, no pressure. Just let me hold the heaviness with you.",
     name: "Amira Al Mazrouei",
     designation: `Emirati
       Persona: Romantic Partner
@@ -1384,135 +1669,137 @@ const bot_details = [
     src: emirati_romantic_female,
     bot_id: "emirati_romantic_female",
   },
-  
-{
-  quote: "Qué onda, carnal? Saw this art piece and thought of you—it's pure fire. 😊",
-  name: "Sebastian Chavez",
-  designation: `Mexican
+
+  {
+    quote:
+      "Qué onda, carnal? Saw this art piece and thought of you—it's pure fire. 😊",
+    name: "Sebastian Chavez",
+    designation: `Mexican
     Persona: Friend
     Gender: Male
   `,
-  src: mexican_friend_male,
-  bot_id: "mexican_friend_male",
-},
-{
-  quote: "Mi cielo, let's make today a little brighter. 🎨",
-  name: "Mariana Garcia",
-  designation: `Mexican
+    src: mexican_friend_male,
+    bot_id: "mexican_friend_male",
+  },
+  {
+    quote: "Mi cielo, let's make today a little brighter. 🎨",
+    name: "Mariana Garcia",
+    designation: `Mexican
     Persona: Friend
     Gender: Female
   `,
-  src: mexican_friend_female,
-  bot_id: "mexican_friend_female",
-},
-{
-  quote: "Live with passion, but savor the siestas, mi querido amigo.",
-  name: "Alvaro Hernandez",
-  designation: `Mexican
+    src: mexican_friend_female,
+    bot_id: "mexican_friend_female",
+  },
+  {
+    quote: "Live with passion, but savor the siestas, mi querido amigo.",
+    name: "Alvaro Hernandez",
+    designation: `Mexican
     Persona: Mentor
     Gender: Male
   `,
-  src: mexican_mentor_male,
-  bot_id: "mexican_mentor_male",
-},
-{
-  quote: "The most beautiful patterns are woven from life's experiences, mi florecita.",
-  name: "Carmen Martinez",
-  designation: `Mexican
+    src: mexican_mentor_male,
+    bot_id: "mexican_mentor_male",
+  },
+  {
+    quote:
+      "The most beautiful patterns are woven from life's experiences, mi florecita.",
+    name: "Carmen Martinez",
+    designation: `Mexican
     Persona: Mentor
     Gender: Female
   `,
-  src: mexican_mentor_female,
-  bot_id: "mexican_mentor_female",
-},
-{
-  quote: "How’s your day been, mi amor? 😊",
-  name: "Gabriel Diaz",
-  designation: `Mexican
+    src: mexican_mentor_female,
+    bot_id: "mexican_mentor_female",
+  },
+  {
+    quote: "How’s your day been, mi amor? 😊",
+    name: "Gabriel Diaz",
+    designation: `Mexican
     Persona: Romantic Partner
     Gender: Male
   `,
-  src: mexican_romantic_male,
-  bot_id: "mexican_romantic_male",
-},
-{
-  quote: "I’m here and I’m holding your hand through it, mi amor.",
-  name: "Luciana Torres",
-  designation: `Mexican
+    src: mexican_romantic_male,
+    bot_id: "mexican_romantic_male",
+  },
+  {
+    quote: "I’m here and I’m holding your hand through it, mi amor.",
+    name: "Luciana Torres",
+    designation: `Mexican
     Persona: Romantic Partner
     Gender: Female
   `,
-  src: mexican_romantic_female,
-  bot_id: "mexican_romantic_female",
-},
-{
-  quote: "Vibe audit time, cosmic crew! Meme or mood, I got you. 🔥",
-  name: "Dev",
-  designation: `Sri Lanka
+    src: mexican_romantic_female,
+    bot_id: "mexican_romantic_female",
+  },
+  {
+    quote: "Vibe audit time, cosmic crew! Meme or mood, I got you. 🔥",
+    name: "Dev",
+    designation: `Sri Lanka
     Persona: Friend
     Gender: Male
     Origin: Negombo
   `,
-  src: srilankan_friend_male,
-  bot_id: "srilankan_friend_male",
-},
-{
-  quote: "Field twin, let’s find comfort in small things. Jelly and poems for the soul.",
-  name: "Savi",
-  designation: `Sri Lanka
+    src: srilankan_friend_male,
+    bot_id: "srilankan_friend_male",
+  },
+  {
+    quote:
+      "Field twin, let’s find comfort in small things. Jelly and poems for the soul.",
+    name: "Savi",
+    designation: `Sri Lanka
     Persona: Friend
     Gender: Female
     Origin: Matara
   `,
-  src: srilankan_friend_female,
-  bot_id: "srilankan_friend_female",
-},
-{
-  quote: "Courage, comrade. Night skies and simple truths—ask me anything.",
-  name: "Suren",
-  designation: `Sri Lanka
+    src: srilankan_friend_female,
+    bot_id: "srilankan_friend_female",
+  },
+  {
+    quote: "Courage, comrade. Night skies and simple truths—ask me anything.",
+    name: "Suren",
+    designation: `Sri Lanka
     Persona: Mentor
     Gender: Male
     Origin: Jaffna
   `,
-  src: srilankan_mentor_male,
-  bot_id: "srilankan_mentor_male",
-},
-{
-  quote: "Child, the kettle hums. Let’s share a story and some cinnamon tea.",
-  name: "Amma Lakshmi",
-  designation: `Sri Lanka
+    src: srilankan_mentor_male,
+    bot_id: "srilankan_mentor_male",
+  },
+  {
+    quote: "Child, the kettle hums. Let’s share a story and some cinnamon tea.",
+    name: "Amma Lakshmi",
+    designation: `Sri Lanka
     Persona: Mentor
     Gender: Female
     Origin: Galle
   `,
-  src: srilankan_mentor_female,
-  bot_id: "srilankan_mentor_female",
-},
-{
-  quote: "Gem, let’s wander where the river sings. Whisper me your dreams.",
-  name: "Nalin",
-  designation: `Sri Lanka
+    src: srilankan_mentor_female,
+    bot_id: "srilankan_mentor_female",
+  },
+  {
+    quote: "Gem, let’s wander where the river sings. Whisper me your dreams.",
+    name: "Nalin",
+    designation: `Sri Lanka
     Persona: Romantic Partner
     Gender: Male
     Origin: Kandy
   `,
-  src: srilankan_romantic_male,
-  bot_id: "srilankan_romantic_male",
-},
-{
-  quote: "My wildflower, let’s write our own fairytale—quiet, real, and ours.",
-  name: "Aruni",
-  designation: `Sri Lanka
+    src: srilankan_romantic_male,
+    bot_id: "srilankan_romantic_male",
+  },
+  {
+    quote:
+      "My wildflower, let’s write our own fairytale—quiet, real, and ours.",
+    name: "Aruni",
+    designation: `Sri Lanka
     Persona: Romantic Partner
     Gender: Female
     Origin: Colombo
   `,
-  src: srilankan_romantic_female,
-  bot_id: "srilankan_romantic_female",
-},
-
-
+    src: srilankan_romantic_female,
+    bot_id: "srilankan_romantic_female",
+  },
 ];
 
 const ACTIVITY_RESPONSES = {
@@ -1966,30 +2253,30 @@ const CATEGORY_ICONS = {
 
 // Determine which activities to show based on bot type
 const getBotPersona = (botId) => {
-  if (botId.includes('friend')) return 'friend';
-  if (botId.includes('romantic')) return 'romantic';
-  if (botId.includes('mentor')) return 'mentor';
-  if (['Krishna', 'Rama', 'Hanuman', 'Shiva', 'Trimurti'].includes(botId)) return 'spiritual';
-  return 'friend'; // default
+  if (botId.includes("friend")) return "friend";
+  if (botId.includes("romantic")) return "romantic";
+  if (botId.includes("mentor")) return "mentor";
+  if (["Krishna", "Rama", "Hanuman", "Shiva", "Trimurti"].includes(botId))
+    return "spiritual";
+  return "friend"; // default
 };
 
 const getBotLocation = (botId) => {
-  if (botId.includes('delhi')) return 'Delhi';
-  if (botId.includes('japanese')) return 'Tokyo';
-  if (botId.includes('parisian')) return 'Parisian';
-  if (botId.includes('berlin')) return 'Berlin';
-  if (botId.includes('singapore')) return 'Singapore';
-  if (botId.includes('emirati')) return 'Dubai';
-  if (botId.includes('mexican')) return 'Mexico City'; // <-- Add this line for Mexican personas
-  if (botId.includes('srilankan')) return 'Sri Lanka';
+  if (botId.includes("delhi")) return "Delhi";
+  if (botId.includes("japanese")) return "Tokyo";
+  if (botId.includes("parisian")) return "Parisian";
+  if (botId.includes("berlin")) return "Berlin";
+  if (botId.includes("singapore")) return "Singapore";
+  if (botId.includes("emirati")) return "Dubai";
+  if (botId.includes("mexican")) return "Mexico City"; // <-- Add this line for Mexican personas
+  if (botId.includes("srilankan")) return "Sri Lanka";
 
-  if (['Krishna', 'Rama', 'Hanuman', 'Shiva', 'Trimurti'].includes(botId)) return 'spiritual';
-  return 'local'; // default
+  if (["Krishna", "Rama", "Hanuman", "Shiva", "Trimurti"].includes(botId))
+    return "spiritual";
+  return "local"; // default
 };
 
-
 const CATEGORY_ORDER = ["AI Art", "AI Fiction", "Entertainment"];
-
 
 const CATEGORY_DISPLAY_ORDER = ["AI Art", "AI Fiction", "Entertainment"];
 const CATEGORY_DISPLAY_LABELS = {
@@ -2090,16 +2377,6 @@ const ActivitiesModal = ({
     </div>
   );
 };
-
-
-
-
-
-
-
-
-
-
 
 export default function SidebarDemo() {
   const [messages, setMessages] = useState([]);
@@ -2438,7 +2715,6 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                   selectedBotId={selectedBotId}
                   userDetails={userDetails}
                 />
-
               </div>
               <div>
                 <button
@@ -2456,18 +2732,19 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
               </div>
 
               <button
-
-  onClick={() => setIsActivitiesOpen(true)}
-  className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-blue-400/80 via-purple-400/80 to-pink-400/80 hover:from-blue-400/90 hover:via-purple-400/90 hover:to-pink-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
->
-  🎮 Activities
-</button>
-<div className="mt-4">
-  {userDetails.subscription_status !== "Premium" && (
-    <StripeCheckoutButton amount={499} email={userDetails.email} />
-  )}
-</div>
-
+                onClick={() => setIsActivitiesOpen(true)}
+                className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-blue-400/80 via-purple-400/80 to-pink-400/80 hover:from-blue-400/90 hover:via-purple-400/90 hover:to-pink-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+              >
+                🎮 Activities
+              </button>
+              <div className="mt-4">
+                {userDetails.subscription_status !== "Premium" && (
+                  <StripeCheckoutButton
+                    amount={499}
+                    email={userDetails.email}
+                  />
+                )}
+              </div>
             </div>
             <FloatingDockDemo />
           </div>
@@ -2536,143 +2813,132 @@ const Dashboard = ({
   isActivitiesOpen,
   setIsActivitiesOpen,
 }) => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isImageUploading, setIsImageUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
+  // Add this function to handle image upload and analysis
+  // ...existing code...
 
+  // Update the handleImageUpload function
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-
-
-
-
-
-
-const [selectedImage, setSelectedImage] = useState(null);
-const [isImageUploading, setIsImageUploading] = useState(false);
-const fileInputRef = useRef(null);
-
-
-
-// Add this function to handle image upload and analysis
-// ...existing code...
-
-// Update the handleImageUpload function
-const handleImageUpload = async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  // Validate file type
-  if (!file.type.startsWith('image/')) {
-    alert('Please select a valid image file.');
-    return;
-  }
-
-  // Validate file size (max 10MB)
-  if (file.size > 10 * 1024 * 1024) {
-    alert('File size should be less than 10MB.');
-    return;
-  }
-
-  setIsImageUploading(true);
-  setIsTyping(true);
-
-  try {
-    const currentTime = new Date();
-
-    // Create image URL for display
-    const imageUrl = URL.createObjectURL(file);
-
-    // Add user's image message to chat immediately
-    const userImageMessage = {
-      text: "",
-      sender: "user",
-      timestamp: currentTime,
-      feedback: "",
-      reaction: "",
-      isImageMessage: true,
-      imageFile: file,
-      imageUrl: imageUrl, // Add this for display
-    };
-
-    setMessages((prev) => [...prev, userImageMessage]);
-    scrollToBottom();
-
-    // Create FormData for API
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('bot_id', selectedBotId);
-
-    console.log('Uploading image for analysis...');
-
-    // Send to image analysis API
-    const response = await fetch('https://fastapi-image-personality-233451779807.us-central1.run.app/analyze_image_with_file', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const data = await response.json();
-    console.log('Image analysis response:', data);
-
-    if (data.error) {
-      throw new Error(data.error);
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      alert("Please select a valid image file.");
+      return;
     }
 
-    // Add bot's response to chat using final_response
-    const botResponse = {
-      text: data.final_response || "I can see your image, but I'm having trouble describing it right now.",
-      sender: "bot",
-      id: `image_analysis_${Date.now()}`,
-      feedback: "",
-      reaction: "",
-      timestamp: currentTime,
-      bot_id: selectedBotId,
-      isSystemMessage: false,
-      imageAnalysis: {
-        description: data.image_description,
-        summary: data.image_summary,
-        bot_used: data.bot_used,
-      }
-    };
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File size should be less than 10MB.");
+      return;
+    }
 
-    setMessages((prev) => [...prev, botResponse]);
+    setIsImageUploading(true);
+    setIsTyping(true);
 
-  } catch (error) {
-    console.error('Image upload error:', error);
-    
-    const errorMessage = "Sorry, I couldn't analyze your image right now. Please try again later.";
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: errorMessage,
-        sender: "bot",
-        id: `image_error_${Date.now()}`,
+    try {
+      const currentTime = new Date();
+
+      // Create image URL for display
+      const imageUrl = URL.createObjectURL(file);
+
+      // Add user's image message to chat immediately
+      const userImageMessage = {
+        text: "",
+        sender: "user",
+        timestamp: currentTime,
         feedback: "",
         reaction: "",
-        timestamp: new Date(),
+        isImageMessage: true,
+        imageFile: file,
+        imageUrl: imageUrl, // Add this for display
+      };
+
+      setMessages((prev) => [...prev, userImageMessage]);
+      scrollToBottom();
+
+      // Create FormData for API
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("bot_id", selectedBotId);
+
+      console.log("Uploading image for analysis...");
+
+      // Send to image analysis API
+      const response = await fetch(
+        "https://fastapi-image-personality-233451779807.us-central1.run.app/analyze_image_with_file",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      console.log("Image analysis response:", data);
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      // Add bot's response to chat using final_response
+      const botResponse = {
+        text:
+          data.final_response ||
+          "I can see your image, but I'm having trouble describing it right now.",
+        sender: "bot",
+        id: `image_analysis_${Date.now()}`,
+        feedback: "",
+        reaction: "",
+        timestamp: currentTime,
         bot_id: selectedBotId,
-        isSystemMessage: true,
-      },
-    ]);
-  } finally {
-    setIsImageUploading(false);
-    setIsTyping(false);
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+        isSystemMessage: false,
+        imageAnalysis: {
+          description: data.image_description,
+          summary: data.image_summary,
+          bot_used: data.bot_used,
+        },
+      };
+
+      setMessages((prev) => [...prev, botResponse]);
+    } catch (error) {
+      console.error("Image upload error:", error);
+
+      const errorMessage =
+        "Sorry, I couldn't analyze your image right now. Please try again later.";
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: errorMessage,
+          sender: "bot",
+          id: `image_error_${Date.now()}`,
+          feedback: "",
+          reaction: "",
+          timestamp: new Date(),
+          bot_id: selectedBotId,
+          isSystemMessage: true,
+        },
+      ]);
+    } finally {
+      setIsImageUploading(false);
+      setIsTyping(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      scrollToBottom();
     }
-    scrollToBottom();
-  }
-};
+  };
 
-
-// Add this function to trigger file input
-const handleImageButtonClick = () => {
-  if (fileInputRef.current) {
-    fileInputRef.current.click();
-  }
-};
-
-
-
-
+  // Add this function to trigger file input
+  const handleImageButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   const { selectedBotId } = useBot();
   //const [messages, setMessages] = useState([]);
@@ -2697,224 +2963,262 @@ const handleImageButtonClick = () => {
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
   // ✅ ADD: Bot location function
   const getBotLocation = (botId) => {
-
-  if (botId.includes('delhi')) return 'Delhi';
-  if (botId.includes('japanese')) return 'Tokyo';
-  if (botId.includes('parisian')) return 'Parisian';
-  if (botId.includes('berlin')) return 'Berlin';
-  if (botId.includes('singapore')) return 'Singapore';
-  if (botId.includes('emirati')) return 'Dubai';
-  if (['Krishna', 'Rama', 'Hanuman', 'Shiva', 'Trimurti'].includes(botId)) return 'spiritual';
-  return 'local'; // default
+    if (botId.includes("delhi")) return "Delhi";
+    if (botId.includes("japanese")) return "Tokyo";
+    if (botId.includes("parisian")) return "Parisian";
+    if (botId.includes("berlin")) return "Berlin";
+    if (botId.includes("singapore")) return "Singapore";
+    if (botId.includes("emirati")) return "Dubai";
+    if (["Krishna", "Rama", "Hanuman", "Shiva", "Trimurti"].includes(botId))
+      return "spiritual";
+    return "local"; // default
   };
   // Function to start an activity
-// ...existing code...
-// Function to start an activity
-const startActivity = (activityId) => {
-  let response = ACTIVITY_RESPONSES[activityId];
-  if (!response) return;
-  // ✅ ADD: Replace location placeholder for city_shuffle
-  // ✅ ENHANCED: Replace location placeholder with specific places for city_shuffle
-  if (activityId === 'city_shuffle') {
-    const botLocation = getBotLocation(selectedBotId);
-    
-    // Define specific locations for each city
-const locationLists = {
-  'Delhi': '1. 🏛️ Red Fort - Historic Mughal fortress\n2. 🌸 Lodhi Gardens - Beautiful parks and tombs\n3. 🛍️ Chandni Chowk - Bustling traditional market',
-  'Tokyo': '1. 🌸 Shibuya Crossing - World\'s busiest intersection\n2. 🏯 Senso-ji Temple - Ancient Buddhist temple\n3. 🗼 Tokyo Skytree - Modern observation tower',
-  'Parisian': '1. 🗼 Eiffel Tower - Iconic iron lattice tower\n2. 🎨 Louvre Museum - World\'s largest art museum\n3. 🥐 Montmartre - Artistic hilltop district',
-  'Berlin': '1. 🚪 Brandenburg Gate - Historic neoclassical monument\n2. 🎨 East Side Gallery - Longest remaining Berlin Wall section\n3. 🏛️ Museum Island - UNESCO World Heritage site',
-  'Singapore': '1. 🌳 Gardens by the Bay - Futuristic nature park\n2. 🦁 Merlion Park - Iconic national symbol\n3. 🏙️ Marina Bay Sands SkyPark - Panoramic city views',
-  'Sri Lanka': '1. 🏝️ Galle Fort - Historic coastal fortress\n2. 🌿 Sinharaja Forest Reserve - Lush rainforest\n3. 🕍 Temple of the Tooth, Kandy - Sacred Buddhist site',
-  'Mexico City': '1. 🏛️ Palacio de Bellas Artes - Majestic cultural center\n2. 🌮 Coyoacán - Vibrant artsy neighborhood\n3. 🏺 Templo Mayor - Ancient Aztec ruins',
-  'Dubai': '1. 🏙️ Burj Khalifa - World\'s tallest building\n2. 🏜️ Al Fahidi Historical Neighbourhood - Old Dubai charm\n3. 🏝️ Palm Jumeirah - Iconic man-made island',
-  'spiritual': '1. 🕉️ Sacred meditation space - Inner temple of the heart\n2. 🌸 Garden of detachment - Where desires dissolve\n3. 🔥 Fire of transformation - Where ego burns away'
-};
-    
-    const locationList = locationLists[botLocation] || '1. Local park\n2. City center\n3. Historic district';
-    
-    response = response.replace('{{LOCATION}}', botLocation);
-    response = response.replace('{{LOCATION_LIST}}', locationList);
-  }
-  // Handle template responses that need username interpolation
-  if (activityId === 'nickname_game') {
-    response = `Onzzz! Nickname Game it is! For you, I'm thinking... 'Meme Master ${userDetails?.name || 'User'}'. Haha, jokin' lah! Maybe 'Steady ${userDetails?.name || 'User'}'? Your turn, bro, what nickname you got for me?`;
-  } else if (activityId === 'compliment_mirror') {
-    response = `Compliment Mirror! You slay lah, ${userDetails?.name || 'User'}. Seriously, you're always so chill and supportive. And you got that subtle rizz! Now, your turn: give one sincere compliment to yourself, no need to be shy!`;
-  } else if (activityId === 'skill_swap_simulation') {
-    response = `Skill Swap Simulation! Okay, Sensei ${userDetails?.name || 'User'}, teach me a life skill. What should I learn today?`;
-  }
+  // ...existing code...
+  // Function to start an activity
+  const startActivity = (activityId) => {
+    let response = ACTIVITY_RESPONSES[activityId];
+    if (!response) return;
+    // ✅ ADD: Replace location placeholder for city_shuffle
+    // ✅ ENHANCED: Replace location placeholder with specific places for city_shuffle
+    if (activityId === "city_shuffle") {
+      const botLocation = getBotLocation(selectedBotId);
 
-  // Set current activity
-  setCurrentActivity(activityId);
-  
-  // Add bot's initial response to chat
-  const currentTime = new Date();
-const activityMessage = {
-  text: response,
-  sender: 'bot',
-  id: `activity_${Date.now()}`,
-  feedback: "",
-  reaction: "",
-  timestamp: currentTime,
-  bot_id: selectedBotId,
-  isSystemMessage: true,
-  isActivityMessage: true,  // ✅ CRITICAL: Mark as activity message
-  activityId: activityId,
-  voice_only: false  // ✅ CRITICAL: Force text-only
-};
+      // Define specific locations for each city
+      const locationLists = {
+        Delhi:
+          "1. 🏛️ Red Fort - Historic Mughal fortress\n2. 🌸 Lodhi Gardens - Beautiful parks and tombs\n3. 🛍️ Chandni Chowk - Bustling traditional market",
+        Tokyo:
+          "1. 🌸 Shibuya Crossing - World's busiest intersection\n2. 🏯 Senso-ji Temple - Ancient Buddhist temple\n3. 🗼 Tokyo Skytree - Modern observation tower",
+        Parisian:
+          "1. 🗼 Eiffel Tower - Iconic iron lattice tower\n2. 🎨 Louvre Museum - World's largest art museum\n3. 🥐 Montmartre - Artistic hilltop district",
+        Berlin:
+          "1. 🚪 Brandenburg Gate - Historic neoclassical monument\n2. 🎨 East Side Gallery - Longest remaining Berlin Wall section\n3. 🏛️ Museum Island - UNESCO World Heritage site",
+        Singapore:
+          "1. 🌳 Gardens by the Bay - Futuristic nature park\n2. 🦁 Merlion Park - Iconic national symbol\n3. 🏙️ Marina Bay Sands SkyPark - Panoramic city views",
+        "Sri Lanka":
+          "1. 🏝️ Galle Fort - Historic coastal fortress\n2. 🌿 Sinharaja Forest Reserve - Lush rainforest\n3. 🕍 Temple of the Tooth, Kandy - Sacred Buddhist site",
+        "Mexico City":
+          "1. 🏛️ Palacio de Bellas Artes - Majestic cultural center\n2. 🌮 Coyoacán - Vibrant artsy neighborhood\n3. 🏺 Templo Mayor - Ancient Aztec ruins",
+        Dubai:
+          "1. 🏙️ Burj Khalifa - World's tallest building\n2. 🏜️ Al Fahidi Historical Neighbourhood - Old Dubai charm\n3. 🏝️ Palm Jumeirah - Iconic man-made island",
+        spiritual:
+          "1. 🕉️ Sacred meditation space - Inner temple of the heart\n2. 🌸 Garden of detachment - Where desires dissolve\n3. 🔥 Fire of transformation - Where ego burns away",
+      };
 
-  setMessages(prev => [...prev, activityMessage]);
-  
-  // Initialize activity history with the bot's opening message
-  setActivityHistory([`Bot: ${response}`]);
-  
-  setIsActivitiesOpen(false);
-  scrollToBottom();
-};
+      const locationList =
+        locationLists[botLocation] ||
+        "1. Local park\n2. City center\n3. Historic district";
 
+      response = response.replace("{{LOCATION}}", botLocation);
+      response = response.replace("{{LOCATION_LIST}}", locationList);
+    }
+    // Handle template responses that need username interpolation
+    if (activityId === "nickname_game") {
+      response = `Onzzz! Nickname Game it is! For you, I'm thinking... 'Meme Master ${
+        userDetails?.name || "User"
+      }'. Haha, jokin' lah! Maybe 'Steady ${
+        userDetails?.name || "User"
+      }'? Your turn, bro, what nickname you got for me?`;
+    } else if (activityId === "compliment_mirror") {
+      response = `Compliment Mirror! You slay lah, ${
+        userDetails?.name || "User"
+      }. Seriously, you're always so chill and supportive. And you got that subtle rizz! Now, your turn: give one sincere compliment to yourself, no need to be shy!`;
+    } else if (activityId === "skill_swap_simulation") {
+      response = `Skill Swap Simulation! Okay, Sensei ${
+        userDetails?.name || "User"
+      }, teach me a life skill. What should I learn today?`;
+    }
 
-// ...existing code...
-// Function to end current activity
-// ...existing code...
+    // Set current activity
+    setCurrentActivity(activityId);
 
-// Function to end current activity
-const endActivity = () => {
-  if (!currentActivity) return;
+    // Add bot's initial response to chat
+    const currentTime = new Date();
+    const activityMessage = {
+      text: response,
+      sender: "bot",
+      id: `activity_${Date.now()}`,
+      feedback: "",
+      reaction: "",
+      timestamp: currentTime,
+      bot_id: selectedBotId,
+      isSystemMessage: true,
+      isActivityMessage: true, // ✅ CRITICAL: Mark as activity message
+      activityId: activityId,
+      voice_only: false, // ✅ CRITICAL: Force text-only
+    };
 
-  const currentTime = new Date();
-  
-  // Calculate XP based on activity difficulty
-  let xpMessage = "";
-  const activityDetail = Object.values(ACTIVITY_CATEGORIES)
-    .flatMap(category => [...category.light, ...category.medium, ...category.deep])
-    .find(activity => activity.id === currentActivity);
-  
-  if (activityDetail) {
-    if (activityDetail.xp.includes('2-3')) xpMessage = " +3 XP earned! 🌟";
-    else if (activityDetail.xp.includes('5')) xpMessage = " +5 XP earned! 🌟";
-    else if (activityDetail.xp.includes('8')) xpMessage = " +8 XP earned! 🌟";
-  }
+    setMessages((prev) => [...prev, activityMessage]);
 
-  const endMessage = {
-    text: `🎉 Activity "${currentActivity.replace(/_/g, ' ')}" completed!${xpMessage}\n\nBack to normal chat mode. Voice messages are now available again. What else would you like to talk about?`,
-    sender: 'bot',
-    id: `activity_end_${Date.now()}`,
-    feedback: "",
-    reaction: "",
-    timestamp: currentTime,
-    bot_id: selectedBotId,
-    isSystemMessage: true,
-    voice_only: false // This will be normal text message with audio option
+    // Initialize activity history with the bot's opening message
+    setActivityHistory([`Bot: ${response}`]);
+
+    setIsActivitiesOpen(false);
+    scrollToBottom();
   };
 
-  setMessages(prev => [...prev, endMessage]);
-  setCurrentActivity(null);
-  setActivityHistory([]);
-  scrollToBottom();
-  
-  // Optional: Show a toast notification
-  console.log("✅ Activity ended, returning to normal chat mode");
-};
+  // ...existing code...
+  // Function to end current activity
+  // ...existing code...
+
+  // Function to end current activity
+  const endActivity = () => {
+    if (!currentActivity) return;
+
+    const currentTime = new Date();
+
+    // Calculate XP based on activity difficulty
+    let xpMessage = "";
+    const activityDetail = Object.values(ACTIVITY_CATEGORIES)
+      .flatMap((category) => [
+        ...category.light,
+        ...category.medium,
+        ...category.deep,
+      ])
+      .find((activity) => activity.id === currentActivity);
+
+    if (activityDetail) {
+      if (activityDetail.xp.includes("2-3")) xpMessage = " +3 XP earned! 🌟";
+      else if (activityDetail.xp.includes("5")) xpMessage = " +5 XP earned! 🌟";
+      else if (activityDetail.xp.includes("8")) xpMessage = " +8 XP earned! 🌟";
+    }
+
+    const endMessage = {
+      text: `🎉 Activity "${currentActivity.replace(
+        /_/g,
+        " "
+      )}" completed!${xpMessage}\n\nBack to normal chat mode. Voice messages are now available again. What else would you like to talk about?`,
+      sender: "bot",
+      id: `activity_end_${Date.now()}`,
+      feedback: "",
+      reaction: "",
+      timestamp: currentTime,
+      bot_id: selectedBotId,
+      isSystemMessage: true,
+      voice_only: false, // This will be normal text message with audio option
+    };
+
+    setMessages((prev) => [...prev, endMessage]);
+    setCurrentActivity(null);
+    setActivityHistory([]);
+    scrollToBottom();
+
+    // Optional: Show a toast notification
+    console.log("✅ Activity ended, returning to normal chat mode");
+  };
 
   // ...existing code...
 
   // Function to handle activity-specific messages
   const handleActivityMessage = async (userMessage) => {
-  if (!currentActivity) return;
+    if (!currentActivity) return;
 
-  const currentTime = new Date();
-  
-  // Add user message to activity history in the correct format
-  const userHistoryEntry = `User: ${userMessage}`;
-  setActivityHistory(prev => [...prev, userHistoryEntry]);
+    const currentTime = new Date();
 
-  try {
-    setIsTyping(true);
+    // Add user message to activity history in the correct format
+    const userHistoryEntry = `User: ${userMessage}`;
+    setActivityHistory((prev) => [...prev, userHistoryEntry]);
 
-    // Prepare payload for gaming agent - Fixed format
-    const payload = {
-      persona: selectedBotId,
-      activity: currentActivity,
-      user_input: userMessage,
-      username: userDetails?.name || "User",
-      history: [...activityHistory, userHistoryEntry] // Include the current message
-    };
+    try {
+      setIsTyping(true);
 
-    console.log("Activity payload:", payload);
-
-    // Call the gaming agent API - FIXED URL
-    const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/cv/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    console.log("🎯 Full activity response:", data); // Debug log
-    setIsTyping(false);
-
-    if (data.error) {
-      const errorMessage = "Sorry, there was an error with the activity. Let's continue our chat normally.";
-      setMessages(prev => [...prev, {
-        text: errorMessage,
-        sender: 'bot',
-        id: `activity_error_${Date.now()}`,
-        feedback: "",
-        reaction: "",
-        timestamp: currentTime,
-        bot_id: selectedBotId,
-        isSystemMessage: true
-      }]);
-      endActivity();
-    } else {
-      // ✅ FIXED: Extract response from the correct path
-      const botResponseText = data.reply?.raw || data.response || "Sorry, I didn't get a proper response.";
-      
-      // Add bot response to chat
-      const botResponse = {
-        text: botResponseText,
-        sender: 'bot',
-        id: data.message_id || `activity_${Date.now()}`,
-        feedback: "",
-        reaction: "",
-        timestamp: currentTime,
-        bot_id: selectedBotId,
-        isSystemMessage: true,
-        isActivityMessage: true,  // ✅ CRITICAL: This marks it as activity message
-        activityId: currentActivity,
-        voice_only: false  // ✅ CRITICAL: Force text-only for activity messages
+      // Prepare payload for gaming agent - Fixed format
+      const payload = {
+        persona: selectedBotId,
+        activity: currentActivity,
+        user_input: userMessage,
+        username: userDetails?.name || "User",
+        history: [...activityHistory, userHistoryEntry], // Include the current message
       };
 
-      setMessages(prev => [...prev, botResponse]);
-      
-      // Add bot response to activity history
-      setActivityHistory(prev => [...prev, `Bot: ${botResponseText}`]);
+      console.log("Activity payload:", payload);
+
+      // Call the gaming agent API - FIXED URL
+      const response = await fetch(
+        "https://novibe-backend-233451779807.us-central1.run.app/cv/chat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      const data = await response.json();
+      console.log("🎯 Full activity response:", data); // Debug log
+      setIsTyping(false);
+
+      if (data.error) {
+        const errorMessage =
+          "Sorry, there was an error with the activity. Let's continue our chat normally.";
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: errorMessage,
+            sender: "bot",
+            id: `activity_error_${Date.now()}`,
+            feedback: "",
+            reaction: "",
+            timestamp: currentTime,
+            bot_id: selectedBotId,
+            isSystemMessage: true,
+          },
+        ]);
+        endActivity();
+      } else {
+        // ✅ FIXED: Extract response from the correct path
+        const botResponseText =
+          data.reply?.raw ||
+          data.response ||
+          "Sorry, I didn't get a proper response.";
+
+        // Add bot response to chat
+        const botResponse = {
+          text: botResponseText,
+          sender: "bot",
+          id: data.message_id || `activity_${Date.now()}`,
+          feedback: "",
+          reaction: "",
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: true,
+          isActivityMessage: true, // ✅ CRITICAL: This marks it as activity message
+          activityId: currentActivity,
+          voice_only: false, // ✅ CRITICAL: Force text-only for activity messages
+        };
+
+        setMessages((prev) => [...prev, botResponse]);
+
+        // Add bot response to activity history
+        setActivityHistory((prev) => [...prev, `Bot: ${botResponseText}`]);
+      }
+    } catch (error) {
+      logClientError(error, { source: "Gaming Agent API" });
+      console.error("Activity error:", error);
+      setIsTyping(false);
+
+      const errorMessage =
+        "Sorry, there was an error with the activity. Let's continue our chat normally.";
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: errorMessage,
+          sender: "bot",
+          id: `activity_error_${Date.now()}`,
+          feedback: "",
+          reaction: "",
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: true,
+        },
+      ]);
+      endActivity();
     }
 
-  } catch (error) {
-    logClientError(error, { source: 'Gaming Agent API' });
-    console.error("Activity error:", error);
-    setIsTyping(false);
-    
-    const errorMessage = "Sorry, there was an error with the activity. Let's continue our chat normally.";
-    setMessages(prev => [...prev, {
-      text: errorMessage,
-      sender: 'bot',
-      id: `activity_error_${Date.now()}`,
-      feedback: "",
-      reaction: "",
-      timestamp: currentTime,
-      bot_id: selectedBotId,
-      isSystemMessage: true
-    }]);
-    endActivity();
-  }
-
-  scrollToBottom();
-};
+    scrollToBottom();
+  };
 
   // Helper: decide if a bot reply should be voice-only
   function isVoiceOnlyBotReply(msg) {
@@ -3118,14 +3422,17 @@ const endActivity = () => {
         'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
-        const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/sync", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
-    
+        const response = await fetch(
+          "https://novibe-backend-233451779807.us-central1.run.app/sync",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          }
+        );
+
         if (!response.ok) throw new Error("Failed to fetch messages");
 
         const newMessages = await response.json();
@@ -3593,26 +3900,26 @@ const toggleRemovalTooltip = (msgId) => {
       await handleActivityMessage(userMessage);
       return;
     }
-
     setIsTyping(true);
     scrollToBottom();
 
-    // 2. If message contains a URL, use /api/news
+    // 1. If message contains a URL, use /api/news
     if (containsUrl(userMessage)) {
       try {
-        const res = await fetch("https://novibe-backend-233451779807.us-central1.run.app/api/news", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query: userMessage,
-            bot_id: selectedBotId,
-            user_email: userDetails?.email || "anonymous@example.com",
-            // conversation_id: currentConversationId || null, // add if you have this
-          }),
-        });
+        const res = await fetch(
+          "https://novibe-backend-233451779807.us-central1.run.app/api/news",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              query: userMessage,
+              bot_id: selectedBotId,
+              user_email: userDetails?.email || "anonymous@example.com",
+            }),
+          }
+        );
         const data = await res.json();
 
-        // Only show ai_response as bot message
         if (data.status === "success" && data.ai_response) {
           setMessages((prev) => [
             ...prev,
@@ -3650,8 +3957,33 @@ const toggleRemovalTooltip = (msgId) => {
       return;
     }
 
+    // Continue with LLM processing
     const currentTime = new Date();
 
+    const convertToOpenAIFormat = (msgs) =>
+      msgs.map((msg) => ({
+        role: msg.sender === "bot" ? "assistant" : "user",
+        content: msg.text,
+      }));
+
+    const primaryLlmPayload = {
+      message:
+        e?.reminder === true
+          ? `User asked to remind: ${e.message}`
+          : userMessage,
+      bot_id: selectedBotId,
+      custom_bot_name: selectedBotDetails?.name || "",
+      user_name: userDetails.name || "",
+      user_gender: userDetails.gender || "",
+      language: "",
+      traits: "",
+      previous_conversation: convertToOpenAIFormat(messages),
+      email: userDetails.email || "",
+      request_time: currentTime.toISOString(),
+      platform: "web",
+    };
+
+    console.log("📤 Sending to Primary LLM (Novi VI):", primaryLlmPayload);
     try {
       /**
        * The function `convertToOpenAIFormat` takes an array of messages and converts them into an
@@ -3695,37 +4027,41 @@ const toggleRemovalTooltip = (msgId) => {
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
 
-      const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/cv/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "https://novibe-backend-233451779807.us-central1.run.app/cv/chat",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(primaryLlmPayload),
+        }
+      );
 
       const data = await response.json();
-
       // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
+      console.log("🧠 Primary LLM Response Data:", data);
 
-      // In your handleSend function, update the XP processing section:
-      // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
       if (data.xp_data) {
         console.log("🎯 XP data found in response:", data.xp_data);
 
-        // Call the global updateXPFromResponse function
         if (typeof window.updateXPFromResponse === "function") {
           console.log("✅ Calling updateXPFromResponse with:", data.xp_data);
           window.updateXPFromResponse(data.xp_data);
         } else {
           console.error("❌ window.updateXPFromResponse is not available");
         }
-
-        // ✅ REMOVED: Flying stars animation code
       } else {
         console.warn("⚠️ No XP data found in response");
       }
 
       setIsTyping(false);
 
-      // ✅ Add bot message with XP info
+      let finalMessage = data.response;
+
+      if (!finalMessage) {
+        console.warn("⚠️ Primary LLM response is empty. Using fallback.");
+        finalMessage = "Sorry, I couldn't generate a reply.";
+      }
+
       if (data.error) {
         const errorMessage =
           "Sorry, there was an error processing your request. Please try again.";
@@ -3760,13 +4096,10 @@ const toggleRemovalTooltip = (msgId) => {
         console.log("Add reminder", reminder);
         console.log("Reminders before adding", reminders);
 
-        // Create the new reminders array
         const updatedReminders = [...reminders, reminder];
         console.log("New reminders array", updatedReminders);
 
-        // Update state
         setReminders(updatedReminders);
-
         localStorage.setItem(
           `reminders-${selectedBotId}`,
           JSON.stringify(updatedReminders)
@@ -3782,12 +4115,14 @@ const toggleRemovalTooltip = (msgId) => {
             reaction: "",
             timestamp: currentTime,
             bot_id: selectedBotId,
-            isSystemMessage: true,
+            isSystemMessage: true, // Reminders are treated as system messages
           },
         ]);
       } else {
-        // Check if this response should be treated as a system message based on content
-        const shouldBeSystemMessage = isSystemMessageContent(data.response);
+        // Use finalMessage if defined, otherwise fallback to data.response
+        const shouldBeSystemMessage = isSystemMessageContent(
+          finalMessage || data.response
+        );
 
         setMessages((prev) => [
           ...prev,
@@ -3803,11 +4138,69 @@ const toggleRemovalTooltip = (msgId) => {
           },
         ]);
       }
+      // --- NEW INTEGRATION POINT ---
+      // AFTER the primary LLM has responded and its message is displayed,
+      // call your backend's /store-message endpoint for categorization and delta logic.
+      try {
+        const storeMessagePayload = {
+          email: userDetails?.email || "anonymous@example.com",
+          bot_id: selectedBotId,
+          message: userMessage, // Send the original user message
+          user_name: userDetails?.name || "Unknown",
+        };
+
+        console.log(
+          "📤 Sending to Backend /store-message for Categorization & Delta:",
+          storeMessagePayload
+        );
+
+        const storeRes = await fetch(
+          "https://novibe-backend-233451779807.us-central1.run.app/store-message",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(storeMessagePayload),
+          }
+        );
+
+        const storeData = await storeRes.json();
+        console.log(
+          "✅ Backend /store-message Result (Categorization & Delta):",
+          storeData
+        );
+
+        // Optional: You can display a small, non-intrusive notification to the user
+        // if storeData.delta_result.status indicates important changes,
+        // e.g., "Your preferences have been updated!"
+        if (storeData.delta_result?.status === "delta_updates_applied") {
+          console.log(
+            "Info: User persona updated in database due to new message."
+          );
+          // You could add a temporary message to the UI or a log for debugging
+        }
+      } catch (storeError) {
+        console.error(
+          "❌ Error with Backend /store-message (Categorization & Delta):",
+          storeError
+        );
+        // You might want to log this error to your backend's frontend_error_logs
+        // or display a subtle message to the user that memory update failed.
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: `⚠️ Persona memory update failed.`, // Less intrusive message
+            sender: "system",
+            timestamp: new Date(),
+            isSystemMessage: true,
+          },
+        ]);
+      }
     } catch (error) {
       logClientError(error, { source: "API Call" });
       console.log(error);
-      console.error(error);
+      console.error("❌ Error calling Primary LLM:", error);
       setIsTyping(false);
+
       const errorMessage =
         "Sorry, there was an error processing your request. Please try again.";
       setMessages((prev) => [
@@ -3894,13 +4287,16 @@ const toggleRemovalTooltip = (msgId) => {
 
       // Send to voice call API endpoint - Using local development server
       const response = await Promise.race([
-        fetch("https://novibe-backend-233451779807.us-central1.run.app/voice-call", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }),
+        fetch(
+          "https://novibe-backend-233451779807.us-central1.run.app/voice-call",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          }
+        ),
         new Promise((_, reject) =>
           setTimeout(
             () => reject(new Error("Voice call request timeout")),
@@ -4081,138 +4477,140 @@ const toggleRemovalTooltip = (msgId) => {
                 </p>
               </div>
 
-
-{messagesOnDate.map((msg, index) => (
-  <div
-    key={index}
-    className={`my-2 flex ${
-      msg.sender === "bot" ? "justify-start" : "justify-end"
-    }`}
-  >
-    <div className="max-w-[80%] min-w-16 relative">
-      {msg.sender === "bot" && msg.reaction && (
-        <div
-          className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
-          onClick={() => toggleRemovalTooltip(msg.id)}
-        >
-          <span className="text-lg">{msg.reaction}</span>
-          {showRemoveTooltip === msg.id && (
-            <RemovalTooltip msgId={msg.id} />
-          )}
-        </div>
-      )}
-
-      <div className="flex flex-row items-center gap-2">
-        {msg.sender === "bot" ? (
-          msg.voice_only ? (
-            <PlayAudio
-              text={msg.text}
-              bot_id={msg.bot_id || selectedBotId}
-            />
-          ) : (
-            <>
-              <div
-                data-sender="bot"
-                className={`px-4 py-2 rounded-2xl ${
-                  botThemes[selectedBotId]?.botBubble ||
-                  "bg-white/20 text-gray-900"
-                } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
-                  highlightedMessage === msg.id
-                    ? "bg-orange-200/30"
-                    : ""
-                } w-full text-left`}
-                style={{
-                  userSelect: "none",
-                  WebkitUserSelect: "none",
-                  WebkitTouchCallout: "none",
-                }}
-                onTouchStart={(e) => {
-                  e.preventDefault();
-                  handleLongPressStart(msg.id);
-                }}
-                onTouchEnd={handleLongPressEnd}
-                onTouchMove={handleLongPressEnd}
-                onTouchCancel={handleLongPressEnd}
-              >
-                <motion.p>
-                  {(typeof msg.text === "string" ? msg.text : "")
-                    .split(" ")
-                    .map((word, i) => (
-                      <motion.span
-                        key={i}
-                        initial={{
-                          filter: "blur(10px)",
-                          opacity: 0,
-                          y: 5,
-                        }}
-                        animate={{
-                          filter: "blur(0px)",
-                          opacity: 1,
-                          y: 0,
-                        }}
-                        transition={{
-                          duration: 0.2,
-                          ease: "easeInOut",
-                          delay: 0.02 * i,
-                        }}
-                        className="inline-block select-none"
+              {messagesOnDate.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`my-2 flex ${
+                    msg.sender === "bot" ? "justify-start" : "justify-end"
+                  }`}
+                >
+                  <div className="max-w-[80%] min-w-16 relative">
+                    {msg.sender === "bot" && msg.reaction && (
+                      <div
+                        className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
+                        onClick={() => toggleRemovalTooltip(msg.id)}
                       >
-                        {word}&nbsp;
-                      </motion.span>
-                    ))}
-                </motion.p>
-              </div>
-              <PlayAudio
-                text={msg.text}
-                bot_id={msg.bot_id || selectedBotId}
-                minimal={true}
-              />
-            </>
-          )
-        ) : (
-<div
-  data-sender="user"
-  className={`px-4 py-2 rounded-2xl ${
-    msg.isImageMessage 
-      ? "bg-transparent border-none shadow-none" // No background for images
-      : botThemes[selectedBotId]?.userBubble || "bg-purple-400/80 text-white"
-  } ${
-    !msg.isImageMessage 
-      ? "border border-white/20 backdrop-blur-sm shadow-md" 
-      : ""
-  } placeholder-gray-200 ${
-    highlightedMessage === msg.id
-      ? "bg-orange-200/90"
-      : ""
-  } w-full text-left`}
-  style={{
-    userSelect: "none",
-    WebkitUserSelect: "none",
-    WebkitTouchCallout: "none",
-  }}
->
-{msg.isImageMessage ? (
-  <div className="flex flex-col gap-2">
-    <img
-      src={msg.imageUrl || (msg.imageFile ? URL.createObjectURL(msg.imageFile) : '')}
-      alt="Shared image"
-      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
-      onLoad={() => scrollToBottom()}
-      style={{ backgroundColor: 'transparent' }}
-    />
-    {msg.text && (
-      <span className="text-sm">{msg.text}</span>
-    )}
-  </div>
-) : (
-  msg.text
-)}
-          </div>
-        )}
-      </div>
+                        <span className="text-lg">{msg.reaction}</span>
+                        {showRemoveTooltip === msg.id && (
+                          <RemovalTooltip msgId={msg.id} />
+                        )}
+                      </div>
+                    )}
 
-
-
+                    <div className="flex flex-row items-center gap-2">
+                      {msg.sender === "bot" ? (
+                        msg.voice_only ? (
+                          <PlayAudio
+                            text={msg.text}
+                            bot_id={msg.bot_id || selectedBotId}
+                          />
+                        ) : (
+                          <>
+                            <div
+                              data-sender="bot"
+                              className={`px-4 py-2 rounded-2xl ${
+                                botThemes[selectedBotId]?.botBubble ||
+                                "bg-white/20 text-gray-900"
+                              } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
+                                highlightedMessage === msg.id
+                                  ? "bg-orange-200/30"
+                                  : ""
+                              } w-full text-left`}
+                              style={{
+                                userSelect: "none",
+                                WebkitUserSelect: "none",
+                                WebkitTouchCallout: "none",
+                              }}
+                              onTouchStart={(e) => {
+                                e.preventDefault();
+                                handleLongPressStart(msg.id);
+                              }}
+                              onTouchEnd={handleLongPressEnd}
+                              onTouchMove={handleLongPressEnd}
+                              onTouchCancel={handleLongPressEnd}
+                            >
+                              <motion.p>
+                                {(typeof msg.text === "string" ? msg.text : "")
+                                  .split(" ")
+                                  .map((word, i) => (
+                                    <motion.span
+                                      key={i}
+                                      initial={{
+                                        filter: "blur(10px)",
+                                        opacity: 0,
+                                        y: 5,
+                                      }}
+                                      animate={{
+                                        filter: "blur(0px)",
+                                        opacity: 1,
+                                        y: 0,
+                                      }}
+                                      transition={{
+                                        duration: 0.2,
+                                        ease: "easeInOut",
+                                        delay: 0.02 * i,
+                                      }}
+                                      className="inline-block select-none"
+                                    >
+                                      {word}&nbsp;
+                                    </motion.span>
+                                  ))}
+                              </motion.p>
+                            </div>
+                            <PlayAudio
+                              text={msg.text}
+                              bot_id={msg.bot_id || selectedBotId}
+                              minimal={true}
+                            />
+                          </>
+                        )
+                      ) : (
+                        <div
+                          data-sender="user"
+                          className={`px-4 py-2 rounded-2xl ${
+                            msg.isImageMessage
+                              ? "bg-transparent border-none shadow-none" // No background for images
+                              : botThemes[selectedBotId]?.userBubble ||
+                                "bg-purple-400/80 text-white"
+                          } ${
+                            !msg.isImageMessage
+                              ? "border border-white/20 backdrop-blur-sm shadow-md"
+                              : ""
+                          } placeholder-gray-200 ${
+                            highlightedMessage === msg.id
+                              ? "bg-orange-200/90"
+                              : ""
+                          } w-full text-left`}
+                          style={{
+                            userSelect: "none",
+                            WebkitUserSelect: "none",
+                            WebkitTouchCallout: "none",
+                          }}
+                        >
+                          {msg.isImageMessage ? (
+                            <div className="flex flex-col gap-2">
+                              <img
+                                src={
+                                  msg.imageUrl ||
+                                  (msg.imageFile
+                                    ? URL.createObjectURL(msg.imageFile)
+                                    : "")
+                                }
+                                alt="Shared image"
+                                className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+                                onLoad={() => scrollToBottom()}
+                                style={{ backgroundColor: "transparent" }}
+                              />
+                              {msg.text && (
+                                <span className="text-sm">{msg.text}</span>
+                              )}
+                            </div>
+                          ) : (
+                            msg.text
+                          )}
+                        </div>
+                      )}
+                    </div>
                     <div className="flex flex-row justify-end">
                       <span
                         className={`text-xs mt-[7px] ${
@@ -4369,24 +4767,13 @@ const toggleRemovalTooltip = (msgId) => {
           }
         />
 
-
-
-
-
-
-
-
-
-
-
-
         {/* Hidden file input for image upload */}
         <input
           ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={handleImageUpload}
-          style={{ display: 'none' }}
+          style={{ display: "none" }}
         />
 
         {/* ✅ NEW: Image upload button */}
@@ -4418,9 +4805,6 @@ const toggleRemovalTooltip = (msgId) => {
             )}
           </button>
         )}
-
-
-
 
         {/* ✅ CONDITIONAL: Hide voice call button during activities */}
         {!currentActivity && (
