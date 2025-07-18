@@ -3319,34 +3319,29 @@ const endActivity = () => {
     }
   }, [showReactionsFor]);
 
-  // Toggle reaction panel visibility for desktop
-  const toggleReactions = (msgId) => {
-    if (isMobile) return;
 
-    setHighlightedMessage(msgId);
-    setShowReactionsFor(showReactionsFor === msgId ? null : msgId);
-    setShowRemoveTooltip(null); // Hide removal tooltip when opening reaction selector
-  };
+const toggleReactions = (msgId) => {
+  if (isMobile || msgId == null) return; // Prevent for null id
+  setHighlightedMessage(msgId);
+  setShowReactionsFor(showReactionsFor === msgId ? null : msgId);
+  setShowRemoveTooltip(null);
+};
 
-  // Toggle removal tooltip visibility
-  const toggleRemovalTooltip = (msgId) => {
-    // If clicking on the same message that already has the tooltip, then remove both the reaction and tooltip
-    if (showRemoveTooltip === msgId) {
-      // Remove the reaction
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.id === msgId ? { ...msg, reaction: "" } : msg
-        )
-      );
-      // Hide the tooltip
-      setShowRemoveTooltip(null);
-    } else {
-      // Show the tooltip for this message and hide for others
-      setShowRemoveTooltip(msgId);
-      // Hide the reaction selector if open
-      setShowReactionsFor(null);
-    }
-  };
+const toggleRemovalTooltip = (msgId) => {
+  if (msgId == null) return; // Prevent for null id
+  if (showRemoveTooltip === msgId) {
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.id === msgId ? { ...msg, reaction: "" } : msg
+      )
+    );
+    setShowRemoveTooltip(null);
+  } else {
+    setShowRemoveTooltip(msgId);
+    setShowReactionsFor(null);
+  }
+};
+
 
   // This function handles the user's feedback on a message like or dislike
   const handleFeedback = async (feedback, msg_id) => {
@@ -4233,9 +4228,10 @@ const endActivity = () => {
 
                       {msg.sender === "bot" && (
                         <div className="flex justify-end px-2 mr-7 relative text-white">
-                          {showReactionsFor === msg.id && (
-                            <ReactionSelector msgId={msg.id} />
-                          )}
+
+{showReactionsFor !== null && msg.id !== null && showReactionsFor === msg.id && (
+  <ReactionSelector msgId={msg.id} />
+)}
 
                           <div className="gap-3 flex flex-row mt-1">
                             {!isMobile && (
