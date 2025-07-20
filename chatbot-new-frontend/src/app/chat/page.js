@@ -3222,7 +3222,7 @@ const Dashboard = ({
 
   // Helper: decide if a bot reply should be voice-only
   function isVoiceOnlyBotReply(msg) {
-    return msg.voice_only === true;
+    return false;
   }
 
   // Utility to detect URLs (simple version)
@@ -3251,50 +3251,25 @@ const Dashboard = ({
     });
   }
     */
-  // Helper function to detect if a message should be treated as a system message.
-  // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
 
-  // ✅ FIXED: Update the processBotMessages function
-  function processBotMessages(messages) {
-    let botReplyCount = {}; // ✅ Changed back to object to track per bot
 
-    return messages.map((msg) => {
-      if (msg.sender === "bot") {
-        const botId = msg.bot_id || selectedBotId || "default";
+function processBotMessages(messages) {
 
-        // Check if this is a system message either by explicit flag OR by content pattern
-        const isSystemMsg =
-          msg.isSystemMessage === true || isSystemMessageContent(msg.text);
+  return messages.map((msg) => {
+    if (msg.sender === "bot") {
+      // Check if this is a system message either by explicit flag OR by content pattern
+      const isSystemMsg =
+        msg.isSystemMessage === true || isSystemMessageContent(msg.text);
 
-        // ✅ NEW: Check if this is an activity message
-        const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
+      // Check if this is an activity message
+      const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
 
-        // ✅ CRITICAL FIX: Only count non-system, non-activity bot messages for the sequence
-        if (!isSystemMsg && !isActivityMsg) {
-          if (!botReplyCount[botId]) botReplyCount[botId] = 0;
-          botReplyCount[botId]++;
-        }
-
-        // ✅ UPDATED: Proper voice_only logic
-        let voice_only = false;
-
-        if (isActivityMsg) {
-          // ✅ Activity messages are ALWAYS text-only (text bubble with small play button)
-          voice_only = false;
-        } else if (isSystemMsg) {
-          // System messages (reminders, proactive messages) are ALWAYS voice-only
-          voice_only = true;
-        } else {
-          // ✅ FIXED: Normal chat sequence - every 3rd normal bot message should be voice-only
-          const currentBotCount = botReplyCount[botId] || 0;
-          voice_only = currentBotCount % 3 === 0;
-        }
-
-        return { ...msg, voice_only, isSystemMessage: isSystemMsg };
-      }
-      return msg;
-    });
-  }
+      // All bot messages should have voice_only: false
+      return { ...msg, voice_only: false, isSystemMessage: isSystemMsg };
+    }
+    return msg;
+  });
+}
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (showReactionsFor && !e.target.closest(".reaction-selector")) {
