@@ -3445,7 +3445,7 @@ if (data.xp_status) {
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
         const response = await fetch(
-          "http://127.0.0.1:8000/sync",
+          "https://novibe-backend-233451779807.us-central1.run.app/sync",
           {
             method: "POST",
             headers: {
@@ -3692,7 +3692,7 @@ const toggleRemovalTooltip = (msgId) => {
             `feedback` variables interpolated into the URL. The request is using the `fetch` function with the
             `await` keyword to asynchronously send the POST request. The method of the request is set to "POST". */
       const response = await fetch(
-        `http://127.0.0.1:8000/cv/message/feedback/${msg_id}/${feedback}`,
+        `https://novibe-backend-233451779807.us-central1.run.app/cv/message/feedback/${msg_id}/${feedback}`,
         {
           method: "POST",
         }
@@ -3719,7 +3719,7 @@ const toggleRemovalTooltip = (msgId) => {
   };
 async function storeActivityMessageInBackend({ text, sender, activityId }) {
   try {
-    await fetch("http://127.0.0.1:8000/store-activity-message", {
+    await fetch("https://novibe-backend-233451779807.us-central1.run.app/store-activity-message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -3811,7 +3811,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
             function. */
 
             const res = await fetch(
-              "http://127.0.0.1:8000/cv/response/reminder",
+              "https://novibe-backend-233451779807.us-central1.run.app/cv/response/reminder",
               {
                 method: "POST",
                 headers: {
@@ -3953,7 +3953,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
     if (containsUrl(userMessage)) {
       try {
         const res = await fetch(
-          "http://127.0.0.1:8000/api/news",
+          "https://novibe-backend-233451779807.us-central1.run.app/api/news",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -4074,7 +4074,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
       `await` keyword, indicating that the fetch operation is asynchronous. */
 
       const response = await fetch(
-        "http://127.0.0.1:8000/cv/chat",
+        "https://novibe-backend-233451779807.us-central1.run.app/cv/chat",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -4201,7 +4201,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
         );
 
         const storeRes = await fetch(
-          "http://127.0.0.1:8000/store-message",
+          "https://novibe-backend-233451779807.us-central1.run.app/store-message",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -4334,7 +4334,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
       // Send to voice call API endpoint - Using local development server
       const response = await Promise.race([
         fetch(
-          "http://127.0.0.1:8000/voice-call",
+          "https://novibe-backend-233451779807.us-central1.run.app/voice-call",
           {
             method: "POST",
             headers: {
