@@ -3152,7 +3152,7 @@ const payload = {
 
       // Call the gaming agent API - FIXED URL
       const response = await fetch(
-        "http://127.0.0.1:8080/chat",
+        "https://gaming-agents-api-2l5aaarlka-uc.a.run.app/chat",
         {
           method: "POST",
           headers: {
