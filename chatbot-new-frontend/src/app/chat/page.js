@@ -2750,6 +2750,8 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
           </div>
         </SidebarBody>
       </Sidebar>
+
+
       <Dashboard
         traits={selectedTraits}
         language={selectedLanguage}
@@ -3051,6 +3053,13 @@ const Dashboard = ({
 
     setMessages((prev) => [...prev, activityMessage]);
 
+
+// Store the activity prompt in Supabase
+storeActivityMessageInBackend({
+  text: response,
+  sender: "bot",
+  activityId,
+});
     // Initialize activity history with the bot's opening message
     setActivityHistory([`Bot: ${response}`]);
 
@@ -3124,19 +3133,20 @@ const Dashboard = ({
       setIsTyping(true);
 
       // Prepare payload for gaming agent - Fixed format
-      const payload = {
-        persona: selectedBotId,
-        activity: currentActivity,
-        user_input: userMessage,
-        username: userDetails?.name || "User",
-        history: [...activityHistory, userHistoryEntry], // Include the current message
-      };
+const payload = {
+  persona: selectedBotId,
+  activity: currentActivity,
+  user_input: userMessage,
+  username: userDetails?.name || "User",
+  email: userDetails?.email || "", // <-- ADD THIS LINE!
+  history: [...activityHistory, userHistoryEntry], // Include the current message
+};
 
       console.log("Activity payload:", payload);
 
       // Call the gaming agent API - FIXED URL
       const response = await fetch(
-        "https://gaming-agents-api-2l5aaarlka-uc.a.run.app/chat",
+        "http://127.0.0.1:8080/chat",
         {
           method: "POST",
           headers: {
@@ -3148,6 +3158,31 @@ const Dashboard = ({
 
       const data = await response.json();
       console.log("🎯 Full activity response:", data); // Debug log
+
+
+      
+if (data.xp_status) {
+  console.log("Calling updateXPFromResponse with:", data.xp_status);
+  if (typeof window.updateXPFromResponse === "function") {
+    window.updateXPFromResponse(data.xp_status);
+  } else {
+    // Retry after 500ms if not available yet
+    setTimeout(() => {
+      if (typeof window.updateXPFromResponse === "function") {
+        window.updateXPFromResponse(data.xp_status);
+      } else {
+        console.error("window.updateXPFromResponse is STILL not available after retry!");
+      }
+    }, 500);
+  }
+
+  // (Optional) Fallback: force XP re-fetch after a short delay
+  setTimeout(() => {
+    if (typeof window.fetchCurrentXP === "function") {
+      window.fetchCurrentXP();
+    }
+  }, 1200);
+}
       setIsTyping(false);
 
       if (data.error) {
@@ -3222,7 +3257,7 @@ const Dashboard = ({
 
   // Helper: decide if a bot reply should be voice-only
   function isVoiceOnlyBotReply(msg) {
-    return false;
+    return msg.voice_only === true;
   }
 
   // Utility to detect URLs (simple version)
@@ -3251,25 +3286,50 @@ const Dashboard = ({
     });
   }
     */
+  // Helper function to detect if a message should be treated as a system message.
+  // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
 
+  // ✅ FIXED: Update the processBotMessages function
+  function processBotMessages(messages) {
+    let botReplyCount = {}; // ✅ Changed back to object to track per bot
 
-function processBotMessages(messages) {
+    return messages.map((msg) => {
+      if (msg.sender === "bot") {
+        const botId = msg.bot_id || selectedBotId || "default";
 
-  return messages.map((msg) => {
-    if (msg.sender === "bot") {
-      // Check if this is a system message either by explicit flag OR by content pattern
-      const isSystemMsg =
-        msg.isSystemMessage === true || isSystemMessageContent(msg.text);
+        // Check if this is a system message either by explicit flag OR by content pattern
+        const isSystemMsg =
+          msg.isSystemMessage === true || isSystemMessageContent(msg.text);
 
-      // Check if this is an activity message
-      const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
+        // ✅ NEW: Check if this is an activity message
+        const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
 
-      // All bot messages should have voice_only: false
-      return { ...msg, voice_only: false, isSystemMessage: isSystemMsg };
-    }
-    return msg;
-  });
-}
+        // ✅ CRITICAL FIX: Only count non-system, non-activity bot messages for the sequence
+        if (!isSystemMsg && !isActivityMsg) {
+          if (!botReplyCount[botId]) botReplyCount[botId] = 0;
+          botReplyCount[botId]++;
+        }
+
+        // ✅ UPDATED: Proper voice_only logic
+        let voice_only = false;
+
+        if (isActivityMsg) {
+          // ✅ Activity messages are ALWAYS text-only (text bubble with small play button)
+          voice_only = false;
+        } else if (isSystemMsg) {
+          // System messages (reminders, proactive messages) are ALWAYS voice-only
+          voice_only = true;
+        } else {
+          // ✅ FIXED: Normal chat sequence - every 3rd normal bot message should be voice-only
+          const currentBotCount = botReplyCount[botId] || 0;
+          voice_only = currentBotCount % 3 === 0;
+        }
+
+        return { ...msg, voice_only, isSystemMessage: isSystemMsg };
+      }
+      return msg;
+    });
+  }
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (showReactionsFor && !e.target.closest(".reaction-selector")) {
@@ -3398,7 +3458,7 @@ function processBotMessages(messages) {
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
         const response = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/sync",
+          "http://127.0.0.1:8000/sync",
           {
             method: "POST",
             headers: {
@@ -3420,12 +3480,19 @@ function processBotMessages(messages) {
         specific format (hour:minute AM/PM) in the 'en-US' locale. It then filters out any empty
         messages using the `filterEmptyMessages` function and stores the formatted messages in the
         `formattedMessages` array. */
-        const formattedMessages = filterEmptyMessages(
-          rawMessages.map((msg) => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp),
-          }))
-        );
+// In the sync messages useEffect, after mapping messages:
+const formattedMessages = filterEmptyMessages(
+  rawMessages.map((msg) => ({
+    ...msg,
+    timestamp: new Date(msg.timestamp),
+    // Mark as activity message if platform or activity_name is present
+    isActivityMessage:
+      msg.platform === "game_activity" ||
+      !!msg.activity_name ||
+      msg.isActivityMessage === true,
+    activityId: msg.activity_name || msg.activityId || null,
+  }))
+);
 
         const defaultMessageText =
           bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
@@ -3638,7 +3705,7 @@ const toggleRemovalTooltip = (msgId) => {
             `feedback` variables interpolated into the URL. The request is using the `fetch` function with the
             `await` keyword to asynchronously send the POST request. The method of the request is set to "POST". */
       const response = await fetch(
-        `https://novibe-backend-233451779807.us-central1.run.app/cv/message/feedback/${msg_id}/${feedback}`,
+        `http://127.0.0.1:8000/cv/message/feedback/${msg_id}/${feedback}`,
         {
           method: "POST",
         }
@@ -3663,7 +3730,24 @@ const toggleRemovalTooltip = (msgId) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
+async function storeActivityMessageInBackend({ text, sender, activityId }) {
+  try {
+    await fetch("http://127.0.0.1:8000/store-activity-message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: userDetails.email,
+        bot_id: selectedBotId,
+        user_message: sender === "user" ? text : "",
+        bot_response: sender === "bot" ? text : "",
+        platform: "game_activity",
+        activity_name: activityId,
+      }),
+    });
+  } catch (e) {
+    console.error("Failed to store activity message:", e);
+  }
+}
   const prevMessagesLength = useRef(messages.length);
 
   // When messages change, call scroll to bottom
@@ -3740,7 +3824,7 @@ const toggleRemovalTooltip = (msgId) => {
             function. */
 
             const res = await fetch(
-              "https://novibe-backend-233451779807.us-central1.run.app/cv/response/reminder",
+              "http://127.0.0.1:8000/cv/response/reminder",
               {
                 method: "POST",
                 headers: {
@@ -3882,7 +3966,7 @@ const toggleRemovalTooltip = (msgId) => {
     if (containsUrl(userMessage)) {
       try {
         const res = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/api/news",
+          "http://127.0.0.1:8000/api/news",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -4003,7 +4087,7 @@ const toggleRemovalTooltip = (msgId) => {
       `await` keyword, indicating that the fetch operation is asynchronous. */
 
       const response = await fetch(
-        "https://novibe-backend-233451779807.us-central1.run.app/cv/chat",
+        "http://127.0.0.1:8000/cv/chat",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -4130,7 +4214,7 @@ const toggleRemovalTooltip = (msgId) => {
         );
 
         const storeRes = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/store-message",
+          "http://127.0.0.1:8000/store-message",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -4263,7 +4347,7 @@ const toggleRemovalTooltip = (msgId) => {
       // Send to voice call API endpoint - Using local development server
       const response = await Promise.race([
         fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/voice-call",
+          "http://127.0.0.1:8000/voice-call",
           {
             method: "POST",
             headers: {
@@ -4530,6 +4614,20 @@ const toggleRemovalTooltip = (msgId) => {
                                       {word}&nbsp;
                                     </motion.span>
                                   ))}
+  {/* Add the gaming symbol here */}
+  {(msg.isActivityMessage || msg.platform === "game_activity" || msg.activityId) && (
+    <span
+      className="inline-block ml-2 align-middle text-lg"
+      title="Game Activity"
+      style={{ verticalAlign: "middle" }}
+    >
+      🎮
+    </span>
+  )}
+
+
+
+
                               </motion.p>
                             </div>
                             <PlayAudio

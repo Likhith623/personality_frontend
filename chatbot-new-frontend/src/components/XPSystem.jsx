@@ -1,7 +1,16 @@
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from "react"; // ✅ ADD useMemo here
 import CustomModal from "./customforxp";
-
+// ...existing code...
+// Expose placeholder global functions immediately so they're always defined
+if (typeof window !== "undefined") {
+  window.updateXPFromResponse = window.updateXPFromResponse || (() => {});
+  window.fetchCurrentXP = window.fetchCurrentXP || (() => {});
+  window.triggerXPAnimation = window.triggerXPAnimation || (() => {});
+  window.createFlyingCoin = window.createFlyingCoin || (() => {});
+  window.createFlyingStars = window.createFlyingStars || (() => {});
+}
+// ...existing code...
 // XP Animation Styles Component(to be clealry separated)
 const XPAnimationStyles = () => (
   <style jsx>{`
@@ -862,6 +871,13 @@ const XPSystem = ({ selectedBotDetails, selectedBotId, userDetails }) => {
     createFlyingStars,
     updateXPFromResponse,
   ]); // ✅ FIXED: Empty dependency array since functions are stable
+
+  useEffect(() => {
+    window.fetchCurrentXP = fetchCurrentXP;
+    return () => {
+      delete window.fetchCurrentXP;
+    };
+  }, [fetchCurrentXP]);
 
   return (
     <>
