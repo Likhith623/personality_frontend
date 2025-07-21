@@ -3116,9 +3116,15 @@ storeActivityMessageInBackend({
     // Optional: Show a toast notification
     console.log("✅ Activity ended, returning to normal chat mode");
   };
-
-  // ...existing code...
-
+function waitForUpdateXPFromResponse(xp_status, retries = 30) {
+  if (typeof window.updateXPFromResponse === "function") {
+    window.updateXPFromResponse(xp_status);
+  } else if (retries > 0) {
+    setTimeout(() => waitForUpdateXPFromResponse(xp_status, retries - 1), 400);
+  } else {
+    console.error("window.updateXPFromResponse is STILL not available after max retries!");
+  }
+}
   // Function to handle activity-specific messages
   const handleActivityMessage = async (userMessage) => {
     if (!currentActivity) return;
@@ -3162,26 +3168,7 @@ const payload = {
 
       
 if (data.xp_status) {
-  console.log("Calling updateXPFromResponse with:", data.xp_status);
-  if (typeof window.updateXPFromResponse === "function") {
-    window.updateXPFromResponse(data.xp_status);
-  } else {
-    // Retry after 500ms if not available yet
-    setTimeout(() => {
-      if (typeof window.updateXPFromResponse === "function") {
-        window.updateXPFromResponse(data.xp_status);
-      } else {
-        console.error("window.updateXPFromResponse is STILL not available after retry!");
-      }
-    }, 500);
-  }
-
-  // (Optional) Fallback: force XP re-fetch after a short delay
-  setTimeout(() => {
-    if (typeof window.fetchCurrentXP === "function") {
-      window.fetchCurrentXP();
-    }
-  }, 1200);
+  waitForUpdateXPFromResponse(data.xp_status);
 }
       setIsTyping(false);
 
