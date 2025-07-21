@@ -2750,6 +2750,8 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
           </div>
         </SidebarBody>
       </Sidebar>
+
+
       <Dashboard
         traits={selectedTraits}
         language={selectedLanguage}
@@ -3051,6 +3053,13 @@ const Dashboard = ({
 
     setMessages((prev) => [...prev, activityMessage]);
 
+
+// Store the activity prompt in Supabase
+storeActivityMessageInBackend({
+  text: response,
+  sender: "bot",
+  activityId,
+});
     // Initialize activity history with the bot's opening message
     setActivityHistory([`Bot: ${response}`]);
 
@@ -3107,9 +3116,15 @@ const Dashboard = ({
     // Optional: Show a toast notification
     console.log("✅ Activity ended, returning to normal chat mode");
   };
-
-  // ...existing code...
-
+function waitForUpdateXPFromResponse(xp_status, retries = 30) {
+  if (typeof window.updateXPFromResponse === "function") {
+    window.updateXPFromResponse(xp_status);
+  } else if (retries > 0) {
+    setTimeout(() => waitForUpdateXPFromResponse(xp_status, retries - 1), 400);
+  } else {
+    console.error("window.updateXPFromResponse is STILL not available after max retries!");
+  }
+}
   // Function to handle activity-specific messages
   const handleActivityMessage = async (userMessage) => {
     if (!currentActivity) return;
@@ -3124,13 +3139,14 @@ const Dashboard = ({
       setIsTyping(true);
 
       // Prepare payload for gaming agent - Fixed format
-      const payload = {
-        persona: selectedBotId,
-        activity: currentActivity,
-        user_input: userMessage,
-        username: userDetails?.name || "User",
-        history: [...activityHistory, userHistoryEntry], // Include the current message
-      };
+const payload = {
+  persona: selectedBotId,
+  activity: currentActivity,
+  user_input: userMessage,
+  username: userDetails?.name || "User",
+  email: userDetails?.email || "", // <-- ADD THIS LINE!
+  history: [...activityHistory, userHistoryEntry], // Include the current message
+};
 
       console.log("Activity payload:", payload);
 
@@ -3148,6 +3164,12 @@ const Dashboard = ({
 
       const data = await response.json();
       console.log("🎯 Full activity response:", data); // Debug log
+
+
+      
+if (data.xp_status) {
+  waitForUpdateXPFromResponse(data.xp_status);
+}
       setIsTyping(false);
 
       if (data.error) {
@@ -3222,7 +3244,7 @@ const Dashboard = ({
 
   // Helper: decide if a bot reply should be voice-only
   function isVoiceOnlyBotReply(msg) {
-    return false;
+    return msg.voice_only === true;
   }
 
   // Utility to detect URLs (simple version)
@@ -3251,25 +3273,50 @@ const Dashboard = ({
     });
   }
     */
+  // Helper function to detect if a message should be treated as a system message.
+  // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
 
+  // ✅ FIXED: Update the processBotMessages function
+  function processBotMessages(messages) {
+    let botReplyCount = {}; // ✅ Changed back to object to track per bot
 
-function processBotMessages(messages) {
+    return messages.map((msg) => {
+      if (msg.sender === "bot") {
+        const botId = msg.bot_id || selectedBotId || "default";
 
-  return messages.map((msg) => {
-    if (msg.sender === "bot") {
-      // Check if this is a system message either by explicit flag OR by content pattern
-      const isSystemMsg =
-        msg.isSystemMessage === true || isSystemMessageContent(msg.text);
+        // Check if this is a system message either by explicit flag OR by content pattern
+        const isSystemMsg =
+          msg.isSystemMessage === true || isSystemMessageContent(msg.text);
 
-      // Check if this is an activity message
-      const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
+        // ✅ NEW: Check if this is an activity message
+        const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
 
-      // All bot messages should have voice_only: false
-      return { ...msg, voice_only: false, isSystemMessage: isSystemMsg };
-    }
-    return msg;
-  });
-}
+        // ✅ CRITICAL FIX: Only count non-system, non-activity bot messages for the sequence
+        if (!isSystemMsg && !isActivityMsg) {
+          if (!botReplyCount[botId]) botReplyCount[botId] = 0;
+          botReplyCount[botId]++;
+        }
+
+        // ✅ UPDATED: Proper voice_only logic
+        let voice_only = false;
+
+        if (isActivityMsg) {
+          // ✅ Activity messages are ALWAYS text-only (text bubble with small play button)
+          voice_only = false;
+        } else if (isSystemMsg) {
+          // System messages (reminders, proactive messages) are ALWAYS voice-only
+          voice_only = true;
+        } else {
+          // ✅ FIXED: Normal chat sequence - every 3rd normal bot message should be voice-only
+          const currentBotCount = botReplyCount[botId] || 0;
+          voice_only = currentBotCount % 3 === 0;
+        }
+
+        return { ...msg, voice_only, isSystemMessage: isSystemMsg };
+      }
+      return msg;
+    });
+  }
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (showReactionsFor && !e.target.closest(".reaction-selector")) {
@@ -3420,12 +3467,19 @@ function processBotMessages(messages) {
         specific format (hour:minute AM/PM) in the 'en-US' locale. It then filters out any empty
         messages using the `filterEmptyMessages` function and stores the formatted messages in the
         `formattedMessages` array. */
-        const formattedMessages = filterEmptyMessages(
-          rawMessages.map((msg) => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp),
-          }))
-        );
+// In the sync messages useEffect, after mapping messages:
+const formattedMessages = filterEmptyMessages(
+  rawMessages.map((msg) => ({
+    ...msg,
+    timestamp: new Date(msg.timestamp),
+    // Mark as activity message if platform or activity_name is present
+    isActivityMessage:
+      msg.platform === "game_activity" ||
+      !!msg.activity_name ||
+      msg.isActivityMessage === true,
+    activityId: msg.activity_name || msg.activityId || null,
+  }))
+);
 
         const defaultMessageText =
           bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
@@ -3663,7 +3717,24 @@ const toggleRemovalTooltip = (msgId) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
+async function storeActivityMessageInBackend({ text, sender, activityId }) {
+  try {
+    await fetch("https://novibe-backend-233451779807.us-central1.run.app/store-activity-message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: userDetails.email,
+        bot_id: selectedBotId,
+        user_message: sender === "user" ? text : "",
+        bot_response: sender === "bot" ? text : "",
+        platform: "game_activity",
+        activity_name: activityId,
+      }),
+    });
+  } catch (e) {
+    console.error("Failed to store activity message:", e);
+  }
+}
   const prevMessagesLength = useRef(messages.length);
 
   // When messages change, call scroll to bottom
@@ -4530,6 +4601,20 @@ const toggleRemovalTooltip = (msgId) => {
                                       {word}&nbsp;
                                     </motion.span>
                                   ))}
+  {/* Add the gaming symbol here */}
+  {(msg.isActivityMessage || msg.platform === "game_activity" || msg.activityId) && (
+    <span
+      className="inline-block ml-2 align-middle text-lg"
+      title="Game Activity"
+      style={{ verticalAlign: "middle" }}
+    >
+      🎮
+    </span>
+  )}
+
+
+
+
                               </motion.p>
                             </div>
                             <PlayAudio
