@@ -80,6 +80,7 @@ export default function Header() {
         <div className="text-xl hidden sm:flex justify-end gap-8">
           <NavLink href="/join-us">Join Us</NavLink>
           <NavLink href="/about">About</NavLink>
+          <NavLink href='#'>Blogs</NavLink>
           <NavLink
             href="https://discord.com/invite/mNmwYdmsPz"
             target="_blank"
