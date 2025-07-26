@@ -13,11 +13,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
-      - name: Echo NOVI_FE (TEMPORARY for debugging)
-        run: echo "${{ secrets.NOVI_FE }}"
-
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -37,25 +37,32 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_KEY }}
 
-      - name: Authenticate with Google Cloud
-        run: |
-          echo "${{ secrets.NOVI_FE }}" > key.json
-          gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project cvoapi
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
 
+      - name: Authenticate using JSON key
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.NOVI_FE }}'
+        
   deploy-dev:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Authenticate with Google Cloud
-        run: |
-          echo "${{ secrets.NOVI_FE }}" > key.json
-          gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project cvoapi
+      - name: Authenticate using JSON key
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.NOVI_FE }}'
+          
+      - name: Set GCP project
+        run: gcloud config set project cvoapi
 
       - name: Deploy to Cloud Run dev
         run: |
@@ -79,16 +86,21 @@ jobs:
   deploy-prod:
     needs: approval
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Authenticate with Google Cloud
-        run: |
-          echo "${{ secrets.NOVI_FE }}" > key.json
-          gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project cvoapi
+      - name: Authenticate using JSON key
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.NOVI_FE }}'
+          
+      - name: Set GCP project
+        run: gcloud config set project cvoapi
 
       - name: Deploy to Cloud Run prod
         run: |
@@ -97,4 +109,5 @@ jobs:
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated \
-            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
+            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }} \
+            --project=cvoapi
