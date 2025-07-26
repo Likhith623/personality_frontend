@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Echo NOVI_FE (TEMPORARY for debugging)
+        run: echo "${{ secrets.NOVI_FE }}"
+
       - name: Checkout code
         uses: actions/checkout@v3
 
