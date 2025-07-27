@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
-
+import Head from "next/head";
 import {
   systemPatterns,
   isSystemMessageContent,
@@ -4451,403 +4451,455 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
   console.log("All chat messages:", messages);
 
   return (
-    <div
-      className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
-        botThemes[selectedBotId]?.background || "bg-gray-100"
-      }`}
-      style={
-        botThemes[selectedBotId]?.backgroundImages
-          ? (() => {
-              const bg =
-                botThemes[selectedBotId].backgroundImages[backgroundIndex];
+    <>
+      <Head>
+        <title>Culturevo | Chat with NOVI - Your AI Bestie</title>
+        <meta
+          name="description"
+          content="Talk to an AI like a friend through our voice-enabled AI companion that responds like an AI that talks like a human. This AI that texts like a real person is perfect for chill AI to talk to when bored or for an AI bestie for late-night overthinking."
+        />
+        <meta
+          name="keywords"
+          content="Talk to an AI like a friend, Voice-enabled AI companion, AI that talks like a human, AI that texts like a real person, Chill AI to talk to when bored, AI bestie for late-night overthinking"
+        />
+        <meta
+          property="og:title"
+          content="Chat with NOVI - Your AI Bestie | Culturevo"
+        />
+        <meta
+          property="og:description"
+          content="Engage in natural, human‑like conversation with NOVI—your voice‑enabled emotional support AI best friend."
+        />
+        <meta property="og:url" content="https://www.culturevo.com/chat" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-              if (bg.url.startsWith("http") || bg.url.startsWith("/")) {
-                return {
-                  backgroundImage: `url('${bg.url}')`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                };
-              } else if (bg.startsWith("radial-gradient")) {
-                return { backgroundImage: bg };
-              } else {
-                return { backgroundColor: bg };
+      <div
+        className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
+          botThemes[selectedBotId]?.background || "bg-gray-100"
+        }`}
+        style={
+          botThemes[selectedBotId]?.backgroundImages
+            ? (() => {
+                const bg =
+                  botThemes[selectedBotId].backgroundImages[backgroundIndex];
+
+                if (bg.url.startsWith("http") || bg.url.startsWith("/")) {
+                  return {
+                    backgroundImage: `url('${bg.url}')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  };
+                } else if (bg.startsWith("radial-gradient")) {
+                  return { backgroundImage: bg };
+                } else {
+                  return { backgroundColor: bg };
+                }
+              })()
+            : botThemes[selectedBotId]?.backgroundImage
+            ? {
+                backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
               }
-            })()
-          : botThemes[selectedBotId]?.backgroundImage
-          ? {
-              backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }
-          : undefined
-      }
-    >
-      {/* ✅ ENHANCED: Always visible activity banner at the very top */}
-      {currentActivity && (
-        <div className="sticky top-0 z-50 px-4 py-3 bg-gradient-to-r from-red-500/95 to-pink-500/95 backdrop-blur-md border-b-2 border-white/30 shadow-lg">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg"></div>
-              <div>
-                <p className="text-white font-bold text-lg drop-shadow-md">
-                  🎮 ACTIVITY MODE:{" "}
-                  {currentActivity
-                    .replace(/_/g, " ")
-                    .replace(/\b\w/g, (l) => l.toUpperCase())}
-                </p>
+            : undefined
+        }
+      >
+        {/* ✅ ENHANCED: Always visible activity banner at the very top */}
+        {currentActivity && (
+          <div className="sticky top-0 z-50 px-4 py-3 bg-gradient-to-r from-red-500/95 to-pink-500/95 backdrop-blur-md border-b-2 border-white/30 shadow-lg">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg"></div>
+                <div>
+                  <p className="text-white font-bold text-lg drop-shadow-md">
+                    🎮 ACTIVITY MODE:{" "}
+                    {currentActivity
+                      .replace(/_/g, " ")
+                      .replace(/\b\w/g, (l) => l.toUpperCase())}
+                  </p>
+                </div>
               </div>
+              <button
+                onClick={endActivity}
+                className="px-6 py-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-lg border-2 border-white/50 hover:border-white font-bold text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                END ACTIVITY
+              </button>
             </div>
-            <button
-              onClick={endActivity}
-              className="px-6 py-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-lg border-2 border-white/50 hover:border-white font-bold text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-            >
-              END ACTIVITY
-            </button>
           </div>
-        </div>
-      )}
+        )}
 
-      <ScrollArea className="flex-1">
-        <div className="px-1 md:px-2">
-          {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
-            <div key={date}>
-              <div className="sticky top-5 z-10 my-10 py-2 mx-auto w-32 bg-gray-200/40 backdrop-blur-sm backdrop-saturate-150 rounded-md shadow-md">
-                <p
-                  className={`text-center text-sm ${
-                    isDarkTheme ? `${textColorClass}` : `${textColorClass}`
-                  }`}
-                >
-                  {date}
-                </p>
-              </div>
+        <ScrollArea className="flex-1">
+          <div className="px-1 md:px-2">
+            {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
+              <div key={date}>
+                <div className="sticky top-5 z-10 my-10 py-2 mx-auto w-32 bg-gray-200/40 backdrop-blur-sm backdrop-saturate-150 rounded-md shadow-md">
+                  <p
+                    className={`text-center text-sm ${
+                      isDarkTheme ? `${textColorClass}` : `${textColorClass}`
+                    }`}
+                  >
+                    {date}
+                  </p>
+                </div>
 
-              {messagesOnDate.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`my-2 flex ${
-                    msg.sender === "bot" ? "justify-start" : "justify-end"
-                  }`}
-                >
-                  <div className="max-w-[80%] min-w-16 relative">
-                    {msg.sender === "bot" && msg.reaction && (
-                      <div
-                        className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
-                        onClick={() => toggleRemovalTooltip(msg.id)}
-                      >
-                        <span className="text-lg">{msg.reaction}</span>
-                        {showRemoveTooltip === msg.id && (
-                          <RemovalTooltip msgId={msg.id} />
-                        )}
-                      </div>
-                    )}
-
-                    <div className="flex flex-row items-center gap-2">
-                      {msg.sender === "bot" ? (
-                        msg.voice_only ? (
-                          <PlayAudio
-                            text={msg.text}
-                            bot_id={msg.bot_id || selectedBotId}
-                          />
-                        ) : (
-                          <>
-                            <div
-                              data-sender="bot"
-                              className={`px-4 py-2 rounded-2xl ${
-                                botThemes[selectedBotId]?.botBubble ||
-                                "bg-white/20 text-gray-900"
-                              } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
-                                highlightedMessage === msg.id
-                                  ? "bg-orange-200/30"
-                                  : ""
-                              } w-full text-left`}
-                              style={{
-                                userSelect: "none",
-                                WebkitUserSelect: "none",
-                                WebkitTouchCallout: "none",
-                              }}
-                              onTouchStart={(e) => {
-                                e.preventDefault();
-                                handleLongPressStart(msg.id);
-                              }}
-                              onTouchEnd={handleLongPressEnd}
-                              onTouchMove={handleLongPressEnd}
-                              onTouchCancel={handleLongPressEnd}
-                            >
-                              <motion.p>
-                                {(typeof msg.text === "string" ? msg.text : "")
-                                  .split(" ")
-                                  .map((word, i) => (
-                                    <motion.span
-                                      key={i}
-                                      initial={{
-                                        filter: "blur(10px)",
-                                        opacity: 0,
-                                        y: 5,
-                                      }}
-                                      animate={{
-                                        filter: "blur(0px)",
-                                        opacity: 1,
-                                        y: 0,
-                                      }}
-                                      transition={{
-                                        duration: 0.2,
-                                        ease: "easeInOut",
-                                        delay: 0.02 * i,
-                                      }}
-                                      className="inline-block select-none"
-                                    >
-                                      {word}&nbsp;
-                                    </motion.span>
-                                  ))}
-  {/* Add the gaming symbol here */}
-  {(msg.isActivityMessage || msg.platform === "game_activity" || msg.activityId) && (
-    <span
-      className="inline-block ml-2 align-middle text-lg"
-      title="Game Activity"
-      style={{ verticalAlign: "middle" }}
-    >
-      🎮
-    </span>
-  )}
-
-
-
-
-                              </motion.p>
-                            </div>
-                            <PlayAudio
-                              text={msg.text}
-                              bot_id={msg.bot_id || selectedBotId}
-                              minimal={true}
-                            />
-                          </>
-                        )
-                      ) : (
+                {messagesOnDate.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={`my-2 flex ${
+                      msg.sender === "bot" ? "justify-start" : "justify-end"
+                    }`}
+                  >
+                    <div className="max-w-[80%] min-w-16 relative">
+                      {msg.sender === "bot" && msg.reaction && (
                         <div
-                          data-sender="user"
-                          className={`px-4 py-2 rounded-2xl ${
-                            msg.isImageMessage
-                              ? "bg-transparent border-none shadow-none" // No background for images
-                              : botThemes[selectedBotId]?.userBubble ||
-                                "bg-purple-400/80 text-white"
-                          } ${
-                            !msg.isImageMessage
-                              ? "border border-white/20 backdrop-blur-sm shadow-md"
-                              : ""
-                          } placeholder-gray-200 ${
-                            highlightedMessage === msg.id
-                              ? "bg-orange-200/90"
-                              : ""
-                          } w-full text-left`}
-                          style={{
-                            userSelect: "none",
-                            WebkitUserSelect: "none",
-                            WebkitTouchCallout: "none",
-                          }}
+                          className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
+                          onClick={() => toggleRemovalTooltip(msg.id)}
                         >
-                          {msg.isImageMessage ? (
-                            <div className="flex flex-col gap-2">
-                              <img
-                                src={
-                                  msg.imageUrl ||
-                                  (msg.imageFile
-                                    ? URL.createObjectURL(msg.imageFile)
-                                    : "")
-                                }
-                                alt="Shared image"
-                                className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
-                                onLoad={() => scrollToBottom()}
-                                style={{ backgroundColor: "transparent" }}
-                              />
-                              {msg.text && (
-                                <span className="text-sm">{msg.text}</span>
-                              )}
-                            </div>
-                          ) : (
-                            msg.text
+                          <span className="text-lg">{msg.reaction}</span>
+                          {showRemoveTooltip === msg.id && (
+                            <RemovalTooltip msgId={msg.id} />
                           )}
                         </div>
                       )}
-                    </div>
-                    <div className="flex flex-row justify-end">
-                      <span
-                        className={`text-xs mt-[7px] ${
-                          msg.sender === "user" ? "mr-3" : ""
-                        } ${
-                          isDarkTheme
-                            ? `${textColorClass}`
-                            : `${textColorClass}`
-                        }`}
-                      >
-                        {formatTime(msg.timestamp)}
-                      </span>
 
-                      {msg.sender === "bot" && (
-                        <div className="flex justify-end px-2 mr-7 relative text-white">
-
-{showReactionsFor !== null && msg.id !== null && showReactionsFor === msg.id && (
-  <ReactionSelector msgId={msg.id} />
-)}
-
-                          <div className="gap-3 flex flex-row mt-1">
-                            {!isMobile && (
-                              <button
-                                onClick={() => toggleReactions(msg.id)}
-                                className={`cursor-pointer transition-colors mr-2 ${
-                                  isDarkTheme
-                                    ? `${textColorClass}`
-                                    : `${textColorClass}`
-                                }`}
+                      <div className="flex flex-row items-center gap-2">
+                        {msg.sender === "bot" ? (
+                          msg.voice_only ? (
+                            <PlayAudio
+                              text={msg.text}
+                              bot_id={msg.bot_id || selectedBotId}
+                            />
+                          ) : (
+                            <>
+                              <div
+                                data-sender="bot"
+                                className={`px-4 py-2 rounded-2xl ${
+                                  botThemes[selectedBotId]?.botBubble ||
+                                  "bg-white/20 text-gray-900"
+                                } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
+                                  highlightedMessage === msg.id
+                                    ? "bg-orange-200/30"
+                                    : ""
+                                } w-full text-left`}
+                                style={{
+                                  userSelect: "none",
+                                  WebkitUserSelect: "none",
+                                  WebkitTouchCallout: "none",
+                                }}
+                                onTouchStart={(e) => {
+                                  e.preventDefault();
+                                  handleLongPressStart(msg.id);
+                                }}
+                                onTouchEnd={handleLongPressEnd}
+                                onTouchMove={handleLongPressEnd}
+                                onTouchCancel={handleLongPressEnd}
                               >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="18"
-                                  height="18"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <circle cx="12" cy="12" r="10" />
-                                  <path d="M8 14s1.5 2.25 4 2.25 4-2.25 4-2.25" />
-                                  <line x1="9" y1="9" x2="9.01" y2="9" />
-                                  <line x1="15" y1="9" x2="15.01" y2="9" />
-                                </svg>
-                              </button>
-                            )}
-
-                            {typeof msg.text === "string" &&
-                            msg.text.trim() ===
-                              "Sorry, there was an error processing your request. Please try again." ? null : (
-                              <>
-                                {msg.feedback === "" ? (
-                                  <>
-                                    <ThumbsUp
-                                      className={`cursor-pointer ${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                      size={18}
-                                      onClick={() =>
-                                        handleFeedback("like", msg.id)
-                                      }
-                                    />
-                                    <ThumbsDown
-                                      className={`cursor-pointer ${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                      size={18}
-                                      onClick={() =>
-                                        handleFeedback("dislike", msg.id)
-                                      }
-                                    />
-                                  </>
-                                ) : msg.feedback === "like" ? (
-                                  <>
-                                    <IconThumbUpFilled
-                                      size={22}
-                                      className={`${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      } mt-[-2px]`}
-                                    />
-                                    <ThumbsDown
-                                      className={`cursor-pointer ${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                      size={18}
-                                      onClick={() =>
-                                        handleFeedback("dislike", msg.id)
-                                      }
-                                    />
-                                  </>
-                                ) : (
-                                  <>
-                                    <ThumbsUp
-                                      className={`cursor-pointer ${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                      size={18}
-                                      onClick={() =>
-                                        handleFeedback("like", msg.id)
-                                      }
-                                    />
-                                    <IconThumbDownFilled
-                                      size={22}
-                                      className={`${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                    />
-                                  </>
+                                <motion.p>
+                                  {(typeof msg.text === "string"
+                                    ? msg.text
+                                    : ""
+                                  )
+                                    .split(" ")
+                                    .map((word, i) => (
+                                      <motion.span
+                                        key={i}
+                                        initial={{
+                                          filter: "blur(10px)",
+                                          opacity: 0,
+                                          y: 5,
+                                        }}
+                                        animate={{
+                                          filter: "blur(0px)",
+                                          opacity: 1,
+                                          y: 0,
+                                        }}
+                                        transition={{
+                                          duration: 0.2,
+                                          ease: "easeInOut",
+                                          delay: 0.02 * i,
+                                        }}
+                                        className="inline-block select-none"
+                                      >
+                                        {word}&nbsp;
+                                      </motion.span>
+                                    ))}
+                                  {/* Add the gaming symbol here */}
+                                  {(msg.isActivityMessage ||
+                                    msg.platform === "game_activity" ||
+                                    msg.activityId) && (
+                                    <span
+                                      className="inline-block ml-2 align-middle text-lg"
+                                      title="Game Activity"
+                                      style={{ verticalAlign: "middle" }}
+                                    >
+                                      🎮
+                                    </span>
+                                  )}
+                                </motion.p>
+                              </div>
+                              <PlayAudio
+                                text={msg.text}
+                                bot_id={msg.bot_id || selectedBotId}
+                                minimal={true}
+                              />
+                            </>
+                          )
+                        ) : (
+                          <div
+                            data-sender="user"
+                            className={`px-4 py-2 rounded-2xl ${
+                              msg.isImageMessage
+                                ? "bg-transparent border-none shadow-none" // No background for images
+                                : botThemes[selectedBotId]?.userBubble ||
+                                  "bg-purple-400/80 text-white"
+                            } ${
+                              !msg.isImageMessage
+                                ? "border border-white/20 backdrop-blur-sm shadow-md"
+                                : ""
+                            } placeholder-gray-200 ${
+                              highlightedMessage === msg.id
+                                ? "bg-orange-200/90"
+                                : ""
+                            } w-full text-left`}
+                            style={{
+                              userSelect: "none",
+                              WebkitUserSelect: "none",
+                              WebkitTouchCallout: "none",
+                            }}
+                          >
+                            {msg.isImageMessage ? (
+                              <div className="flex flex-col gap-2">
+                                <img
+                                  src={
+                                    msg.imageUrl ||
+                                    (msg.imageFile
+                                      ? URL.createObjectURL(msg.imageFile)
+                                      : "")
+                                  }
+                                  alt="Shared image"
+                                  className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+                                  onLoad={() => scrollToBottom()}
+                                  style={{ backgroundColor: "transparent" }}
+                                />
+                                {msg.text && (
+                                  <span className="text-sm">{msg.text}</span>
                                 )}
-                              </>
+                              </div>
+                            ) : (
+                              msg.text
                             )}
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
+                      <div className="flex flex-row justify-end">
+                        <span
+                          className={`text-xs mt-[7px] ${
+                            msg.sender === "user" ? "mr-3" : ""
+                          } ${
+                            isDarkTheme
+                              ? `${textColorClass}`
+                              : `${textColorClass}`
+                          }`}
+                        >
+                          {formatTime(msg.timestamp)}
+                        </span>
+
+                        {msg.sender === "bot" && (
+                          <div className="flex justify-end px-2 mr-7 relative text-white">
+                            {showReactionsFor !== null &&
+                              msg.id !== null &&
+                              showReactionsFor === msg.id && (
+                                <ReactionSelector msgId={msg.id} />
+                              )}
+
+                            <div className="gap-3 flex flex-row mt-1">
+                              {!isMobile && (
+                                <button
+                                  onClick={() => toggleReactions(msg.id)}
+                                  className={`cursor-pointer transition-colors mr-2 ${
+                                    isDarkTheme
+                                      ? `${textColorClass}`
+                                      : `${textColorClass}`
+                                  }`}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M8 14s1.5 2.25 4 2.25 4-2.25 4-2.25" />
+                                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                                    <line x1="15" y1="9" x2="15.01" y2="9" />
+                                  </svg>
+                                </button>
+                              )}
+
+                              {typeof msg.text === "string" &&
+                              msg.text.trim() ===
+                                "Sorry, there was an error processing your request. Please try again." ? null : (
+                                <>
+                                  {msg.feedback === "" ? (
+                                    <>
+                                      <ThumbsUp
+                                        className={`cursor-pointer ${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                        size={18}
+                                        onClick={() =>
+                                          handleFeedback("like", msg.id)
+                                        }
+                                      />
+                                      <ThumbsDown
+                                        className={`cursor-pointer ${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                        size={18}
+                                        onClick={() =>
+                                          handleFeedback("dislike", msg.id)
+                                        }
+                                      />
+                                    </>
+                                  ) : msg.feedback === "like" ? (
+                                    <>
+                                      <IconThumbUpFilled
+                                        size={22}
+                                        className={`${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        } mt-[-2px]`}
+                                      />
+                                      <ThumbsDown
+                                        className={`cursor-pointer ${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                        size={18}
+                                        onClick={() =>
+                                          handleFeedback("dislike", msg.id)
+                                        }
+                                      />
+                                    </>
+                                  ) : (
+                                    <>
+                                      <ThumbsUp
+                                        className={`cursor-pointer ${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                        size={18}
+                                        onClick={() =>
+                                          handleFeedback("like", msg.id)
+                                        }
+                                      />
+                                      <IconThumbDownFilled
+                                        size={22}
+                                        className={`${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                      />
+                                    </>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          ))}
+                ))}
+              </div>
+            ))}
 
-          {isTyping && <TypingIndicator />}
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
+            {isTyping && <TypingIndicator />}
+            <div ref={messagesEndRef} />
+          </div>
+        </ScrollArea>
 
-      {/* ✅ ENHANCED: Modified form to show activity status */}
-      <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
-        <Input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${
-            isDarkTheme ? textColorClass : textColorClass
-          } placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
-          placeholder={
-            currentActivity
-              ? `Activity mode: ${currentActivity.replace(/_/g, " ")}...`
-              : "Type your message..."
-          }
-        />
+        {/* ✅ ENHANCED: Modified form to show activity status */}
+        <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
+          <Input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${
+              isDarkTheme ? textColorClass : textColorClass
+            } placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
+            placeholder={
+              currentActivity
+                ? `Activity mode: ${currentActivity.replace(/_/g, " ")}...`
+                : "Type your message..."
+            }
+          />
 
-        {/* Hidden file input for image upload */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          style={{ display: "none" }}
-        />
+          {/* Hidden file input for image upload */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            style={{ display: "none" }}
+          />
 
-        {/* ✅ NEW: Image upload button */}
-        {!currentActivity && (
-          <button
-            type="button"
-            onClick={handleImageButtonClick}
-            disabled={isImageUploading}
-            className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-orange-400/80 via-yellow-400/80 to-orange-400/80 hover:from-orange-400/90 hover:via-yellow-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Upload and analyze image"
-          >
-            {isImageUploading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : (
+          {/* ✅ NEW: Image upload button */}
+          {!currentActivity && (
+            <button
+              type="button"
+              onClick={handleImageButtonClick}
+              disabled={isImageUploading}
+              className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-orange-400/80 via-yellow-400/80 to-orange-400/80 hover:from-orange-400/90 hover:via-yellow-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Upload and analyze image"
+            >
+              {isImageUploading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              )}
+            </button>
+          )}
+
+          {/* ✅ CONDITIONAL: Hide voice call button during activities */}
+          {!currentActivity && (
+            <button
+              type="button"
+              onClick={() => setIsVoiceCallOpen(true)}
+              className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+              title="Start Voice Call"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -4859,102 +4911,77 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <path d="M12 19v3" />
+                <path d="M8 22h8" />
               </svg>
-            )}
-          </button>
-        )}
+            </button>
+          )}
 
-        {/* ✅ CONDITIONAL: Hide voice call button during activities */}
-        {!currentActivity && (
-          <button
-            type="button"
-            onClick={() => setIsVoiceCallOpen(true)}
-            className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-            title="Start Voice Call"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {/* ✅ CONDITIONAL: Show activity end button instead of voice button during activities */}
+          {currentActivity && (
+            <button
+              type="button"
+              onClick={endActivity}
+              className="p-3 mr-2 hover:opacity-80 cursor-pointer bg-gradient-to-r from-red-400/80 via-pink-400/80 to-red-500/80 hover:from-red-400/90 hover:via-pink-400/90 hover:to-red-500/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+              title="End Activity"
             >
-              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-              <path d="M12 19v3" />
-              <path d="M8 22h8" />
-            </svg>
-          </button>
-        )}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="m15 9-6 6" />
+                <path d="m9 9 6 6" />
+              </svg>
+            </button>
+          )}
 
-        {/* ✅ CONDITIONAL: Show activity end button instead of voice button during activities */}
-        {currentActivity && (
           <button
-            type="button"
-            onClick={endActivity}
-            className="p-3 mr-2 hover:opacity-80 cursor-pointer bg-gradient-to-r from-red-400/80 via-pink-400/80 to-red-500/80 hover:from-red-400/90 hover:via-pink-400/90 hover:to-red-500/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-            title="End Activity"
+            type="submit"
+            className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="m15 9-6 6" />
-              <path d="m9 9 6 6" />
-            </svg>
+            Send
           </button>
-        )}
+        </form>
 
-        <button
-          type="submit"
-          className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+        <p
+          className={`text-xs text-center py-2 ${
+            isDarkTheme ? b_color : b_color
+          }`}
         >
-          Send
-        </button>
-      </form>
+          {currentActivity
+            ? "🎮 Activity mode active - Voice messages disabled during activities"
+            : "Novi can make mistakes, it's constantly learning from you, please be kind!!"}
+        </p>
 
-      <p
-        className={`text-xs text-center py-2 ${
-          isDarkTheme ? b_color : b_color
-        }`}
-      >
-        {currentActivity
-          ? "🎮 Activity mode active - Voice messages disabled during activities"
-          : "Novi can make mistakes, it's constantly learning from you, please be kind!!"}
-      </p>
+        {/* Voice Call Component - Only show when not in activity mode */}
+        {isVoiceCallOpen && !currentActivity && (
+          <VoiceCallUltra
+            isOpen={isVoiceCallOpen}
+            onClose={() => setIsVoiceCallOpen(false)}
+            onMessageReceived={handleVoiceCallMessage}
+            messages={messages}
+          />
+        )}
 
-      {/* Voice Call Component - Only show when not in activity mode */}
-      {isVoiceCallOpen && !currentActivity && (
-        <VoiceCallUltra
-          isOpen={isVoiceCallOpen}
-          onClose={() => setIsVoiceCallOpen(false)}
-          onMessageReceived={handleVoiceCallMessage}
-          messages={messages}
+        {/* Activities Modal */}
+        <ActivitiesModal
+          isOpen={isActivitiesOpen}
+          onClose={() => setIsActivitiesOpen(false)}
+          onActivityStart={startActivity}
+          selectedBotId={selectedBotId}
         />
-      )}
-
-      {/* Activities Modal */}
-      <ActivitiesModal
-        isOpen={isActivitiesOpen}
-        onClose={() => setIsActivitiesOpen(false)}
-        onActivityStart={startActivity}
-        selectedBotId={selectedBotId}
-      />
-    </div>
+      </div>
+    </>
   );
 };
 
