@@ -2536,7 +2536,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
   };
 
   const forgetFriend = async () => {
-    const response = await fetch("https://novi.aigurukul.dev/clear-chat", {
+    const response = await fetch("https://novi.aigurukul.dev/updated-forgetfriend", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
