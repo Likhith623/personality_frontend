@@ -3910,361 +3910,264 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
    * API response.
    */
   const handleSend = async (e) => {
-    e.reminder == undefined && e.preventDefault();
-    if (!input.trim() && e.reminder != true) return;
+  e.reminder == undefined && e.preventDefault();
+  if (!input.trim() && e.reminder != true) return;
 
-    const userMessage = input.trim();
+  const userMessage = input.trim();
 
-    // Check if user wants to end activity
-    if (
-      currentActivity &&
-      ["exit", "stop", "end"].includes(userMessage.toLowerCase())
-    ) {
-      endActivity();
-      setInput("");
-      return;
-    }
+  if (
+    currentActivity &&
+    ["exit", "stop", "end"].includes(userMessage.toLowerCase())
+  ) {
+    endActivity();
+    setInput("");
+    return;
+  }
 
-    // 1. Add user message to chat
-    if (e.reminder == undefined) {
+  if (e.reminder == undefined) {
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: userMessage,
+        sender: "user",
+        timestamp: new Date(),
+        feedback: "",
+        reaction: "",
+      },
+    ]);
+  }
+
+  setInput("");
+
+  if (currentActivity) {
+    await handleActivityMessage(userMessage);
+    return;
+  }
+
+  setIsTyping(true);
+  scrollToBottom();
+
+  if (containsUrl(userMessage)) {
+    try {
+      const res = await fetch(
+        "https://novibe-backend-233451779807.us-central1.run.app/api/news",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: userMessage,
+            bot_id: selectedBotId,
+            user_email: userDetails?.email || "anonymous@example.com",
+          }),
+        }
+      );
+      const data = await res.json();
+
       setMessages((prev) => [
         ...prev,
         {
-          text: userMessage,
-          sender: "user",
+          text: data.ai_response || data.result || "Sorry, I could not summarize that link.",
+          sender: "bot",
           timestamp: new Date(),
-          feedback: "",
-          reaction: "",
+          bot_id: selectedBotId,
+        },
+      ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Sorry, there was an error processing your link.",
+          sender: "bot",
+          timestamp: new Date(),
+          bot_id: selectedBotId,
         },
       ]);
     }
-
-    setInput("");
-
-    // Handle activity-specific messages
-    if (currentActivity) {
-      await handleActivityMessage(userMessage);
-      return;
-    }
-    setIsTyping(true);
+    setIsTyping(false);
     scrollToBottom();
+    return;
+  }
 
-    // 1. If message contains a URL, use /api/news
-    if (containsUrl(userMessage)) {
+  const currentTime = new Date();
+
+  const convertToOpenAIFormat = (msgs) =>
+    msgs.map((msg) => ({
+      role: msg.sender === "bot" ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+  const primaryLlmPayload = {
+    message:
+      e?.reminder === true
+        ? `User asked to remind: ${e.message}`
+        : userMessage,
+    bot_id: selectedBotId,
+    custom_bot_name: selectedBotDetails?.name || "",
+    user_name: userDetails.name || "",
+    user_gender: userDetails.gender || "",
+    language: "",
+    traits: "",
+    previous_conversation: convertToOpenAIFormat(messages),
+    email: userDetails.email || "",
+    request_time: currentTime.toISOString(),
+    platform: "web",
+  };
+
+  try {
+    const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/cv/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(primaryLlmPayload),
+    });
+
+    if (!response.body) throw new Error("Streaming not supported");
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let done = false;
+    let botMessage = "";
+    let metadataBuffer = "";
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: "...",
+        sender: "bot",
+        timestamp: new Date(),
+        bot_id: selectedBotId,
+        isSystemMessage: false,
+      },
+    ]);
+
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunk = decoder.decode(value || new Uint8Array(), { stream: true });
+      botMessage += chunk;
+
+      if (done && botMessage.includes("[[END_JSON]]")) {
+        const [textPart, jsonPart] = botMessage.split("[[END_JSON]]");
+        botMessage = textPart.trim();
+        metadataBuffer = jsonPart.trim();
+      }
+
+      setMessages((prevMessages) => {
+        const updated = [...prevMessages];
+        const lastMsg = updated[updated.length - 1];
+        if (lastMsg.sender === "bot") {
+          lastMsg.text = botMessage;
+        }
+        return updated;
+      });
+
+      scrollToBottom();
+    }
+
+    setIsTyping(false);
+
+    if (metadataBuffer) {
       try {
-        const res = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/api/news",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              query: userMessage,
-              bot_id: selectedBotId,
-              user_email: userDetails?.email || "anonymous@example.com",
-            }),
-          }
-        );
-        const data = await res.json();
+        const data = JSON.parse(metadataBuffer);
 
-        if (data.status === "success" && data.ai_response) {
+        if (data.xp_data && typeof window.updateXPFromResponse === "function") {
+          window.updateXPFromResponse(data.xp_data);
+        }
+
+        if (data.reminder?.response && data.reminder?.task) {
+          const reminder = {
+            response: data.reminder.response,
+            task: data.reminder.task,
+            created_at: data.reminder.created_at,
+            remind_on: data.reminder.remind_on,
+            category: "Reminder",
+          };
+
+          const updatedReminders = [...reminders, reminder];
+          setReminders(updatedReminders);
+          localStorage.setItem(
+            `reminders-${selectedBotId}`,
+            JSON.stringify(updatedReminders)
+          );
+
           setMessages((prev) => [
             ...prev,
             {
-              text: data.ai_response,
+              text: data.response,
               sender: "bot",
+              id: data.message_id,
+              feedback: "",
+              reaction: "",
               timestamp: new Date(),
               bot_id: selectedBotId,
-            },
-          ]);
-        } else {
-          setMessages((prev) => [
-            ...prev,
-            {
-              text: data.result || "Sorry, I could not summarize that link.",
-              sender: "bot",
-              timestamp: new Date(),
-              bot_id: selectedBotId,
+              isSystemMessage: true,
             },
           ]);
         }
       } catch (err) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: "Sorry, there was an error processing your link.",
-            sender: "bot",
-            timestamp: new Date(),
-            bot_id: selectedBotId,
-          },
-        ]);
+        console.error("❌ Error parsing final metadata:", err);
       }
-      setIsTyping(false);
-      scrollToBottom();
-      return;
     }
 
-    // Continue with LLM processing
-    const currentTime = new Date();
-
-    const convertToOpenAIFormat = (msgs) =>
-      msgs.map((msg) => ({
-        role: msg.sender === "bot" ? "assistant" : "user",
-        content: msg.text,
-      }));
-
-    const primaryLlmPayload = {
-      message:
-        e?.reminder === true
-          ? `User asked to remind: ${e.message}`
-          : userMessage,
-      bot_id: selectedBotId,
-      custom_bot_name: selectedBotDetails?.name || "",
-      user_name: userDetails.name || "",
-      user_gender: userDetails.gender || "",
-      language: "",
-      traits: "",
-      previous_conversation: convertToOpenAIFormat(messages),
-      email: userDetails.email || "",
-      request_time: currentTime.toISOString(),
-      platform: "web",
-    };
-
-    console.log("📤 Sending to Primary LLM (Novi VI):", primaryLlmPayload);
     try {
-      /**
-       * The function `convertToOpenAIFormat` takes an array of messages and converts them into an
-       * OpenAI format object with role and content properties.
-       * @param msgs - The `msgs` parameter is an array of messages that contains information about the
-       * sender and the text content of each message.
-       */
-      const convertToOpenAIFormat = (msgs) =>
-        msgs.map((msg) => ({
-          role: msg.sender === "bot" ? "assistant" : "user",
-          content: msg.text,
-        }));
-
-      /* The above code is creating a JavaScript object named `payload` with the following properties:
-      - `message`: It is set to a ternary expression that checks if `e.reminder` is true. If true, it sets
-      the message to "User asked to remind: " followed by the value of `e.message`. If false, it sets the
-      message to the value of `input`.
-      - `bot_id`: It is set to the value of `selectedBotId`.
-      - `previous_con */
-
-      const payload = {
-        message:
-          e.reminder === true ? `User asked to remind: ${e.message}` : input,
+      const storeMessagePayload = {
+        email: userDetails?.email || "anonymous@example.com",
         bot_id: selectedBotId,
-        custom_bot_name: selectedBotDetails?.name || "",
-        user_name: userDetails.name || "",
-        user_gender: userDetails.gender || "",
-        language: "", // You can set dynamically if needed
-        traits: "", // Optional: add if user has traits like "funny", "serious", etc.
-        previous_conversation: convertToOpenAIFormat(messages),
-        email: userDetails.email || "", // Optional: provide if available
-        request_time: new Date().toISOString(),
-        platform: "web", // or mobile, etc.
+        message: userMessage,
+        user_name: userDetails?.name || "Unknown",
       };
 
-      console.log("Payload", JSON.stringify(payload, null, 2));
-
-      /* The above code is making a POST request to the URL "http://127.0.0.1:8000/cv/chat" with a
-      JSON payload. The payload is being sent in the body of the request after being stringified
-      using JSON.stringify. The request is being made using the fetch API with the specified method
-      and headers. The response from the server is being stored in the variable `response` using the
-      `await` keyword, indicating that the fetch operation is asynchronous. */
-
-      const response = await fetch(
-        "https://novibe-backend-233451779807.us-central1.run.app/cv/chat",
+      const storeRes = await fetch(
+        "https://novibe-backend-233451779807.us-central1.run.app/store-message",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(primaryLlmPayload),
+          body: JSON.stringify(storeMessagePayload),
         }
       );
 
-      const data = await response.json();
-      // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
-      console.log("🧠 Primary LLM Response Data:", data);
+      const storeData = await storeRes.json();
+      console.log("✅ Backend /store-message Result:", storeData);
 
-      if (data.xp_data) {
-        console.log("🎯 XP data found in response:", data.xp_data);
-
-        if (typeof window.updateXPFromResponse === "function") {
-          console.log("✅ Calling updateXPFromResponse with:", data.xp_data);
-          window.updateXPFromResponse(data.xp_data);
-        } else {
-          console.error("❌ window.updateXPFromResponse is not available");
-        }
-      } else {
-        console.warn("⚠️ No XP data found in response");
+      if (storeData.delta_result?.status === "delta_updates_applied") {
+        console.log("Info: User persona updated in database.");
       }
-
-      setIsTyping(false);
-
-      let finalMessage = data.response;
-
-      if (!finalMessage) {
-        console.warn("⚠️ Primary LLM response is empty. Using fallback.");
-        finalMessage = "Sorry, I couldn't generate a reply.";
-      }
-
-      if (data.error) {
-        const errorMessage =
-          "Sorry, there was an error processing your request. Please try again.";
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: errorMessage,
-            sender: "bot",
-            id: "",
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(errorMessage),
-          },
-        ]);
-      } else if (
-        data.reminder?.response &&
-        data.reminder?.task &&
-        data.reminder?.created_at
-      ) {
-        console.log("This is reminder block", data.reminder);
-
-        const reminder = {
-          response: data.reminder.response,
-          task: data.reminder.task,
-          created_at: data.reminder.created_at,
-          remind_on: data.reminder.remind_on,
-          category: "Reminder",
-        };
-
-        console.log("Add reminder", reminder);
-        console.log("Reminders before adding", reminders);
-
-        const updatedReminders = [...reminders, reminder];
-        console.log("New reminders array", updatedReminders);
-
-        setReminders(updatedReminders);
-        localStorage.setItem(
-          `reminders-${selectedBotId}`,
-          JSON.stringify(updatedReminders)
-        );
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: true, // Reminders are treated as system messages
-          },
-        ]);
-      } else {
-        // Use finalMessage if defined, otherwise fallback to data.response
-        const shouldBeSystemMessage = isSystemMessageContent(
-          finalMessage || data.response
-        );
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: shouldBeSystemMessage,
-          },
-        ]);
-      }
-      // --- NEW INTEGRATION POINT ---
-      // AFTER the primary LLM has responded and its message is displayed,
-      // call your backend's /store-message endpoint for categorization and delta logic.
-      try {
-        const storeMessagePayload = {
-          email: userDetails?.email || "anonymous@example.com",
-          bot_id: selectedBotId,
-          message: userMessage, // Send the original user message
-          user_name: userDetails?.name || "Unknown",
-        };
-
-        console.log(
-          "📤 Sending to Backend /store-message for Categorization & Delta:",
-          storeMessagePayload
-        );
-
-        const storeRes = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/store-message",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(storeMessagePayload),
-          }
-        );
-
-        const storeData = await storeRes.json();
-        console.log(
-          "✅ Backend /store-message Result (Categorization & Delta):",
-          storeData
-        );
-
-        // Optional: You can display a small, non-intrusive notification to the user
-        // if storeData.delta_result.status indicates important changes,
-        // e.g., "Your preferences have been updated!"
-        if (storeData.delta_result?.status === "delta_updates_applied") {
-          console.log(
-            "Info: User persona updated in database due to new message."
-          );
-          // You could add a temporary message to the UI or a log for debugging
-        }
-      } catch (storeError) {
-        console.error(
-          "❌ Error with Backend /store-message (Categorization & Delta):",
-          storeError
-        );
-        // You might want to log this error to your backend's frontend_error_logs
-        // or display a subtle message to the user that memory update failed.
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: `⚠️ Persona memory update failed.`, // Less intrusive message
-            sender: "system",
-            timestamp: new Date(),
-            isSystemMessage: true,
-          },
-        ]);
-      }
-    } catch (error) {
-      logClientError(error, { source: "API Call" });
-      console.log(error);
-      console.error("❌ Error calling Primary LLM:", error);
-      setIsTyping(false);
-
-      const errorMessage =
-        "Sorry, there was an error processing your request. Please try again.";
+    } catch (storeError) {
+      console.error("❌ Error with /store-message:", storeError);
       setMessages((prev) => [
         ...prev,
         {
-          text: errorMessage,
-          sender: "bot",
-          id: "",
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime,
-          bot_id: selectedBotId,
-          isSystemMessage: isSystemMessageContent(errorMessage),
+          text: `⚠️ Persona memory update failed.`,
+          sender: "system",
+          timestamp: new Date(),
+          isSystemMessage: true,
         },
       ]);
     }
-    scrollToBottom();
-  };
+  } catch (error) {
+    logClientError(error, { source: "API Call" });
+    console.error("❌ Error calling Primary LLM:", error);
+    setIsTyping(false);
+
+    const errorMessage =
+      "Sorry, there was an error processing your request. Please try again.";
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: errorMessage,
+        sender: "bot",
+        id: "",
+        feedback: "",
+        reaction: "",
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: isSystemMessageContent(errorMessage),
+      },
+    ]);
+  }
+
+  scrollToBottom();
+};
+
 
   const handleVoiceCallMessage = async (message) => {
     if (!message) return;
