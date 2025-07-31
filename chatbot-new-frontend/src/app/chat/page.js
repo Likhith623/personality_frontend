@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   systemPatterns,
   isSystemMessageContent,
@@ -16,7 +18,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBot } from "@/support/BotContext";
 import { useTraits } from "@/support/TraitsContext";
 import { useUser } from "@/support/UserContext";
-import { useRouter } from "next/navigation";
+
 import { Bot, ThumbsDown, ThumbsUp } from "lucide-react";
 import {
   IconThumbDownFilled,
@@ -2815,12 +2817,105 @@ const Dashboard = ({
   isActivitiesOpen,
   setIsActivitiesOpen,
 }) => {
+  const { selectedBotId } = useBot();
+  const { userDetails } = useUser();
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(null);
   const [isImageUploading, setIsImageUploading] = useState(false);
   const fileInputRef = useRef(null);
+  const pathname = usePathname();
+  const [isGeneratingSelfie, setIsGeneratingSelfie] = useState(false);
+  const handleGenerateSelfie = async () => {
+    setIsGeneratingSelfie(true);
+    try {
+      // 1. Get summary string from backend
+      const summaryRes = await fetch(
+        `http://0.0.0.0:8000/get-last-bot-responses-string/${encodeURIComponent(userDetails.email)}/${encodeURIComponent(selectedBotId)}`
+      );
+      const summaryData = await summaryRes.json();
+      const messageString = summaryData.bot_responses_string || "A friendly selfie";
 
-  // Add this function to handle image upload and analysis
-  // ...existing code...
+      // 2. Call image generation API
+      const payload = {
+        bot_id: selectedBotId,
+        message: messageString,
+        email: userDetails.email,
+        previous_conversation: "",
+        username: userDetails.name || "User",
+      };
+const imgRes = await fetch(
+  "https://fastapi-imagegen-2l5aaarlka-uc.a.run.app/v1/generate_image",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  }
+);
+      const imgData = await imgRes.json();
+
+      // 3. Add bot selfie message to chat
+const IMAGE_SERVER_BASE = "https://fastapi-imagegen-2l5aaarlka-uc.a.run.app";
+let imageUrl = imgData.image_url;
+if (imageUrl && imageUrl.startsWith("/")) {
+  imageUrl = IMAGE_SERVER_BASE + imageUrl;
+} else if (imageUrl && imageUrl.startsWith("http:")) {
+  imageUrl = imageUrl.replace(/^http:/, "https:");
+}
+setMessages((prev) => [
+  ...prev,
+  {
+    text: "",
+    sender: "bot",
+    timestamp: new Date(),
+    bot_id: selectedBotId,
+    isImageMessage: true,
+    imageUrl: imageUrl || (imgData.image_base64 ? `data:image/png;base64,${imgData.image_base64}` : ""),
+    selfieEmotion: imgData.emotion_context?.emotion,
+  },
+]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Sorry, I couldn't generate a selfie right now.",
+          sender: "bot",
+          timestamp: new Date(),
+          bot_id: selectedBotId,
+          isSystemMessage: true,
+        },
+      ]);
+    } finally {
+      setIsGeneratingSelfie(false);
+      scrollToBottom();
+    }
+  };
+  
+useEffect(() => {
+  const handleEndChat = () => {
+    if (userDetails?.email && selectedBotId) {
+      const payload = new Blob(
+        [JSON.stringify({ email: userDetails.email, bot_id: selectedBotId })],
+        { type: "application/json" }
+      );
+      navigator.sendBeacon("http://0.0.0.0:8000/end-chat", payload);
+    }
+  };
+
+  // Listen for browser unload
+  window.addEventListener("beforeunload", handleEndChat);
+  window.addEventListener("pagehide", handleEndChat);
+
+  // Listen for internal navigation
+  const currentPath = pathname;
+  return () => {
+    // If leaving /chat, trigger end-chat
+    if (currentPath === "/chat" && window.location.pathname !== "/chat") {
+      handleEndChat();
+    }
+    window.removeEventListener("beforeunload", handleEndChat);
+    window.removeEventListener("pagehide", handleEndChat);
+  };
+}, [pathname, userDetails?.email, selectedBotId]);
 
   // Update the handleImageUpload function
   const handleImageUpload = async (event) => {
@@ -2942,7 +3037,7 @@ const Dashboard = ({
     }
   };
 
-  const { selectedBotId } = useBot();
+
   //const [messages, setMessages] = useState([]);
 
   const [currentActivity, setCurrentActivity] = useState(null);
@@ -2952,8 +3047,7 @@ const Dashboard = ({
   const [isTyping, setIsTyping] = useState(false);
   const [isVoiceCallOpen, setIsVoiceCallOpen] = useState(false);
   const messagesEndRef = useRef(null);
-  const router = useRouter();
-  const { userDetails } = useUser();
+
   const [reminders, setReminders] = useState([]);
   const [showReactionsFor, setShowReactionsFor] = useState(null); // Track which message is showing reaction options
   const [showRemoveTooltip, setShowRemoveTooltip] = useState(null); // Track which message shows removal tooltip
@@ -3277,46 +3371,41 @@ if (data.xp_status) {
   // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
 
   // ✅ FIXED: Update the processBotMessages function
-  function processBotMessages(messages) {
-    let botReplyCount = {}; // ✅ Changed back to object to track per bot
+function processBotMessages(messages) {
+  let botReplyCount = {};
 
-    return messages.map((msg) => {
-      if (msg.sender === "bot") {
-        const botId = msg.bot_id || selectedBotId || "default";
+  return messages.map((msg) => {
+    if (msg.sender === "bot") {
+      const botId = msg.bot_id || selectedBotId || "default";
+      const isSystemMsg =
+        msg.isSystemMessage === true || isSystemMessageContent(msg.text);
+      const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
 
-        // Check if this is a system message either by explicit flag OR by content pattern
-        const isSystemMsg =
-          msg.isSystemMessage === true || isSystemMessageContent(msg.text);
-
-        // ✅ NEW: Check if this is an activity message
-        const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
-
-        // ✅ CRITICAL FIX: Only count non-system, non-activity bot messages for the sequence
-        if (!isSystemMsg && !isActivityMsg) {
-          if (!botReplyCount[botId]) botReplyCount[botId] = 0;
-          botReplyCount[botId]++;
-        }
-
-        // ✅ UPDATED: Proper voice_only logic
-        let voice_only = false;
-
-        if (isActivityMsg) {
-          // ✅ Activity messages are ALWAYS text-only (text bubble with small play button)
-          voice_only = false;
-        } else if (isSystemMsg) {
-          // System messages (reminders, proactive messages) are ALWAYS voice-only
-          voice_only = true;
-        } else {
-          // ✅ FIXED: Normal chat sequence - every 3rd normal bot message should be voice-only
-          const currentBotCount = botReplyCount[botId] || 0;
-          voice_only = currentBotCount % 3 === 0;
-        }
-
-        return { ...msg, voice_only, isSystemMessage: isSystemMsg };
+      // --- FIX: Never set voice_only for image messages ---
+      if (msg.isImageMessage) {
+        return { ...msg, voice_only: false, isSystemMessage: isSystemMsg };
       }
-      return msg;
-    });
-  }
+
+      if (!isSystemMsg && !isActivityMsg) {
+        if (!botReplyCount[botId]) botReplyCount[botId] = 0;
+        botReplyCount[botId]++;
+      }
+
+      let voice_only = false;
+      if (isActivityMsg) {
+        voice_only = false;
+      } else if (isSystemMsg) {
+        voice_only = true;
+      } else {
+        const currentBotCount = botReplyCount[botId] || 0;
+        voice_only = currentBotCount % 3 === 0;
+      }
+
+      return { ...msg, voice_only, isSystemMessage: isSystemMsg };
+    }
+    return msg;
+  });
+}
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (showReactionsFor && !e.target.closest(".reaction-selector")) {
@@ -3415,11 +3504,40 @@ if (data.xp_status) {
     }
   }, [userDetails.name, router]);
 
-  // Add this helper function to filter empty messages
-  const filterEmptyMessages = (messages) => {
-    return messages.filter((msg) => msg.text && msg.text.trim() !== "");
-  };
 
+    // Call /login endpoint to load user-bot chats into Redis
+  useEffect(() => {
+    if (!userDetails?.email || !selectedBotId) return;
+
+    fetch("http://127.0.0.1:8000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: userDetails.email,
+        bot_id: selectedBotId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Login/Redis preload status:", data);
+      })
+      .catch((err) => {
+        console.error("Error calling /login for Redis preload:", err);
+      });
+  }, [userDetails?.email, selectedBotId]);
+
+
+
+
+
+  // Add this helper function to filter empty messages
+const filterEmptyMessages = (messages) => {
+  return messages.filter(
+    (msg) =>
+      (msg.text && msg.text.trim() !== "") ||
+      msg.isImageMessage // Allow image messages even if text is empty
+  );
+};
   // Sync the messages with the server
   useEffect(() => {
     const fetchMessages = async () => {
@@ -3445,7 +3563,7 @@ if (data.xp_status) {
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
         const response = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/sync",
+          "http://127.0.0.1:8000/sync",
           {
             method: "POST",
             headers: {
@@ -3692,7 +3810,7 @@ const toggleRemovalTooltip = (msgId) => {
             `feedback` variables interpolated into the URL. The request is using the `fetch` function with the
             `await` keyword to asynchronously send the POST request. The method of the request is set to "POST". */
       const response = await fetch(
-        `https://novibe-backend-233451779807.us-central1.run.app/cv/message/feedback/${msg_id}/${feedback}`,
+        `http://127.0.0.1:8000/cv/message/feedback/${msg_id}/${feedback}`,
         {
           method: "POST",
         }
@@ -3719,7 +3837,7 @@ const toggleRemovalTooltip = (msgId) => {
   };
 async function storeActivityMessageInBackend({ text, sender, activityId }) {
   try {
-    await fetch("https://novibe-backend-233451779807.us-central1.run.app/store-activity-message", {
+    await fetch("http://127.0.0.1:8000/store-activity-message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -3811,7 +3929,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
             function. */
 
             const res = await fetch(
-              "https://novibe-backend-233451779807.us-central1.run.app/cv/response/reminder",
+              "http://127.0.0.1:8000/cv/response/reminder",
               {
                 method: "POST",
                 headers: {
@@ -3953,7 +4071,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
     if (containsUrl(userMessage)) {
       try {
         const res = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/api/news",
+          "http://127.0.0.1:8000/api/news",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -4074,7 +4192,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
       `await` keyword, indicating that the fetch operation is asynchronous. */
 
       const response = await fetch(
-        "https://novibe-backend-233451779807.us-central1.run.app/cv/chat",
+        "http://127.0.0.1:8000/cv/chat",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -4201,7 +4319,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
         );
 
         const storeRes = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/store-message",
+          "http://127.0.0.1:8000/store-message",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -4532,7 +4650,31 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
             </div>
           </div>
         )}
-
+      {/* Selfie Button - Beautiful, centered, above chat messages */}
+      {!currentActivity && (
+        <div className="w-full flex justify-center items-center py-4">
+          <button
+            onClick={handleGenerateSelfie}
+            disabled={isGeneratingSelfie}
+            className="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-white font-bold shadow-lg hover:scale-105 transition-all disabled:opacity-60"
+            style={{ fontSize: "1.1rem" }}
+          >
+            {isGeneratingSelfie ? (
+              <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
+            ) : (
+              <>
+                <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="10" r="3" />
+                  <path d="M4.5 17.5L9 13" />
+                </svg>
+                Generate a Selfie
+              </>
+            )}
+          </button>
+          <span className="ml-3 text-sm text-gray-400">See how your bot might look right now!</span>
+        </div>
+      )}
         <ScrollArea className="flex-1">
           <div className="px-1 md:px-2">
             {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
@@ -4576,78 +4718,95 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
                             />
                           ) : (
                             <>
-                              <div
-                                data-sender="bot"
-                                className={`px-4 py-2 rounded-2xl ${
-                                  botThemes[selectedBotId]?.botBubble ||
-                                  "bg-white/20 text-gray-900"
-                                } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
-                                  highlightedMessage === msg.id
-                                    ? "bg-orange-200/30"
-                                    : ""
-                                } w-full text-left`}
-                                style={{
-                                  userSelect: "none",
-                                  WebkitUserSelect: "none",
-                                  WebkitTouchCallout: "none",
-                                }}
-                                onTouchStart={(e) => {
-                                  e.preventDefault();
-                                  handleLongPressStart(msg.id);
-                                }}
-                                onTouchEnd={handleLongPressEnd}
-                                onTouchMove={handleLongPressEnd}
-                                onTouchCancel={handleLongPressEnd}
-                              >
-                                <motion.p>
-                                  {(typeof msg.text === "string"
-                                    ? msg.text
-                                    : ""
-                                  )
-                                    .split(" ")
-                                    .map((word, i) => (
-                                      <motion.span
-                                        key={i}
-                                        initial={{
-                                          filter: "blur(10px)",
-                                          opacity: 0,
-                                          y: 5,
-                                        }}
-                                        animate={{
-                                          filter: "blur(0px)",
-                                          opacity: 1,
-                                          y: 0,
-                                        }}
-                                        transition={{
-                                          duration: 0.2,
-                                          ease: "easeInOut",
-                                          delay: 0.02 * i,
-                                        }}
-                                        className="inline-block select-none"
-                                      >
-                                        {word}&nbsp;
-                                      </motion.span>
-                                    ))}
-                                  {/* Add the gaming symbol here */}
-                                  {(msg.isActivityMessage ||
-                                    msg.platform === "game_activity" ||
-                                    msg.activityId) && (
-                                    <span
-                                      className="inline-block ml-2 align-middle text-lg"
-                                      title="Game Activity"
-                                      style={{ verticalAlign: "middle" }}
-                                    >
-                                      🎮
-                                    </span>
-                                  )}
-                                </motion.p>
+<div
+  data-sender="bot"
+  className={
+    msg.isImageMessage
+      ? "p-0 m-0 bg-transparent border-none shadow-none rounded-none w-full text-left"
+      : `px-4 py-2 rounded-2xl ${
+          botThemes[selectedBotId]?.botBubble || "bg-white/20 text-gray-900"
+        } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
+          highlightedMessage === msg.id ? "bg-orange-200/30" : ""
+        } w-full text-left`
+  }
+  style={{
+    userSelect: "none",
+    WebkitUserSelect: "none",
+    WebkitTouchCallout: "none",
+  }}
+  onTouchStart={(e) => {
+    e.preventDefault();
+    handleLongPressStart(msg.id);
+  }}
+  onTouchEnd={handleLongPressEnd}
+  onTouchMove={handleLongPressEnd}
+  onTouchCancel={handleLongPressEnd}
+>
+  {msg.isImageMessage ? (
+    <div className="flex flex-col gap-2">
+      <img
+        src={msg.imageUrl}
+        alt="Bot selfie"
+        className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+        onLoad={() => scrollToBottom()}
+        style={{ backgroundColor: "transparent" }}
+      />
+      {msg.text && (
+        <span className="text-sm">{msg.text}</span>
+      )}
+    </div>
+  ) : (
+  <motion.p>
+    {(typeof msg.text === "string"
+      ? msg.text
+      : ""
+    )
+      .split(" ")
+      .map((word, i) => (
+        <motion.span
+          key={i}
+          initial={{
+            filter: "blur(10px)",
+            opacity: 0,
+            y: 5,
+          }}
+          animate={{
+            filter: "blur(0px)",
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.2,
+            ease: "easeInOut",
+            delay: 0.02 * i,
+          }}
+          className="inline-block select-none"
+        >
+          {word}&nbsp;
+        </motion.span>
+      ))}
+    {(msg.isActivityMessage ||
+      msg.platform === "game_activity" ||
+      msg.activityId) && (
+      <span
+        className="inline-block ml-2 align-middle text-lg"
+        title="Game Activity"
+        style={{ verticalAlign: "middle" }}
+      >
+        🎮
+      </span>
+    )}
+  </motion.p>
+)}
                               </div>
-                              <PlayAudio
-                                text={msg.text}
-                                bot_id={msg.bot_id || selectedBotId}
-                                minimal={true}
-                              />
-                            </>
+      {!msg.isImageMessage && (
+        <PlayAudio
+          text={msg.text}
+          bot_id={msg.bot_id || selectedBotId}
+          minimal={true}
+        />
+      )}
+    </>
                           )
                         ) : (
                           <div
@@ -4672,27 +4831,45 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
                               WebkitTouchCallout: "none",
                             }}
                           >
-                            {msg.isImageMessage ? (
-                              <div className="flex flex-col gap-2">
-                                <img
-                                  src={
-                                    msg.imageUrl ||
-                                    (msg.imageFile
-                                      ? URL.createObjectURL(msg.imageFile)
-                                      : "")
-                                  }
-                                  alt="Shared image"
-                                  className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
-                                  onLoad={() => scrollToBottom()}
-                                  style={{ backgroundColor: "transparent" }}
-                                />
-                                {msg.text && (
-                                  <span className="text-sm">{msg.text}</span>
-                                )}
-                              </div>
-                            ) : (
-                              msg.text
-                            )}
+
+
+
+
+
+{msg.isImageMessage ? (
+  <div className="flex flex-col gap-2">
+    {(() => {
+      console.log("Rendering image:", msg.imageUrl); // <-- This should show up if block is entered
+      return (
+        <img
+          src={msg.imageUrl}
+          alt="Shared image"
+          className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+          onLoad={() => scrollToBottom()}
+          style={{ backgroundColor: "transparent" }}
+        />
+      );
+    })()}
+    {msg.text && (
+      <span className="text-sm">{msg.text}</span>
+    )}
+  </div>
+) : (
+  msg.text
+)}
+
+
+
+
+
+
+
+
+
+
+
+
+
                           </div>
                         )}
                       </div>
