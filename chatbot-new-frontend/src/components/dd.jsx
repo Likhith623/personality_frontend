@@ -50,7 +50,7 @@ function Diary() {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://https://novibe-backend-233451779807.us-central1.run.app/get-summaries/${email}/${bot_id}`
+          `https://api.culturevo.com/get-summaries/${email}/${bot_id}`
         );
         if (!res.ok) {
           const errorText = await res.text();
@@ -110,7 +110,7 @@ function Diary() {
     try {
       await Promise.all(
         selectedEntries.map(async (isoDate) => {
-          await fetch("https://novibe-backend-233451779807.us-central1.run.app/delete-summary", {
+          await fetch("https://api.culturevo.com/delete-summary", {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
