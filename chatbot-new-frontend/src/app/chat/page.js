@@ -3278,11 +3278,11 @@ const payload = {
       console.log("Activity payload:", payload);
 
       // Call the gaming agent API - FIXED URL
-      console.log("📤 Sending request to:", "http://127.0.0.1:8000/chat");
+      console.log("📤 Sending request to:", "https://gaming-agents-api-2l5aaarlka-uc.a.run.app/chat");
       console.log("📤 Request payload:", payload);
       
       const response = await fetch(
-        "http://127.0.0.1:8000/chat",
+        "https://gaming-agents-api-2l5aaarlka-uc.a.run.app/chat",
         {
           method: "POST",
           headers: {
