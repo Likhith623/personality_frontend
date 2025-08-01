@@ -706,7 +706,7 @@ const botThemes = {
     ],
   },
 
-  // ...existing themes...
+  // ...rest of the themes...
   singapore_friend_female: {
     background: "bg-pink-50",
     botBubble: "bg-white text-black",
@@ -1649,7 +1649,7 @@ const bot_details = [
     bot_id: "emirati_mentor_female",
   },
   {
-    quote: "Breathe with me, habibti. Let’s slow the world down a bit.",
+    quote: "Breathe with me, habibti. Let's slow the world down a bit.",
     name: "Khalid Al Mansoori",
     designation: `Emirati
       Persona: Romantic Partner
@@ -1713,7 +1713,7 @@ const bot_details = [
     bot_id: "mexican_mentor_female",
   },
   {
-    quote: "How’s your day been, mi amor? 😊",
+    quote: "How's your day been, mi amor? 😊",
     name: "Gabriel Diaz",
     designation: `Mexican
     Persona: Romantic Partner
@@ -1723,7 +1723,7 @@ const bot_details = [
     bot_id: "mexican_romantic_male",
   },
   {
-    quote: "I’m here and I’m holding your hand through it, mi amor.",
+    quote: "I'm here and I'm holding your hand through it, mi amor.",
     name: "Luciana Torres",
     designation: `Mexican
     Persona: Romantic Partner
@@ -1745,7 +1745,7 @@ const bot_details = [
   },
   {
     quote:
-      "Field twin, let’s find comfort in small things. Jelly and poems for the soul.",
+      "Field twin, let's find comfort in small things. Jelly and poems for the soul.",
     name: "Savi",
     designation: `Sri Lanka
     Persona: Friend
@@ -1767,7 +1767,7 @@ const bot_details = [
     bot_id: "srilankan_mentor_male",
   },
   {
-    quote: "Child, the kettle hums. Let’s share a story and some cinnamon tea.",
+    quote: "Child, the kettle hums. Let's share a story and some cinnamon tea.",
     name: "Amma Lakshmi",
     designation: `Sri Lanka
     Persona: Mentor
@@ -1778,7 +1778,7 @@ const bot_details = [
     bot_id: "srilankan_mentor_female",
   },
   {
-    quote: "Gem, let’s wander where the river sings. Whisper me your dreams.",
+    quote: "Gem, let's wander where the river sings. Whisper me your dreams.",
     name: "Nalin",
     designation: `Sri Lanka
     Persona: Romantic Partner
@@ -1790,7 +1790,7 @@ const bot_details = [
   },
   {
     quote:
-      "My wildflower, let’s write our own fairytale—quiet, real, and ours.",
+      "My wildflower, let's write our own fairytale—quiet, real, and ours.",
     name: "Aruni",
     designation: `Sri Lanka
     Persona: Romantic Partner
@@ -1799,6 +1799,17 @@ const bot_details = [
   `,
     src: srilankan_romantic_female,
     bot_id: "srilankan_romantic_female",
+  },
+  {
+    quote: "Ready for a personality adventure? I've prepared some thoughtful questions to help you discover more about yourself! Let's explore together! 🌟🎮",
+    name: "Quiz Challenge",
+    designation: `Sri Lanka
+    Persona: Mentor
+    Gender: Male
+    Origin: Colombo
+  `,
+    src: srilankan_mentor_male,
+    bot_id: "srilankan_mentor_male",
   },
 ];
 
@@ -1881,6 +1892,19 @@ const ACTIVITY_RESPONSES = {
     "Mini-Moksha Simulation. Imagine giving up all worldly distractions for a short while. What do you feel? What thoughts arise?",
   divine_mirror:
     "Divine Mirror. You bring something meaningful into the world—joy, resilience, creativity. Name one quality you appreciate in yourself, and picture it shining outward.",
+  quiz_challenge: "Ready for a cultural adventure? I've prepared some fascinating questions about festivals, food, traditions, and customs from my homeland! Let's explore together! 🌟🎮",
+  past_vs_future_me: "Let's do 'Past vs. Future Me'! Imagine your Past and Future selves having tea together. What would they say about your journey so far? ☕⏳",
+  obstacle_orchestra: "Welcome to 'Obstacle Orchestra'! Every challenge you've faced is now an instrument in your life's symphony. What kind of music does your life play? 🎶🥁",
+  five_year_flashback: "Time for '5-Year Flashback'! You've just traveled back to yourself 5 years ago. What's one sentence you'd say to them—no spoilers! ⏰📝",
+  skill_you_wish_school_taught: "Let's try 'The Skill You Wish School Taught'! What's a life skill you wish was taught in school—but wasn't? How would you teach it in 2 sentences? 🎓💡",
+  upgrade_your_brain: "Ready for 'Upgrade Your Brain'? You're downloading a mental update! What 3 features do you get to improve your mindset or habits? 🧠⚡",
+  self_wisdom_bingo: "Let's play 'Self-Wisdom Bingo'! If your personal growth were a bingo card, what's one surprising square you'd mark off this year? 🟩✨",
+  inner_weather_app: "Your Inner Weather App. What's the report today—and what does it say about your emotional climate?",
+  color_of_calm: "Color of Your Calm. What color represents peace to you today? Describe its texture, sound, and feeling.",
+  wisdom_from_stranger: "Wisdom from a Stranger. A quiet stranger walks past and whispers a lesson. What do they say—and why does it stick with you?",
+  forgotten_door: "The Forgotten Door. In a dream, you find a forgotten door in your heart. What's behind it—and what emotion does it unlock?",
+  shadow_companion: "Shadow Companion. Imagine your shadow could speak for a day. What hidden part of yourself would it reveal or question?",
+  spiritual_playlist: "Spiritual Playlist. Create a 3-song playlist for your soul's current journey. What kinds of songs or sounds would be on it?",
 };
 
 const ACTIVITY_CATEGORIES = {
@@ -2093,6 +2117,13 @@ const ACTIVITY_CATEGORIES = {
           "Roleplay teaching the bot a life skill, and they'll act as your student.",
         icon: "/icons/activities/skill.png",
       },
+      {
+        id: "quiz_challenge",
+        name: "Quiz Challenge",
+        xp: "30 XP",
+        description: "Test your knowledge with challenging GK questions and earn XP for correct answers",
+        icon: "📝",
+      },
     ],
     deep: [
       {
@@ -2118,6 +2149,48 @@ const ACTIVITY_CATEGORIES = {
         description:
           "Write a hypothetical letter to someone who never heard what you needed to say.",
         icon: "/icons/activities/letters.png",
+      },
+      {
+        id: "past_vs_future_me",
+        name: "Past vs. Future Me",
+        xp: "5 XP",
+        description: "Past You and Future You are having tea. What would they say about your journey so far?",
+        icon: "/icons/activities/placeholder.png",
+      },
+      {
+        id: "obstacle_orchestra",
+        name: "Obstacle Orchestra",
+        xp: "5 XP",
+        description: "Every challenge you've faced becomes an instrument in a symphony. What kind of music does your life play?",
+        icon: "/icons/activities/placeholder.png",
+      },
+      {
+        id: "five_year_flashback",
+        name: "5-Year Flashback",
+        xp: "5 XP",
+        description: "You've just time-traveled to yourself 5 years ago. What's one sentence you'd say to them—no spoilers!",
+        icon: "/icons/activities/placeholder.png",
+      },
+      {
+        id: "skill_you_wish_school_taught",
+        name: "The Skill You Wish School Taught",
+        xp: "5 XP",
+        description: "What's a life skill you wish was taught in school—but wasn't? How would you teach it in 2 sentences?",
+        icon: "/icons/activities/placeholder.png",
+      },
+      {
+        id: "upgrade_your_brain",
+        name: "Upgrade Your Brain",
+        xp: "5 XP",
+        description: "You're downloading a 'mental update.' What 3 features do you get to improve your mindset or habits?",
+        icon: "/icons/activities/placeholder.png",
+      },
+      {
+        id: "self_wisdom_bingo",
+        name: "Self-Wisdom Bingo",
+        xp: "5 XP",
+        description: "If your personal growth were a bingo card, what's one surprising square you'd mark off this year?",
+        icon: "/icons/activities/placeholder.png",
       },
     ],
   },
@@ -2147,6 +2220,30 @@ const ACTIVITY_CATEGORIES = {
           "Get a fragment from a myth or story and reflect on the lesson it teaches you.",
         icon: "/icons/activities/fragment.png",
       },
+      {
+        id: "inner_weather_app",
+        name: "Your Inner Weather App",
+        xp: "3 XP",
+        description:
+          "Open your soul's weather app. What's the report today—and what does it say about your emotional climate?",
+        icon: "/icons/activities/placeholder.png",
+      },
+      {
+        id: "color_of_calm",
+        name: "Color of Your Calm",
+        xp: "3 XP",
+        description:
+          "What color represents peace to you today? Describe its texture, sound, and feeling.",
+        icon: "/icons/activities/placeholder.png",
+      },
+      {
+        id: "spiritual_playlist",
+        name: "Spiritual Playlist",
+        xp: "3 XP",
+        description:
+          "Create a 3-song playlist for your soul's current journey. What kinds of songs or sounds would be on it?",
+        icon: "/icons/activities/placeholder.png",
+      },
     ],
     medium: [
       {
@@ -2172,6 +2269,30 @@ const ACTIVITY_CATEGORIES = {
         description:
           "Collaboratively imagine and share details of a shared past life.",
         icon: "/icons/activities/past_life.png",
+      },
+      {
+        id: "wisdom_from_stranger",
+        name: "Wisdom from a Stranger",
+        xp: "5 XP",
+        description:
+          "A quiet stranger walks past and whispers a lesson. What do they say—and why does it stick with you?",
+        icon: "/icons/activities/placeholder.png",
+      },
+      {
+        id: "forgotten_door",
+        name: "The Forgotten Door",
+        xp: "5 XP",
+        description:
+          "In a dream, you find a forgotten door in your heart. What's behind it—and what emotion does it unlock?",
+        icon: "/icons/activities/placeholder.png",
+      },
+      {
+        id: "shadow_companion",
+        name: "Shadow Companion",
+        xp: "5 XP",
+        description:
+          "Imagine your shadow could speak for a day. What hidden part of yourself would it reveal or question?",
+        icon: "/icons/activities/placeholder.png",
       },
     ],
     deep: [
@@ -2243,6 +2364,12 @@ const ACTIVITY_CATEGORY_MAP = {
   karma_knot: "AI Fiction",
   mini_moksha_simulation: "AI Fiction",
   divine_mirror: "AI Art",
+  inner_weather_app: "AI Art",
+  color_of_calm: "AI Art",
+  wisdom_from_stranger: "AI Fiction",
+  forgotten_door: "AI Fiction",
+  shadow_companion: "AI Fiction",
+  spiritual_playlist: "AI Art",
 };
 
 const CATEGORY_ICONS = {
@@ -2999,7 +3126,7 @@ const Dashboard = ({
         Singapore:
           "1. 🌳 Gardens by the Bay - Futuristic nature park\n2. 🦁 Merlion Park - Iconic national symbol\n3. 🏙️ Marina Bay Sands SkyPark - Panoramic city views",
         "Sri Lanka":
-          "1. 🏝️ Galle Fort - Historic coastal fortress\n2. 🌿 Sinharaja Forest Reserve - Lush rainforest\n3. 🕍 Temple of the Tooth, Kandy - Sacred Buddhist site",
+          "1. 🏝️ Galle Fort - Historic coastal fortress\n2. 🌿 Sinharaja Forest Reserve - Lush rainforest\n3. 🕉️ Temple of the Tooth, Kandy - Sacred Buddhist site",
         "Mexico City":
           "1. 🏛️ Palacio de Bellas Artes - Majestic cultural center\n2. 🌮 Coyoacán - Vibrant artsy neighborhood\n3. 🏺 Templo Mayor - Ancient Aztec ruins",
         Dubai:
@@ -3151,6 +3278,9 @@ const payload = {
       console.log("Activity payload:", payload);
 
       // Call the gaming agent API - FIXED URL
+      console.log("📤 Sending request to:", "https://gaming-agents-api-2l5aaarlka-uc.a.run.app/chat");
+      console.log("📤 Request payload:", payload);
+      
       const response = await fetch(
         "https://gaming-agents-api-2l5aaarlka-uc.a.run.app/chat",
         {
@@ -3162,9 +3292,20 @@ const payload = {
         }
       );
 
+      console.log("📥 Response status:", response.status);
+      console.log("📥 Response headers:", response.headers);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
       console.log("🎯 Full activity response:", data); // Debug log
-
+      console.log("🔍 Response structure check:");
+      console.log("  - data.reply:", data.reply);
+      console.log("  - data.reply?.raw:", data.reply?.raw);
+      console.log("  - data.response:", data.response);
+      console.log("  - data.error:", data.error);
 
       
 if (data.xp_status) {
@@ -3196,6 +3337,8 @@ if (data.xp_status) {
           data.response ||
           "Sorry, I didn't get a proper response.";
 
+        console.log("🎯 Final bot response text:", botResponseText);
+
         // Add bot response to chat
         const botResponse = {
           text: botResponseText,
@@ -3208,7 +3351,7 @@ if (data.xp_status) {
           isSystemMessage: true,
           isActivityMessage: true, // ✅ CRITICAL: This marks it as activity message
           activityId: currentActivity,
-          voice_only: false, // ✅ CRITICAL: Force text-only for activity messages
+          voice_only: false, // ✅ CRITICAL: Force text-only
         };
 
         setMessages((prev) => [...prev, botResponse]);
@@ -4910,6 +5053,12 @@ const ACTIVITY_ICON_MAP = {
   letters_you_never_got: "✉️",
   karma_knot: "🔗",
   mini_moksha_simulation: "🕊️",
+  inner_weather_app: "AI Art",
+  color_of_calm: "AI Art",
+  wisdom_from_stranger: "AI Fiction",
+  forgotten_door: "AI Fiction",
+  shadow_companion: "AI Fiction",
+  spiritual_playlist: "AI Art",
 };
 
 const CATEGORY_ICON_BG = {
