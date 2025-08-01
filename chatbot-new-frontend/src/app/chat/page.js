@@ -3445,7 +3445,7 @@ if (data.xp_status) {
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
         const response = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/sync",
+          "https://api.culturevo.com/sync",
           {
             method: "POST",
             headers: {
@@ -3692,7 +3692,7 @@ const toggleRemovalTooltip = (msgId) => {
             `feedback` variables interpolated into the URL. The request is using the `fetch` function with the
             `await` keyword to asynchronously send the POST request. The method of the request is set to "POST". */
       const response = await fetch(
-        `https://novibe-backend-233451779807.us-central1.run.app/cv/message/feedback/${msg_id}/${feedback}`,
+        `https://api.culturevo.com/cv/message/feedback/${msg_id}/${feedback}`,
         {
           method: "POST",
         }
@@ -3719,7 +3719,7 @@ const toggleRemovalTooltip = (msgId) => {
   };
 async function storeActivityMessageInBackend({ text, sender, activityId }) {
   try {
-    await fetch("https://novibe-backend-233451779807.us-central1.run.app/store-activity-message", {
+    await fetch("https://api.culturevo.com/store-activity-message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -3811,7 +3811,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
             function. */
 
             const res = await fetch(
-              "https://novibe-backend-233451779807.us-central1.run.app/cv/response/reminder",
+              "https://api.culturevo.com/cv/response/reminder",
               {
                 method: "POST",
                 headers: {
@@ -3950,7 +3950,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
   if (containsUrl(userMessage)) {
     try {
       const res = await fetch(
-        "https://novibe-backend-233451779807.us-central1.run.app/api/news",
+        "https://api.culturevo.com/api/news",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -4014,7 +4014,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
   };
 
   try {
-    const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/cv/chat", {
+    const response = await fetch("https://api.culturevo.com/cv/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(primaryLlmPayload),
@@ -4117,7 +4117,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
       };
 
       const storeRes = await fetch(
-        "https://novibe-backend-233451779807.us-central1.run.app/store-message",
+        "https://api.culturevo.com/store-message",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -4237,7 +4237,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
       // Send to voice call API endpoint - Using local development server
       const response = await Promise.race([
         fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/voice-call",
+          "https://api.culturevo.com/voice-call",
           {
             method: "POST",
             headers: {

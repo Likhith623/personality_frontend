@@ -201,7 +201,7 @@ const XPDetailsModal = ({
       try {
         setLoading(true);
         const response = await fetch(
-          `https://novibe-backend-233451779807.us-central1.run.app/user-xp-current/${userDetails.email}/${selectedBotId}`
+          `https://api.culturevo.com/user-xp-current/${userDetails.email}/${selectedBotId}`
         );
 
         if (!response.ok) {
@@ -551,7 +551,7 @@ const XPSystem = ({ selectedBotDetails, selectedBotId, userDetails }) => {
       const allXPPromises = allBotIds.map(async (botId) => {
         try {
           const response = await fetch(
-            `https://novibe-backend-233451779807.us-central1.run.app/user-xp-current/${userDetails.email}/${botId}`
+            `https://api.culturevo.com/user-xp-current/${userDetails.email}/${botId}`
           );
 
           if (!response.ok) {
@@ -607,7 +607,7 @@ const XPSystem = ({ selectedBotDetails, selectedBotId, userDetails }) => {
 
       // Fetch current bot XP only
       const response = await fetch(
-        `https://novibe-backend-233451779807.us-central1.run.app/user-xp-current/${userDetails.email}/${selectedBotId}`
+        `https://api.culturevo.com/user-xp-current/${userDetails.email}/${selectedBotId}`
       );
 
       if (!response.ok) {
