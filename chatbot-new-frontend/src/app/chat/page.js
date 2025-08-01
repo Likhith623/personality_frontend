@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
-
+import Head from "next/head";
 import {
   systemPatterns,
   isSystemMessageContent,
@@ -2663,7 +2663,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
   };
 
   const forgetFriend = async () => {
-    const response = await fetch("https://novi.aigurukul.dev/clear-chat", {
+    const response = await fetch("https://novi.aigurukul.dev/updated-forgetfriend", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -4053,361 +4053,264 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
    * API response.
    */
   const handleSend = async (e) => {
-    e.reminder == undefined && e.preventDefault();
-    if (!input.trim() && e.reminder != true) return;
+  e.reminder == undefined && e.preventDefault();
+  if (!input.trim() && e.reminder != true) return;
 
-    const userMessage = input.trim();
+  const userMessage = input.trim();
 
-    // Check if user wants to end activity
-    if (
-      currentActivity &&
-      ["exit", "stop", "end"].includes(userMessage.toLowerCase())
-    ) {
-      endActivity();
-      setInput("");
-      return;
-    }
+  if (
+    currentActivity &&
+    ["exit", "stop", "end"].includes(userMessage.toLowerCase())
+  ) {
+    endActivity();
+    setInput("");
+    return;
+  }
 
-    // 1. Add user message to chat
-    if (e.reminder == undefined) {
+  if (e.reminder == undefined) {
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: userMessage,
+        sender: "user",
+        timestamp: new Date(),
+        feedback: "",
+        reaction: "",
+      },
+    ]);
+  }
+
+  setInput("");
+
+  if (currentActivity) {
+    await handleActivityMessage(userMessage);
+    return;
+  }
+
+  setIsTyping(true);
+  scrollToBottom();
+
+  if (containsUrl(userMessage)) {
+    try {
+      const res = await fetch(
+        "https://novibe-backend-233451779807.us-central1.run.app/api/news",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: userMessage,
+            bot_id: selectedBotId,
+            user_email: userDetails?.email || "anonymous@example.com",
+          }),
+        }
+      );
+      const data = await res.json();
+
       setMessages((prev) => [
         ...prev,
         {
-          text: userMessage,
-          sender: "user",
+          text: data.ai_response || data.result || "Sorry, I could not summarize that link.",
+          sender: "bot",
           timestamp: new Date(),
-          feedback: "",
-          reaction: "",
+          bot_id: selectedBotId,
+        },
+      ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Sorry, there was an error processing your link.",
+          sender: "bot",
+          timestamp: new Date(),
+          bot_id: selectedBotId,
         },
       ]);
     }
-
-    setInput("");
-
-    // Handle activity-specific messages
-    if (currentActivity) {
-      await handleActivityMessage(userMessage);
-      return;
-    }
-    setIsTyping(true);
+    setIsTyping(false);
     scrollToBottom();
+    return;
+  }
 
-    // 1. If message contains a URL, use /api/news
-    if (containsUrl(userMessage)) {
+  const currentTime = new Date();
+
+  const convertToOpenAIFormat = (msgs) =>
+    msgs.map((msg) => ({
+      role: msg.sender === "bot" ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+  const primaryLlmPayload = {
+    message:
+      e?.reminder === true
+        ? `User asked to remind: ${e.message}`
+        : userMessage,
+    bot_id: selectedBotId,
+    custom_bot_name: selectedBotDetails?.name || "",
+    user_name: userDetails.name || "",
+    user_gender: userDetails.gender || "",
+    language: "",
+    traits: "",
+    previous_conversation: convertToOpenAIFormat(messages),
+    email: userDetails.email || "",
+    request_time: currentTime.toISOString(),
+    platform: "web",
+  };
+
+  try {
+    const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/cv/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(primaryLlmPayload),
+    });
+
+    if (!response.body) throw new Error("Streaming not supported");
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let done = false;
+    let botMessage = "";
+    let metadataBuffer = "";
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: "...",
+        sender: "bot",
+        timestamp: new Date(),
+        bot_id: selectedBotId,
+        isSystemMessage: false,
+      },
+    ]);
+
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunk = decoder.decode(value || new Uint8Array(), { stream: true });
+      botMessage += chunk;
+
+      if (done && botMessage.includes("[[END_JSON]]")) {
+        const [textPart, jsonPart] = botMessage.split("[[END_JSON]]");
+        botMessage = textPart.trim();
+        metadataBuffer = jsonPart.trim();
+      }
+
+      setMessages((prevMessages) => {
+        const updated = [...prevMessages];
+        const lastMsg = updated[updated.length - 1];
+        if (lastMsg.sender === "bot") {
+          lastMsg.text = botMessage;
+        }
+        return updated;
+      });
+
+      scrollToBottom();
+    }
+
+    setIsTyping(false);
+
+    if (metadataBuffer) {
       try {
-        const res = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/api/news",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              query: userMessage,
-              bot_id: selectedBotId,
-              user_email: userDetails?.email || "anonymous@example.com",
-            }),
-          }
-        );
-        const data = await res.json();
+        const data = JSON.parse(metadataBuffer);
 
-        if (data.status === "success" && data.ai_response) {
+        if (data.xp_data && typeof window.updateXPFromResponse === "function") {
+          window.updateXPFromResponse(data.xp_data);
+        }
+
+        if (data.reminder?.response && data.reminder?.task) {
+          const reminder = {
+            response: data.reminder.response,
+            task: data.reminder.task,
+            created_at: data.reminder.created_at,
+            remind_on: data.reminder.remind_on,
+            category: "Reminder",
+          };
+
+          const updatedReminders = [...reminders, reminder];
+          setReminders(updatedReminders);
+          localStorage.setItem(
+            `reminders-${selectedBotId}`,
+            JSON.stringify(updatedReminders)
+          );
+
           setMessages((prev) => [
             ...prev,
             {
-              text: data.ai_response,
+              text: data.response,
               sender: "bot",
+              id: data.message_id,
+              feedback: "",
+              reaction: "",
               timestamp: new Date(),
               bot_id: selectedBotId,
-            },
-          ]);
-        } else {
-          setMessages((prev) => [
-            ...prev,
-            {
-              text: data.result || "Sorry, I could not summarize that link.",
-              sender: "bot",
-              timestamp: new Date(),
-              bot_id: selectedBotId,
+              isSystemMessage: true,
             },
           ]);
         }
       } catch (err) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: "Sorry, there was an error processing your link.",
-            sender: "bot",
-            timestamp: new Date(),
-            bot_id: selectedBotId,
-          },
-        ]);
+        console.error("❌ Error parsing final metadata:", err);
       }
-      setIsTyping(false);
-      scrollToBottom();
-      return;
     }
 
-    // Continue with LLM processing
-    const currentTime = new Date();
-
-    const convertToOpenAIFormat = (msgs) =>
-      msgs.map((msg) => ({
-        role: msg.sender === "bot" ? "assistant" : "user",
-        content: msg.text,
-      }));
-
-    const primaryLlmPayload = {
-      message:
-        e?.reminder === true
-          ? `User asked to remind: ${e.message}`
-          : userMessage,
-      bot_id: selectedBotId,
-      custom_bot_name: selectedBotDetails?.name || "",
-      user_name: userDetails.name || "",
-      user_gender: userDetails.gender || "",
-      language: "",
-      traits: "",
-      previous_conversation: convertToOpenAIFormat(messages),
-      email: userDetails.email || "",
-      request_time: currentTime.toISOString(),
-      platform: "web",
-    };
-
-    console.log("📤 Sending to Primary LLM (Novi VI):", primaryLlmPayload);
     try {
-      /**
-       * The function `convertToOpenAIFormat` takes an array of messages and converts them into an
-       * OpenAI format object with role and content properties.
-       * @param msgs - The `msgs` parameter is an array of messages that contains information about the
-       * sender and the text content of each message.
-       */
-      const convertToOpenAIFormat = (msgs) =>
-        msgs.map((msg) => ({
-          role: msg.sender === "bot" ? "assistant" : "user",
-          content: msg.text,
-        }));
-
-      /* The above code is creating a JavaScript object named `payload` with the following properties:
-      - `message`: It is set to a ternary expression that checks if `e.reminder` is true. If true, it sets
-      the message to "User asked to remind: " followed by the value of `e.message`. If false, it sets the
-      message to the value of `input`.
-      - `bot_id`: It is set to the value of `selectedBotId`.
-      - `previous_con */
-
-      const payload = {
-        message:
-          e.reminder === true ? `User asked to remind: ${e.message}` : input,
+      const storeMessagePayload = {
+        email: userDetails?.email || "anonymous@example.com",
         bot_id: selectedBotId,
-        custom_bot_name: selectedBotDetails?.name || "",
-        user_name: userDetails.name || "",
-        user_gender: userDetails.gender || "",
-        language: "", // You can set dynamically if needed
-        traits: "", // Optional: add if user has traits like "funny", "serious", etc.
-        previous_conversation: convertToOpenAIFormat(messages),
-        email: userDetails.email || "", // Optional: provide if available
-        request_time: new Date().toISOString(),
-        platform: "web", // or mobile, etc.
+        message: userMessage,
+        user_name: userDetails?.name || "Unknown",
       };
 
-      console.log("Payload", JSON.stringify(payload, null, 2));
-
-      /* The above code is making a POST request to the URL "http://127.0.0.1:8000/cv/chat" with a
-      JSON payload. The payload is being sent in the body of the request after being stringified
-      using JSON.stringify. The request is being made using the fetch API with the specified method
-      and headers. The response from the server is being stored in the variable `response` using the
-      `await` keyword, indicating that the fetch operation is asynchronous. */
-
-      const response = await fetch(
-        "https://novibe-backend-233451779807.us-central1.run.app/cv/chat",
+      const storeRes = await fetch(
+        "https://novibe-backend-233451779807.us-central1.run.app/store-message",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(primaryLlmPayload),
+          body: JSON.stringify(storeMessagePayload),
         }
       );
 
-      const data = await response.json();
-      // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
-      console.log("🧠 Primary LLM Response Data:", data);
+      const storeData = await storeRes.json();
+      console.log("✅ Backend /store-message Result:", storeData);
 
-      if (data.xp_data) {
-        console.log("🎯 XP data found in response:", data.xp_data);
-
-        if (typeof window.updateXPFromResponse === "function") {
-          console.log("✅ Calling updateXPFromResponse with:", data.xp_data);
-          window.updateXPFromResponse(data.xp_data);
-        } else {
-          console.error("❌ window.updateXPFromResponse is not available");
-        }
-      } else {
-        console.warn("⚠️ No XP data found in response");
+      if (storeData.delta_result?.status === "delta_updates_applied") {
+        console.log("Info: User persona updated in database.");
       }
-
-      setIsTyping(false);
-
-      let finalMessage = data.response;
-
-      if (!finalMessage) {
-        console.warn("⚠️ Primary LLM response is empty. Using fallback.");
-        finalMessage = "Sorry, I couldn't generate a reply.";
-      }
-
-      if (data.error) {
-        const errorMessage =
-          "Sorry, there was an error processing your request. Please try again.";
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: errorMessage,
-            sender: "bot",
-            id: "",
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(errorMessage),
-          },
-        ]);
-      } else if (
-        data.reminder?.response &&
-        data.reminder?.task &&
-        data.reminder?.created_at
-      ) {
-        console.log("This is reminder block", data.reminder);
-
-        const reminder = {
-          response: data.reminder.response,
-          task: data.reminder.task,
-          created_at: data.reminder.created_at,
-          remind_on: data.reminder.remind_on,
-          category: "Reminder",
-        };
-
-        console.log("Add reminder", reminder);
-        console.log("Reminders before adding", reminders);
-
-        const updatedReminders = [...reminders, reminder];
-        console.log("New reminders array", updatedReminders);
-
-        setReminders(updatedReminders);
-        localStorage.setItem(
-          `reminders-${selectedBotId}`,
-          JSON.stringify(updatedReminders)
-        );
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: true, // Reminders are treated as system messages
-          },
-        ]);
-      } else {
-        // Use finalMessage if defined, otherwise fallback to data.response
-        const shouldBeSystemMessage = isSystemMessageContent(
-          finalMessage || data.response
-        );
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: shouldBeSystemMessage,
-          },
-        ]);
-      }
-      // --- NEW INTEGRATION POINT ---
-      // AFTER the primary LLM has responded and its message is displayed,
-      // call your backend's /store-message endpoint for categorization and delta logic.
-      try {
-        const storeMessagePayload = {
-          email: userDetails?.email || "anonymous@example.com",
-          bot_id: selectedBotId,
-          message: userMessage, // Send the original user message
-          user_name: userDetails?.name || "Unknown",
-        };
-
-        console.log(
-          "📤 Sending to Backend /store-message for Categorization & Delta:",
-          storeMessagePayload
-        );
-
-        const storeRes = await fetch(
-          "https://novibe-backend-233451779807.us-central1.run.app/store-message",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(storeMessagePayload),
-          }
-        );
-
-        const storeData = await storeRes.json();
-        console.log(
-          "✅ Backend /store-message Result (Categorization & Delta):",
-          storeData
-        );
-
-        // Optional: You can display a small, non-intrusive notification to the user
-        // if storeData.delta_result.status indicates important changes,
-        // e.g., "Your preferences have been updated!"
-        if (storeData.delta_result?.status === "delta_updates_applied") {
-          console.log(
-            "Info: User persona updated in database due to new message."
-          );
-          // You could add a temporary message to the UI or a log for debugging
-        }
-      } catch (storeError) {
-        console.error(
-          "❌ Error with Backend /store-message (Categorization & Delta):",
-          storeError
-        );
-        // You might want to log this error to your backend's frontend_error_logs
-        // or display a subtle message to the user that memory update failed.
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: `⚠️ Persona memory update failed.`, // Less intrusive message
-            sender: "system",
-            timestamp: new Date(),
-            isSystemMessage: true,
-          },
-        ]);
-      }
-    } catch (error) {
-      logClientError(error, { source: "API Call" });
-      console.log(error);
-      console.error("❌ Error calling Primary LLM:", error);
-      setIsTyping(false);
-
-      const errorMessage =
-        "Sorry, there was an error processing your request. Please try again.";
+    } catch (storeError) {
+      console.error("❌ Error with /store-message:", storeError);
       setMessages((prev) => [
         ...prev,
         {
-          text: errorMessage,
-          sender: "bot",
-          id: "",
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime,
-          bot_id: selectedBotId,
-          isSystemMessage: isSystemMessageContent(errorMessage),
+          text: `⚠️ Persona memory update failed.`,
+          sender: "system",
+          timestamp: new Date(),
+          isSystemMessage: true,
         },
       ]);
     }
-    scrollToBottom();
-  };
+  } catch (error) {
+    logClientError(error, { source: "API Call" });
+    console.error("❌ Error calling Primary LLM:", error);
+    setIsTyping(false);
+
+    const errorMessage =
+      "Sorry, there was an error processing your request. Please try again.";
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: errorMessage,
+        sender: "bot",
+        id: "",
+        feedback: "",
+        reaction: "",
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: isSystemMessageContent(errorMessage),
+      },
+    ]);
+  }
+
+  scrollToBottom();
+};
+
 
   const handleVoiceCallMessage = async (message) => {
     if (!message) return;
@@ -4594,403 +4497,455 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
   console.log("All chat messages:", messages);
 
   return (
-    <div
-      className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
-        botThemes[selectedBotId]?.background || "bg-gray-100"
-      }`}
-      style={
-        botThemes[selectedBotId]?.backgroundImages
-          ? (() => {
-              const bg =
-                botThemes[selectedBotId].backgroundImages[backgroundIndex];
+    <>
+      <Head>
+        <title>Culturevo | Chat with NOVI - Your AI Bestie</title>
+        <meta
+          name="description"
+          content="Talk to an AI like a friend through our voice-enabled AI companion that responds like an AI that talks like a human. This AI that texts like a real person is perfect for chill AI to talk to when bored or for an AI bestie for late-night overthinking."
+        />
+        <meta
+          name="keywords"
+          content="Talk to an AI like a friend, Voice-enabled AI companion, AI that talks like a human, AI that texts like a real person, Chill AI to talk to when bored, AI bestie for late-night overthinking"
+        />
+        <meta
+          property="og:title"
+          content="Chat with NOVI - Your AI Bestie | Culturevo"
+        />
+        <meta
+          property="og:description"
+          content="Engage in natural, human‑like conversation with NOVI—your voice‑enabled emotional support AI best friend."
+        />
+        <meta property="og:url" content="https://www.culturevo.com/chat" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-              if (bg.url.startsWith("http") || bg.url.startsWith("/")) {
-                return {
-                  backgroundImage: `url('${bg.url}')`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                };
-              } else if (bg.startsWith("radial-gradient")) {
-                return { backgroundImage: bg };
-              } else {
-                return { backgroundColor: bg };
+      <div
+        className={`flex flex-col flex-1 border border-neutral-200 md:h-full md:mt-0 relative overflow-hidden ${
+          botThemes[selectedBotId]?.background || "bg-gray-100"
+        }`}
+        style={
+          botThemes[selectedBotId]?.backgroundImages
+            ? (() => {
+                const bg =
+                  botThemes[selectedBotId].backgroundImages[backgroundIndex];
+
+                if (bg.url.startsWith("http") || bg.url.startsWith("/")) {
+                  return {
+                    backgroundImage: `url('${bg.url}')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  };
+                } else if (bg.startsWith("radial-gradient")) {
+                  return { backgroundImage: bg };
+                } else {
+                  return { backgroundColor: bg };
+                }
+              })()
+            : botThemes[selectedBotId]?.backgroundImage
+            ? {
+                backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
               }
-            })()
-          : botThemes[selectedBotId]?.backgroundImage
-          ? {
-              backgroundImage: `url('${botThemes[selectedBotId].backgroundImage}')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }
-          : undefined
-      }
-    >
-      {/* ✅ ENHANCED: Always visible activity banner at the very top */}
-      {currentActivity && (
-        <div className="sticky top-0 z-50 px-4 py-3 bg-gradient-to-r from-red-500/95 to-pink-500/95 backdrop-blur-md border-b-2 border-white/30 shadow-lg">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg"></div>
-              <div>
-                <p className="text-white font-bold text-lg drop-shadow-md">
-                  🎮 ACTIVITY MODE:{" "}
-                  {currentActivity
-                    .replace(/_/g, " ")
-                    .replace(/\b\w/g, (l) => l.toUpperCase())}
-                </p>
+            : undefined
+        }
+      >
+        {/* ✅ ENHANCED: Always visible activity banner at the very top */}
+        {currentActivity && (
+          <div className="sticky top-0 z-50 px-4 py-3 bg-gradient-to-r from-red-500/95 to-pink-500/95 backdrop-blur-md border-b-2 border-white/30 shadow-lg">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg"></div>
+                <div>
+                  <p className="text-white font-bold text-lg drop-shadow-md">
+                    🎮 ACTIVITY MODE:{" "}
+                    {currentActivity
+                      .replace(/_/g, " ")
+                      .replace(/\b\w/g, (l) => l.toUpperCase())}
+                  </p>
+                </div>
               </div>
+              <button
+                onClick={endActivity}
+                className="px-6 py-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-lg border-2 border-white/50 hover:border-white font-bold text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                END ACTIVITY
+              </button>
             </div>
-            <button
-              onClick={endActivity}
-              className="px-6 py-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-lg border-2 border-white/50 hover:border-white font-bold text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-            >
-              END ACTIVITY
-            </button>
           </div>
-        </div>
-      )}
+        )}
 
-      <ScrollArea className="flex-1">
-        <div className="px-1 md:px-2">
-          {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
-            <div key={date}>
-              <div className="sticky top-5 z-10 my-10 py-2 mx-auto w-32 bg-gray-200/40 backdrop-blur-sm backdrop-saturate-150 rounded-md shadow-md">
-                <p
-                  className={`text-center text-sm ${
-                    isDarkTheme ? `${textColorClass}` : `${textColorClass}`
-                  }`}
-                >
-                  {date}
-                </p>
-              </div>
+        <ScrollArea className="flex-1">
+          <div className="px-1 md:px-2">
+            {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
+              <div key={date}>
+                <div className="sticky top-5 z-10 my-10 py-2 mx-auto w-32 bg-gray-200/40 backdrop-blur-sm backdrop-saturate-150 rounded-md shadow-md">
+                  <p
+                    className={`text-center text-sm ${
+                      isDarkTheme ? `${textColorClass}` : `${textColorClass}`
+                    }`}
+                  >
+                    {date}
+                  </p>
+                </div>
 
-              {messagesOnDate.map((msg, index) => (
-                <div
-                  key={index}
-                  className={`my-2 flex ${
-                    msg.sender === "bot" ? "justify-start" : "justify-end"
-                  }`}
-                >
-                  <div className="max-w-[80%] min-w-16 relative">
-                    {msg.sender === "bot" && msg.reaction && (
-                      <div
-                        className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
-                        onClick={() => toggleRemovalTooltip(msg.id)}
-                      >
-                        <span className="text-lg">{msg.reaction}</span>
-                        {showRemoveTooltip === msg.id && (
-                          <RemovalTooltip msgId={msg.id} />
-                        )}
-                      </div>
-                    )}
-
-                    <div className="flex flex-row items-center gap-2">
-                      {msg.sender === "bot" ? (
-                        msg.voice_only ? (
-                          <PlayAudio
-                            text={msg.text}
-                            bot_id={msg.bot_id || selectedBotId}
-                          />
-                        ) : (
-                          <>
-                            <div
-                              data-sender="bot"
-                              className={`px-4 py-2 rounded-2xl ${
-                                botThemes[selectedBotId]?.botBubble ||
-                                "bg-white/20 text-gray-900"
-                              } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
-                                highlightedMessage === msg.id
-                                  ? "bg-orange-200/30"
-                                  : ""
-                              } w-full text-left`}
-                              style={{
-                                userSelect: "none",
-                                WebkitUserSelect: "none",
-                                WebkitTouchCallout: "none",
-                              }}
-                              onTouchStart={(e) => {
-                                e.preventDefault();
-                                handleLongPressStart(msg.id);
-                              }}
-                              onTouchEnd={handleLongPressEnd}
-                              onTouchMove={handleLongPressEnd}
-                              onTouchCancel={handleLongPressEnd}
-                            >
-                              <motion.p>
-                                {(typeof msg.text === "string" ? msg.text : "")
-                                  .split(" ")
-                                  .map((word, i) => (
-                                    <motion.span
-                                      key={i}
-                                      initial={{
-                                        filter: "blur(10px)",
-                                        opacity: 0,
-                                        y: 5,
-                                      }}
-                                      animate={{
-                                        filter: "blur(0px)",
-                                        opacity: 1,
-                                        y: 0,
-                                      }}
-                                      transition={{
-                                        duration: 0.2,
-                                        ease: "easeInOut",
-                                        delay: 0.02 * i,
-                                      }}
-                                      className="inline-block select-none"
-                                    >
-                                      {word}&nbsp;
-                                    </motion.span>
-                                  ))}
-  {/* Add the gaming symbol here */}
-  {(msg.isActivityMessage || msg.platform === "game_activity" || msg.activityId) && (
-    <span
-      className="inline-block ml-2 align-middle text-lg"
-      title="Game Activity"
-      style={{ verticalAlign: "middle" }}
-    >
-      🎮
-    </span>
-  )}
-
-
-
-
-                              </motion.p>
-                            </div>
-                            <PlayAudio
-                              text={msg.text}
-                              bot_id={msg.bot_id || selectedBotId}
-                              minimal={true}
-                            />
-                          </>
-                        )
-                      ) : (
+                {messagesOnDate.map((msg, index) => (
+                  <div
+                    key={index}
+                    className={`my-2 flex ${
+                      msg.sender === "bot" ? "justify-start" : "justify-end"
+                    }`}
+                  >
+                    <div className="max-w-[80%] min-w-16 relative">
+                      {msg.sender === "bot" && msg.reaction && (
                         <div
-                          data-sender="user"
-                          className={`px-4 py-2 rounded-2xl ${
-                            msg.isImageMessage
-                              ? "bg-transparent border-none shadow-none" // No background for images
-                              : botThemes[selectedBotId]?.userBubble ||
-                                "bg-purple-400/80 text-white"
-                          } ${
-                            !msg.isImageMessage
-                              ? "border border-white/20 backdrop-blur-sm shadow-md"
-                              : ""
-                          } placeholder-gray-200 ${
-                            highlightedMessage === msg.id
-                              ? "bg-orange-200/90"
-                              : ""
-                          } w-full text-left`}
-                          style={{
-                            userSelect: "none",
-                            WebkitUserSelect: "none",
-                            WebkitTouchCallout: "none",
-                          }}
+                          className="absolute bottom-0 left-3 z-10 bg-white/80 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-100 cursor-pointer hover:bg-white/90"
+                          onClick={() => toggleRemovalTooltip(msg.id)}
                         >
-                          {msg.isImageMessage ? (
-                            <div className="flex flex-col gap-2">
-                              <img
-                                src={
-                                  msg.imageUrl ||
-                                  (msg.imageFile
-                                    ? URL.createObjectURL(msg.imageFile)
-                                    : "")
-                                }
-                                alt="Shared image"
-                                className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
-                                onLoad={() => scrollToBottom()}
-                                style={{ backgroundColor: "transparent" }}
-                              />
-                              {msg.text && (
-                                <span className="text-sm">{msg.text}</span>
-                              )}
-                            </div>
-                          ) : (
-                            msg.text
+                          <span className="text-lg">{msg.reaction}</span>
+                          {showRemoveTooltip === msg.id && (
+                            <RemovalTooltip msgId={msg.id} />
                           )}
                         </div>
                       )}
-                    </div>
-                    <div className="flex flex-row justify-end">
-                      <span
-                        className={`text-xs mt-[7px] ${
-                          msg.sender === "user" ? "mr-3" : ""
-                        } ${
-                          isDarkTheme
-                            ? `${textColorClass}`
-                            : `${textColorClass}`
-                        }`}
-                      >
-                        {formatTime(msg.timestamp)}
-                      </span>
 
-                      {msg.sender === "bot" && (
-                        <div className="flex justify-end px-2 mr-7 relative text-white">
-
-{showReactionsFor !== null && msg.id !== null && showReactionsFor === msg.id && (
-  <ReactionSelector msgId={msg.id} />
-)}
-
-                          <div className="gap-3 flex flex-row mt-1">
-                            {!isMobile && (
-                              <button
-                                onClick={() => toggleReactions(msg.id)}
-                                className={`cursor-pointer transition-colors mr-2 ${
-                                  isDarkTheme
-                                    ? `${textColorClass}`
-                                    : `${textColorClass}`
-                                }`}
+                      <div className="flex flex-row items-center gap-2">
+                        {msg.sender === "bot" ? (
+                          msg.voice_only ? (
+                            <PlayAudio
+                              text={msg.text}
+                              bot_id={msg.bot_id || selectedBotId}
+                            />
+                          ) : (
+                            <>
+                              <div
+                                data-sender="bot"
+                                className={`px-4 py-2 rounded-2xl ${
+                                  botThemes[selectedBotId]?.botBubble ||
+                                  "bg-white/20 text-gray-900"
+                                } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
+                                  highlightedMessage === msg.id
+                                    ? "bg-orange-200/30"
+                                    : ""
+                                } w-full text-left`}
+                                style={{
+                                  userSelect: "none",
+                                  WebkitUserSelect: "none",
+                                  WebkitTouchCallout: "none",
+                                }}
+                                onTouchStart={(e) => {
+                                  e.preventDefault();
+                                  handleLongPressStart(msg.id);
+                                }}
+                                onTouchEnd={handleLongPressEnd}
+                                onTouchMove={handleLongPressEnd}
+                                onTouchCancel={handleLongPressEnd}
                               >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="18"
-                                  height="18"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <circle cx="12" cy="12" r="10" />
-                                  <path d="M8 14s1.5 2.25 4 2.25 4-2.25 4-2.25" />
-                                  <line x1="9" y1="9" x2="9.01" y2="9" />
-                                  <line x1="15" y1="9" x2="15.01" y2="9" />
-                                </svg>
-                              </button>
-                            )}
-
-                            {typeof msg.text === "string" &&
-                            msg.text.trim() ===
-                              "Sorry, there was an error processing your request. Please try again." ? null : (
-                              <>
-                                {msg.feedback === "" ? (
-                                  <>
-                                    <ThumbsUp
-                                      className={`cursor-pointer ${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                      size={18}
-                                      onClick={() =>
-                                        handleFeedback("like", msg.id)
-                                      }
-                                    />
-                                    <ThumbsDown
-                                      className={`cursor-pointer ${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                      size={18}
-                                      onClick={() =>
-                                        handleFeedback("dislike", msg.id)
-                                      }
-                                    />
-                                  </>
-                                ) : msg.feedback === "like" ? (
-                                  <>
-                                    <IconThumbUpFilled
-                                      size={22}
-                                      className={`${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      } mt-[-2px]`}
-                                    />
-                                    <ThumbsDown
-                                      className={`cursor-pointer ${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                      size={18}
-                                      onClick={() =>
-                                        handleFeedback("dislike", msg.id)
-                                      }
-                                    />
-                                  </>
-                                ) : (
-                                  <>
-                                    <ThumbsUp
-                                      className={`cursor-pointer ${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                      size={18}
-                                      onClick={() =>
-                                        handleFeedback("like", msg.id)
-                                      }
-                                    />
-                                    <IconThumbDownFilled
-                                      size={22}
-                                      className={`${
-                                        isDarkTheme
-                                          ? `${textColorClass}`
-                                          : `${textColorClass}`
-                                      }`}
-                                    />
-                                  </>
+                                <motion.p>
+                                  {(typeof msg.text === "string"
+                                    ? msg.text
+                                    : ""
+                                  )
+                                    .split(" ")
+                                    .map((word, i) => (
+                                      <motion.span
+                                        key={i}
+                                        initial={{
+                                          filter: "blur(10px)",
+                                          opacity: 0,
+                                          y: 5,
+                                        }}
+                                        animate={{
+                                          filter: "blur(0px)",
+                                          opacity: 1,
+                                          y: 0,
+                                        }}
+                                        transition={{
+                                          duration: 0.2,
+                                          ease: "easeInOut",
+                                          delay: 0.02 * i,
+                                        }}
+                                        className="inline-block select-none"
+                                      >
+                                        {word}&nbsp;
+                                      </motion.span>
+                                    ))}
+                                  {/* Add the gaming symbol here */}
+                                  {(msg.isActivityMessage ||
+                                    msg.platform === "game_activity" ||
+                                    msg.activityId) && (
+                                    <span
+                                      className="inline-block ml-2 align-middle text-lg"
+                                      title="Game Activity"
+                                      style={{ verticalAlign: "middle" }}
+                                    >
+                                      🎮
+                                    </span>
+                                  )}
+                                </motion.p>
+                              </div>
+                              <PlayAudio
+                                text={msg.text}
+                                bot_id={msg.bot_id || selectedBotId}
+                                minimal={true}
+                              />
+                            </>
+                          )
+                        ) : (
+                          <div
+                            data-sender="user"
+                            className={`px-4 py-2 rounded-2xl ${
+                              msg.isImageMessage
+                                ? "bg-transparent border-none shadow-none" // No background for images
+                                : botThemes[selectedBotId]?.userBubble ||
+                                  "bg-purple-400/80 text-white"
+                            } ${
+                              !msg.isImageMessage
+                                ? "border border-white/20 backdrop-blur-sm shadow-md"
+                                : ""
+                            } placeholder-gray-200 ${
+                              highlightedMessage === msg.id
+                                ? "bg-orange-200/90"
+                                : ""
+                            } w-full text-left`}
+                            style={{
+                              userSelect: "none",
+                              WebkitUserSelect: "none",
+                              WebkitTouchCallout: "none",
+                            }}
+                          >
+                            {msg.isImageMessage ? (
+                              <div className="flex flex-col gap-2">
+                                <img
+                                  src={
+                                    msg.imageUrl ||
+                                    (msg.imageFile
+                                      ? URL.createObjectURL(msg.imageFile)
+                                      : "")
+                                  }
+                                  alt="Shared image"
+                                  className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+                                  onLoad={() => scrollToBottom()}
+                                  style={{ backgroundColor: "transparent" }}
+                                />
+                                {msg.text && (
+                                  <span className="text-sm">{msg.text}</span>
                                 )}
-                              </>
+                              </div>
+                            ) : (
+                              msg.text
                             )}
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
+                      <div className="flex flex-row justify-end">
+                        <span
+                          className={`text-xs mt-[7px] ${
+                            msg.sender === "user" ? "mr-3" : ""
+                          } ${
+                            isDarkTheme
+                              ? `${textColorClass}`
+                              : `${textColorClass}`
+                          }`}
+                        >
+                          {formatTime(msg.timestamp)}
+                        </span>
+
+                        {msg.sender === "bot" && (
+                          <div className="flex justify-end px-2 mr-7 relative text-white">
+                            {showReactionsFor !== null &&
+                              msg.id !== null &&
+                              showReactionsFor === msg.id && (
+                                <ReactionSelector msgId={msg.id} />
+                              )}
+
+                            <div className="gap-3 flex flex-row mt-1">
+                              {!isMobile && (
+                                <button
+                                  onClick={() => toggleReactions(msg.id)}
+                                  className={`cursor-pointer transition-colors mr-2 ${
+                                    isDarkTheme
+                                      ? `${textColorClass}`
+                                      : `${textColorClass}`
+                                  }`}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M8 14s1.5 2.25 4 2.25 4-2.25 4-2.25" />
+                                    <line x1="9" y1="9" x2="9.01" y2="9" />
+                                    <line x1="15" y1="9" x2="15.01" y2="9" />
+                                  </svg>
+                                </button>
+                              )}
+
+                              {typeof msg.text === "string" &&
+                              msg.text.trim() ===
+                                "Sorry, there was an error processing your request. Please try again." ? null : (
+                                <>
+                                  {msg.feedback === "" ? (
+                                    <>
+                                      <ThumbsUp
+                                        className={`cursor-pointer ${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                        size={18}
+                                        onClick={() =>
+                                          handleFeedback("like", msg.id)
+                                        }
+                                      />
+                                      <ThumbsDown
+                                        className={`cursor-pointer ${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                        size={18}
+                                        onClick={() =>
+                                          handleFeedback("dislike", msg.id)
+                                        }
+                                      />
+                                    </>
+                                  ) : msg.feedback === "like" ? (
+                                    <>
+                                      <IconThumbUpFilled
+                                        size={22}
+                                        className={`${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        } mt-[-2px]`}
+                                      />
+                                      <ThumbsDown
+                                        className={`cursor-pointer ${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                        size={18}
+                                        onClick={() =>
+                                          handleFeedback("dislike", msg.id)
+                                        }
+                                      />
+                                    </>
+                                  ) : (
+                                    <>
+                                      <ThumbsUp
+                                        className={`cursor-pointer ${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                        size={18}
+                                        onClick={() =>
+                                          handleFeedback("like", msg.id)
+                                        }
+                                      />
+                                      <IconThumbDownFilled
+                                        size={22}
+                                        className={`${
+                                          isDarkTheme
+                                            ? `${textColorClass}`
+                                            : `${textColorClass}`
+                                        }`}
+                                      />
+                                    </>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          ))}
+                ))}
+              </div>
+            ))}
 
-          {isTyping && <TypingIndicator />}
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
+            {isTyping && <TypingIndicator />}
+            <div ref={messagesEndRef} />
+          </div>
+        </ScrollArea>
 
-      {/* ✅ ENHANCED: Modified form to show activity status */}
-      <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
-        <Input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${
-            isDarkTheme ? textColorClass : textColorClass
-          } placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
-          placeholder={
-            currentActivity
-              ? `Activity mode: ${currentActivity.replace(/_/g, " ")}...`
-              : "Type your message..."
-          }
-        />
+        {/* ✅ ENHANCED: Modified form to show activity status */}
+        <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
+          <Input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${
+              isDarkTheme ? textColorClass : textColorClass
+            } placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
+            placeholder={
+              currentActivity
+                ? `Activity mode: ${currentActivity.replace(/_/g, " ")}...`
+                : "Type your message..."
+            }
+          />
 
-        {/* Hidden file input for image upload */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          style={{ display: "none" }}
-        />
+          {/* Hidden file input for image upload */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            style={{ display: "none" }}
+          />
 
-        {/* ✅ NEW: Image upload button */}
-        {!currentActivity && (
-          <button
-            type="button"
-            onClick={handleImageButtonClick}
-            disabled={isImageUploading}
-            className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-orange-400/80 via-yellow-400/80 to-orange-400/80 hover:from-orange-400/90 hover:via-yellow-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Upload and analyze image"
-          >
-            {isImageUploading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : (
+          {/* ✅ NEW: Image upload button */}
+          {!currentActivity && (
+            <button
+              type="button"
+              onClick={handleImageButtonClick}
+              disabled={isImageUploading}
+              className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-orange-400/80 via-yellow-400/80 to-orange-400/80 hover:from-orange-400/90 hover:via-yellow-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Upload and analyze image"
+            >
+              {isImageUploading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              )}
+            </button>
+          )}
+
+          {/* ✅ CONDITIONAL: Hide voice call button during activities */}
+          {!currentActivity && (
+            <button
+              type="button"
+              onClick={() => setIsVoiceCallOpen(true)}
+              className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+              title="Start Voice Call"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -5002,102 +4957,77 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <path d="M12 19v3" />
+                <path d="M8 22h8" />
               </svg>
-            )}
-          </button>
-        )}
+            </button>
+          )}
 
-        {/* ✅ CONDITIONAL: Hide voice call button during activities */}
-        {!currentActivity && (
-          <button
-            type="button"
-            onClick={() => setIsVoiceCallOpen(true)}
-            className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-            title="Start Voice Call"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {/* ✅ CONDITIONAL: Show activity end button instead of voice button during activities */}
+          {currentActivity && (
+            <button
+              type="button"
+              onClick={endActivity}
+              className="p-3 mr-2 hover:opacity-80 cursor-pointer bg-gradient-to-r from-red-400/80 via-pink-400/80 to-red-500/80 hover:from-red-400/90 hover:via-pink-400/90 hover:to-red-500/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+              title="End Activity"
             >
-              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-              <path d="M12 19v3" />
-              <path d="M8 22h8" />
-            </svg>
-          </button>
-        )}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="m15 9-6 6" />
+                <path d="m9 9 6 6" />
+              </svg>
+            </button>
+          )}
 
-        {/* ✅ CONDITIONAL: Show activity end button instead of voice button during activities */}
-        {currentActivity && (
           <button
-            type="button"
-            onClick={endActivity}
-            className="p-3 mr-2 hover:opacity-80 cursor-pointer bg-gradient-to-r from-red-400/80 via-pink-400/80 to-red-500/80 hover:from-red-400/90 hover:via-pink-400/90 hover:to-red-500/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-            title="End Activity"
+            type="submit"
+            className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <path d="m15 9-6 6" />
-              <path d="m9 9 6 6" />
-            </svg>
+            Send
           </button>
-        )}
+        </form>
 
-        <button
-          type="submit"
-          className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+        <p
+          className={`text-xs text-center py-2 ${
+            isDarkTheme ? b_color : b_color
+          }`}
         >
-          Send
-        </button>
-      </form>
+          {currentActivity
+            ? "🎮 Activity mode active - Voice messages disabled during activities"
+            : "Novi can make mistakes, it's constantly learning from you, please be kind!!"}
+        </p>
 
-      <p
-        className={`text-xs text-center py-2 ${
-          isDarkTheme ? b_color : b_color
-        }`}
-      >
-        {currentActivity
-          ? "🎮 Activity mode active - Voice messages disabled during activities"
-          : "Novi can make mistakes, it's constantly learning from you, please be kind!!"}
-      </p>
+        {/* Voice Call Component - Only show when not in activity mode */}
+        {isVoiceCallOpen && !currentActivity && (
+          <VoiceCallUltra
+            isOpen={isVoiceCallOpen}
+            onClose={() => setIsVoiceCallOpen(false)}
+            onMessageReceived={handleVoiceCallMessage}
+            messages={messages}
+          />
+        )}
 
-      {/* Voice Call Component - Only show when not in activity mode */}
-      {isVoiceCallOpen && !currentActivity && (
-        <VoiceCallUltra
-          isOpen={isVoiceCallOpen}
-          onClose={() => setIsVoiceCallOpen(false)}
-          onMessageReceived={handleVoiceCallMessage}
-          messages={messages}
+        {/* Activities Modal */}
+        <ActivitiesModal
+          isOpen={isActivitiesOpen}
+          onClose={() => setIsActivitiesOpen(false)}
+          onActivityStart={startActivity}
+          selectedBotId={selectedBotId}
         />
-      )}
-
-      {/* Activities Modal */}
-      <ActivitiesModal
-        isOpen={isActivitiesOpen}
-        onClose={() => setIsActivitiesOpen(false)}
-        onActivityStart={startActivity}
-        selectedBotId={selectedBotId}
-      />
-    </div>
+      </div>
+    </>
   );
 };
 
