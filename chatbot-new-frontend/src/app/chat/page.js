@@ -2121,8 +2121,9 @@ const ACTIVITY_CATEGORIES = {
         id: "quiz_challenge",
         name: "Quiz Challenge",
         xp: "30 XP",
-        description: "Test your knowledge with challenging GK questions and earn XP for correct answers",
-        icon: "📝",
+        description:
+          "Test your knowledge with challenging GK questions and earn XP for correct answers",
+        icon: "/icons/activities/quiz.png",
       },
     ],
     deep: [
@@ -2154,43 +2155,49 @@ const ACTIVITY_CATEGORIES = {
         id: "past_vs_future_me",
         name: "Past vs. Future Me",
         xp: "5 XP",
-        description: "Past You and Future You are having tea. What would they say about your journey so far?",
-        icon: "/icons/activities/placeholder.png",
+        description:
+          "Past You and Future You are having tea. What would they say about your journey so far?",
+        icon: "/icons/activities/past.png",
       },
       {
         id: "obstacle_orchestra",
         name: "Obstacle Orchestra",
         xp: "5 XP",
-        description: "Every challenge you've faced becomes an instrument in a symphony. What kind of music does your life play?",
-        icon: "/icons/activities/placeholder.png",
+        description:
+          "Every challenge you've faced becomes an instrument in a symphony. What kind of music does your life play?",
+        icon: "/icons/activities/obstacle.png",
       },
       {
         id: "five_year_flashback",
         name: "5-Year Flashback",
         xp: "5 XP",
-        description: "You've just time-traveled to yourself 5 years ago. What's one sentence you'd say to them—no spoilers!",
-        icon: "/icons/activities/placeholder.png",
+        description:
+          "You've just time-traveled to yourself 5 years ago. What's one sentence you'd say to them—no spoilers!",
+        icon: "/icons/activities/five.png",
       },
       {
         id: "skill_you_wish_school_taught",
         name: "The Skill You Wish School Taught",
         xp: "5 XP",
-        description: "What's a life skill you wish was taught in school—but wasn't? How would you teach it in 2 sentences?",
-        icon: "/icons/activities/placeholder.png",
+        description:
+          "What's a life skill you wish was taught in school—but wasn't? How would you teach it in 2 sentences?",
+        icon: "/icons/activities/skill_you_wish_school_taught.png",
       },
       {
         id: "upgrade_your_brain",
         name: "Upgrade Your Brain",
         xp: "5 XP",
-        description: "You're downloading a 'mental update.' What 3 features do you get to improve your mindset or habits?",
-        icon: "/icons/activities/placeholder.png",
+        description:
+          "You're downloading a 'mental update.' What 3 features do you get to improve your mindset or habits?",
+        icon: "/icons/activities/upgrade_your_brain.png",
       },
       {
         id: "self_wisdom_bingo",
         name: "Self-Wisdom Bingo",
         xp: "5 XP",
-        description: "If your personal growth were a bingo card, what's one surprising square you'd mark off this year?",
-        icon: "/icons/activities/placeholder.png",
+        description:
+          "If your personal growth were a bingo card, what's one surprising square you'd mark off this year?",
+        icon: "/icons/activities/self_wisdom_bingo.png",
       },
     ],
   },
@@ -2226,7 +2233,7 @@ const ACTIVITY_CATEGORIES = {
         xp: "3 XP",
         description:
           "Open your soul's weather app. What's the report today—and what does it say about your emotional climate?",
-        icon: "/icons/activities/placeholder.png",
+        icon: "/icons/activities/inner_weather_app.png",
       },
       {
         id: "color_of_calm",
@@ -2234,7 +2241,7 @@ const ACTIVITY_CATEGORIES = {
         xp: "3 XP",
         description:
           "What color represents peace to you today? Describe its texture, sound, and feeling.",
-        icon: "/icons/activities/placeholder.png",
+        icon: "/icons/activities/color_of_calm.png",
       },
       {
         id: "spiritual_playlist",
@@ -2242,7 +2249,7 @@ const ACTIVITY_CATEGORIES = {
         xp: "3 XP",
         description:
           "Create a 3-song playlist for your soul's current journey. What kinds of songs or sounds would be on it?",
-        icon: "/icons/activities/placeholder.png",
+        icon: "/icons/activities/spiritual_playlist.png",
       },
     ],
     medium: [
@@ -2276,7 +2283,7 @@ const ACTIVITY_CATEGORIES = {
         xp: "5 XP",
         description:
           "A quiet stranger walks past and whispers a lesson. What do they say—and why does it stick with you?",
-        icon: "/icons/activities/placeholder.png",
+        icon: "/icons/activities/wisdom_from_stranger.png",
       },
       {
         id: "forgotten_door",
@@ -2284,7 +2291,7 @@ const ACTIVITY_CATEGORIES = {
         xp: "5 XP",
         description:
           "In a dream, you find a forgotten door in your heart. What's behind it—and what emotion does it unlock?",
-        icon: "/icons/activities/placeholder.png",
+        icon: "/icons/activities/forgotten_door.png",
       },
       {
         id: "shadow_companion",
@@ -2292,7 +2299,7 @@ const ACTIVITY_CATEGORIES = {
         xp: "5 XP",
         description:
           "Imagine your shadow could speak for a day. What hidden part of yourself would it reveal or question?",
-        icon: "/icons/activities/placeholder.png",
+        icon: "/icons/activities/shadow_companion.png",
       },
     ],
     deep: [
