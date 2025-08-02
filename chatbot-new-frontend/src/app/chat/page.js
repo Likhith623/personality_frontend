@@ -2831,7 +2831,7 @@ const Dashboard = ({
     try {
       // 1. Get summary string from backend
       const summaryRes = await fetch(
-        `http://0.0.0.0:8000/get-last-bot-responses-string/${encodeURIComponent(userDetails.email)}/${encodeURIComponent(selectedBotId)}`
+        `https://api.culturevo.com/get-last-bot-responses-string/${encodeURIComponent(userDetails.email)}/${encodeURIComponent(selectedBotId)}`
       );
       const summaryData = await summaryRes.json();
       const messageString = summaryData.bot_responses_string || "A friendly selfie";
@@ -2899,7 +2899,7 @@ useEffect(() => {
         [JSON.stringify({ email: userDetails.email, bot_id: selectedBotId })],
         { type: "application/json" }
       );
-      navigator.sendBeacon("http://0.0.0.0:8000/end-chat", payload);
+      navigator.sendBeacon("https://api.culturevo.com/end-chat", payload);
     }
   };
 
@@ -3511,7 +3511,7 @@ function processBotMessages(messages) {
   useEffect(() => {
     if (!userDetails?.email || !selectedBotId) return;
 
-    fetch("http://127.0.0.1:8000/login", {
+    fetch("https://api.culturevo.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -3565,7 +3565,7 @@ const filterEmptyMessages = (messages) => {
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
         const response = await fetch(
-          "http://127.0.0.1:8000/sync",
+          "https://api.culturevo.com/sync",
           {
             method: "POST",
             headers: {
@@ -3812,7 +3812,7 @@ const toggleRemovalTooltip = (msgId) => {
             `feedback` variables interpolated into the URL. The request is using the `fetch` function with the
             `await` keyword to asynchronously send the POST request. The method of the request is set to "POST". */
       const response = await fetch(
-        `http://127.0.0.1:8000/cv/message/feedback/${msg_id}/${feedback}`,
+        `https://api.culturevo.com/cv/message/feedback/${msg_id}/${feedback}`,
         {
           method: "POST",
         }
@@ -3839,7 +3839,7 @@ const toggleRemovalTooltip = (msgId) => {
   };
 async function storeActivityMessageInBackend({ text, sender, activityId }) {
   try {
-    await fetch("http://127.0.0.1:8000/store-activity-message", {
+    await fetch("https://api.culturevo.com/store-activity-message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -3931,7 +3931,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
             function. */
 
             const res = await fetch(
-              "http://127.0.0.1:8000/cv/response/reminder",
+              "https://api.culturevo.com/cv/response/reminder",
               {
                 method: "POST",
                 headers: {
@@ -4108,7 +4108,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
     if (containsUrl(userMessage)) {
       try {
         const res = await fetch(
-          "http://127.0.0.1:8000/api/news",
+          "https://api.culturevo.com/api/news",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -4229,7 +4229,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
       `await` keyword, indicating that the fetch operation is asynchronous. */
 
       const response = await fetch(
-        "http://127.0.0.1:8000/cv/chat",
+        "https://api.culturevo.com/cv/chat",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -4356,7 +4356,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
         );
 
         const storeRes = await fetch(
-          "http://127.0.0.1:8000/store-message",
+          "https://api.culturevo.com/store-message",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
