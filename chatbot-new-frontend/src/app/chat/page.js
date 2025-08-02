@@ -2827,6 +2827,7 @@ const Dashboard = ({
   const [isGeneratingSelfie, setIsGeneratingSelfie] = useState(false);
   const handleGenerateSelfie = async () => {
     setIsGeneratingSelfie(true);
+    setIsTyping(true);
     try {
       // 1. Get summary string from backend
       const summaryRes = await fetch(
@@ -2886,6 +2887,7 @@ setMessages((prev) => [
       ]);
     } finally {
       setIsGeneratingSelfie(false);
+      setIsTyping(false);
       scrollToBottom();
     }
   };
@@ -4027,6 +4029,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
    * a chatbot API, handling reminders, updating state variables, and displaying messages based on the
    * API response.
    */
+
   const handleSend = async (e) => {
     e.reminder == undefined && e.preventDefault();
     if (!input.trim() && e.reminder != true) return;
@@ -4040,6 +4043,39 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
     ) {
       endActivity();
       setInput("");
+      return;
+    }
+
+    // ✅ NEW: Check for selfie generation requests
+    const selfiePatterns = [
+      /generate.*selfie/i,
+      /send.*selfie/i,
+      /take.*selfie/i,
+      /show.*selfie/i,
+      /selfie/i,
+      /picture.*yourself/i,
+      /photo.*yourself/i,
+      /how.*you.*look/i
+    ];
+
+    const isSelfieRequest = selfiePatterns.some(pattern => pattern.test(userMessage));
+
+    if (isSelfieRequest && !currentActivity) {
+      // Add user message to chat
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: userMessage,
+          sender: "user",
+          timestamp: new Date(),
+          feedback: "",
+          reaction: "",
+        },
+      ]);
+      setInput("");
+      
+      // Generate selfie
+      await handleGenerateSelfie();
       return;
     }
 
@@ -4058,6 +4094,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
     }
 
     setInput("");
+
 
     // Handle activity-specific messages
     if (currentActivity) {
@@ -4535,9 +4572,20 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
     <div className="flex justify-start my-4">
       <div className="px-4 py-2 rounded-2xl">
         <div className="flex space-x-1 items-center">
-          <div className="w-2 h-2 bg-[#C084FC] rounded-full animate-bounce" />
-          <div className="w-2 h-2 bg-[#C084FC] rounded-full animate-bounce [animation-delay:0.2s]" />
-          <div className="w-2 h-2 bg-[#C084FC] rounded-full animate-bounce [animation-delay:0.4s]" />
+          {isGeneratingSelfie ? (
+            <>
+              <div className="w-2 h-2 bg-[#3B82F6] rounded-full animate-bounce" />
+              <div className="w-2 h-2 bg-[#8B5CF6] rounded-full animate-bounce [animation-delay:0.2s]" />
+              <div className="w-2 h-2 bg-[#EC4899] rounded-full animate-bounce [animation-delay:0.4s]" />
+              <span className="ml-2 text-sm text-gray-600">Generating selfie...</span>
+            </>
+          ) : (
+            <>
+              <div className="w-2 h-2 bg-[#C084FC] rounded-full animate-bounce" />
+              <div className="w-2 h-2 bg-[#C084FC] rounded-full animate-bounce [animation-delay:0.2s]" />
+              <div className="w-2 h-2 bg-[#C084FC] rounded-full animate-bounce [animation-delay:0.4s]" />
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -4650,7 +4698,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
             </div>
           </div>
         )}
-      {/* Selfie Button - Beautiful, centered, above chat messages */}
+      {/* Selfie Button - Beautiful, centered, above chat messages 
       {!currentActivity && (
         <div className="w-full flex justify-center items-center py-4">
           <button
@@ -4674,7 +4722,7 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
           </button>
           <span className="ml-3 text-sm text-gray-400">See how your bot might look right now!</span>
         </div>
-      )}
+      )} */}
         <ScrollArea className="flex-1">
           <div className="px-1 md:px-2">
             {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
