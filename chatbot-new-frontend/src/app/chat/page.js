@@ -3383,24 +3383,19 @@ function processBotMessages(messages) {
         msg.isSystemMessage === true || isSystemMessageContent(msg.text);
       const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
 
-      // --- FIX: Never set voice_only for image messages ---
+      // Never set voice_only for image messages
       if (msg.isImageMessage) {
         return { ...msg, voice_only: false, isSystemMessage: isSystemMsg };
       }
 
-      if (!isSystemMsg && !isActivityMsg) {
-        if (!botReplyCount[botId]) botReplyCount[botId] = 0;
-        botReplyCount[botId]++;
-      }
-
       let voice_only = false;
-      if (isActivityMsg) {
-        voice_only = false;
-      } else if (isSystemMsg) {
+      
+      // Only set voice_only for explicitly requested voice messages or weekly messages
+      if (msg.isVoiceRequested || msg.isWeeklyVoice) {
         voice_only = true;
       } else {
-        const currentBotCount = botReplyCount[botId] || 0;
-        voice_only = currentBotCount % 3 === 0;
+        // All other messages are text-only
+        voice_only = false;
       }
 
       return { ...msg, voice_only, isSystemMessage: isSystemMsg };
@@ -4029,7 +4024,22 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
    * a chatbot API, handling reminders, updating state variables, and displaying messages based on the
    * API response.
    */
-
+// Function to check if it's time for a weekly voice message (OPTIONAL)
+const shouldSendWeeklyVoice = () => {
+  const lastWeeklyVoice = localStorage.getItem(`lastWeeklyVoice_${selectedBotId}`);
+  const now = new Date().getTime();
+  const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+  
+  // Only send weekly voice if user hasn't requested one recently
+  const lastVoiceRequest = localStorage.getItem(`lastVoiceRequest_${selectedBotId}`);
+  const hasRecentRequest = lastVoiceRequest && (now - parseInt(lastVoiceRequest)) < oneWeek;
+  
+  if (!hasRecentRequest && (!lastWeeklyVoice || (now - parseInt(lastWeeklyVoice)) >= oneWeek)) {
+    localStorage.setItem(`lastWeeklyVoice_${selectedBotId}`, now.toString());
+    return true;
+  }
+  return false;
+};
   const handleSend = async (e) => {
     e.reminder == undefined && e.preventDefault();
     if (!input.trim() && e.reminder != true) return;
@@ -4103,7 +4113,53 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
     }
     setIsTyping(true);
     scrollToBottom();
+// ✅ NEW: Check for voice note requests
+const voiceNotePatterns = [
+  /give.*me.*voice.*note/i,
+  /send.*voice.*note/i,
+  /voice.*message/i,
+  /can.*you.*speak/i,
+  /talk.*to.*me/i,
+  /hear.*your.*voice/i,
+  /voice.*note/i
+];
 
+const isVoiceNoteRequest = voiceNotePatterns.some(pattern => pattern.test(userMessage));
+
+if (isVoiceNoteRequest && !currentActivity) {
+  // Check if user has requested a voice note in the last 7 days
+  const lastVoiceRequest = localStorage.getItem(`lastVoiceRequest_${selectedBotId}`);
+  const now = new Date().getTime();
+  const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+  
+  if (lastVoiceRequest && (now - parseInt(lastVoiceRequest)) < oneWeek) {
+    // Show a message that they need to wait
+    setMessages((prev) => [
+      ...prev,
+      {
+        text: userMessage,
+        sender: "user",
+        timestamp: new Date(),
+        feedback: "",
+        reaction: "",
+      },
+      {
+        text: "I'd love to send you a voice note! You can request one voice message per week. Your next voice note will be available soon. 💕",
+        sender: "bot",
+        timestamp: new Date(),
+        bot_id: selectedBotId,
+        isSystemMessage: true,
+        voice_only: false,
+      }
+    ]);
+    setInput("");
+    scrollToBottom();
+    return;
+  }
+  
+  // Mark this message as a voice request and store the timestamp
+  localStorage.setItem(`lastVoiceRequest_${selectedBotId}`, now.toString());
+}
     // 1. If message contains a URL, use /api/news
     if (containsUrl(userMessage)) {
       try {
@@ -4319,26 +4375,30 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
             isSystemMessage: true, // Reminders are treated as system messages
           },
         ]);
-      } else {
-        // Use finalMessage if defined, otherwise fallback to data.response
-        const shouldBeSystemMessage = isSystemMessageContent(
-          finalMessage || data.response
-        );
+} else {
+  // Use finalMessage if defined, otherwise fallback to data.response
+  const shouldBeSystemMessage = isSystemMessageContent(
+    finalMessage || data.response
+  );
 
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: shouldBeSystemMessage,
-          },
-        ]);
-      }
+  // Check if this response should be a voice message
+  const isVoiceResponse = isVoiceNoteRequest || shouldSendWeeklyVoice();// ✅ FIXED: Only when explicitly requested
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      text: data.response,
+      sender: "bot",
+      id: data.message_id,
+      feedback: "",
+      reaction: "",
+      timestamp: currentTime,
+      bot_id: selectedBotId,
+      isSystemMessage: shouldBeSystemMessage,
+      isVoiceRequested: isVoiceResponse, // This flag triggers voice_only
+    },
+  ]);
+}
       // --- NEW INTEGRATION POINT ---
       // AFTER the primary LLM has responded and its message is displayed,
       // call your backend's /store-message endpoint for categorization and delta logic.
