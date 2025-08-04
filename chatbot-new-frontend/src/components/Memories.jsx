@@ -84,7 +84,7 @@ export default function Memories() {
       try {
         // 1. Fetch memories from API
         const response = await fetch(
-          `https://novibe-backend-233451779807.us-central1.run.app/get_persona?email=${encodeURIComponent(
+          `https://api.culturevo.com/get_persona?email=${encodeURIComponent(
             userDetails.email
           )}&bot_id=${encodeURIComponent(selectedBotId)}`
         );
@@ -219,7 +219,7 @@ export default function Memories() {
       };
 
       // Send a POST request to the backend to add the new memory using add_persona endpoint
-      const response = await fetch("https://novibe-backend-233451779807.us-central1.run.app/add_persona", {
+      const response = await fetch("https://api.culturevo.com/add_persona", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -288,7 +288,7 @@ export default function Memories() {
       const memoryIdToUpdate = selectedMemory.id; // Get the memory ID
       // Make an asynchronous API call to update the memory.
       const response = await fetch(
-        `https://novibe-backend-233451779807.us-central1.run.app/update_persona?id=${memoryIdToUpdate}`, // Include ID in query
+        `https://api.culturevo.com/update_persona?id=${memoryIdToUpdate}`, // Include ID in query
         {
           method: "PUT", // Changed to PUT as per API
           headers: {
@@ -381,7 +381,7 @@ export default function Memories() {
 
     try {
       const memoryIdToDelete = selectedMemory.id;
-      const deleteUrl = `https://novibe-backend-233451779807.us-central1.run.app/delete_persona?id=${memoryIdToDelete}`;
+      const deleteUrl = `https://api.culturevo.com/delete_persona?id=${memoryIdToDelete}`;
       // Make an asynchronous API call to delete the current memory ID.
       const response = await fetch(deleteUrl, {
         method: "DELETE",
@@ -422,7 +422,7 @@ export default function Memories() {
     try {
       // Loop through the array of selected memory IDs
       for (const memoryIdToDelete of selectedMemoriesToDelete) {
-        const deleteUrl = `https://novibe-backend-233451779807.us-central1.run.app/delete_persona?id=${memoryIdToDelete}`;
+        const deleteUrl = `https://api.culturevo.com/delete_persona?id=${memoryIdToDelete}`;
         // Make an asynchronous API call to delete the current memory ID.
         const response = await fetch(deleteUrl, {
           method: "DELETE",

@@ -115,7 +115,7 @@ const ChatInterface = () => {
     const testConnection = async () => {
       try {
         const start = performance.now();
-        const response = await fetch('https://novibe-backend-233451779807.us-central1.run.app/voice-call-ultra-fast', {
+        const response = await fetch('https://api.culturevo.com/voice-call-ultra-fast', {
           method: 'OPTIONS'
         });
         const latency = performance.now() - start;
