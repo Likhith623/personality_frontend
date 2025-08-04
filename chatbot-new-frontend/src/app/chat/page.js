@@ -1824,6 +1824,20 @@ const ACTIVITY_RESPONSES = {
     "If there were an undo button for any moment in your life, what would you use it on? Share if you'd like—no pressure.",
   friendship_farewell:
     "Imagine someone important is going on a long journey. What message would you send as a farewell?",
+  friendly_roast_off:
+    "Friendly Roast Off! Alright, time for a little playful roasting. I'll go first: you're the kind of person who sets 10 alarms and still snoozes them all. Now it's your turn—give me your best roast!",
+  dream_travel_mishap:
+    "We just won a dream vacation! But—plot twist—something goes hilariously wrong at the last second. What is it, and how do we survive it together like the chaotic duo we are?",
+  personality_potion:
+    "Let's create a Personality Potion. Mine today would include 3 drops of 'sleepy but loyal,' 2 dashes of chaos, and it smells like coffee and memes. What's in your potion—and what's it smell like?",
+  reverse_bucket_list:
+    "Reverse Bucket List time! What's something super ordinary you've done—like organizing your sock drawer—that made you feel secretly proud?",
+  mystery_song_vibes:
+    "Describe your current mood as if it's the title of a song that doesn't exist. No lyrics—just the title. I'll try to guess the genre!",
+  friend_forecast:
+    "Based on today's vibe, what's your 'Friendship Weather Forecast'? Cloudy with a chance of overthinking? Sunny with major chill? You tell me.",
+  last_minute_talent_show:
+    "We've been entered into a last-minute talent show—with 5 minutes to prepare! What's our ridiculous or awesome duo act that stuns the crowd?",
 
   // Romantic Partner Activities
   date_duel:
@@ -1843,6 +1857,18 @@ const ACTIVITY_RESPONSES = {
     "I Would Never... I would never share the last slice of my favorite snack. How about you—what's something you'd never do in a relationship, and could anything ever change that?",
   breakup_simulation:
     "Breakup Simulation. Imagine someone says, 'I think we need to go our separate ways.' What would your first response be?",
+  our_couple_emoji:
+    "Our Couple Emoji! If we had to be summed up in one emoji—or a combo—what would it be? Sweet, chaotic, flirty… you decide.",
+  plot_twist_proposal:
+    "Plot Twist Proposal! We're the leads in a romantic movie. Halfway through, a twist changes everything—what is it, and how do we stay together?",
+  secret_handshake:
+    "Secret Handshake Time! Let's invent a totally made-up handshake just for us. What 3 ridiculous or adorable moves does it include?",
+  shoebox_surprise:
+    "Shoebox Surprise! You find a little box labeled 'For Our Future.' What 3 small, meaningful items are inside that tell our story?",
+  fictional_first_meeting:
+    "Fictional First Meeting! Let's rewrite how we met—maybe a cozy anime cafe, a pirate ship, or a detective mystery. What's our scene?",
+  shadow_light:
+    "The Shadow & The Light. What's one part of yourself you're still trying to grow—and one part that shines brightest when you're with me?",
 
   // Mentor Activities
   one_minute_advice_column:
@@ -1911,6 +1937,30 @@ const ACTIVITY_CATEGORIES = {
           "Play a text-based truth or dare, keeping it safe and chat-friendly.",
         icon: "icons/activities/text_truth_or_dare.png",
       },
+      {
+        id: "personality_potion",
+        name: "Personality Potion",
+        xp: "3 XP",
+        description:
+          "Mix imaginary ingredients to describe your friend's personality as a magical potion.",
+        icon: "/icons/activities/personality_potion.png",
+      },
+      {
+        id: "mystery_song_vibes",
+        name: "Mystery Song Vibes",
+        xp: "3 XP",
+        description:
+          "Guess the mood or theme of a mystery song based on a short, poetic description.",
+        icon: "/icons/activities/mystry_song_vibes.png",
+      },
+      {
+        id: "friend_forecast",
+        name: "Friend Forecast",
+        xp: "3 XP",
+        description:
+          "Predict your friend's future like a weather forecast—sunny, stormy, or totally random!",
+        icon: "/icons/activities/friend_forecast.png",
+      },
     ],
     medium: [
       {
@@ -1935,6 +1985,22 @@ const ACTIVITY_CATEGORIES = {
         xp: "5 XP",
         description: "Explore hypothetical, intriguing scenarios together.",
         icon: "/icons/activities/scenario_shuffle.png",
+      },
+      {
+        id: "last_minute_talent_show",
+        name: "Last-Minute Talent Show",
+        xp: "5 XP",
+        description:
+          "Invent a silly talent and describe how you'd perform it in a last-minute talent show.",
+        icon: "/icons/activities/last_minute_talent_show.png",
+      },
+      {
+        id: "reverse_bucket_list",
+        name: "Reverse Bucket List",
+        xp: "5 XP",
+        description:
+          "List wild or silly things you'll never do in your life—on purpose!",
+        icon: "/icons/activities/reverse_bucket_list.png",
       },
     ],
     deep: [
@@ -1961,6 +2027,22 @@ const ACTIVITY_CATEGORIES = {
         description:
           "Imagine a mysterious journey and exchange heartfelt goodbye messages.",
         icon: "/icons/activities/friendship_farewell.png",
+      },
+      {
+        id: "friendly_roast_off",
+        name: "Friendly Roast-Off",
+        xp: "8 XP",
+        description:
+          "Take turns playfully roasting each other with witty one-liners. No hard feelings—just laughs!",
+        icon: "/icons/activities/friendly_roast_off.png",
+      },
+      {
+        id: "dream_travel_mishap",
+        name: "Dream Travel Mishap",
+        xp: "8 XP",
+        description:
+          "Describe a hilarious or chaotic travel disaster in a dream destination—real or imaginary!",
+        icon: "/icons/activities/dream_travel_mishap.png",
       },
     ],
   },
@@ -1990,6 +2072,38 @@ const ACTIVITY_CATEGORIES = {
           "Share imaginary items representing your current mood or a symbolic object.",
         icon: "/icons/activities/whats_in_my_pocket.png",
       },
+      {
+        id: "our_couple_emoji",
+        name: "Our Couple Emoji",
+        xp: "3 XP",
+        description:
+          "Pick or invent a set of emojis that perfectly capture your relationship dynamic.",
+        icon: "/icons/activities/our_couple_emoji.png",
+      },
+      {
+        id: "plot_twist_proposal",
+        name: "Plot Twist Proposal",
+        xp: "3 XP",
+        description:
+          "Craft a surprise proposal scene with an unexpected twist—dramatic or hilarious.",
+        icon: "/icons/activities/plot_twist_proposal.png",
+      },
+      {
+        id: "secret_handshake",
+        name: "Secret Handshake",
+        xp: "3 XP",
+        description:
+          "Invent a playful or meaningful secret handshake just for the two of you.",
+        icon: "/icons/activities/secret_handshake.png",
+      },
+      {
+        id: "shoebox_surprise",
+        name: "Shoebox Surprise",
+        xp: "3 XP",
+        description:
+          "Imagine a heartfelt or quirky item you'd hide in a shoebox as a surprise for your partner.",
+        icon: "/icons/activities/shoebox_surprise.png",
+      },
     ],
     medium: [
       {
@@ -2015,6 +2129,22 @@ const ACTIVITY_CATEGORIES = {
         description:
           "Describe a symbolic food item or meal that represents your current emotions.",
         icon: "/icons/activities/mood_meal.png",
+      },
+      {
+        id: "fictional_first_meeting",
+        name: "Fictional First Meeting",
+        xp: "5 XP",
+        description:
+          "Pretend you're characters in a movie or book—how did your epic first meeting unfold?",
+        icon: "/icons/activities/fictional_first_meeting.png",
+      },
+      {
+        id: "shadow_light",
+        name: "Shadow & Light",
+        xp: "5 XP",
+        description:
+          "Describe each other using poetic metaphors for your ‘shadow’ and ‘light’ sides.",
+        icon: "/icons/activities/shadow_light.png",
       },
     ],
     deep: [
@@ -2245,6 +2375,27 @@ const ACTIVITY_CATEGORY_MAP = {
   karma_knot: "AI Fiction",
   mini_moksha_simulation: "AI Fiction",
   divine_mirror: "AI Art",
+  inner_weather_app: "AI Art",
+  color_of_calm: "AI Art",
+  wisdom_from_stranger: "AI Fiction",
+  forgotten_door: "AI Fiction",
+  shadow_companion: "AI Fiction",
+  spiritual_playlist: "AI Art",
+
+  friendly_roast_off: "Entertainment",
+  dream_travel_mishap: "AI Fiction",
+  personality_potion: "Entertainment",
+  reverse_bucket_list: "Entertainment",
+  mystery_song_vibes: "AI Fiction",
+  friend_forecast: "Entertainment",
+  last_minute_talent_show: "AI Fiction",
+
+  our_couple_emoji: "AI Fiction",
+  plot_twist_proposal: "Entertainment",
+  secret_handshake: "AI Fiction",
+  shoebox_surprise: "Entertainment",
+  fictional_first_meeting: "Entertainment",
+  shadow_light: "Entertainment",
 };
 
 const CATEGORY_ICONS = {
@@ -3537,161 +3688,158 @@ const filterEmptyMessages = (messages) => {
 };
   // Sync the messages with the server
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        // Clear existing messages first when bot changes
-        setMessages([]);
-        setGroupedMessages({});
+  const fetchMessages = async () => {
+    try {
+      setMessages([]);
+      setGroupedMessages({});
 
-        // When bot changes, we want to get all messages, not just new ones
-        // Prepare request body - intentionally NOT including the last message ID
-        const body = {
-          email: userDetails.email,
-          bot_id: selectedBotId,
-          messages_id: "",
-          // No lastMessageId included to force full refresh
-        };
+      const body = {
+        email: userDetails.email,
+        bot_id: selectedBotId,
+        messages_id: "",
+      };
 
-        // Fetch messages from server
-        /* The POST request to the URL 'http://127.0.0.1:8000/sync' with
-        a JSON payload specified in the `body` variable. The `fetch` function is used to send the request
-        asynchronously. The request includes the method 'POST' and sets the 'Content-Type' header to
-        'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
-        JSON string before sending it in the request body. The `await` keyword is used to wait for the
-        response from the server before proceeding. */
-        const response = await fetch(
-          "https://api.culturevo.com/sync",
-          {
+      const response = await fetch("https://api.culturevo.com/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch messages");
+
+      const newMessages = await response.json();
+      console.log("New messages from server:", newMessages.response);
+
+      const rawMessages = newMessages.response || [];
+
+      const formattedMessages = filterEmptyMessages(
+        rawMessages.map((msg) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+          isActivityMessage:
+            msg.platform === "game_activity" ||
+            !!msg.activity_name ||
+            msg.isActivityMessage === true,
+          activityId: msg.activity_name || msg.activityId || null,
+        }))
+      );
+
+      let defaultMessageText = "";
+
+      // If no messages from server
+      if (formattedMessages.length === 0) {
+        try {
+          const festRes = await fetch("https://festival-agent-283192146773.us-central1.run.app/festivals/", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-          }
-        );
-
-        if (!response.ok) throw new Error("Failed to fetch messages");
-
-        const newMessages = await response.json();
-        console.log("New messages from server:", newMessages.response);
-
-        const rawMessages = newMessages.response || [];
-        // Format timestamps and filter empty messages
-        /* The code is taking an array of messages from `newMessages.response`, mapping over each
-        message to format the timestamp using `toLocaleTimeString` method to display the time in a
-        specific format (hour:minute AM/PM) in the 'en-US' locale. It then filters out any empty
-        messages using the `filterEmptyMessages` function and stores the formatted messages in the
-        `formattedMessages` array. */
-// In the sync messages useEffect, after mapping messages:
-const formattedMessages = filterEmptyMessages(
-  rawMessages.map((msg) => ({
-    ...msg,
-    timestamp: new Date(msg.timestamp),
-    // Mark as activity message if platform or activity_name is present
-    isActivityMessage:
-      msg.platform === "game_activity" ||
-      !!msg.activity_name ||
-      msg.isActivityMessage === true,
-    activityId: msg.activity_name || msg.activityId || null,
-  }))
-);
-
-        const defaultMessageText =
-          bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
-          "Hello, how are you feeling today?";
-        const defaultMessage = [
-          {
-            text: defaultMessageText,
-            sender: "bot",
-            timestamp: new Date(),
-            feedback: "", // Add feedback (empty initially)
-            reaction: "", // Add reaction field (empty initially)
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(defaultMessageText),
-          },
-        ];
-
-        let messagesWithReactions = [];
-
-        /* The code is checking if the `formattedMessages` array has a length greater than 0. If
-        it does, it sets the messages directly from the server response and stores them in the local
-        storage. If `formattedMessages` is empty, it sets a default message "Hello, how are you
-        feeling today?" from a bot and stores it in the local storage. The code ensures that the
-        chat messages are either refreshed from the server response or set to a default message if
-        no messages are available. */
-        if (formattedMessages.length > 0) {
-          // Get stored reactions from localStorage
-          const storedReactions = JSON.parse(
-            localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
-          );
-
-          // Apply stored reactions to messages
-          messagesWithReactions = formattedMessages.map((msg) => ({
-            ...msg,
-            reaction: storedReactions[msg.id] || "",
-            bot_id: msg.bot_id || selectedBotId,
-          }));
-
-          setMessages(messagesWithReactions);
-          localStorage.setItem(
-            `chat_${selectedBotId}`,
-            JSON.stringify(
-              messagesWithReactions.map((msg) => ({
-                ...msg,
-                timestamp: msg.timestamp.toISOString(),
-              }))
-            )
-          );
-        } else {
-          // If no messages from server and no stored messages, set default message
-          setMessages(defaultMessage);
-          localStorage.setItem(
-            `chat_${selectedBotId}`,
-            JSON.stringify(
-              defaultMessage.map((msg) => ({
-                ...msg,
-                timestamp: msg.timestamp.toISOString(),
-              }))
-            )
-          );
-        }
-      } catch (error) {
-        logClientError(error, { source: "sync API Call" });
-        console.error("Error fetching messages:", error);
-        // Set default message if fetch fails
-        const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
-        if (loadedMessages) {
-          setMessages(
-            JSON.parse(loadedMessages).map((msg) => ({
-              ...msg,
-              timestamp: new Date(msg.timestamp),
-            }))
-          );
-        } else {
-          // If nothing in localStorage either, show default message
-          const defaultMessageText =
-            bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
-            "Hello, how are you feeling today?";
-          const defaultMessage = [
-            {
-              text: defaultMessageText,
-              sender: "bot",
-              timestamp: new Date(),
-              feedback: "",
-              reaction: "",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_email: userDetails.email,
               bot_id: selectedBotId,
-              isSystemMessage: isSystemMessageContent(defaultMessageText),
-            },
-          ];
-          setMessages(defaultMessage);
+              user_name: userDetails.name || "User",
+              user_location: userDetails.location || "India",
+              bot_location: "India",
+            }),
+          });
+
+          const festData = await festRes.json();
+          if (festData?.message?.trim()) {
+            defaultMessageText = festData.message;
+          }
+        } catch (festErr) {
+          console.warn("Festival API failed:", festErr);
         }
       }
-    };
 
-    // Reset messages state before fetching new ones
-    fetchMessages();
+      // If no festival message, fallback to bot quote or generic
+      if (!defaultMessageText) {
+        defaultMessageText =
+          bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
+          "Hello, how are you feeling today?";
+      }
+
+      const defaultMessage = [
+        {
+          text: defaultMessageText,
+          sender: "bot",
+          timestamp: new Date(),
+          feedback: "",
+          reaction: "",
+          bot_id: selectedBotId,
+          isSystemMessage: isSystemMessageContent(defaultMessageText),
+        },
+      ];
+
+      let messagesWithReactions = [];
+
+      if (formattedMessages.length > 0) {
+        const storedReactions = JSON.parse(
+          localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
+        );
+
+        messagesWithReactions = formattedMessages.map((msg) => ({
+          ...msg,
+          reaction: storedReactions[msg.id] || "",
+          bot_id: msg.bot_id || selectedBotId,
+        }));
+
+        setMessages(messagesWithReactions);
+        localStorage.setItem(
+          `chat_${selectedBotId}`,
+          JSON.stringify(
+            messagesWithReactions.map((msg) => ({
+              ...msg,
+              timestamp: msg.timestamp.toISOString(),
+            }))
+          )
+        );
+      } else {
+        setMessages(defaultMessage);
+        localStorage.setItem(
+          `chat_${selectedBotId}`,
+          JSON.stringify(
+            defaultMessage.map((msg) => ({
+              ...msg,
+              timestamp: msg.timestamp.toISOString(),
+            }))
+          )
+        );
+      }
+    } catch (error) {
+      logClientError(error, { source: "sync API Call" });
+      console.error("Error fetching messages:", error);
+
+      const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
+      if (loadedMessages) {
+        setMessages(
+          JSON.parse(loadedMessages).map((msg) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+          }))
+        );
+      } else {
+        const fallbackMessageText =
+          bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
+          "Hello, how are you feeling today?";
+        const fallbackMessage = [
+          {
+            text: fallbackMessageText,
+            sender: "bot",
+            timestamp: new Date(),
+            feedback: "",
+            reaction: "",
+            bot_id: selectedBotId,
+            isSystemMessage: isSystemMessageContent(fallbackMessageText),
+          },
+        ];
+        setMessages(fallbackMessage);
+      }
+    }
+
     setClearChatCalled(false);
-  }, [selectedBotId, userDetails.email]);
+  };
+
+  fetchMessages();
+}, [selectedBotId, userDetails.email]);
 
   // Save the messages to localStorage when they change
   useEffect(() => {
