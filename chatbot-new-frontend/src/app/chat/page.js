@@ -1824,6 +1824,20 @@ const ACTIVITY_RESPONSES = {
     "If there were an undo button for any moment in your life, what would you use it on? Share if you'd like—no pressure.",
   friendship_farewell:
     "Imagine someone important is going on a long journey. What message would you send as a farewell?",
+  friendly_roast_off:
+    "Friendly Roast Off! Alright, time for a little playful roasting. I'll go first: you're the kind of person who sets 10 alarms and still snoozes them all. Now it's your turn—give me your best roast!",
+  dream_travel_mishap:
+    "We just won a dream vacation! But—plot twist—something goes hilariously wrong at the last second. What is it, and how do we survive it together like the chaotic duo we are?",
+  personality_potion:
+    "Let's create a Personality Potion. Mine today would include 3 drops of 'sleepy but loyal,' 2 dashes of chaos, and it smells like coffee and memes. What's in your potion—and what's it smell like?",
+  reverse_bucket_list:
+    "Reverse Bucket List time! What's something super ordinary you've done—like organizing your sock drawer—that made you feel secretly proud?",
+  mystery_song_vibes:
+    "Describe your current mood as if it's the title of a song that doesn't exist. No lyrics—just the title. I'll try to guess the genre!",
+  friend_forecast:
+    "Based on today's vibe, what's your 'Friendship Weather Forecast'? Cloudy with a chance of overthinking? Sunny with major chill? You tell me.",
+  last_minute_talent_show:
+    "We've been entered into a last-minute talent show—with 5 minutes to prepare! What's our ridiculous or awesome duo act that stuns the crowd?",
 
   // Romantic Partner Activities
   date_duel:
@@ -1843,6 +1857,18 @@ const ACTIVITY_RESPONSES = {
     "I Would Never... I would never share the last slice of my favorite snack. How about you—what's something you'd never do in a relationship, and could anything ever change that?",
   breakup_simulation:
     "Breakup Simulation. Imagine someone says, 'I think we need to go our separate ways.' What would your first response be?",
+  our_couple_emoji:
+    "Our Couple Emoji! If we had to be summed up in one emoji—or a combo—what would it be? Sweet, chaotic, flirty… you decide.",
+  plot_twist_proposal:
+    "Plot Twist Proposal! We're the leads in a romantic movie. Halfway through, a twist changes everything—what is it, and how do we stay together?",
+  secret_handshake:
+    "Secret Handshake Time! Let's invent a totally made-up handshake just for us. What 3 ridiculous or adorable moves does it include?",
+  shoebox_surprise:
+    "Shoebox Surprise! You find a little box labeled 'For Our Future.' What 3 small, meaningful items are inside that tell our story?",
+  fictional_first_meeting:
+    "Fictional First Meeting! Let's rewrite how we met—maybe a cozy anime cafe, a pirate ship, or a detective mystery. What's our scene?",
+  shadow_light:
+    "The Shadow & The Light. What's one part of yourself you're still trying to grow—and one part that shines brightest when you're with me?",
 
   // Mentor Activities
   one_minute_advice_column:
@@ -1911,6 +1937,30 @@ const ACTIVITY_CATEGORIES = {
           "Play a text-based truth or dare, keeping it safe and chat-friendly.",
         icon: "icons/activities/text_truth_or_dare.png",
       },
+      {
+        id: "personality_potion",
+        name: "Personality Potion",
+        xp: "3 XP",
+        description:
+          "Mix imaginary ingredients to describe your friend's personality as a magical potion.",
+        icon: "/icons/activities/personality_potion.png",
+      },
+      {
+        id: "mystery_song_vibes",
+        name: "Mystery Song Vibes",
+        xp: "3 XP",
+        description:
+          "Guess the mood or theme of a mystery song based on a short, poetic description.",
+        icon: "/icons/activities/mystry_song_vibes.png",
+      },
+      {
+        id: "friend_forecast",
+        name: "Friend Forecast",
+        xp: "3 XP",
+        description:
+          "Predict your friend's future like a weather forecast—sunny, stormy, or totally random!",
+        icon: "/icons/activities/friend_forecast.png",
+      },
     ],
     medium: [
       {
@@ -1935,6 +1985,22 @@ const ACTIVITY_CATEGORIES = {
         xp: "5 XP",
         description: "Explore hypothetical, intriguing scenarios together.",
         icon: "/icons/activities/scenario_shuffle.png",
+      },
+      {
+        id: "last_minute_talent_show",
+        name: "Last-Minute Talent Show",
+        xp: "5 XP",
+        description:
+          "Invent a silly talent and describe how you'd perform it in a last-minute talent show.",
+        icon: "/icons/activities/last_minute_talent_show.png",
+      },
+      {
+        id: "reverse_bucket_list",
+        name: "Reverse Bucket List",
+        xp: "5 XP",
+        description:
+          "List wild or silly things you'll never do in your life—on purpose!",
+        icon: "/icons/activities/reverse_bucket_list.png",
       },
     ],
     deep: [
@@ -1961,6 +2027,22 @@ const ACTIVITY_CATEGORIES = {
         description:
           "Imagine a mysterious journey and exchange heartfelt goodbye messages.",
         icon: "/icons/activities/friendship_farewell.png",
+      },
+      {
+        id: "friendly_roast_off",
+        name: "Friendly Roast-Off",
+        xp: "8 XP",
+        description:
+          "Take turns playfully roasting each other with witty one-liners. No hard feelings—just laughs!",
+        icon: "/icons/activities/friendly_roast_off.png",
+      },
+      {
+        id: "dream_travel_mishap",
+        name: "Dream Travel Mishap",
+        xp: "8 XP",
+        description:
+          "Describe a hilarious or chaotic travel disaster in a dream destination—real or imaginary!",
+        icon: "/icons/activities/dream_travel_mishap.png",
       },
     ],
   },
@@ -1990,6 +2072,38 @@ const ACTIVITY_CATEGORIES = {
           "Share imaginary items representing your current mood or a symbolic object.",
         icon: "/icons/activities/whats_in_my_pocket.png",
       },
+      {
+        id: "our_couple_emoji",
+        name: "Our Couple Emoji",
+        xp: "3 XP",
+        description:
+          "Pick or invent a set of emojis that perfectly capture your relationship dynamic.",
+        icon: "/icons/activities/our_couple_emoji.png",
+      },
+      {
+        id: "plot_twist_proposal",
+        name: "Plot Twist Proposal",
+        xp: "3 XP",
+        description:
+          "Craft a surprise proposal scene with an unexpected twist—dramatic or hilarious.",
+        icon: "/icons/activities/plot_twist_proposal.png",
+      },
+      {
+        id: "secret_handshake",
+        name: "Secret Handshake",
+        xp: "3 XP",
+        description:
+          "Invent a playful or meaningful secret handshake just for the two of you.",
+        icon: "/icons/activities/secret_handshake.png",
+      },
+      {
+        id: "shoebox_surprise",
+        name: "Shoebox Surprise",
+        xp: "3 XP",
+        description:
+          "Imagine a heartfelt or quirky item you'd hide in a shoebox as a surprise for your partner.",
+        icon: "/icons/activities/shoebox_surprise.png",
+      },
     ],
     medium: [
       {
@@ -2015,6 +2129,22 @@ const ACTIVITY_CATEGORIES = {
         description:
           "Describe a symbolic food item or meal that represents your current emotions.",
         icon: "/icons/activities/mood_meal.png",
+      },
+      {
+        id: "fictional_first_meeting",
+        name: "Fictional First Meeting",
+        xp: "5 XP",
+        description:
+          "Pretend you're characters in a movie or book—how did your epic first meeting unfold?",
+        icon: "/icons/activities/fictional_first_meeting.png",
+      },
+      {
+        id: "shadow_light",
+        name: "Shadow & Light",
+        xp: "5 XP",
+        description:
+          "Describe each other using poetic metaphors for your ‘shadow’ and ‘light’ sides.",
+        icon: "/icons/activities/shadow_light.png",
       },
     ],
     deep: [
