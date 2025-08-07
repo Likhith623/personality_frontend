@@ -481,26 +481,26 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
         boxShadow: '0 10px 40px -5px rgba(0,0,0,0.15)',
         transition: { duration: 0.2 }
       }}
-      className="inline-flex items-center shadow-lg min-h-[32px] relative px-4 py-2 rounded-2xl border border-white/30 backdrop-blur-sm transition-all"
+      className="inline-flex items-center shadow-lg min-h-[32px] relative px-2 sm:px-4 py-2 rounded-2xl border border-white/30 backdrop-blur-sm transition-all"
       style={{
         boxShadow: '0 8px 32px -4px rgba(0,0,0,0.1)',
         background: 'white',
-        width: '620px',
-        minWidth: '320px',
-        maxWidth: '800px',
+        width: '100%',
+        maxWidth: '620px',
+        minWidth: '280px',
         borderRadius: 24,
         padding: '0.3rem 0.7rem',
       }}
     >
       {/* Avatar with mic overlay */}
-      <div className="mr-4 relative flex-shrink-0 group">
+      <div className="mr-2 sm:mr-4 relative flex-shrink-0 group">
         <motion.img
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.2 }}
           src={avatarSrc?.src || avatarSrc}
           alt="Bot Avatar"
-          className="w-14 h-14 rounded-full transition-transform duration-200 group-hover:scale-105"
+          className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full transition-transform duration-200 group-hover:scale-105"
           style={{
             border: '3px solid rgba(192,132,252,0.9)',
             boxShadow: '0 6px 16px rgba(0,0,0,0.15)',
@@ -510,17 +510,17 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.1, type: "spring", stiffness: 500 }}
-          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center bg-white/90 backdrop-blur-sm"
+          className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center bg-white/90 backdrop-blur-sm"
           style={{ boxShadow: '0 3px 8px rgba(192,132,252,0.9)' }}
         >
           {isLoading ? (
             <motion.div 
-              className="w-3 h-3 border border-purple-400 border-t-transparent rounded-full"
+              className="w-2 h-2 sm:w-3 sm:h-3 border border-purple-400 border-t-transparent rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             />
           ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" className="sm:w-3 sm:h-3 md:w-4 md:h-4">
               <path
                 d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
                 stroke="#C084FC"
@@ -545,34 +545,34 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
         onClick={handlePlayPause}
         disabled={isLoading}
         whileTap={{ scale: 0.95 }}
-        className="mr-4 flex items-center justify-center w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200 hover:shadow-lg"
+        className="mr-2 sm:mr-4 flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200 hover:shadow-lg"
         style={{ boxShadow: '0 2px 8px rgba(192,132,252,0.9)' }}
       >
         {isLoading ? (
           <motion.div 
-            className="w-5 h-5 border-3 border-purple-400 border-t-pink-400 rounded-full"
+            className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 border-3 border-purple-400 border-t-pink-400 rounded-full"
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           />
         ) : isPlaying ? (
-          <svg width="20" height="20" viewBox="0 0 22 22">
+          <svg width="14" height="14" viewBox="0 0 22 22" className="sm:w-5 sm:h-5 md:w-6 md:h-6">
             <rect x="5" y="4" width="3" height="12" rx="1.2" fill="#C084FC" />
             <rect x="12" y="4" width="3" height="12" rx="1.2" fill="#C084FC" />
           </svg>
         ) : (
-          <svg width="22" height="22" viewBox="0 0 22 22">
+          <svg width="16" height="16" viewBox="0 0 22 22" className="sm:w-5 sm:h-5 md:w-6 md:h-6">
             <polygon points="6,4 16,11 6,18" fill="#C084FC" />
           </svg>
         )}
       </motion.button>
   
       {/* Waveform and progress dot */}
-      <div className="flex-1 relative flex flex-col justify-center min-h-[44px] mx-2">
+      <div className="flex-1 relative flex flex-col justify-center min-h-[44px] mx-1 sm:mx-2">
         <div className="flex items-center w-full" style={{ minHeight: 28 }}>
           <div
             ref={waveformRef}
-            className="w-full h-7 min-h-[28px] cursor-pointer hover:opacity-90 transition-opacity duration-200 relative"
-            style={{ position: 'relative', minHeight: 28 }}
+            className="w-full h-6 sm:h-7 min-h-[24px] sm:min-h-[28px] cursor-pointer hover:opacity-90 transition-opacity duration-200 relative"
+            style={{ position: 'relative', minHeight: 24 }}
             onClick={handleWaveformClick}
           >
             <AnimatePresence>
@@ -615,7 +615,7 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
                 }}
               >
                 <motion.span 
-                  className="block w-4 h-4 rounded-full border-2 border-white shadow-lg" 
+                  className="block w-3 h-3 sm:w-4 sm:h-4 rounded-full border-2 border-white shadow-lg" 
                   style={{ 
                     background: 'linear-gradient(135deg, rgba(192,132,252,1), rgba(255,255,255,0.9))',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.15)' 
@@ -639,7 +639,7 @@ const PlayAudio = ({ text, bot_id,isWhiteIcon, minimal = false }) => {
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="ml-5 text-sm font-medium flex-shrink-0 min-w-[90px] text-right px-3 py-1 rounded-full bg-white/30 flex items-center justify-center"
+        className="ml-2 sm:ml-5 text-xs sm:text-sm font-medium flex-shrink-0 min-w-[60px] sm:min-w-[90px] text-right px-2 sm:px-3 py-1 rounded-full bg-white/30 flex items-center justify-center"
         style={{ 
           color: 'rgba(192,132,252,0.9)',
           textShadow: '0 1px 2px rgba(0,0,0,0.05)'
