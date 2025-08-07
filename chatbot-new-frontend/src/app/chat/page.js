@@ -2375,27 +2375,6 @@ const ACTIVITY_CATEGORY_MAP = {
   karma_knot: "AI Fiction",
   mini_moksha_simulation: "AI Fiction",
   divine_mirror: "AI Art",
-  inner_weather_app: "AI Art",
-  color_of_calm: "AI Art",
-  wisdom_from_stranger: "AI Fiction",
-  forgotten_door: "AI Fiction",
-  shadow_companion: "AI Fiction",
-  spiritual_playlist: "AI Art",
-
-  friendly_roast_off: "Entertainment",
-  dream_travel_mishap: "AI Fiction",
-  personality_potion: "Entertainment",
-  reverse_bucket_list: "Entertainment",
-  mystery_song_vibes: "AI Fiction",
-  friend_forecast: "Entertainment",
-  last_minute_talent_show: "AI Fiction",
-
-  our_couple_emoji: "AI Fiction",
-  plot_twist_proposal: "Entertainment",
-  secret_handshake: "AI Fiction",
-  shoebox_surprise: "Entertainment",
-  fictional_first_meeting: "Entertainment",
-  shadow_light: "Entertainment",
 };
 
 const CATEGORY_ICONS = {
@@ -3284,19 +3263,21 @@ useEffect(() => {
 
     // Add bot's initial response to chat
     const currentTime = new Date();
-    const activityMessage = {
-      text: response,
-      sender: "bot",
-      id: `activity_${Date.now()}`,
-      feedback: "",
-      reaction: "",
-      timestamp: currentTime,
-      bot_id: selectedBotId,
-      isSystemMessage: true,
-      isActivityMessage: true, // ✅ CRITICAL: Mark as activity message
-      activityId: activityId,
-      voice_only: false, // ✅ CRITICAL: Force text-only
-    };
+
+const activityMessage = {
+  text: response,
+  sender: "bot",
+  id: `activity_${Date.now()}`,
+  feedback: "",
+  reaction: "",
+  timestamp: currentTime,
+  bot_id: selectedBotId,
+  isSystemMessage: true,
+  isActivityMessage: true,
+  activityId: activityId,
+  voice_only: false, // ✅ FIXED: Activities are always text-only
+  isVoiceRequested: false, // ✅ FIXED: Never voice for activities
+};
 
     setMessages((prev) => [...prev, activityMessage]);
 
@@ -3501,7 +3482,7 @@ if (data.xp_status) {
   }
 
   /*
-  // Helper: inject voice_only property for bot replies based on index
+  Helper: inject voice_only property for bot replies based on index
   function processBotMessages(messages) {
     let botReplyCount = {};
     return messages.map((msg, idx) => {
@@ -3524,32 +3505,28 @@ if (data.xp_status) {
   // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
 
   // ✅ FIXED: Update the processBotMessages function
-function processBotMessages(messages) {
-  let botReplyCount = {};
+// Replace the processBotMessages function around line 3354:
 
+function processBotMessages(messages) {
   return messages.map((msg) => {
     if (msg.sender === "bot") {
-      const botId = msg.bot_id || selectedBotId || "default";
       const isSystemMsg =
         msg.isSystemMessage === true || isSystemMessageContent(msg.text);
-      const isActivityMsg = msg.isActivityMessage === true || msg.activityId;
 
       // Never set voice_only for image messages
       if (msg.isImageMessage) {
         return { ...msg, voice_only: false, isSystemMessage: isSystemMsg };
       }
 
-      let voice_only = false;
-      
-      // Only set voice_only for explicitly requested voice messages or weekly messages
-      if (msg.isVoiceRequested || msg.isWeeklyVoice) {
-        voice_only = true;
-      } else {
-        // All other messages are text-only
-        voice_only = false;
-      }
+      // ✅ FIXED: Only set voice_only if user explicitly requested it
+      const voice_only = msg.isVoiceRequested === true;
 
-      return { ...msg, voice_only, isSystemMessage: isSystemMsg };
+      return { 
+        ...msg, 
+        voice_only, 
+        isSystemMessage: isSystemMsg,
+        isVoiceRequested: msg.isVoiceRequested || false
+      };
     }
     return msg;
   });
@@ -3688,158 +3665,164 @@ const filterEmptyMessages = (messages) => {
 };
   // Sync the messages with the server
   useEffect(() => {
-  const fetchMessages = async () => {
-    try {
-      setMessages([]);
-      setGroupedMessages({});
+    const fetchMessages = async () => {
+      try {
+        // Clear existing messages first when bot changes
+        setMessages([]);
+        setGroupedMessages({});
 
-      const body = {
-        email: userDetails.email,
-        bot_id: selectedBotId,
-        messages_id: "",
-      };
+        // When bot changes, we want to get all messages, not just new ones
+        // Prepare request body - intentionally NOT including the last message ID
+        const body = {
+          email: userDetails.email,
+          bot_id: selectedBotId,
+          messages_id: "",
+          // No lastMessageId included to force full refresh
+        };
 
-      const response = await fetch("https://api.culturevo.com/sync", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (!response.ok) throw new Error("Failed to fetch messages");
-
-      const newMessages = await response.json();
-      console.log("New messages from server:", newMessages.response);
-
-      const rawMessages = newMessages.response || [];
-
-      const formattedMessages = filterEmptyMessages(
-        rawMessages.map((msg) => ({
-          ...msg,
-          timestamp: new Date(msg.timestamp),
-          isActivityMessage:
-            msg.platform === "game_activity" ||
-            !!msg.activity_name ||
-            msg.isActivityMessage === true,
-          activityId: msg.activity_name || msg.activityId || null,
-        }))
-      );
-
-      let defaultMessageText = "";
-
-      // If no messages from server
-      if (formattedMessages.length === 0) {
-        try {
-          const festRes = await fetch("https://festival-agent-283192146773.us-central1.run.app/festivals/", {
+        // Fetch messages from server
+        /* The POST request to the URL 'http://127.0.0.1:8000/sync' with
+        a JSON payload specified in the `body` variable. The `fetch` function is used to send the request
+        asynchronously. The request includes the method 'POST' and sets the 'Content-Type' header to
+        'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
+        JSON string before sending it in the request body. The `await` keyword is used to wait for the
+        response from the server before proceeding. */
+        const response = await fetch(
+          "https://api.culturevo.com/sync",
+          {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              user_email: userDetails.email,
-              bot_id: selectedBotId,
-              user_name: userDetails.name || "User",
-              user_location: userDetails.location || "India",
-              bot_location: "India",
-            }),
-          });
-
-          const festData = await festRes.json();
-          if (festData?.message?.trim()) {
-            defaultMessageText = festData.message;
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
           }
-        } catch (festErr) {
-          console.warn("Festival API failed:", festErr);
+        );
+
+        if (!response.ok) throw new Error("Failed to fetch messages");
+
+        const newMessages = await response.json();
+        console.log("New messages from server:", newMessages.response);
+
+        const rawMessages = newMessages.response || [];
+        // Format timestamps and filter empty messages
+        /* The code is taking an array of messages from `newMessages.response`, mapping over each
+        message to format the timestamp using `toLocaleTimeString` method to display the time in a
+        specific format (hour:minute AM/PM) in the 'en-US' locale. It then filters out any empty
+        messages using the `filterEmptyMessages` function and stores the formatted messages in the
+        `formattedMessages` array. */
+// In the sync messages useEffect, after mapping messages:
+const formattedMessages = filterEmptyMessages(
+  rawMessages.map((msg) => ({
+    ...msg,
+    timestamp: new Date(msg.timestamp),
+    // Mark as activity message if platform or activity_name is present
+    isActivityMessage:
+      msg.platform === "game_activity" ||
+      !!msg.activity_name ||
+      msg.isActivityMessage === true,
+    activityId: msg.activity_name || msg.activityId || null,
+  }))
+);
+
+        const defaultMessageText =
+          bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
+          "Hello, how are you feeling today?";
+const defaultMessage = [
+  {
+    text: defaultMessageText,
+    sender: "bot",
+    timestamp: new Date(),
+    feedback: "",
+    reaction: "",
+    bot_id: selectedBotId,
+    isSystemMessage: isSystemMessageContent(defaultMessageText),
+    voice_only: false, // ✅ FIXED: Explicitly set to false
+    isVoiceRequested: false, // ✅ FIXED: Never voice for default message
+  },
+];
+        let messagesWithReactions = [];
+
+        /* The code is checking if the `formattedMessages` array has a length greater than 0. If
+        it does, it sets the messages directly from the server response and stores them in the local
+        storage. If `formattedMessages` is empty, it sets a default message "Hello, how are you
+        feeling today?" from a bot and stores it in the local storage. The code ensures that the
+        chat messages are either refreshed from the server response or set to a default message if
+        no messages are available. */
+        if (formattedMessages.length > 0) {
+          // Get stored reactions from localStorage
+          const storedReactions = JSON.parse(
+            localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
+          );
+
+          // Apply stored reactions to messages
+          messagesWithReactions = formattedMessages.map((msg) => ({
+            ...msg,
+            reaction: storedReactions[msg.id] || "",
+            bot_id: msg.bot_id || selectedBotId,
+          }));
+
+          setMessages(messagesWithReactions);
+          localStorage.setItem(
+            `chat_${selectedBotId}`,
+            JSON.stringify(
+              messagesWithReactions.map((msg) => ({
+                ...msg,
+                timestamp: msg.timestamp.toISOString(),
+              }))
+            )
+          );
+        } else {
+          // If no messages from server and no stored messages, set default message
+          setMessages(defaultMessage);
+          localStorage.setItem(
+            `chat_${selectedBotId}`,
+            JSON.stringify(
+              defaultMessage.map((msg) => ({
+                ...msg,
+                timestamp: msg.timestamp.toISOString(),
+              }))
+            )
+          );
+        }
+      } catch (error) {
+        logClientError(error, { source: "sync API Call" });
+        console.error("Error fetching messages:", error);
+        // Set default message if fetch fails
+        const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
+        if (loadedMessages) {
+          setMessages(
+            JSON.parse(loadedMessages).map((msg) => ({
+              ...msg,
+              timestamp: new Date(msg.timestamp),
+            }))
+          );
+        } else {
+          // If nothing in localStorage either, show default message
+          const defaultMessageText =
+            bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
+            "Hello, how are you feeling today?";
+const defaultMessage = [
+  {
+    text: defaultMessageText,
+    sender: "bot",
+    timestamp: new Date(),
+    feedback: "",
+    reaction: "",
+    bot_id: selectedBotId,
+    isSystemMessage: isSystemMessageContent(defaultMessageText),
+    voice_only: false, // ✅ FIXED: Explicitly set to false
+    isVoiceRequested: false, // ✅ FIXED: Never voice for default message
+  },
+];
+          setMessages(defaultMessage);
         }
       }
+    };
 
-      // If no festival message, fallback to bot quote or generic
-      if (!defaultMessageText) {
-        defaultMessageText =
-          bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
-          "Hello, how are you feeling today?";
-      }
-
-      const defaultMessage = [
-        {
-          text: defaultMessageText,
-          sender: "bot",
-          timestamp: new Date(),
-          feedback: "",
-          reaction: "",
-          bot_id: selectedBotId,
-          isSystemMessage: isSystemMessageContent(defaultMessageText),
-        },
-      ];
-
-      let messagesWithReactions = [];
-
-      if (formattedMessages.length > 0) {
-        const storedReactions = JSON.parse(
-          localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
-        );
-
-        messagesWithReactions = formattedMessages.map((msg) => ({
-          ...msg,
-          reaction: storedReactions[msg.id] || "",
-          bot_id: msg.bot_id || selectedBotId,
-        }));
-
-        setMessages(messagesWithReactions);
-        localStorage.setItem(
-          `chat_${selectedBotId}`,
-          JSON.stringify(
-            messagesWithReactions.map((msg) => ({
-              ...msg,
-              timestamp: msg.timestamp.toISOString(),
-            }))
-          )
-        );
-      } else {
-        setMessages(defaultMessage);
-        localStorage.setItem(
-          `chat_${selectedBotId}`,
-          JSON.stringify(
-            defaultMessage.map((msg) => ({
-              ...msg,
-              timestamp: msg.timestamp.toISOString(),
-            }))
-          )
-        );
-      }
-    } catch (error) {
-      logClientError(error, { source: "sync API Call" });
-      console.error("Error fetching messages:", error);
-
-      const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
-      if (loadedMessages) {
-        setMessages(
-          JSON.parse(loadedMessages).map((msg) => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp),
-          }))
-        );
-      } else {
-        const fallbackMessageText =
-          bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
-          "Hello, how are you feeling today?";
-        const fallbackMessage = [
-          {
-            text: fallbackMessageText,
-            sender: "bot",
-            timestamp: new Date(),
-            feedback: "",
-            reaction: "",
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(fallbackMessageText),
-          },
-        ];
-        setMessages(fallbackMessage);
-      }
-    }
-
+    // Reset messages state before fetching new ones
+    fetchMessages();
     setClearChatCalled(false);
-  };
-
-  fetchMessages();
-}, [selectedBotId, userDetails.email]);
+  }, [selectedBotId, userDetails.email]);
 
   // Save the messages to localStorage when they change
   useEffect(() => {
@@ -4105,18 +4088,20 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
               ]);
             } else {
               // Add reminder message to chat
-              setMessages((prev) => [
-                ...prev,
-                {
-                  text: data.response,
-                  sender: "bot",
-                  id: data.message_id,
-                  feedback: "",
-                  reaction: "",
-                  timestamp: new Date(),
-                  isSystemMessage: true, // Reminders are always system messages
-                },
-              ]);
+setMessages((prev) => [
+  ...prev,
+  {
+    text: data.response,
+    sender: "bot",
+    id: data.message_id,
+    feedback: "",
+    reaction: "",
+    timestamp: new Date(),
+    isSystemMessage: true,
+    voice_only: false, // ✅ FIXED: Force reminders to be text-only
+    isVoiceRequested: false, // ✅ FIXED: Explicitly disable voice
+  },
+]);
 
               setIsTyping(false);
 
@@ -4173,6 +4158,11 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
    * API response.
    */
 // Function to check if it's time for a weekly voice message (OPTIONAL)
+
+
+
+
+/*
 const shouldSendWeeklyVoice = () => {
   const lastWeeklyVoice = localStorage.getItem(`lastWeeklyVoice_${selectedBotId}`);
   const now = new Date().getTime();
@@ -4188,12 +4178,28 @@ const shouldSendWeeklyVoice = () => {
   }
   return false;
 };
+*/
   const handleSend = async (e) => {
     e.reminder == undefined && e.preventDefault();
     if (!input.trim() && e.reminder != true) return;
 
     const userMessage = input.trim();
+const voiceNotePatterns = [
+  /give.*me.*voice.*note/i,
+  /send.*voice.*note/i,
+  /voice.*message/i,
+  /can.*you.*speak/i,
+  /talk.*to.*me/i,
+  /hear.*your.*voice/i,
+  /voice.*note/i,
+  /speak.*to.*me/i,
+  /voice.*response/i,
+  /send.*me.*audio/i,
+  /audio.*message/i,
+  /want.*to.*hear.*you/i
+];
 
+const isVoiceNoteRequest = voiceNotePatterns.some(pattern => pattern.test(userMessage));
     // Check if user wants to end activity
     if (
       currentActivity &&
@@ -4261,52 +4267,14 @@ const shouldSendWeeklyVoice = () => {
     }
     setIsTyping(true);
     scrollToBottom();
-// ✅ NEW: Check for voice note requests
-const voiceNotePatterns = [
-  /give.*me.*voice.*note/i,
-  /send.*voice.*note/i,
-  /voice.*message/i,
-  /can.*you.*speak/i,
-  /talk.*to.*me/i,
-  /hear.*your.*voice/i,
-  /voice.*note/i
-];
+// Around line 4435, update the voice note request logic:
 
-const isVoiceNoteRequest = voiceNotePatterns.some(pattern => pattern.test(userMessage));
+// ✅ ENHANCED: Voice note request patterns
 
+
+// ✅ REMOVE WEEKLY LIMIT: Allow unlimited voice requests
 if (isVoiceNoteRequest && !currentActivity) {
-  // Check if user has requested a voice note in the last 7 days
-  const lastVoiceRequest = localStorage.getItem(`lastVoiceRequest_${selectedBotId}`);
-  const now = new Date().getTime();
-  const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-  
-  if (lastVoiceRequest && (now - parseInt(lastVoiceRequest)) < oneWeek) {
-    // Show a message that they need to wait
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: userMessage,
-        sender: "user",
-        timestamp: new Date(),
-        feedback: "",
-        reaction: "",
-      },
-      {
-        text: "I'd love to send you a voice note! You can request one voice message per week. Your next voice note will be available soon. 💕",
-        sender: "bot",
-        timestamp: new Date(),
-        bot_id: selectedBotId,
-        isSystemMessage: true,
-        voice_only: false,
-      }
-    ]);
-    setInput("");
-    scrollToBottom();
-    return;
-  }
-  
-  // Mark this message as a voice request and store the timestamp
-  localStorage.setItem(`lastVoiceRequest_${selectedBotId}`, now.toString());
+  console.log("✅ Voice note requested by user");
 }
     // 1. If message contains a URL, use /api/news
     if (containsUrl(userMessage)) {
@@ -4510,27 +4478,29 @@ if (isVoiceNoteRequest && !currentActivity) {
           JSON.stringify(updatedReminders)
         );
 
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: true, // Reminders are treated as system messages
-          },
-        ]);
+setMessages((prev) => [
+  ...prev,
+  {
+    text: data.response,
+    sender: "bot",
+    id: data.message_id,
+    feedback: "",
+    reaction: "",
+    timestamp: new Date(),
+    isSystemMessage: true,
+    voice_only: false, // ✅ FIXED: Force reminders to be text-only
+    isVoiceRequested: false, // ✅ FIXED: Explicitly disable voice
+  },
+]);
+// Around line 4740, update the bot response creation:
+
 } else {
-  // Use finalMessage if defined, otherwise fallback to data.response
   const shouldBeSystemMessage = isSystemMessageContent(
     finalMessage || data.response
   );
 
-  // Check if this response should be a voice message
-  const isVoiceResponse = isVoiceNoteRequest || shouldSendWeeklyVoice();// ✅ FIXED: Only when explicitly requested
+  // ✅ FIXED: Only create voice message if user explicitly requested it
+  const isVoiceResponse = isVoiceNoteRequest; // Only when user asks
 
   setMessages((prev) => [
     ...prev,
@@ -4543,7 +4513,8 @@ if (isVoiceNoteRequest && !currentActivity) {
       timestamp: currentTime,
       bot_id: selectedBotId,
       isSystemMessage: shouldBeSystemMessage,
-      isVoiceRequested: isVoiceResponse, // This flag triggers voice_only
+      voice_only: isVoiceResponse, // ✅ Only true if user requested voice
+      isVoiceRequested: isVoiceResponse, // ✅ Track the request
     },
   ]);
 }
@@ -4966,11 +4937,11 @@ if (isVoiceNoteRequest && !currentActivity) {
                       )}
 
                       <div className="flex flex-row items-center gap-2">
-                        {msg.sender === "bot" ? (
-                          msg.voice_only ? (
-                            <PlayAudio
-                              text={msg.text}
-                              bot_id={msg.bot_id || selectedBotId}
+{msg.sender === "bot" ? (
+  msg.voice_only && msg.isVoiceRequested ? ( // ✅ BOTH CONDITIONS
+    <PlayAudio
+      text={msg.text}
+      bot_id={msg.bot_id || selectedBotId}
                             />
                           ) : (
                             <>
