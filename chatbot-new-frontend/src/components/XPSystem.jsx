@@ -248,23 +248,23 @@ const XPDetailsModal = ({
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-        <div className="bg-[#FFFFFF] rounded-2xl max-w-4xl min-w-[600px] w-full max-h-[90vh] overflow-y-auto shadow-2xl border-0 p-6">
+      <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-2 sm:p-4">
+        <div className="bg-[#FFFFFF] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-0 p-4 sm:p-6 mx-2">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-black flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-black flex items-center gap-2">
               XP Progress
             </h2>
             <button
               onClick={() => setIsXPModalOpen(false)}
-              className="text-black hover:text-white text-2xl font-bold"
+              className="text-black hover:text-white text-xl sm:text-2xl font-bold"
             >
               ×
             </button>
           </div>
-          <div className="w-96 max-w-md mx-auto">
+          <div className="w-full max-w-md mx-auto">
             {" "}
             {/* Centered loading card */}
-            <div className="relative bg-black/40 backdrop-blur-2xl border border-white/25 rounded-2xl p-6 shadow-2xl">
+            <div className="relative bg-black/40 backdrop-blur-2xl border border-white/25 rounded-2xl p-4 sm:p-6 shadow-2xl">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 rounded-2xl"></div>
               <div className="relative text-center">
                 <div className="w-8 h-8 mx-auto mb-3 border-2 border-purple-400/50 border-t-purple-400 rounded-full animate-spin"></div>
@@ -280,16 +280,16 @@ const XPDetailsModal = ({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="bg-[#FFFFFF] rounded-2xl max-w-4xl min-w-[600px] w-full max-h-[90vh] overflow-y-auto shadow-2xl border-0 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-black flex items-center gap-2">
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-2 sm:p-4">
+      <div className="bg-[#FFFFFF] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-0 p-4 sm:p-6 mx-2">
+        <div className="flex justify-between items-center mb-3 sm:mb-4">
+          <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-black flex items-center gap-1 sm:gap-2 truncate">
             XP Progress: {userDetails.name}
           </h2>
           
           <button
             onClick={() => setIsXPModalOpen(false)}
-            className="text-black hover:text-white text-2xl font-bold"
+            className="text-black hover:text-white text-lg sm:text-xl md:text-2xl font-bold flex-shrink-0"
           >
             ×
           </button>
@@ -297,45 +297,45 @@ const XPDetailsModal = ({
         <div className="grid gap-4 items-stretch mb-6">
           {/* Grand Total (first row, full width) */}
           <div className="w-full">
-          <div className="relative bg-[#FFFBED] rounded-3xl shadow-2xl ring-1 ring-black/10 min-h-[60px] p-6 min-w-[360px] md:min-w-[500px] flex flex-col justify-between h-full overflow-hidden">
+          <div className="relative bg-[#FFFBED] rounded-3xl shadow-2xl ring-1 ring-black/10 min-h-[60px] p-4 sm:p-6 flex flex-col justify-between h-full overflow-hidden">
               <img
                 src="/icons/activities/star.png"
                 alt="Star Icon"
-                className="absolute right-0 bottom-0 w-32 h-32 md:w-40 md:h-40 object-contain pointer-events-none z-0 translate-x-1/4 translate-y-1/4"
+                className="absolute right-0 bottom-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 xl:w-40 xl:h-40 object-contain pointer-events-none z-0 translate-x-1/4 translate-y-1/4"
                 draggable={false}
               />
-              <div className="flex items-center justify-between mb-3 pr-20 md:pr-28">
-                <div className="flex items-center gap-2">
-                  <span className="text-base">🌟</span>
-                  <span className="font-bold text-lg md:text-xl text-black mb-0 text-left break-words">
+              <div className="flex items-center justify-between mb-3 pr-10 sm:pr-12 md:pr-16 lg:pr-20 xl:pr-28">
+                <div className="flex items-center gap-1 sm:gap-2 min-w-0">
+                  <span className="text-sm sm:text-base flex-shrink-0">🌟</span>
+                  <span className="font-bold text-sm sm:text-base md:text-lg lg:text-xl text-black mb-0 text-left truncate">
                     Grand Total
                   </span>
                 </div>
-                <span className="text-sm text-black md:text-base text-left break-words bg-gray-100 px-3 py-1 rounded-full">
+                <span className="text-xs sm:text-sm text-black md:text-base text-left bg-gray-100 px-2 sm:px-3 py-1 rounded-full flex-shrink-0">
                   All Bots
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-4 mb-3 pr-20 md:pr-28">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-black">
+              <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 pr-10 sm:pr-12 md:pr-16 lg:pr-20 xl:pr-28">
+                <div className="text-center min-w-0">
+                  <div className="text-lg sm:text-xl md:text-2xl font-bold text-black truncate">
                     {totalXPAllBots}
                   </div>
-                  <div className="text-sm text-black">Total XP</div>
+                  <div className="text-xs sm:text-sm text-black truncate">Total XP</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-black">
+                <div className="text-center min-w-0">
+                  <div className="text-lg sm:text-xl md:text-2xl font-bold text-black truncate">
                     {Math.floor(totalXPAllBots / 10)}
                   </div>
-                  <div className="text-sm text-black">Total Coins</div>
-                  <div className="text-xs text-black">
+                  <div className="text-xs sm:text-sm text-black truncate">Total Coins</div>
+                  <div className="text-xs text-black truncate">
                     ({totalXPAllBots} ÷ 10)
                   </div>
                 </div>
               </div>
-              <div className="space-y-2 pr-20 md:pr-28">
-                <div className="flex justify-between text-sm text-black">
-                  <span>Level {calculateLevel(totalXPAllBots)}</span>
-                  <span>{getXPForNextLevel(totalXPAllBots)} XP to next</span>
+              <div className="space-y-2 pr-10 sm:pr-12 md:pr-16 lg:pr-20 xl:pr-28">
+                <div className="flex justify-between text-xs sm:text-sm text-black">
+                  <span className="truncate">Level {calculateLevel(totalXPAllBots)}</span>
+                  <span className="truncate">{getXPForNextLevel(totalXPAllBots)} XP to next</span>
                 </div>
                 <div className="relative h-3 bg-yellow-100 rounded-full overflow-hidden">
                   <div
@@ -347,42 +347,42 @@ const XPDetailsModal = ({
             </div>
           </div>
           {/* Current Bot and XP Tips (second row, two columns) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
             {/* Current Bot */}
             <div className="relative flex-1 min-w-0 break-words h-full">
-              <div className="relative bg-[#FFFBED] rounded-3xl shadow-xl min-h-[60px] p-4 min-w-[180px] md:min-w-[220px] flex flex-col justify-between h-full overflow-hidden">
+              <div className="relative bg-[#FFFBED] rounded-3xl shadow-xl min-h-[60px] p-3 sm:p-4 flex flex-col justify-between h-full overflow-hidden">
                 {/* Icon placeholder */}
-                <div className="absolute top-4 right-4 w-16 h-16"></div>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-base">🤖</span>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-lg md:text-xl text-black truncate">
+                <div className="absolute top-3 sm:top-4 right-3 sm:right-4 w-12 h-12 sm:w-16 sm:h-16"></div>
+                <div className="flex items-center gap-2 sm:gap-3 mb-3">
+                  <span className="text-sm sm:text-base flex-shrink-0">🤖</span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-sm sm:text-base md:text-lg lg:text-xl text-black truncate">
                       {selectedBotDetails?.name || selectedBotId}
                     </h3>
-                    <p className="text-sm text-black">Your AI Companion</p>
+                    <p className="text-xs sm:text-sm text-black truncate">Your AI Companion</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-3">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-black">
+                <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3">
+                  <div className="text-center min-w-0">
+                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-black truncate">
                       {currentXP}
                     </div>
-                    <div className="text-sm text-black">Bot XP</div>
+                    <div className="text-xs sm:text-sm text-black truncate">Bot XP</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-black">
+                  <div className="text-center min-w-0">
+                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-black truncate">
                       {Math.floor(currentXP / 10)}
                     </div>
-                    <div className="text-sm text-black">Bot Coins</div>
-                    <div className="text-xs text-black">
+                    <div className="text-xs sm:text-sm text-black truncate">Bot Coins</div>
+                    <div className="text-xs text-black truncate">
                       ({currentXP} ÷ 10)
                     </div>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex justify-between text-sm text-black">
-                    <span>Level {calculateLevel(currentXP)}</span>
-                    <span>{getXPForNextLevel(currentXP)} XP to next</span>
+                  <div className="flex justify-between text-xs sm:text-sm text-black">
+                    <span className="truncate">Level {calculateLevel(currentXP)}</span>
+                    <span className="truncate">{getXPForNextLevel(currentXP)} XP to next</span>
                   </div>
                   <div className="relative h-3 bg-yellow-100 rounded-full overflow-hidden">
                     <div
@@ -395,21 +395,21 @@ const XPDetailsModal = ({
             </div>
             {/* XP Tips */}
             <div className="relative flex-1 min-w-0 break-words h-full">
-              <div className="relative bg-[#FFFBED] rounded-3xl shadow-xl min-h-[60px] p-4 min-w-[180px] md:min-w-[220px] flex flex-col justify-between h-full overflow-hidden">
+              <div className="relative bg-[#FFFBED] rounded-3xl shadow-xl min-h-[60px] p-3 sm:p-4 flex flex-col justify-between h-full overflow-hidden">
                 {/* Icon placeholder */}
                 <img
                   src="/icons/activities/flame.png"
                   alt="Flame Icon"
-                  className="absolute right-0 bottom-0 w-32 h-32 md:w-40 md:h-40 object-contain pointer-events-none z-0 translate-x-1/4 translate-y-1/4"
+                  className="absolute right-0 bottom-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 xl:w-40 xl:h-40 object-contain pointer-events-none z-0 translate-x-1/4 translate-y-1/4"
                   draggable={false}
                 />
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-base">💡</span>
-                  <h4 className="font-bold text-lg md:text-xl text-black">
+                <div className="flex items-center gap-2 sm:gap-3 mb-3">
+                  <span className="text-sm sm:text-base flex-shrink-0">💡</span>
+                  <h4 className="font-bold text-sm sm:text-base md:text-lg lg:text-xl text-black truncate">
                     How to Earn XP
                   </h4>
                 </div>
-                <div className="space-y-2 flex-1">
+                <div className="space-y-1 sm:space-y-2 flex-1">
                   {[
                     "Chat with your AI companion",
                     "Higher engagement = more XP",
@@ -418,10 +418,10 @@ const XPDetailsModal = ({
                   ].map((tip, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-3 text-sm text-black"
+                      className="flex items-start gap-2 sm:gap-3 text-xs sm:text-sm text-black"
                     >
-                      <span className="w-1.5 h-1.5 bg-green-400 rounded-full flex-shrink-0"></span>
-                      <span className="truncate">{tip}</span>
+                      <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-green-400 rounded-full flex-shrink-0 mt-1.5 sm:mt-2"></span>
+                      <span className="break-words leading-tight">{tip}</span>
                     </div>
                   ))}
                 </div>
@@ -433,11 +433,11 @@ const XPDetailsModal = ({
         {/* Action Button */}
         <button
           onClick={() => setIsXPModalOpen(false)}
-          className="relative group w-full py-3 rounded-xl font-bold text-white transition-all duration-300 overflow-hidden"
+          className="relative group w-full py-2.5 sm:py-3 rounded-xl font-bold text-white transition-all duration-300 overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80  rounded-xl transition-all duration-300 group-hover:from-purple-400 group-hover:via-blue-400 group-hover:to-purple-500"></div>
           <div className="absolute inset-0 bg-white/20 rounded-xl backdrop-blur-sm"></div>
-          <span className="relative flex items-center justify-center gap-2 text-base">
+          <span className="relative flex items-center justify-center gap-2 text-sm sm:text-base">
             Keep Chatting!
             <span>🚀</span>
           </span>

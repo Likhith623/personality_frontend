@@ -2449,16 +2449,16 @@ const ActivitiesModal = ({
   });
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <div className="activities-modal bg-[#1a2040] rounded-2xl max-w-4xl min-w-[600px] w-full max-h-[90vh] overflow-y-auto shadow-2xl border-0">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-2 sm:p-4">
+      <div className="activities-modal bg-[#1a2040] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-0 mx-2">
+        <div className="p-4 sm:p-6">
+          <div className="flex justify-between items-center mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white flex items-center gap-1 sm:gap-2">
               Activities
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-white text-2xl font-bold"
+              className="text-gray-400 hover:text-white text-lg sm:text-xl md:text-2xl font-bold"
             >
               ×
             </button>
@@ -2468,32 +2468,32 @@ const ActivitiesModal = ({
             activitiesByCategory[catKey] &&
             activitiesByCategory[catKey].length > 0 ? (
               <div key={catKey} className="mb-6">
-                <h3 className="text-gray-400 text-base font-semibold mb-3 mt-6 flex items-center gap-2">
+                <h3 className="text-gray-400 text-sm sm:text-base font-semibold mb-3 mt-4 sm:mt-6 flex items-center gap-1 sm:gap-2">
                   <span>{CATEGORY_EMOJIS[catKey]}</span>{" "}
                   {CATEGORY_DISPLAY_LABELS[catKey]}
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                   {activitiesByCategory[catKey].map((activity) => (
                     <button
                       key={activity.id}
                       onClick={() => onActivityStart(activity.id)}
-                      className="relative flex flex-col justify-between bg-[#23294b] rounded-3xl shadow-xl min-h-[80px] p-4 overflow-hidden transition hover:scale-[1.03] focus:outline-none cursor-pointer"
+                      className="relative flex flex-col justify-between bg-[#23294b] rounded-3xl shadow-xl min-h-[80px] p-3 sm:p-4 overflow-hidden transition hover:scale-[1.03] focus:outline-none cursor-pointer"
                     >
-                      <div className="flex flex-col justify-between h-full min-h-0 z-10 text-left pr-28">
-                        <span className="font-bold text-lg md:text-xl text-white mb-0 text-left break-words">
+                      <div className="flex flex-col justify-between h-full min-h-0 z-10 text-left pr-20 sm:pr-24 md:pr-28">
+                        <span className="font-bold text-base sm:text-lg md:text-xl text-white mb-0 text-left break-words">
                           {activity.name}
                         </span>
-                        <span className="text-sm text-gray-200 md:text-base text-left break-words">
+                        <span className="text-xs sm:text-sm text-gray-200 md:text-base text-left break-words">
                           {activity.description}
                         </span>
                       </div>
                       {activity.icon && (
                         <>
-                          <span className="absolute right-0 bottom-0 w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-white/10 via-white/0 to-white/0 blur-md z-0 pointer-events-none translate-x-1/4 translate-y-1/4"></span>
+                          <span className="absolute right-0 bottom-0 w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-br from-white/10 via-white/0 to-white/0 blur-md z-0 pointer-events-none translate-x-1/4 translate-y-1/4"></span>
                           <img
                             src={activity.icon}
                             alt={activity.name}
-                            className="absolute right-0 bottom-0 w-28 h-28 md:w-32 md:h-32 object-contain pointer-events-none z-0 translate-x-1/4 translate-y-1/4"
+                            className="absolute right-0 bottom-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 object-contain pointer-events-none z-0 translate-x-1/4 translate-y-1/4"
                             draggable={false}
                           />
                         </>
@@ -4855,12 +4855,12 @@ setMessages((prev) => [
       >
         {/* ✅ ENHANCED: Always visible activity banner at the very top */}
         {currentActivity && (
-          <div className="sticky top-0 z-50 px-4 py-3 bg-gradient-to-r from-red-500/95 to-pink-500/95 backdrop-blur-md border-b-2 border-white/30 shadow-lg">
+          <div className="sticky top-0 z-50 px-2 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-red-500/95 to-pink-500/95 backdrop-blur-md border-b-2 border-white/30 shadow-lg">
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg"></div>
-                <div>
-                  <p className="text-white font-bold text-lg drop-shadow-md">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg flex-shrink-0"></div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-white font-bold text-sm sm:text-base md:text-lg drop-shadow-md truncate">
                     🎮 ACTIVITY MODE:{" "}
                     {currentActivity
                       .replace(/_/g, " ")
@@ -4870,9 +4870,9 @@ setMessages((prev) => [
               </div>
               <button
                 onClick={endActivity}
-                className="px-6 py-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-lg border-2 border-white/50 hover:border-white font-bold text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-lg border-2 border-white/50 hover:border-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex-shrink-0 ml-2"
               >
-                END ACTIVITY
+                END
               </button>
             </div>
           </div>
@@ -4903,12 +4903,12 @@ setMessages((prev) => [
         </div>
       )} */}
         <ScrollArea className="flex-1">
-          <div className="px-1 md:px-2">
+          <div className="px-1 sm:px-2 md:px-2">
             {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
               <div key={date}>
-                <div className="sticky top-5 z-10 my-10 py-2 mx-auto w-32 bg-gray-200/40 backdrop-blur-sm backdrop-saturate-150 rounded-md shadow-md">
+                <div className="sticky top-5 z-10 my-6 sm:my-10 py-2 mx-auto w-24 sm:w-32 bg-gray-200/40 backdrop-blur-sm backdrop-saturate-150 rounded-md shadow-md">
                   <p
-                    className={`text-center text-sm ${
+                    className={`text-center text-xs sm:text-sm ${
                       isDarkTheme ? `${textColorClass}` : `${textColorClass}`
                     }`}
                   >
@@ -5242,12 +5242,12 @@ setMessages((prev) => [
         </ScrollArea>
 
         {/* ✅ ENHANCED: Modified form to show activity status */}
-        <form onSubmit={handleSend} className="flex items-center px-2 pt-2">
+        <form onSubmit={handleSend} className="flex items-center px-1 sm:px-2 pt-2">
           <Input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className={`flex-1 p-[22px] outline-none md:mr-4 mr-2 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full ${
+            className={`flex-1 p-3 sm:p-[22px] outline-none mr-1 sm:mr-2 md:mr-4 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-sm sm:text-base ${
               isDarkTheme ? textColorClass : textColorClass
             } placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
             placeholder={
@@ -5272,22 +5272,23 @@ setMessages((prev) => [
               type="button"
               onClick={handleImageButtonClick}
               disabled={isImageUploading}
-              className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-orange-400/80 via-yellow-400/80 to-orange-400/80 hover:from-orange-400/90 hover:via-yellow-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 sm:p-3 mr-1 sm:mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-orange-400/80 via-yellow-400/80 to-orange-400/80 hover:from-orange-400/90 hover:via-yellow-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
               title="Upload and analyze image"
             >
               {isImageUploading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  className="sm:w-5 sm:h-5"
                 >
                   <line x1="12" y1="5" x2="12" y2="19" />
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -5301,19 +5302,20 @@ setMessages((prev) => [
             <button
               type="button"
               onClick={() => setIsVoiceCallOpen(true)}
-              className="p-3 mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+              className="p-2 sm:p-3 mr-1 sm:mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
               title="Start Voice Call"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                className="sm:w-5 sm:h-5"
               >
                 <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
@@ -5328,19 +5330,20 @@ setMessages((prev) => [
             <button
               type="button"
               onClick={endActivity}
-              className="p-3 mr-2 hover:opacity-80 cursor-pointer bg-gradient-to-r from-red-400/80 via-pink-400/80 to-red-500/80 hover:from-red-400/90 hover:via-pink-400/90 hover:to-red-500/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+              className="p-2 sm:p-3 mr-1 sm:mr-2 hover:opacity-80 cursor-pointer bg-gradient-to-r from-red-400/80 via-pink-400/80 to-red-500/80 hover:from-red-400/90 hover:via-pink-400/90 hover:to-red-500/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
               title="End Activity"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                className="sm:w-5 sm:h-5"
               >
                 <circle cx="12" cy="12" r="10" />
                 <path d="m15 9-6 6" />
@@ -5351,14 +5354,14 @@ setMessages((prev) => [
 
           <button
             type="submit"
-            className="p-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+            className="px-3 sm:px-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-1 sm:gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] text-sm sm:text-base"
           >
             Send
           </button>
         </form>
 
         <p
-          className={`text-xs text-center py-2 ${
+          className={`text-xs text-center py-1 sm:py-2 px-2 ${
             isDarkTheme ? b_color : b_color
           }`}
         >
