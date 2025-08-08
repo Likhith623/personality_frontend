@@ -1910,6 +1910,32 @@ const ACTIVITY_RESPONSES = {
     "Mini-Moksha Simulation. Imagine giving up all worldly distractions for a short while. What do you feel? What thoughts arise?",
   divine_mirror:
     "Divine Mirror. You bring something meaningful into the world—joy, resilience, creativity. Name one quality you appreciate in yourself, and picture it shining outward.",
+  quiz_challenge:
+    "Ready for a cultural adventure? I've prepared some fascinating questions about festivals, food, traditions, and customs from my homeland! Let's explore together! 🌟🎮",
+  obstacle_orchestra:
+    "Welcome to 'Obstacle Orchestra'! Every challenge you've faced is now an instrument in your life's symphony. What kind of music does your life play? 🎶🥁",
+  skill_you_wish_school_taught:
+    "Let's try 'The Skill You Wish School Taught'! What's a life skill you wish was taught in school—but wasn't? How would you teach it in 2 sentences? 🎓💡",
+  self_wisdom_bingo:
+    "Let's play 'Self-Wisdom Bingo'! If your personal growth were a bingo card, what's one surprising square you'd mark off this year? 🟩✨",
+  past_vs_future_me:
+    "Let's do 'Past vs. Future Me'! Imagine your Past and Future selves having tea together. What would they say about your journey so far? ☕⏳",
+  five_year_flashback:
+    "Time for '5-Year Flashback'! You've just traveled back to yourself 5 years ago. What's one sentence you'd say to them—no spoilers! ⏰📝",
+  upgrade_your_brain:
+    "Ready for 'Upgrade Your Brain'? You're downloading a mental update! What 3 features do you get to improve your mindset or habits? 🧠⚡",
+  inner_weather_app:
+    "Your Inner Weather App. What's the report today—and what does it say about your emotional climate?",
+  color_of_calm:
+    "Color of Your Calm. What color represents peace to you today? Describe its texture, sound, and feeling.",
+  wisdom_from_stranger:
+    "Wisdom from a Stranger. A quiet stranger walks past and whispers a lesson. What do they say—and why does it stick with you?",
+  forgotten_door:
+    "The Forgotten Door. In a dream, you find a forgotten door in your heart. What's behind it—and what emotion does it unlock?",
+  shadow_companion:
+    "Shadow Companion. Imagine your shadow could speak for a day. What hidden part of yourself would it reveal or question?",
+  spiritual_playlist:
+    "Spiritual Playlist. Create a 3-song playlist for your soul's current journey. What kinds of songs or sounds would be on it?",
 };
 
 const ACTIVITY_CATEGORIES = {
@@ -2201,6 +2227,14 @@ const ACTIVITY_CATEGORIES = {
           "Give and receive sincere compliments, practicing self-affirmation.",
         icon: "/icons/activities/mirror.png",
       },
+      {
+        id: "quiz_challenge",
+        name: "Quiz Challenge",
+        xp: "30 XP",
+        description:
+          "Test your knowledge with challenging GK questions and earn XP for correct answers",
+        icon: "/icons/activities/quiz.png",
+      },
     ],
     medium: [
       {
@@ -2252,6 +2286,54 @@ const ACTIVITY_CATEGORIES = {
           "Write a hypothetical letter to someone who never heard what you needed to say.",
         icon: "/icons/activities/letters.png",
       },
+      {
+        id: "obstacle_orchestra",
+        name: "Obstacle Orchestra",
+        xp: "5 XP",
+        description:
+          "Every challenge you've faced becomes an instrument in a symphony. What kind of music does your life play?",
+        icon: "/icons/activities/obstacle.png",
+      },
+      {
+        id: "skill_you_wish_school_taught",
+        name: "The Skill You Wish School Taught",
+        xp: "5 XP",
+        description:
+          "What's a life skill you wish was taught in school—but wasn't? How would you teach it in 2 sentences?",
+        icon: "/icons/activities/skill_you_wish_school_taught.png",
+      },
+      {
+        id: "self_wisdom_bingo",
+        name: "Self-Wisdom Bingo",
+        xp: "5 XP",
+        description:
+          "If your personal growth were a bingo card, what's one surprising square you'd mark off this year?",
+        icon: "/icons/activities/self_wisdom_bingo.png",
+      },
+      {
+        id: "past_vs_future_me",
+        name: "Past vs. Future Me",
+        xp: "5 XP",
+        description:
+          "Past You and Future You are having tea. What would they say about your journey so far?",
+        icon: "/icons/activities/past.png",
+      },
+      {
+        id: "five_year_flashback",
+        name: "5-Year Flashback",
+        xp: "5 XP",
+        description:
+          "You've just time-traveled to yourself 5 years ago. What's one sentence you'd say to them—no spoilers!",
+        icon: "/icons/activities/five.png",
+      },
+      {
+        id: "upgrade_your_brain",
+        name: "Upgrade Your Brain",
+        xp: "5 XP",
+        description:
+          "You're downloading a 'mental update.' What 3 features do you get to improve your mindset or habits?",
+        icon: "/icons/activities/upgrade_your_brain.png",
+      },
     ],
   },
   spiritual: {
@@ -2280,6 +2362,30 @@ const ACTIVITY_CATEGORIES = {
           "Get a fragment from a myth or story and reflect on the lesson it teaches you.",
         icon: "/icons/activities/fragment.png",
       },
+      {
+        id: "inner_weather_app",
+        name: "Your Inner Weather App",
+        xp: "3 XP",
+        description:
+          "Open your soul's weather app. What's the report today—and what does it say about your emotional climate?",
+        icon: "/icons/activities/inner_weather_app.png",
+      },
+      {
+        id: "color_of_calm",
+        name: "Color of Your Calm",
+        xp: "3 XP",
+        description:
+          "What color represents peace to you today? Describe its texture, sound, and feeling.",
+        icon: "/icons/activities/color_of_calm.png",
+      },
+      {
+        id: "spiritual_playlist",
+        name: "Spiritual Playlist",
+        xp: "3 XP",
+        description:
+          "Create a 3-song playlist for your soul's current journey. What kinds of songs or sounds would be on it?",
+        icon: "/icons/activities/spiritual_playlist.png",
+      },
     ],
     medium: [
       {
@@ -2305,6 +2411,30 @@ const ACTIVITY_CATEGORIES = {
         description:
           "Collaboratively imagine and share details of a shared past life.",
         icon: "/icons/activities/past_life.png",
+      },
+      {
+        id: "wisdom_from_stranger",
+        name: "Wisdom from a Stranger",
+        xp: "5 XP",
+        description:
+          "A quiet stranger walks past and whispers a lesson. What do they say—and why does it stick with you?",
+        icon: "/icons/activities/wisdom_from_stranger.png",
+      },
+      {
+        id: "forgotten_door",
+        name: "The Forgotten Door",
+        xp: "5 XP",
+        description:
+          "In a dream, you find a forgotten door in your heart. What's behind it—and what emotion does it unlock?",
+        icon: "/icons/activities/forgotten_door.png",
+      },
+      {
+        id: "shadow_companion",
+        name: "Shadow Companion",
+        xp: "5 XP",
+        description:
+          "Imagine your shadow could speak for a day. What hidden part of yourself would it reveal or question?",
+        icon: "/icons/activities/shadow_companion.png",
       },
     ],
     deep: [
@@ -2335,7 +2465,6 @@ const ACTIVITY_CATEGORIES = {
     ],
   },
 };
-
 const ACTIVITY_CATEGORY_MAP = {
   // AI Art
   city_shuffle: "Entertainment",
