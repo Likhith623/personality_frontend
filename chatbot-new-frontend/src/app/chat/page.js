@@ -12,6 +12,7 @@ import {
   systemPatterns,
   isSystemMessageContent,
 } from "@/constants/identifiers";
+import {Phone} from "lucide-react";
 import StripeCheckoutButton from "@/components/StripeCheckoutButton";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -4212,14 +4213,11 @@ const isVoiceNoteRequest = voiceNotePatterns.some(pattern => pattern.test(userMe
 
     // ✅ NEW: Check for selfie generation requests
     const selfiePatterns = [
-      /generate.*selfie/i,
-      /send.*selfie/i,
-      /take.*selfie/i,
-      /show.*selfie/i,
-      /selfie/i,
-      /picture.*yourself/i,
-      /photo.*yourself/i,
-      /how.*you.*look/i
+      /\b(?:generate|take|send|show)\b.*\bselfie\b/i,
+      /\bhow.*do.*you.*look\b/i, 
+      /\bwhat.*do.*you.*look.*like\b/i, 
+      /\bpicture.*yourself\b/i,
+      /\bphoto.*yourself\b/i,
     ];
 
     const isSelfieRequest = selfiePatterns.some(pattern => pattern.test(userMessage));
@@ -5305,23 +5303,7 @@ setMessages((prev) => [
               className="p-2 sm:p-3 mr-1 sm:mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
               title="Start Voice Call"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="sm:w-5 sm:h-5"
-              >
-                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                <path d="M12 19v3" />
-                <path d="M8 22h8" />
-              </svg>
+              <Phone size={20} />
             </button>
           )}
 
