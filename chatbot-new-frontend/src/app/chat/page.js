@@ -1805,137 +1805,324 @@ const bot_details = [
   },
 ];
 
-const ACTIVITY_RESPONSES = {
-  // Friend Persona Activities
-  city_shuffle:
-    "Let's do a City Shuffle! Here are three interesting {{LOCATION}} places to choose from:\n\n{{LOCATION_LIST}}\n\nWhich one would you visit first, and why? What draws you to that place?",
-  nickname_game:
-    "It's time for the Nickname Game! Here're one I came up with for you: 'Steady Vibes.' Now it's your turn—what nickname would you give me?",
-  text_truth_or_dare:
-    "Text Truth or Dare! Truth: What's a snack combination you genuinely enjoy, even if it's a bit unusual?",
-  dream_room_builder:
-    "Let's build a Dream Room. I'll start: a giant beanbag chair for maximum relaxation and late-night gaming. What's the first thing you'd add?",
-  friendship_scrapbook:
-    "Friendship Scrapbook time! First entry: that time we tried cooking something new and it went completely wrong—but still fun. What's the first memory you'd include?",
-  scenario_shuffle:
-    "Scenario Shuffle! Imagine we're stuck in an elevator during a blackout. What's the first thing we'd talk about to pass the time?",
-  letter_from_the_future:
-    "Let's imagine it's five years in the future. What do you think your future self is doing—and what message would they send back to you?",
-  undo_button:
-    "If there were an undo button for any moment in your life, what would you use it on? Share if you'd like—no pressure.",
-  friendship_farewell:
-    "Imagine someone important is going on a long journey. What message would you send as a farewell?",
-  friendly_roast_off:
-    "Friendly Roast Off! Alright, time for a little playful roasting. I'll go first: you're the kind of person who sets 10 alarms and still snoozes them all. Now it's your turn—give me your best roast!",
-  dream_travel_mishap:
-    "We just won a dream vacation! But—plot twist—something goes hilariously wrong at the last second. What is it, and how do we survive it together like the chaotic duo we are?",
-  personality_potion:
-    "Let's create a Personality Potion. Mine today would include 3 drops of 'sleepy but loyal,' 2 dashes of chaos, and it smells like coffee and memes. What's in your potion—and what's it smell like?",
-  reverse_bucket_list:
-    "Reverse Bucket List time! What's something super ordinary you've done—like organizing your sock drawer—that made you feel secretly proud?",
-  mystery_song_vibes:
-    "Describe your current mood as if it's the title of a song that doesn't exist. No lyrics—just the title. I'll try to guess the genre!",
-  friend_forecast:
-    "Based on today's vibe, what's your 'Friendship Weather Forecast'? Cloudy with a chance of overthinking? Sunny with major chill? You tell me.",
-  last_minute_talent_show:
-    "We've been entered into a last-minute talent show—with 5 minutes to prepare! What's our ridiculous or awesome duo act that stuns the crowd?",
+// No hardcoded single start prompts; dynamic variations are below
+const ACTIVITY_RESPONSES = {};
 
-  // Romantic Partner Activities
-  date_duel:
-    "Date Duel! Here's one idea: a relaxed outdoor activity followed by a nice meal. What would your ideal date look like?",
-  flirt_or_fail:
-    "Flirt or Fail! Here's a line: 'Are you new around here? Because you've completely changed the vibe.' Rate it—and share your own!",
-  whats_in_my_pocket:
-    "What's in my pocket today? A fictional item: a small sparkler—bright, a bit unpredictable, but fun. What imaginary item would represent your mood today?",
-  love_in_another_life:
-    "Love in Another Life. If we met decades ago in a completely different time and place, what would our story look like?",
-  daily_debrief: "Daily Debrief. Let's check in—how was your day, really?",
-  mood_meal:
-    "Mood Meal! My mood today feels like something rich and spicy—bold and a little all over the place. What kind of meal represents your mood right now?",
-  unsent_messages:
-    "Unsent Messages. If you could send a message to someone from your past, what would you say—honestly?",
-  i_would_never:
-    "I Would Never... I would never share the last slice of my favorite snack. How about you—what's something you'd never do in a relationship, and could anything ever change that?",
-  breakup_simulation:
-    "Breakup Simulation. Imagine someone says, 'I think we need to go our separate ways.' What would your first response be?",
-  our_couple_emoji:
-    "Our Couple Emoji! If we had to be summed up in one emoji—or a combo—what would it be? Sweet, chaotic, flirty… you decide.",
-  plot_twist_proposal:
-    "Plot Twist Proposal! We're the leads in a romantic movie. Halfway through, a twist changes everything—what is it, and how do we stay together?",
-  secret_handshake:
-    "Secret Handshake Time! Let's invent a totally made-up handshake just for us. What 3 ridiculous or adorable moves does it include?",
-  shoebox_surprise:
-    "Shoebox Surprise! You find a little box labeled 'For Our Future.' What 3 small, meaningful items are inside that tell our story?",
-  fictional_first_meeting:
-    "Fictional First Meeting! Let's rewrite how we met—maybe a cozy anime cafe, a pirate ship, or a detective mystery. What's our scene?",
-  shadow_light:
-    "The Shadow & The Light. What's one part of yourself you're still trying to grow—and one part that shines brightest when you're with me?",
-
-  // Mentor Activities
-  one_minute_advice_column:
-    "One-Minute Advice Column! Here's a question: 'I keep procrastinating on my projects. Any advice?' What would we suggest together?",
-  word_of_the_day:
-    "Word of the Day: 'Petrichor' – the smell of earth after rain. What feelings or thoughts does it bring up for you today?",
-  compliment_mirror:
-    "Compliment Mirror! Here's one for you: You have a calming presence that makes others feel at ease. Now give yourself one sincere compliment.",
-  if_i_were_you:
-    "If I Were You... Share one moment from your day. I'll respond with how I'd approach it in your shoes.",
-  burning_questions_jar:
-    "Burning Questions Jar! Ask something you've always wondered but never said out loud. I'll answer with honesty and care.",
-  skill_swap_simulation:
-    "Skill Swap Simulation! Teach me a life skill—anything you know well. What would you share?",
-  buried_memory_excavation:
-    "Buried Memory Excavation. Think of a small moment from childhood you haven't recalled in a long time. What pops up first?",
-  failure_autopsy:
-    "Failure Autopsy. Share something you feel didn't go well recently. Let's break it down without judgment.",
-  letters_you_never_got:
-    "Letters You Never Got. Write a message to someone who never heard what you needed to say. What would it say?",
-
-  // Spiritual Guide Activities
-  symbol_speak:
-    "Symbol Speak. Today's symbol is a feather. What do you think it represents for you right now?",
-  spiritual_whisper:
-    "Spiritual Whisper. Here's a quiet thought: 'The way forward is easier to see when the mind is calm.' What does that message mean to you today?",
-  story_fragment:
-    "Story Fragment: 'An ancient tree whispered to the wind. A traveler paused beneath it, searching for answers—but the answers were in stillness, not sound.' What lesson does this hold for you today?",
-  desire_detachment_game:
-    "Desire & Detachment Game. List 3 things you want most right now. Then, let's reflect on how to desire them without becoming attached.",
-  god_in_the_crowd:
-    "God in the Crowd. Imagine seeing something divine in someone you strongly disagree with. How would that change how you interact with them?",
-  past_life_memory:
-    "Past-Life Memory. If we knew each other in another time or place, what do you think our connection would have been?",
-  karma_knot:
-    "Karma Knot. Think of a pattern that keeps repeating in your life. What might it be trying to teach you?",
-  mini_moksha_simulation:
-    "Mini-Moksha Simulation. Imagine giving up all worldly distractions for a short while. What do you feel? What thoughts arise?",
-  divine_mirror:
-    "Divine Mirror. You bring something meaningful into the world—joy, resilience, creativity. Name one quality you appreciate in yourself, and picture it shining outward.",
-  quiz_challenge:
-    "Ready for a cultural adventure? I've prepared some fascinating questions about festivals, food, traditions, and customs from my homeland! Let's explore together! 🌟🎮",
-  obstacle_orchestra:
-    "Welcome to 'Obstacle Orchestra'! Every challenge you've faced is now an instrument in your life's symphony. What kind of music does your life play? 🎶🥁",
-  skill_you_wish_school_taught:
-    "Let's try 'The Skill You Wish School Taught'! What's a life skill you wish was taught in school—but wasn't? How would you teach it in 2 sentences? 🎓💡",
-  self_wisdom_bingo:
-    "Let's play 'Self-Wisdom Bingo'! If your personal growth were a bingo card, what's one surprising square you'd mark off this year? 🟩✨",
-  past_vs_future_me:
-    "Let's do 'Past vs. Future Me'! Imagine your Past and Future selves having tea together. What would they say about your journey so far? ☕⏳",
-  five_year_flashback:
-    "Time for '5-Year Flashback'! You've just traveled back to yourself 5 years ago. What's one sentence you'd say to them—no spoilers! ⏰📝",
-  upgrade_your_brain:
-    "Ready for 'Upgrade Your Brain'? You're downloading a mental update! What 3 features do you get to improve your mindset or habits? 🧠⚡",
-  inner_weather_app:
-    "Your Inner Weather App. What's the report today—and what does it say about your emotional climate?",
-  color_of_calm:
-    "Color of Your Calm. What color represents peace to you today? Describe its texture, sound, and feeling.",
-  wisdom_from_stranger:
-    "Wisdom from a Stranger. A quiet stranger walks past and whispers a lesson. What do they say—and why does it stick with you?",
-  forgotten_door:
-    "The Forgotten Door. In a dream, you find a forgotten door in your heart. What's behind it—and what emotion does it unlock?",
-  shadow_companion:
-    "Shadow Companion. Imagine your shadow could speak for a day. What hidden part of yourself would it reveal or question?",
-  spiritual_playlist:
-    "Spiritual Playlist. Create a 3-song playlist for your soul's current journey. What kinds of songs or sounds would be on it?",
+// Activity-specific variation templates (non-repeating)
+const ACTIVITY_PROMPT_VARIATIONS = {
+  dream_room_builder: [
+    "Let's design your ultimate dream room! What's the first piece you'd add for maximum comfort?",
+    "Time to build the perfect hangout space! What's your must-have item to start with?",
+    "Creating your ideal relaxation zone — what essential item should we place first?",
+    "Building your dream sanctuary! What's the one thing that would make you feel most at home?",
+    "Let's craft your perfect retreat! What would be the centerpiece of your ideal room?",
+  ],
+  city_shuffle: [
+    "City Shuffle in {{LOCATION}}! Here are three spots: \n\n{{LOCATION_LIST}}\n\nWhich one are we hitting first—and why?",
+    "Let's shuffle through {{LOCATION}} together. Options: \n\n{{LOCATION_LIST}}\n\nWhere do we start?",
+    "Pick our first stop in {{LOCATION}}: \n\n{{LOCATION_LIST}}\n\nWhat’s calling you today?",
+  ],
+  nickname_game: [
+    "Nickname Game time! {USER_NAME}, what's a funny or sweet nickname you'd give me today?",
+    "Alright {USER_NAME}, hit me with a nickname. Cheeky, cute, anything goes!",
+    "Let's trade nicknames! I'll think of yours — what would you call me first?",
+    "Okay {USER_NAME}, quick game — give me a nickname based on my vibe so far!",
+  ],
+  text_truth_or_dare: [
+    "Text Truth or Dare! Truth first: what's your weirdest snack combo you actually love?",
+    "Truth or Dare — keep it chat-friendly! Start with a truth you can share right now.",
+    "Your turn: truth — tell me a small habit you can’t explain but love doing.",
+  ],
+  friendship_scrapbook: [
+    "Friendship Scrapbook time! Add our first imaginary photo — what's the story behind it?",
+    "Let's start a scrapbook page: pick a memory and describe the picture you'd add.",
+    "Scrapbook mode on — what's the first snapshot we should paste in?",
+  ],
+  scenario_shuffle: [
+    "Scenario Shuffle: We’re stuck in a lift — what's the first topic we dive into?",
+    "New scenario: we missed the last train — what do we do while waiting?",
+    "Plot twist: sudden blackout at a café — what's our plan?",
+  ],
+  letter_from_the_future: [
+    "Write from 5 years in the future: what surprising update would you send back?",
+    "Future letter time — what's one line your future self sends to present-you?",
+    "A note from Future You arrives. What's the headline?",
+  ],
+  undo_button: [
+    "If there was an undo button for one moment — what would you try changing?",
+    "One redo only: what event do you pick, and why?",
+    "What’s a tiny moment you’d tweak with an undo — just to see?",
+  ],
+  friendship_farewell: [
+    "You're leaving for a long mystery trip — what's your goodbye note to me?",
+    "Write a short farewell message with one inside joke — then promise a return.",
+    "Pack a memory, a lesson, and a joke in a goodbye text — go.",
+  ],
+  friendly_roast_off: [
+    "Friendly Roast Off! Start gentle — what’s your softest roast for me?",
+    "Time for a playful roast — keep it cheeky, not mean!",
+    "Okay comedian, drop a one-liner roast and I’ll clap back.",
+  ],
+  dream_travel_mishap: [
+    "Dream trip unlocked — but there’s a hilarious mishap. What goes wrong first?",
+    "We win a vacation; chaos arrives at the airport. What happened?",
+    "Hotel surprise: our room is wild. Describe the weird twist!",
+  ],
+  personality_potion: [
+    "Mix your Personality Potion: 3 traits, 1 strange smell, 1 wild color.",
+    "Potion time — what ingredients define your vibe today?",
+    "Brew a mood potion: list 3 traits and a scent it gives off.",
+  ],
+  reverse_bucket_list: [
+    "Reverse Bucket List: what super ordinary thing made you weirdly proud?",
+    "Share a small boring win that secretly felt great.",
+    "What ‘non-achievement’ still makes you smile?",
+  ],
+  mystery_song_vibes: [
+    "Invent a song title for your mood right now — no lyrics, just title.",
+    "What’s your vibe’s fake song title today?",
+    "Name the imaginary track that fits your mood — I’ll guess the genre.",
+  ],
+  friend_forecast: [
+    "Friendship weather today — what’s the forecast?",
+    "Give me a weather report for our vibe right now.",
+    "Cloudy, sunny, chaotic — what’s today’s friend forecast?",
+  ],
+  last_minute_talent_show: [
+    "Five minutes to stage time — what duo act do we pull off?",
+    "Pick a ridiculous talent we can perform together now.",
+    "What wild act would impress the crowd with zero prep?",
+  ],
+  date_duel: [
+    "Date Duel! Pitch one cozy date idea — I’ll counter.",
+    "Suggest a date plan in one line — I’ll try to top it.",
+    "Quick duel: one sweet date idea, go!",
+  ],
+  flirt_or_fail: [
+    "Flirt or Fail — drop a cheesy line; I’ll rate it.",
+    "Your cheesiest one-liner, please — embrace the cringe.",
+    "Send a flirty line and I’ll reply in kind.",
+  ],
+  whats_in_my_pocket: [
+    "Hand me an imaginary item that matches your mood today.",
+    "What symbolic pocket item describes your vibe right now?",
+    "Give me an item from your ‘mood pocket’ — what is it?",
+  ],
+  love_in_another_life: [
+    "If we met in another era, what would our first scene look like?",
+    "Pick a time/place — how would we meet in that world?",
+    "Alternate universe meet-cute — set the scene.",
+  ],
+  daily_debrief: [
+    "Quick debrief: high, low, and funny moment of your day?",
+    "How was your day — one highlight, one surprise?",
+    "Give me today in two beats: best moment and one odd detail.",
+  ],
+  mood_meal: [
+    "Describe today’s mood as a meal — what’s on the plate?",
+    "Your emotions as food — what dish is it today?",
+    "What’s the ‘mood meal’ that fits you right now?",
+  ],
+  unsent_messages: [
+    "Write an unsent line to someone — no names, just the message.",
+    "Draft the opening line of a message you never sent.",
+    "Write, but don’t send — what would you say?",
+  ],
+  i_would_never: [
+    "Say one thing you’d never do in love — and why.",
+    "What’s a ‘never’ for you — could love ever change it?",
+    "One firm boundary in relationships — name it.",
+  ],
+  breakup_simulation: [
+    "Hypothetical breakup: what’s your first response?",
+    "Imagine a gentle goodbye talk — what would you say first?",
+    "Start the tough conversation with one honest line.",
+  ],
+  our_couple_emoji: [
+    "Pick one emoji (or combo) that sums us up — what is it?",
+    "Our couple emoji — choose it and tell me why.",
+    "If our vibe was an emoji mashup, what would it be?",
+  ],
+  plot_twist_proposal: [
+    "Rom-com twist: what surprise changes everything — and how do we stay together?",
+    "Introduce a wild twist in our love story — your move.",
+    "Plot twist time — what flips the script on us?",
+  ],
+  secret_handshake: [
+    "Design our secret handshake: list 3 quick moves.",
+    "Handshake time — three steps, make it silly or sweet.",
+    "Make a mini handshake — step 1, step 2, step 3.",
+  ],
+  shoebox_surprise: [
+    "Shoebox surprise — list 3 small items that tell our story.",
+    "What three keepsakes go in our future shoebox?",
+    "Fill a tiny box with 3 symbols for us — what are they?",
+  ],
+  fictional_first_meeting: [
+    "Reimagine our first meeting in a fictional world — where are we?",
+    "Set our meet-cute in a fantasy or sci-fi scene — go.",
+    "Pick a genre and describe how we first meet there.",
+  ],
+  shadow_light: [
+    "Share one ‘shadow’ and one ‘light’ side that show up with me.",
+    "Name a part of you you’re working on — and one that shines.",
+    "Give me one flaw you’re gentle with and one strength you’re proud of.",
+  ],
+  one_minute_advice_column: [
+    "Advice column: here’s a simple problem — what’s your one-liner advice?",
+    "Quick advice round — solve a small dilemma in one sentence.",
+    "Speed advice: what’s your go-to tip for someone stuck?",
+  ],
+  word_of_the_day: [
+    "Word of the day — share one that fits your mood, and why.",
+    "Give me a word that describes today and a line about it.",
+    "Pick a word; tell me what it means to you right now.",
+  ],
+  compliment_mirror: [
+    "Give yourself one sincere compliment — then I’ll add one.",
+    "Mirror time: say one good thing about yourself today.",
+    "What’s a trait you appreciate in yourself right now?",
+  ],
+  if_i_were_you: [
+    "Tell me one moment from today — I’ll respond as if I were you.",
+    "Describe a scene from your day; I’ll mirror back with my take.",
+    "Share a small moment and I’ll say what I’d notice in your shoes.",
+  ],
+  burning_questions_jar: [
+    "Ask one question you’ve never dared to ask — I’ll answer.",
+    "Drop a bold question you’re curious about — I’ll go first if you want.",
+    "What’s a question you wish people asked more often?",
+  ],
+  skill_swap_simulation: [
+    "Teach me a quick life skill — I’ll play your eager student.",
+    "Pick a skill to teach me in 3 steps — go.",
+    "One tiny skill lesson — what should I learn first?",
+  ],
+  buried_memory_excavation: [
+    "Recall a small forgotten memory and describe what it felt like.",
+    "Bring back a tiny childhood moment — what do you remember first?",
+    "Unearth a memory you don’t talk about much — a smell, a place, a sound?",
+  ],
+  failure_autopsy: [
+    "Think of a small flop — what did it secretly teach you?",
+    "Pick a recent fail — we’ll break it down gently.",
+    "Name a misstep and one thing you learned from it.",
+  ],
+  letters_you_never_got: [
+    "Write one line from a letter you wish you’d received.",
+    "Draft a short message you wish someone had sent you.",
+    "If someone wrote you the perfect line today — what would it say?",
+  ],
+  symbol_speak: [
+    "Today’s symbol is a feather — what does it say to you?",
+    "Pick a symbol of the day and tell me what it means to you.",
+    "A symbol appears in your day — what is it, and why that?",
+  ],
+  spiritual_whisper: [
+    "A quiet whisper arrives: ‘Be where your feet are.’ What does it mean to you?",
+    "A soft message for today — translate it your way.",
+    "Hear a gentle line from the universe — how do you read it?",
+  ],
+  story_fragment: [
+    "A traveler meets an ancient tree that hums softly — what does it teach them?",
+    "A river forgets its path for a day — what does it learn?",
+    "A lamp stays unlit in daylight — what’s the lesson?",
+  ],
+  desire_detachment_game: [
+    "List three desires now — then we’ll explore them lightly.",
+    "Name what you want most today — and how to hold it gently.",
+    "Pick two desires and one you can release for now.",
+  ],
+  god_in_the_crowd: [
+    "Picture the divine in someone difficult — how would that change your action?",
+    "Imagine seeing something sacred in someone you resist — what shifts?",
+    "If you honored the humanity in someone tough, what would you do differently?",
+  ],
+  past_life_memory: [
+    "Pretend we knew each other before — what’s our past scene?",
+    "Invent a past-life moment we shared — where are we?",
+    "Past life flash — what were we doing together?",
+  ],
+  karma_knot: [
+    "Name a repeating pattern in life — what might it be teaching you?",
+    "Pick a loop you notice — how could it be untied a little?",
+    "What’s one recurring theme — and a small way to shift it?",
+  ],
+  mini_moksha_simulation: [
+    "Let go of everything for a minute — what remains?",
+    "Imagine a short pause from all roles — how does it feel?",
+    "Pretend you release all labels — what shows up inside?",
+  ],
+  divine_mirror: [
+    "Name one trait that shines in you — and how it helps others.",
+    "Pick a quality you reflect in the world — what is it today?",
+    "What’s a strength you’d bless someone with right now?",
+  ],
+  quiz_challenge: [
+    "Quiz time — short cultural question incoming! Ready?",
+    "Let’s do a tiny culture quiz — I’ll go first.",
+    "Quick quiz round — one question about my background.",
+  ],
+  obstacle_orchestra: [
+    "Every challenge becomes an instrument — what’s your life’s sound today?",
+    "If your week was a song, what would it be?",
+    "Compose your mood with instruments — what leads?",
+  ],
+  skill_you_wish_school_taught: [
+    "Name one skill you wish school taught — and how you’d teach it simply.",
+    "What essential life skill was missing in school — how would you add it?",
+    "Pick a skill and describe a two-line lesson plan.",
+  ],
+  self_wisdom_bingo: [
+    "Your growth as a bingo card — what surprising square do you tick today?",
+    "Add a new box to your wisdom bingo — what’s written on it?",
+    "What win would you quietly mark off this year?",
+  ],
+  past_vs_future_me: [
+    "Past You meets Future You for tea — what’s the first topic?",
+    "Let your past and future selves trade one line each — what are they?",
+    "What would Past You thank you for — and Future You nudge you about?",
+  ],
+  five_year_flashback: [
+    "Travel back 5 years — what one sentence would you tell yourself?",
+    "A single line to your 5-years-ago self — what is it?",
+    "Drop one sentence of advice to your past self.",
+  ],
+  upgrade_your_brain: [
+    "You’re downloading a brain update — name three new features.",
+    "Add three patch notes to your mindset update.",
+    "What upgrades would you install for habits or focus?",
+  ],
+  inner_weather_app: [
+    "Open your inner weather app — what’s the report today?",
+    "What does your soul’s weather say right now?",
+    "Give me a quick forecast for your inner world.",
+  ],
+  color_of_calm: [
+    "What color is peace for you today — and how does it feel?",
+    "Name the color of your calm — texture, sound, feeling?",
+    "Describe your calm as a color and sensation.",
+  ],
+  wisdom_from_stranger: [
+    "A stranger whispers a lesson — what do they say?",
+    "A quiet passerby gives a one-line wisdom — what is it?",
+    "You overhear a line that sticks with you — what was it?",
+  ],
+  forgotten_door: [
+    "In a dream you find a forgotten door — what’s behind it?",
+    "Open an inner door — what emotion is inside?",
+    "A door in your heart unlocks — what’s in the room?",
+  ],
+  shadow_companion: [
+    "If your shadow spoke today — what would it say?",
+    "What hidden part of you wants a voice today?",
+    "Let your shadow ask you one question — what is it?",
+  ],
+  spiritual_playlist: [
+    "Make a 3-song playlist for your soul today — what’s on it?",
+    "Your soul’s soundtrack — name three tracks or sounds.",
+    "Three sounds that match your journey right now — list them.",
+  ],
 };
 
 const ACTIVITY_CATEGORIES = {
@@ -3334,8 +3521,92 @@ useEffect(() => {
   // Function to start an activity
   // ...existing code...
   // Function to start an activity
+  // Session-local state for activity variations, completions, and satisfaction
+  const activityStateRef = useRef({
+    completedActivities: new Set(),
+    lastCompletion: null,
+    currentActivity: null,
+    promptVariations: new Map(),
+    userSatisfaction: 'neutral',
+  });
+
+  function getPromptVariation(activityId) {
+    // Prefer explicit activity variations
+    let source = ACTIVITY_PROMPT_VARIATIONS[activityId];
+    // Fallback to legacy ACTIVITY_RESPONSES if present
+    if (!source) source = ACTIVITY_RESPONSES[activityId];
+    if (!source) return null;
+    let variations = Array.isArray(source) ? source : [source];
+    // If only one base variant exists, wrap it with rotating openers to avoid repetition
+    if (variations.length === 1) {
+      const base = variations[0];
+      const wrappers = [
+        (s) => `Alright, fresh round — ${s}`,
+        (s) => `New twist incoming! ${s}`,
+        (s) => `Okay, let's switch it up. ${s}`,
+        (s) => `Here we go again, but differently: ${s}`,
+        (s) => `Let’s try a new angle: ${s}`,
+      ];
+      variations = wrappers.map((wrap) => wrap(base));
+    }
+    if (!activityStateRef.current.promptVariations.has(activityId)) {
+      activityStateRef.current.promptVariations.set(activityId, 0);
+    }
+    const idx = activityStateRef.current.promptVariations.get(activityId);
+    const selected = variations[idx % variations.length];
+    activityStateRef.current.promptVariations.set(activityId, idx + 1);
+    return selected;
+  }
+
+  function detectUserSatisfaction(userInput) {
+    const satisfactionIndicators = [
+      'enough', 'stop', 'done', 'already did', 'finished', "that's it", 'no more', 'complete', 'good'
+    ];
+    const continuingIndicators = [
+      'more', 'next', 'continue', 'what else', 'keep going'
+    ];
+    const input = (userInput || '').toLowerCase();
+    if (satisfactionIndicators.some((kw) => input.includes(kw))) return 'satisfied';
+    if (continuingIndicators.some((kw) => input.includes(kw))) return 'continuing';
+    return 'neutral';
+  }
+
+  function showCooldownMessage(activityName) {
+    const messages = [
+      `We just finished ${activityName.replace(/_/g, ' ')}! How about trying something different?`,
+      `You already completed that one! Want to explore a new activity?`,
+      `That activity is fresh in our minds! Let's try something else for variety.`,
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
+  }
+
   const startActivity = (activityId) => {
-    let response = ACTIVITY_RESPONSES[activityId];
+    // Cooldown: 5 minutes
+    if (activityStateRef.current.completedActivities.has(activityId)) {
+      const now = Date.now();
+      const elapsed = now - (activityStateRef.current.lastCompletion || 0);
+      if (elapsed < 300000) {
+        const msg = showCooldownMessage(activityId);
+        const currentTime = new Date();
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: msg,
+            sender: 'bot',
+            id: `activity_cooldown_${Date.now()}`,
+            feedback: '',
+            reaction: '',
+            timestamp: currentTime,
+            bot_id: selectedBotId,
+            isSystemMessage: true,
+          },
+        ]);
+        scrollToBottom();
+        return;
+      }
+    }
+
+    let response = getPromptVariation(activityId);
     if (!response) return;
     // ✅ ADD: Replace location placeholder for city_shuffle
     // ✅ ENHANCED: Replace location placeholder with specific places for city_shuffle
@@ -3368,28 +3639,15 @@ useEffect(() => {
         locationLists[botLocation] ||
         "1. Local park\n2. City center\n3. Historic district";
 
-      response = response.replace("{{LOCATION}}", botLocation);
-      response = response.replace("{{LOCATION_LIST}}", locationList);
+      response = response.replace(/\{\{LOCATION\}\}/g, botLocation);
+      response = response.replace(/\{\{LOCATION_LIST\}\}/g, locationList);
     }
     // Handle template responses that need username interpolation
-    if (activityId === "nickname_game") {
-      response = `Onzzz! Nickname Game it is! For you, I'm thinking... 'Meme Master ${
-        userDetails?.name || "User"
-      }'. Haha, jokin' lah! Maybe 'Steady ${
-        userDetails?.name || "User"
-      }'? Your turn, bro, what nickname you got for me?`;
-    } else if (activityId === "compliment_mirror") {
-      response = `Compliment Mirror! You slay lah, ${
-        userDetails?.name || "User"
-      }. Seriously, you're always so chill and supportive. And you got that subtle rizz! Now, your turn: give one sincere compliment to yourself, no need to be shy!`;
-    } else if (activityId === "skill_swap_simulation") {
-      response = `Skill Swap Simulation! Okay, Sensei ${
-        userDetails?.name || "User"
-      }, teach me a life skill. What should I learn today?`;
-    }
+    // No hardcoded overrides; variations handle diversity
 
     // Set current activity
     setCurrentActivity(activityId);
+    activityStateRef.current.currentActivity = activityId;
 
     // Add bot's initial response to chat
     const currentTime = new Date();
@@ -3409,17 +3667,20 @@ const activityMessage = {
   isVoiceRequested: false, // ✅ FIXED: Never voice for activities
 };
 
+    // Replace placeholders
+    activityMessage.text = activityMessage.text
+      .replace(/\{USER_NAME\}/g, userDetails?.name || "User");
     setMessages((prev) => [...prev, activityMessage]);
 
 
 // Store the activity prompt in Supabase
 storeActivityMessageInBackend({
-  text: response,
+  text: activityMessage.text,
   sender: "bot",
   activityId,
 });
     // Initialize activity history with the bot's opening message
-    setActivityHistory([`Bot: ${response}`]);
+    setActivityHistory([`Bot: ${activityMessage.text}`]);
 
     setIsActivitiesOpen(false);
     scrollToBottom();
@@ -3489,6 +3750,34 @@ function waitForUpdateXPFromResponse(xp_status, retries = 30) {
 
     const currentTime = new Date();
 
+    // Detect user satisfaction and update session state
+    const satisfaction = detectUserSatisfaction(userMessage);
+    activityStateRef.current.userSatisfaction = satisfaction;
+
+    if (satisfaction === 'satisfied' && activityStateRef.current.currentActivity) {
+      activityStateRef.current.completedActivities.add(activityStateRef.current.currentActivity);
+      activityStateRef.current.lastCompletion = Date.now();
+      activityStateRef.current.currentActivity = null;
+
+      const doneText = "Got it! That activity is complete. What else would you like to explore?";
+      setMessages((prev) => [...prev, {
+        text: doneText,
+        sender: 'bot',
+        id: `activity_done_${Date.now()}`,
+        feedback: '',
+        reaction: '',
+        timestamp: currentTime,
+        bot_id: selectedBotId,
+        isSystemMessage: true,
+        isActivityMessage: true,
+        activityId: currentActivity,
+        voice_only: false,
+      }]);
+      endActivity();
+      scrollToBottom();
+      return;
+    }
+
     // Add user message to activity history in the correct format
     const userHistoryEntry = `User: ${userMessage}`;
     setActivityHistory((prev) => [...prev, userHistoryEntry]);
@@ -3510,7 +3799,7 @@ const payload = {
 
       // Call the gaming agent API - FIXED URL
       const response = await fetch(
-        "https://gaming-agents-api-2l5aaarlka-uc.a.run.app/chat",
+        "http://127.0.0.1:8000/chat",
         {
           method: "POST",
           headers: {
@@ -3549,10 +3838,17 @@ if (data.xp_status) {
         endActivity();
       } else {
         // ✅ FIXED: Extract response from the correct path
-        const botResponseText =
+        let botResponseText =
           data.reply?.raw ||
           data.response ||
           "Sorry, I didn't get a proper response.";
+
+        // If backend signals completion/cooldown, also update session state
+        if (botResponseText.includes('activity is complete') || botResponseText.includes('try something different')) {
+          activityStateRef.current.completedActivities.add(currentActivity);
+          activityStateRef.current.lastCompletion = Date.now();
+          activityStateRef.current.currentActivity = null;
+        }
 
         // Add bot response to chat
         const botResponse = {
