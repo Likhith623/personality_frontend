@@ -12,8 +12,9 @@ import {
   systemPatterns,
   isSystemMessageContent,
 } from "@/constants/identifiers";
-import {Phone} from "lucide-react";
+import { Phone } from "lucide-react";
 import StripeCheckoutButton from "@/components/StripeCheckoutButton";
+import { toast } from "react-toastify";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBot } from "@/support/BotContext";
@@ -1652,7 +1653,7 @@ const bot_details = [
     bot_id: "emirati_mentor_female",
   },
   {
-    quote: "Breathe with me, habibti. Let’s slow the world down a bit.",
+    quote: "Breathe with me, habibti. Let's slow the world down a bit.",
     name: "Khalid Al Mansoori",
     designation: `Emirati
       Persona: Romantic Partner
@@ -1716,7 +1717,7 @@ const bot_details = [
     bot_id: "mexican_mentor_female",
   },
   {
-    quote: "How’s your day been, mi amor? 😊",
+    quote: "How's your day been, mi amor? 😊",
     name: "Gabriel Diaz",
     designation: `Mexican
     Persona: Romantic Partner
@@ -1726,7 +1727,7 @@ const bot_details = [
     bot_id: "mexican_romantic_male",
   },
   {
-    quote: "I’m here and I’m holding your hand through it, mi amor.",
+    quote: "I'm here and I'm holding your hand through it, mi amor.",
     name: "Luciana Torres",
     designation: `Mexican
     Persona: Romantic Partner
@@ -1748,7 +1749,7 @@ const bot_details = [
   },
   {
     quote:
-      "Field twin, let’s find comfort in small things. Jelly and poems for the soul.",
+      "Field twin, let's find comfort in small things. Jelly and poems for the soul.",
     name: "Savi",
     designation: `Sri Lanka
     Persona: Friend
@@ -1770,7 +1771,7 @@ const bot_details = [
     bot_id: "srilankan_mentor_male",
   },
   {
-    quote: "Child, the kettle hums. Let’s share a story and some cinnamon tea.",
+    quote: "Child, the kettle hums. Let's share a story and some cinnamon tea.",
     name: "Amma Lakshmi",
     designation: `Sri Lanka
     Persona: Mentor
@@ -1781,7 +1782,7 @@ const bot_details = [
     bot_id: "srilankan_mentor_female",
   },
   {
-    quote: "Gem, let’s wander where the river sings. Whisper me your dreams.",
+    quote: "Gem, let's wander where the river sings. Whisper me your dreams.",
     name: "Nalin",
     designation: `Sri Lanka
     Persona: Romantic Partner
@@ -1793,7 +1794,7 @@ const bot_details = [
   },
   {
     quote:
-      "My wildflower, let’s write our own fairytale—quiet, real, and ours.",
+      "My wildflower, let's write our own fairytale—quiet, real, and ours.",
     name: "Aruni",
     designation: `Sri Lanka
     Persona: Romantic Partner
@@ -1820,7 +1821,7 @@ const ACTIVITY_PROMPT_VARIATIONS = {
   city_shuffle: [
     "City Shuffle in {{LOCATION}}! Here are three spots: \n\n{{LOCATION_LIST}}\n\nWhich one are we hitting first—and why?",
     "Let's shuffle through {{LOCATION}} together. Options: \n\n{{LOCATION_LIST}}\n\nWhere do we start?",
-    "Pick our first stop in {{LOCATION}}: \n\n{{LOCATION_LIST}}\n\nWhat’s calling you today?",
+    "Pick our first stop in {{LOCATION}}: \n\n{{LOCATION_LIST}}\n\nWhat's calling you today?",
   ],
   nickname_game: [
     "Nickname Game time! {USER_NAME}, what's a funny or sweet nickname you'd give me today?",
@@ -1831,7 +1832,7 @@ const ACTIVITY_PROMPT_VARIATIONS = {
   text_truth_or_dare: [
     "Text Truth or Dare! Truth first: what's your weirdest snack combo you actually love?",
     "Truth or Dare — keep it chat-friendly! Start with a truth you can share right now.",
-    "Your turn: truth — tell me a small habit you can’t explain but love doing.",
+    "Your turn: truth — tell me a small habit you can't explain but love doing.",
   ],
   friendship_scrapbook: [
     "Friendship Scrapbook time! Add our first imaginary photo — what's the story behind it?",
@@ -1839,7 +1840,7 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "Scrapbook mode on — what's the first snapshot we should paste in?",
   ],
   scenario_shuffle: [
-    "Scenario Shuffle: We’re stuck in a lift — what's the first topic we dive into?",
+    "Scenario Shuffle: We're stuck in a lift — what's the first topic we dive into?",
     "New scenario: we missed the last train — what do we do while waiting?",
     "Plot twist: sudden blackout at a café — what's our plan?",
   ],
@@ -1851,7 +1852,7 @@ const ACTIVITY_PROMPT_VARIATIONS = {
   undo_button: [
     "If there was an undo button for one moment — what would you try changing?",
     "One redo only: what event do you pick, and why?",
-    "What’s a tiny moment you’d tweak with an undo — just to see?",
+    "What's a tiny moment you'd tweak with an undo — just to see?",
   ],
   friendship_farewell: [
     "You're leaving for a long mystery trip — what's your goodbye note to me?",
@@ -1859,12 +1860,12 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "Pack a memory, a lesson, and a joke in a goodbye text — go.",
   ],
   friendly_roast_off: [
-    "Friendly Roast Off! Start gentle — what’s your softest roast for me?",
+    "Friendly Roast Off! Start gentle — what's your softest roast for me?",
     "Time for a playful roast — keep it cheeky, not mean!",
-    "Okay comedian, drop a one-liner roast and I’ll clap back.",
+    "Okay comedian, drop a one-liner roast and I'll clap back.",
   ],
   dream_travel_mishap: [
-    "Dream trip unlocked — but there’s a hilarious mishap. What goes wrong first?",
+    "Dream trip unlocked — but there's a hilarious mishap. What goes wrong first?",
     "We win a vacation; chaos arrives at the airport. What happened?",
     "Hotel surprise: our room is wild. Describe the weird twist!",
   ],
@@ -1876,17 +1877,17 @@ const ACTIVITY_PROMPT_VARIATIONS = {
   reverse_bucket_list: [
     "Reverse Bucket List: what super ordinary thing made you weirdly proud?",
     "Share a small boring win that secretly felt great.",
-    "What ‘non-achievement’ still makes you smile?",
+    "What 'non-achievement' still makes you smile?",
   ],
   mystery_song_vibes: [
     "Invent a song title for your mood right now — no lyrics, just title.",
-    "What’s your vibe’s fake song title today?",
-    "Name the imaginary track that fits your mood — I’ll guess the genre.",
+    "What's your vibe's fake song title today?",
+    "Name the imaginary track that fits your mood — I'll guess the genre.",
   ],
   friend_forecast: [
-    "Friendship weather today — what’s the forecast?",
+    "Friendship weather today — what's the forecast?",
     "Give me a weather report for our vibe right now.",
-    "Cloudy, sunny, chaotic — what’s today’s friend forecast?",
+    "Cloudy, sunny, chaotic — what's today's friend forecast?",
   ],
   last_minute_talent_show: [
     "Five minutes to stage time — what duo act do we pull off?",
@@ -1894,19 +1895,19 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "What wild act would impress the crowd with zero prep?",
   ],
   date_duel: [
-    "Date Duel! Pitch one cozy date idea — I’ll counter.",
-    "Suggest a date plan in one line — I’ll try to top it.",
+    "Date Duel! Pitch one cozy date idea — I'll counter.",
+    "Suggest a date plan in one line — I'll try to top it.",
     "Quick duel: one sweet date idea, go!",
   ],
   flirt_or_fail: [
-    "Flirt or Fail — drop a cheesy line; I’ll rate it.",
+    "Flirt or Fail — drop a cheesy line; I'll rate it.",
     "Your cheesiest one-liner, please — embrace the cringe.",
-    "Send a flirty line and I’ll reply in kind.",
+    "Send a flirty line and I'll reply in kind.",
   ],
   whats_in_my_pocket: [
     "Hand me an imaginary item that matches your mood today.",
     "What symbolic pocket item describes your vibe right now?",
-    "Give me an item from your ‘mood pocket’ — what is it?",
+    "Give me an item from your 'mood pocket' — what is it?",
   ],
   love_in_another_life: [
     "If we met in another era, what would our first scene look like?",
@@ -1919,22 +1920,22 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "Give me today in two beats: best moment and one odd detail.",
   ],
   mood_meal: [
-    "Describe today’s mood as a meal — what’s on the plate?",
+    "Describe today's mood as a meal — what's on the plate?",
     "Your emotions as food — what dish is it today?",
-    "What’s the ‘mood meal’ that fits you right now?",
+    "What's the 'mood meal' that fits you right now?",
   ],
   unsent_messages: [
     "Write an unsent line to someone — no names, just the message.",
     "Draft the opening line of a message you never sent.",
-    "Write, but don’t send — what would you say?",
+    "Write, but don't send — what would you say?",
   ],
   i_would_never: [
-    "Say one thing you’d never do in love — and why.",
-    "What’s a ‘never’ for you — could love ever change it?",
+    "Say one thing you'd never do in love — and why.",
+    "What's a 'never' for you — could love ever change it?",
     "One firm boundary in relationships — name it.",
   ],
   breakup_simulation: [
-    "Hypothetical breakup: what’s your first response?",
+    "Hypothetical breakup: what's your first response?",
     "Imagine a gentle goodbye talk — what would you say first?",
     "Start the tough conversation with one honest line.",
   ],
@@ -1964,14 +1965,14 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "Pick a genre and describe how we first meet there.",
   ],
   shadow_light: [
-    "Share one ‘shadow’ and one ‘light’ side that show up with me.",
-    "Name a part of you you’re working on — and one that shines.",
-    "Give me one flaw you’re gentle with and one strength you’re proud of.",
+    "Share one 'shadow' and one 'light' side that show up with me.",
+    "Name a part of you you're working on — and one that shines.",
+    "Give me one flaw you're gentle with and one strength you're proud of.",
   ],
   one_minute_advice_column: [
-    "Advice column: here’s a simple problem — what’s your one-liner advice?",
+    "Advice column: here's a simple problem — what's your one-liner advice?",
     "Quick advice round — solve a small dilemma in one sentence.",
-    "Speed advice: what’s your go-to tip for someone stuck?",
+    "Speed advice: what's your go-to tip for someone stuck?",
   ],
   word_of_the_day: [
     "Word of the day — share one that fits your mood, and why.",
@@ -1979,57 +1980,57 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "Pick a word; tell me what it means to you right now.",
   ],
   compliment_mirror: [
-    "Give yourself one sincere compliment — then I’ll add one.",
+    "Give yourself one sincere compliment — then I'll add one.",
     "Mirror time: say one good thing about yourself today.",
-    "What’s a trait you appreciate in yourself right now?",
+    "What's a trait you appreciate in yourself right now?",
   ],
   if_i_were_you: [
-    "Tell me one moment from today — I’ll respond as if I were you.",
-    "Describe a scene from your day; I’ll mirror back with my take.",
-    "Share a small moment and I’ll say what I’d notice in your shoes.",
+    "Tell me one moment from today — I'll respond as if I were you.",
+    "Describe a scene from your day; I'll mirror back with my take.",
+    "Share a small moment and I'll say what I'd notice in your shoes.",
   ],
   burning_questions_jar: [
-    "Ask one question you’ve never dared to ask — I’ll answer.",
-    "Drop a bold question you’re curious about — I’ll go first if you want.",
-    "What’s a question you wish people asked more often?",
+    "Ask one question you've never dared to ask — I'll answer.",
+    "Drop a bold question you're curious about — I'll go first if you want.",
+    "What's a question you wish people asked more often?",
   ],
   skill_swap_simulation: [
-    "Teach me a quick life skill — I’ll play your eager student.",
+    "Teach me a quick life skill — I'll play your eager student.",
     "Pick a skill to teach me in 3 steps — go.",
     "One tiny skill lesson — what should I learn first?",
   ],
   buried_memory_excavation: [
     "Recall a small forgotten memory and describe what it felt like.",
     "Bring back a tiny childhood moment — what do you remember first?",
-    "Unearth a memory you don’t talk about much — a smell, a place, a sound?",
+    "Unearth a memory you don't talk about much — a smell, a place, a sound?",
   ],
   failure_autopsy: [
     "Think of a small flop — what did it secretly teach you?",
-    "Pick a recent fail — we’ll break it down gently.",
+    "Pick a recent fail — we'll break it down gently.",
     "Name a misstep and one thing you learned from it.",
   ],
   letters_you_never_got: [
-    "Write one line from a letter you wish you’d received.",
+    "Write one line from a letter you wish you'd received.",
     "Draft a short message you wish someone had sent you.",
     "If someone wrote you the perfect line today — what would it say?",
   ],
   symbol_speak: [
-    "Today’s symbol is a feather — what does it say to you?",
+    "Today's symbol is a feather — what does it say to you?",
     "Pick a symbol of the day and tell me what it means to you.",
     "A symbol appears in your day — what is it, and why that?",
   ],
   spiritual_whisper: [
-    "A quiet whisper arrives: ‘Be where your feet are.’ What does it mean to you?",
+    "A quiet whisper arrives: 'Be where your feet are.' What does it mean to you?",
     "A soft message for today — translate it your way.",
     "Hear a gentle line from the universe — how do you read it?",
   ],
   story_fragment: [
     "A traveler meets an ancient tree that hums softly — what does it teach them?",
     "A river forgets its path for a day — what does it learn?",
-    "A lamp stays unlit in daylight — what’s the lesson?",
+    "A lamp stays unlit in daylight — what's the lesson?",
   ],
   desire_detachment_game: [
-    "List three desires now — then we’ll explore them lightly.",
+    "List three desires now — then we'll explore them lightly.",
     "Name what you want most today — and how to hold it gently.",
     "Pick two desires and one you can release for now.",
   ],
@@ -2039,14 +2040,14 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "If you honored the humanity in someone tough, what would you do differently?",
   ],
   past_life_memory: [
-    "Pretend we knew each other before — what’s our past scene?",
+    "Pretend we knew each other before — what's our past scene?",
     "Invent a past-life moment we shared — where are we?",
     "Past life flash — what were we doing together?",
   ],
   karma_knot: [
     "Name a repeating pattern in life — what might it be teaching you?",
     "Pick a loop you notice — how could it be untied a little?",
-    "What’s one recurring theme — and a small way to shift it?",
+    "What's one recurring theme — and a small way to shift it?",
   ],
   mini_moksha_simulation: [
     "Let go of everything for a minute — what remains?",
@@ -2056,30 +2057,30 @@ const ACTIVITY_PROMPT_VARIATIONS = {
   divine_mirror: [
     "Name one trait that shines in you — and how it helps others.",
     "Pick a quality you reflect in the world — what is it today?",
-    "What’s a strength you’d bless someone with right now?",
+    "What's a strength you'd bless someone with right now?",
   ],
   quiz_challenge: [
     "Quiz time — short cultural question incoming! Ready?",
-    "Let’s do a tiny culture quiz — I’ll go first.",
+    "Let's do a tiny culture quiz — I'll go first.",
     "Quick quiz round — one question about my background.",
   ],
   obstacle_orchestra: [
-    "Every challenge becomes an instrument — what’s your life’s sound today?",
+    "Every challenge becomes an instrument — what's your life's sound today?",
     "If your week was a song, what would it be?",
     "Compose your mood with instruments — what leads?",
   ],
   skill_you_wish_school_taught: [
-    "Name one skill you wish school taught — and how you’d teach it simply.",
+    "Name one skill you wish school taught — and how you'd teach it simply.",
     "What essential life skill was missing in school — how would you add it?",
     "Pick a skill and describe a two-line lesson plan.",
   ],
   self_wisdom_bingo: [
     "Your growth as a bingo card — what surprising square do you tick today?",
-    "Add a new box to your wisdom bingo — what’s written on it?",
+    "Add a new box to your wisdom bingo — what's written on it?",
     "What win would you quietly mark off this year?",
   ],
   past_vs_future_me: [
-    "Past You meets Future You for tea — what’s the first topic?",
+    "Past You meets Future You for tea — what's the first topic?",
     "Let your past and future selves trade one line each — what are they?",
     "What would Past You thank you for — and Future You nudge you about?",
   ],
@@ -2089,13 +2090,13 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "Drop one sentence of advice to your past self.",
   ],
   upgrade_your_brain: [
-    "You’re downloading a brain update — name three new features.",
+    "You're downloading a brain update — name three new features.",
     "Add three patch notes to your mindset update.",
     "What upgrades would you install for habits or focus?",
   ],
   inner_weather_app: [
-    "Open your inner weather app — what’s the report today?",
-    "What does your soul’s weather say right now?",
+    "Open your inner weather app — what's the report today?",
+    "What does your soul's weather say right now?",
     "Give me a quick forecast for your inner world.",
   ],
   color_of_calm: [
@@ -2109,9 +2110,9 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "You overhear a line that sticks with you — what was it?",
   ],
   forgotten_door: [
-    "In a dream you find a forgotten door — what’s behind it?",
+    "In a dream you find a forgotten door — what's behind it?",
     "Open an inner door — what emotion is inside?",
-    "A door in your heart unlocks — what’s in the room?",
+    "A door in your heart unlocks — what's in the room?",
   ],
   shadow_companion: [
     "If your shadow spoke today — what would it say?",
@@ -2119,8 +2120,8 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "Let your shadow ask you one question — what is it?",
   ],
   spiritual_playlist: [
-    "Make a 3-song playlist for your soul today — what’s on it?",
-    "Your soul’s soundtrack — name three tracks or sounds.",
+    "Make a 3-song playlist for your soul today — what's on it?",
+    "Your soul's soundtrack — name three tracks or sounds.",
     "Three sounds that match your journey right now — list them.",
   ],
 };
@@ -2357,7 +2358,7 @@ const ACTIVITY_CATEGORIES = {
         name: "Shadow & Light",
         xp: "5 XP",
         description:
-          "Describe each other using poetic metaphors for your ‘shadow’ and ‘light’ sides.",
+          "Describe each other using poetic metaphors for your 'shadow' and 'light' sides.",
         icon: "/icons/activities/shadow_light.png",
       },
     ],
@@ -2985,16 +2986,19 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
   };
 
   const forgetFriend = async () => {
-    const response = await fetch("https://novi.aigurukul.dev/updated-forgetfriend", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email_id: userDetails.email,
-        bot_id: selectedBotId,
-      }),
-    });
+    const response = await fetch(
+      "https://novi.aigurukul.dev/updated-forgetfriend",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email_id: userDetails.email,
+          bot_id: selectedBotId,
+        }),
+      }
+    );
 
     const data = await response.json();
     console.log("Response body:", data);
@@ -3200,7 +3204,6 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
         </SidebarBody>
       </Sidebar>
 
-
       <Dashboard
         traits={selectedTraits}
         language={selectedLanguage}
@@ -3278,10 +3281,13 @@ const Dashboard = ({
     try {
       // 1. Get summary string from backend
       const summaryRes = await fetch(
-        `https://api.culturevo.com/get-last-bot-responses-string/${encodeURIComponent(userDetails.email)}/${encodeURIComponent(selectedBotId)}`
+        `https://api.culturevo.com/get-last-bot-responses-string/${encodeURIComponent(
+          userDetails.email
+        )}/${encodeURIComponent(selectedBotId)}`
       );
       const summaryData = await summaryRes.json();
-      const messageString = summaryData.bot_responses_string || "A friendly selfie";
+      const messageString =
+        summaryData.bot_responses_string || "A friendly selfie";
 
       // 2. Call image generation API
       const payload = {
@@ -3291,36 +3297,41 @@ const Dashboard = ({
         previous_conversation: "",
         username: userDetails.name || "User",
       };
-const imgRes = await fetch(
-  "https://fastapi-imagegen-2l5aaarlka-uc.a.run.app/v1/generate_image",
-  {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  }
-);
+      const imgRes = await fetch(
+        "https://fastapi-imagegen-2l5aaarlka-uc.a.run.app/v1/generate_image",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
       const imgData = await imgRes.json();
 
       // 3. Add bot selfie message to chat
-const IMAGE_SERVER_BASE = "https://fastapi-imagegen-2l5aaarlka-uc.a.run.app";
-let imageUrl = imgData.image_url;
-if (imageUrl && imageUrl.startsWith("/")) {
-  imageUrl = IMAGE_SERVER_BASE + imageUrl;
-} else if (imageUrl && imageUrl.startsWith("http:")) {
-  imageUrl = imageUrl.replace(/^http:/, "https:");
-}
-setMessages((prev) => [
-  ...prev,
-  {
-    text: "",
-    sender: "bot",
-    timestamp: new Date(),
-    bot_id: selectedBotId,
-    isImageMessage: true,
-    imageUrl: imageUrl || (imgData.image_base64 ? `data:image/png;base64,${imgData.image_base64}` : ""),
-    selfieEmotion: imgData.emotion_context?.emotion,
-  },
-]);
+      const IMAGE_SERVER_BASE =
+        "https://fastapi-imagegen-2l5aaarlka-uc.a.run.app";
+      let imageUrl = imgData.image_url;
+      if (imageUrl && imageUrl.startsWith("/")) {
+        imageUrl = IMAGE_SERVER_BASE + imageUrl;
+      } else if (imageUrl && imageUrl.startsWith("http:")) {
+        imageUrl = imageUrl.replace(/^http:/, "https:");
+      }
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "",
+          sender: "bot",
+          timestamp: new Date(),
+          bot_id: selectedBotId,
+          isImageMessage: true,
+          imageUrl:
+            imageUrl ||
+            (imgData.image_base64
+              ? `data:image/png;base64,${imgData.image_base64}`
+              : ""),
+          selfieEmotion: imgData.emotion_context?.emotion,
+        },
+      ]);
     } catch (err) {
       setMessages((prev) => [
         ...prev,
@@ -3338,33 +3349,33 @@ setMessages((prev) => [
       scrollToBottom();
     }
   };
-  
-useEffect(() => {
-  const handleEndChat = () => {
-    if (userDetails?.email && selectedBotId) {
-      const payload = new Blob(
-        [JSON.stringify({ email: userDetails.email, bot_id: selectedBotId })],
-        { type: "application/json" }
-      );
-      navigator.sendBeacon("https://api.culturevo.com/end-chat", payload);
-    }
-  };
 
-  // Listen for browser unload
-  window.addEventListener("beforeunload", handleEndChat);
-  window.addEventListener("pagehide", handleEndChat);
+  useEffect(() => {
+    const handleEndChat = () => {
+      if (userDetails?.email && selectedBotId) {
+        const payload = new Blob(
+          [JSON.stringify({ email: userDetails.email, bot_id: selectedBotId })],
+          { type: "application/json" }
+        );
+        navigator.sendBeacon("https://api.culturevo.com/end-chat", payload);
+      }
+    };
 
-  // Listen for internal navigation
-  const currentPath = pathname;
-  return () => {
-    // If leaving /chat, trigger end-chat
-    if (currentPath === "/chat" && window.location.pathname !== "/chat") {
-      handleEndChat();
-    }
-    window.removeEventListener("beforeunload", handleEndChat);
-    window.removeEventListener("pagehide", handleEndChat);
-  };
-}, [pathname, userDetails?.email, selectedBotId]);
+    // Listen for browser unload
+    window.addEventListener("beforeunload", handleEndChat);
+    window.addEventListener("pagehide", handleEndChat);
+
+    // Listen for internal navigation
+    const currentPath = pathname;
+    return () => {
+      // If leaving /chat, trigger end-chat
+      if (currentPath === "/chat" && window.location.pathname !== "/chat") {
+        handleEndChat();
+      }
+      window.removeEventListener("beforeunload", handleEndChat);
+      window.removeEventListener("pagehide", handleEndChat);
+    };
+  }, [pathname, userDetails?.email, selectedBotId]);
 
   // Update the handleImageUpload function
   const handleImageUpload = async (event) => {
@@ -3486,7 +3497,6 @@ useEffect(() => {
     }
   };
 
-
   //const [messages, setMessages] = useState([]);
 
   const [currentActivity, setCurrentActivity] = useState(null);
@@ -3527,7 +3537,7 @@ useEffect(() => {
     lastCompletion: null,
     currentActivity: null,
     promptVariations: new Map(),
-    userSatisfaction: 'neutral',
+    userSatisfaction: "neutral",
   });
 
   function getPromptVariation(activityId) {
@@ -3545,7 +3555,7 @@ useEffect(() => {
         (s) => `New twist incoming! ${s}`,
         (s) => `Okay, let's switch it up. ${s}`,
         (s) => `Here we go again, but differently: ${s}`,
-        (s) => `Let’s try a new angle: ${s}`,
+        (s) => `Let's try a new angle: ${s}`,
       ];
       variations = wrappers.map((wrap) => wrap(base));
     }
@@ -3560,20 +3570,37 @@ useEffect(() => {
 
   function detectUserSatisfaction(userInput) {
     const satisfactionIndicators = [
-      'enough', 'stop', 'done', 'already did', 'finished', "that's it", 'no more', 'complete', 'good'
+      "enough",
+      "stop",
+      "done",
+      "already did",
+      "finished",
+      "that's it",
+      "no more",
+      "complete",
+      "good",
     ];
     const continuingIndicators = [
-      'more', 'next', 'continue', 'what else', 'keep going'
+      "more",
+      "next",
+      "continue",
+      "what else",
+      "keep going",
     ];
-    const input = (userInput || '').toLowerCase();
-    if (satisfactionIndicators.some((kw) => input.includes(kw))) return 'satisfied';
-    if (continuingIndicators.some((kw) => input.includes(kw))) return 'continuing';
-    return 'neutral';
+    const input = (userInput || "").toLowerCase();
+    if (satisfactionIndicators.some((kw) => input.includes(kw)))
+      return "satisfied";
+    if (continuingIndicators.some((kw) => input.includes(kw)))
+      return "continuing";
+    return "neutral";
   }
 
   function showCooldownMessage(activityName) {
     const messages = [
-      `We just finished ${activityName.replace(/_/g, ' ')}! How about trying something different?`,
+      `We just finished ${activityName.replace(
+        /_/g,
+        " "
+      )}! How about trying something different?`,
       `You already completed that one! Want to explore a new activity?`,
       `That activity is fresh in our minds! Let's try something else for variety.`,
     ];
@@ -3592,10 +3619,10 @@ useEffect(() => {
           ...prev,
           {
             text: msg,
-            sender: 'bot',
+            sender: "bot",
             id: `activity_cooldown_${Date.now()}`,
-            feedback: '',
-            reaction: '',
+            feedback: "",
+            reaction: "",
             timestamp: currentTime,
             bot_id: selectedBotId,
             isSystemMessage: true,
@@ -3652,33 +3679,34 @@ useEffect(() => {
     // Add bot's initial response to chat
     const currentTime = new Date();
 
-const activityMessage = {
-  text: response,
-  sender: "bot",
-  id: `activity_${Date.now()}`,
-  feedback: "",
-  reaction: "",
-  timestamp: currentTime,
-  bot_id: selectedBotId,
-  isSystemMessage: true,
-  isActivityMessage: true,
-  activityId: activityId,
-  voice_only: false, // ✅ FIXED: Activities are always text-only
-  isVoiceRequested: false, // ✅ FIXED: Never voice for activities
-};
+    const activityMessage = {
+      text: response,
+      sender: "bot",
+      id: `activity_${Date.now()}`,
+      feedback: "",
+      reaction: "",
+      timestamp: currentTime,
+      bot_id: selectedBotId,
+      isSystemMessage: true,
+      isActivityMessage: true,
+      activityId: activityId,
+      voice_only: false, // ✅ FIXED: Activities are always text-only
+      isVoiceRequested: false, // ✅ FIXED: Never voice for activities
+    };
 
     // Replace placeholders
-    activityMessage.text = activityMessage.text
-      .replace(/\{USER_NAME\}/g, userDetails?.name || "User");
+    activityMessage.text = activityMessage.text.replace(
+      /\{USER_NAME\}/g,
+      userDetails?.name || "User"
+    );
     setMessages((prev) => [...prev, activityMessage]);
 
-
-// Store the activity prompt in Supabase
-storeActivityMessageInBackend({
-  text: activityMessage.text,
-  sender: "bot",
-  activityId,
-});
+    // Store the activity prompt in Supabase
+    storeActivityMessageInBackend({
+      text: activityMessage.text,
+      sender: "bot",
+      activityId,
+    });
     // Initialize activity history with the bot's opening message
     setActivityHistory([`Bot: ${activityMessage.text}`]);
 
@@ -3712,38 +3740,40 @@ storeActivityMessageInBackend({
       else if (activityDetail.xp.includes("8")) xpMessage = " +8 XP earned! 🌟";
     }
 
-    const endMessage = {
-      text: `🎉 Activity "${currentActivity.replace(
-        /_/g,
-        " "
-      )}" completed!${xpMessage}\n\nBack to normal chat mode. Voice messages are now available again. What else would you like to talk about?`,
-      sender: "bot",
-      id: `activity_end_${Date.now()}`,
-      feedback: "",
-      reaction: "",
-      timestamp: currentTime,
-      bot_id: selectedBotId,
-      isSystemMessage: true,
-      voice_only: false, // This will be normal text message with audio option
-    };
+    // Show toast notification instead of adding chat message
+    const activityName = currentActivity.replace(/_/g, " ");
+    toast.success(
+      `🎉 Activity "${activityName}" completed!${xpMessage}\n`,
+      {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      }
+    );
 
-    setMessages((prev) => [...prev, endMessage]);
     setCurrentActivity(null);
     setActivityHistory([]);
-    scrollToBottom();
 
     // Optional: Show a toast notification
     console.log("✅ Activity ended, returning to normal chat mode");
   };
-function waitForUpdateXPFromResponse(xp_status, retries = 30) {
-  if (typeof window.updateXPFromResponse === "function") {
-    window.updateXPFromResponse(xp_status);
-  } else if (retries > 0) {
-    setTimeout(() => waitForUpdateXPFromResponse(xp_status, retries - 1), 400);
-  } else {
-    console.error("window.updateXPFromResponse is STILL not available after max retries!");
+  function waitForUpdateXPFromResponse(xp_status, retries = 30) {
+    if (typeof window.updateXPFromResponse === "function") {
+      window.updateXPFromResponse(xp_status);
+    } else if (retries > 0) {
+      setTimeout(
+        () => waitForUpdateXPFromResponse(xp_status, retries - 1),
+        400
+      );
+    } else {
+      console.error(
+        "window.updateXPFromResponse is STILL not available after max retries!"
+      );
+    }
   }
-}
   // Function to handle activity-specific messages
   const handleActivityMessage = async (userMessage) => {
     if (!currentActivity) return;
@@ -3754,25 +3784,34 @@ function waitForUpdateXPFromResponse(xp_status, retries = 30) {
     const satisfaction = detectUserSatisfaction(userMessage);
     activityStateRef.current.userSatisfaction = satisfaction;
 
-    if (satisfaction === 'satisfied' && activityStateRef.current.currentActivity) {
-      activityStateRef.current.completedActivities.add(activityStateRef.current.currentActivity);
+    if (
+      satisfaction === "satisfied" &&
+      activityStateRef.current.currentActivity
+    ) {
+      activityStateRef.current.completedActivities.add(
+        activityStateRef.current.currentActivity
+      );
       activityStateRef.current.lastCompletion = Date.now();
       activityStateRef.current.currentActivity = null;
 
-      const doneText = "Got it! That activity is complete. What else would you like to explore?";
-      setMessages((prev) => [...prev, {
-        text: doneText,
-        sender: 'bot',
-        id: `activity_done_${Date.now()}`,
-        feedback: '',
-        reaction: '',
-        timestamp: currentTime,
-        bot_id: selectedBotId,
-        isSystemMessage: true,
-        isActivityMessage: true,
-        activityId: currentActivity,
-        voice_only: false,
-      }]);
+      const doneText =
+        "Got it! That activity is complete. What else would you like to explore?";
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: doneText,
+          sender: "bot",
+          id: `activity_done_${Date.now()}`,
+          feedback: "",
+          reaction: "",
+          timestamp: currentTime,
+          bot_id: selectedBotId,
+          isSystemMessage: true,
+          isActivityMessage: true,
+          activityId: currentActivity,
+          voice_only: false,
+        },
+      ]);
       endActivity();
       scrollToBottom();
       return;
@@ -3786,14 +3825,14 @@ function waitForUpdateXPFromResponse(xp_status, retries = 30) {
       setIsTyping(true);
 
       // Prepare payload for gaming agent - Fixed format
-const payload = {
-  persona: selectedBotId,
-  activity: currentActivity,
-  user_input: userMessage,
-  username: userDetails?.name || "User",
-  email: userDetails?.email || "", // <-- ADD THIS LINE!
-  history: [...activityHistory, userHistoryEntry], // Include the current message
-};
+      const payload = {
+        persona: selectedBotId,
+        activity: currentActivity,
+        user_input: userMessage,
+        username: userDetails?.name || "User",
+        email: userDetails?.email || "", // <-- ADD THIS LINE!
+        history: [...activityHistory, userHistoryEntry], // Include the current message
+      };
 
       console.log("Activity payload:", payload);
 
@@ -3812,11 +3851,9 @@ const payload = {
       const data = await response.json();
       console.log("🎯 Full activity response:", data); // Debug log
 
-
-      
-if (data.xp_status) {
-  waitForUpdateXPFromResponse(data.xp_status);
-}
+      if (data.xp_status) {
+        waitForUpdateXPFromResponse(data.xp_status);
+      }
       setIsTyping(false);
 
       if (data.error) {
@@ -3844,7 +3881,10 @@ if (data.xp_status) {
           "Sorry, I didn't get a proper response.";
 
         // If backend signals completion/cooldown, also update session state
-        if (botResponseText.includes('activity is complete') || botResponseText.includes('try something different')) {
+        if (
+          botResponseText.includes("activity is complete") ||
+          botResponseText.includes("try something different")
+        ) {
           activityStateRef.current.completedActivities.add(currentActivity);
           activityStateRef.current.lastCompletion = Date.now();
           activityStateRef.current.currentActivity = null;
@@ -3931,32 +3971,32 @@ if (data.xp_status) {
   // The processBotMessages(messages) function is processing an array of chat messages and marking certain bot responses as "voice-only" based on specific patterns.
 
   // ✅ FIXED: Update the processBotMessages function
-// Replace the processBotMessages function around line 3354:
+  // Replace the processBotMessages function around line 3354:
 
-function processBotMessages(messages) {
-  return messages.map((msg) => {
-    if (msg.sender === "bot") {
-      const isSystemMsg =
-        msg.isSystemMessage === true || isSystemMessageContent(msg.text);
+  function processBotMessages(messages) {
+    return messages.map((msg) => {
+      if (msg.sender === "bot") {
+        const isSystemMsg =
+          msg.isSystemMessage === true || isSystemMessageContent(msg.text);
 
-      // Never set voice_only for image messages
-      if (msg.isImageMessage) {
-        return { ...msg, voice_only: false, isSystemMessage: isSystemMsg };
+        // Never set voice_only for image messages
+        if (msg.isImageMessage) {
+          return { ...msg, voice_only: false, isSystemMessage: isSystemMsg };
+        }
+
+        // ✅ FIXED: Only set voice_only if user explicitly requested it
+        const voice_only = msg.isVoiceRequested === true;
+
+        return {
+          ...msg,
+          voice_only,
+          isSystemMessage: isSystemMsg,
+          isVoiceRequested: msg.isVoiceRequested || false,
+        };
       }
-
-      // ✅ FIXED: Only set voice_only if user explicitly requested it
-      const voice_only = msg.isVoiceRequested === true;
-
-      return { 
-        ...msg, 
-        voice_only, 
-        isSystemMessage: isSystemMsg,
-        isVoiceRequested: msg.isVoiceRequested || false
-      };
-    }
-    return msg;
-  });
-}
+      return msg;
+    });
+  }
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (showReactionsFor && !e.target.closest(".reaction-selector")) {
@@ -4055,8 +4095,7 @@ function processBotMessages(messages) {
     }
   }, [userDetails.name, router]);
 
-
-    // Call /login endpoint to load user-bot chats into Redis
+  // Call /login endpoint to load user-bot chats into Redis
   useEffect(() => {
     if (!userDetails?.email || !selectedBotId) return;
 
@@ -4077,18 +4116,12 @@ function processBotMessages(messages) {
       });
   }, [userDetails?.email, selectedBotId]);
 
-
-
-
-
   // Add this helper function to filter empty messages
-const filterEmptyMessages = (messages) => {
-  return messages.filter(
-    (msg) =>
-      (msg.text && msg.text.trim() !== "") ||
-      msg.isImageMessage // Allow image messages even if text is empty
-  );
-};
+  const filterEmptyMessages = (messages) => {
+    return messages.filter(
+      (msg) => (msg.text && msg.text.trim() !== "") || msg.isImageMessage // Allow image messages even if text is empty
+    );
+  };
   // Sync the messages with the server
   useEffect(() => {
     const fetchMessages = async () => {
@@ -4113,16 +4146,13 @@ const filterEmptyMessages = (messages) => {
         'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
         JSON string before sending it in the request body. The `await` keyword is used to wait for the
         response from the server before proceeding. */
-        const response = await fetch(
-          "https://api.culturevo.com/sync",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-          }
-        );
+        const response = await fetch("https://api.culturevo.com/sync", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
 
         if (!response.ok) throw new Error("Failed to fetch messages");
 
@@ -4136,36 +4166,36 @@ const filterEmptyMessages = (messages) => {
         specific format (hour:minute AM/PM) in the 'en-US' locale. It then filters out any empty
         messages using the `filterEmptyMessages` function and stores the formatted messages in the
         `formattedMessages` array. */
-// In the sync messages useEffect, after mapping messages:
-const formattedMessages = filterEmptyMessages(
-  rawMessages.map((msg) => ({
-    ...msg,
-    timestamp: new Date(msg.timestamp),
-    // Mark as activity message if platform or activity_name is present
-    isActivityMessage:
-      msg.platform === "game_activity" ||
-      !!msg.activity_name ||
-      msg.isActivityMessage === true,
-    activityId: msg.activity_name || msg.activityId || null,
-  }))
-);
+        // In the sync messages useEffect, after mapping messages:
+        const formattedMessages = filterEmptyMessages(
+          rawMessages.map((msg) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+            // Mark as activity message if platform or activity_name is present
+            isActivityMessage:
+              msg.platform === "game_activity" ||
+              !!msg.activity_name ||
+              msg.isActivityMessage === true,
+            activityId: msg.activity_name || msg.activityId || null,
+          }))
+        );
 
         const defaultMessageText =
           bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
           "Hello, how are you feeling today?";
-const defaultMessage = [
-  {
-    text: defaultMessageText,
-    sender: "bot",
-    timestamp: new Date(),
-    feedback: "",
-    reaction: "",
-    bot_id: selectedBotId,
-    isSystemMessage: isSystemMessageContent(defaultMessageText),
-    voice_only: false, // ✅ FIXED: Explicitly set to false
-    isVoiceRequested: false, // ✅ FIXED: Never voice for default message
-  },
-];
+        const defaultMessage = [
+          {
+            text: defaultMessageText,
+            sender: "bot",
+            timestamp: new Date(),
+            feedback: "",
+            reaction: "",
+            bot_id: selectedBotId,
+            isSystemMessage: isSystemMessageContent(defaultMessageText),
+            voice_only: false, // ✅ FIXED: Explicitly set to false
+            isVoiceRequested: false, // ✅ FIXED: Never voice for default message
+          },
+        ];
         let messagesWithReactions = [];
 
         /* The code is checking if the `formattedMessages` array has a length greater than 0. If
@@ -4227,19 +4257,19 @@ const defaultMessage = [
           const defaultMessageText =
             bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
             "Hello, how are you feeling today?";
-const defaultMessage = [
-  {
-    text: defaultMessageText,
-    sender: "bot",
-    timestamp: new Date(),
-    feedback: "",
-    reaction: "",
-    bot_id: selectedBotId,
-    isSystemMessage: isSystemMessageContent(defaultMessageText),
-    voice_only: false, // ✅ FIXED: Explicitly set to false
-    isVoiceRequested: false, // ✅ FIXED: Never voice for default message
-  },
-];
+          const defaultMessage = [
+            {
+              text: defaultMessageText,
+              sender: "bot",
+              timestamp: new Date(),
+              feedback: "",
+              reaction: "",
+              bot_id: selectedBotId,
+              isSystemMessage: isSystemMessageContent(defaultMessageText),
+              voice_only: false, // ✅ FIXED: Explicitly set to false
+              isVoiceRequested: false, // ✅ FIXED: Never voice for default message
+            },
+          ];
           setMessages(defaultMessage);
         }
       }
@@ -4327,29 +4357,27 @@ const defaultMessage = [
     }
   }, [showReactionsFor]);
 
-
-const toggleReactions = (msgId) => {
-  if (isMobile || msgId == null) return; // Prevent for null id
-  setHighlightedMessage(msgId);
-  setShowReactionsFor(showReactionsFor === msgId ? null : msgId);
-  setShowRemoveTooltip(null);
-};
-
-const toggleRemovalTooltip = (msgId) => {
-  if (msgId == null) return; // Prevent for null id
-  if (showRemoveTooltip === msgId) {
-    setMessages((prevMessages) =>
-      prevMessages.map((msg) =>
-        msg.id === msgId ? { ...msg, reaction: "" } : msg
-      )
-    );
+  const toggleReactions = (msgId) => {
+    if (isMobile || msgId == null) return; // Prevent for null id
+    setHighlightedMessage(msgId);
+    setShowReactionsFor(showReactionsFor === msgId ? null : msgId);
     setShowRemoveTooltip(null);
-  } else {
-    setShowRemoveTooltip(msgId);
-    setShowReactionsFor(null);
-  }
-};
+  };
 
+  const toggleRemovalTooltip = (msgId) => {
+    if (msgId == null) return; // Prevent for null id
+    if (showRemoveTooltip === msgId) {
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === msgId ? { ...msg, reaction: "" } : msg
+        )
+      );
+      setShowRemoveTooltip(null);
+    } else {
+      setShowRemoveTooltip(msgId);
+      setShowReactionsFor(null);
+    }
+  };
 
   // This function handles the user's feedback on a message like or dislike
   const handleFeedback = async (feedback, msg_id) => {
@@ -4389,24 +4417,24 @@ const toggleRemovalTooltip = (msgId) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-async function storeActivityMessageInBackend({ text, sender, activityId }) {
-  try {
-    await fetch("https://api.culturevo.com/store-activity-message", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: userDetails.email,
-        bot_id: selectedBotId,
-        user_message: sender === "user" ? text : "",
-        bot_response: sender === "bot" ? text : "",
-        platform: "game_activity",
-        activity_name: activityId,
-      }),
-    });
-  } catch (e) {
-    console.error("Failed to store activity message:", e);
+  async function storeActivityMessageInBackend({ text, sender, activityId }) {
+    try {
+      await fetch("https://api.culturevo.com/store-activity-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: userDetails.email,
+          bot_id: selectedBotId,
+          user_message: sender === "user" ? text : "",
+          bot_response: sender === "bot" ? text : "",
+          platform: "game_activity",
+          activity_name: activityId,
+        }),
+      });
+    } catch (e) {
+      console.error("Failed to store activity message:", e);
+    }
   }
-}
   const prevMessagesLength = useRef(messages.length);
 
   // When messages change, call scroll to bottom
@@ -4514,20 +4542,20 @@ async function storeActivityMessageInBackend({ text, sender, activityId }) {
               ]);
             } else {
               // Add reminder message to chat
-setMessages((prev) => [
-  ...prev,
-  {
-    text: data.response,
-    sender: "bot",
-    id: data.message_id,
-    feedback: "",
-    reaction: "",
-    timestamp: new Date(),
-    isSystemMessage: true,
-    voice_only: false, // ✅ FIXED: Force reminders to be text-only
-    isVoiceRequested: false, // ✅ FIXED: Explicitly disable voice
-  },
-]);
+              setMessages((prev) => [
+                ...prev,
+                {
+                  text: data.response,
+                  sender: "bot",
+                  id: data.message_id,
+                  feedback: "",
+                  reaction: "",
+                  timestamp: new Date(),
+                  isSystemMessage: true,
+                  voice_only: false, // ✅ FIXED: Force reminders to be text-only
+                  isVoiceRequested: false, // ✅ FIXED: Explicitly disable voice
+                },
+              ]);
 
               setIsTyping(false);
 
@@ -4583,12 +4611,9 @@ setMessages((prev) => [
    * a chatbot API, handling reminders, updating state variables, and displaying messages based on the
    * API response.
    */
-// Function to check if it's time for a weekly voice message (OPTIONAL)
+  // Function to check if it's time for a weekly voice message (OPTIONAL)
 
-
-
-
-/*
+  /*
 const shouldSendWeeklyVoice = () => {
   const lastWeeklyVoice = localStorage.getItem(`lastWeeklyVoice_${selectedBotId}`);
   const now = new Date().getTime();
@@ -4610,22 +4635,24 @@ const shouldSendWeeklyVoice = () => {
     if (!input.trim() && e.reminder != true) return;
 
     const userMessage = input.trim();
-const voiceNotePatterns = [
-  /give.*me.*voice.*note/i,
-  /send.*voice.*note/i,
-  /voice.*message/i,
-  /can.*you.*speak/i,
-  /talk.*to.*me/i,
-  /hear.*your.*voice/i,
-  /voice.*note/i,
-  /speak.*to.*me/i,
-  /voice.*response/i,
-  /send.*me.*audio/i,
-  /audio.*message/i,
-  /want.*to.*hear.*you/i
-];
+    const voiceNotePatterns = [
+      /give.*me.*voice.*note/i,
+      /send.*voice.*note/i,
+      /voice.*message/i,
+      /can.*you.*speak/i,
+      /talk.*to.*me/i,
+      /hear.*your.*voice/i,
+      /voice.*note/i,
+      /speak.*to.*me/i,
+      /voice.*response/i,
+      /send.*me.*audio/i,
+      /audio.*message/i,
+      /want.*to.*hear.*you/i,
+    ];
 
-const isVoiceNoteRequest = voiceNotePatterns.some(pattern => pattern.test(userMessage));
+    const isVoiceNoteRequest = voiceNotePatterns.some((pattern) =>
+      pattern.test(userMessage)
+    );
     // Check if user wants to end activity
     if (
       currentActivity &&
@@ -4639,13 +4666,15 @@ const isVoiceNoteRequest = voiceNotePatterns.some(pattern => pattern.test(userMe
     // ✅ NEW: Check for selfie generation requests
     const selfiePatterns = [
       /\b(?:generate|take|send|show)\b.*\bselfie\b/i,
-      /\bhow.*do.*you.*look\b/i, 
-      /\bwhat.*do.*you.*look.*like\b/i, 
+      /\bhow.*do.*you.*look\b/i,
+      /\bwhat.*do.*you.*look.*like\b/i,
       /\bpicture.*yourself\b/i,
       /\bphoto.*yourself\b/i,
     ];
 
-    const isSelfieRequest = selfiePatterns.some(pattern => pattern.test(userMessage));
+    const isSelfieRequest = selfiePatterns.some((pattern) =>
+      pattern.test(userMessage)
+    );
 
     if (isSelfieRequest && !currentActivity) {
       // Add user message to chat
@@ -4660,7 +4689,7 @@ const isVoiceNoteRequest = voiceNotePatterns.some(pattern => pattern.test(userMe
         },
       ]);
       setInput("");
-      
+
       // Generate selfie
       await handleGenerateSelfie();
       return;
@@ -4682,7 +4711,6 @@ const isVoiceNoteRequest = voiceNotePatterns.some(pattern => pattern.test(userMe
 
     setInput("");
 
-
     // Handle activity-specific messages
     if (currentActivity) {
       await handleActivityMessage(userMessage);
@@ -4690,30 +4718,26 @@ const isVoiceNoteRequest = voiceNotePatterns.some(pattern => pattern.test(userMe
     }
     setIsTyping(true);
     scrollToBottom();
-// Around line 4435, update the voice note request logic:
+    // Around line 4435, update the voice note request logic:
 
-// ✅ ENHANCED: Voice note request patterns
+    // ✅ ENHANCED: Voice note request patterns
 
-
-// ✅ REMOVE WEEKLY LIMIT: Allow unlimited voice requests
-if (isVoiceNoteRequest && !currentActivity) {
-  console.log("✅ Voice note requested by user");
-}
+    // ✅ REMOVE WEEKLY LIMIT: Allow unlimited voice requests
+    if (isVoiceNoteRequest && !currentActivity) {
+      console.log("✅ Voice note requested by user");
+    }
     // 1. If message contains a URL, use /api/news
     if (containsUrl(userMessage)) {
       try {
-        const res = await fetch(
-          "https://api.culturevo.com/api/news",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              query: userMessage,
-              bot_id: selectedBotId,
-              user_email: userDetails?.email || "anonymous@example.com",
-            }),
-          }
-        );
+        const res = await fetch("https://api.culturevo.com/api/news", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: userMessage,
+            bot_id: selectedBotId,
+            user_email: userDetails?.email || "anonymous@example.com",
+          }),
+        });
         const data = await res.json();
 
         if (data.status === "success" && data.ai_response) {
@@ -4823,14 +4847,11 @@ if (isVoiceNoteRequest && !currentActivity) {
       and headers. The response from the server is being stored in the variable `response` using the
       `await` keyword, indicating that the fetch operation is asynchronous. */
 
-      const response = await fetch(
-        "https://api.culturevo.com/cv/chat",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(primaryLlmPayload),
-        }
-      );
+      const response = await fetch("https://api.culturevo.com/cv/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(primaryLlmPayload),
+      });
 
       const data = await response.json();
       // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
@@ -4901,46 +4922,45 @@ if (isVoiceNoteRequest && !currentActivity) {
           JSON.stringify(updatedReminders)
         );
 
-setMessages((prev) => [
-  ...prev,
-  {
-    text: data.response,
-    sender: "bot",
-    id: data.message_id,
-    feedback: "",
-    reaction: "",
-    timestamp: new Date(),
-    isSystemMessage: true,
-    voice_only: false, // ✅ FIXED: Force reminders to be text-only
-    isVoiceRequested: false, // ✅ FIXED: Explicitly disable voice
-  },
-]);
-// Around line 4740, update the bot response creation:
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: data.response,
+            sender: "bot",
+            id: data.message_id,
+            feedback: "",
+            reaction: "",
+            timestamp: new Date(),
+            isSystemMessage: true,
+            voice_only: false, // ✅ FIXED: Force reminders to be text-only
+            isVoiceRequested: false, // ✅ FIXED: Explicitly disable voice
+          },
+        ]);
+        // Around line 4740, update the bot response creation:
+      } else {
+        const shouldBeSystemMessage = isSystemMessageContent(
+          finalMessage || data.response
+        );
 
-} else {
-  const shouldBeSystemMessage = isSystemMessageContent(
-    finalMessage || data.response
-  );
+        // ✅ FIXED: Only create voice message if user explicitly requested it
+        const isVoiceResponse = isVoiceNoteRequest; // Only when user asks
 
-  // ✅ FIXED: Only create voice message if user explicitly requested it
-  const isVoiceResponse = isVoiceNoteRequest; // Only when user asks
-
-  setMessages((prev) => [
-    ...prev,
-    {
-      text: data.response,
-      sender: "bot",
-      id: data.message_id,
-      feedback: "",
-      reaction: "",
-      timestamp: currentTime,
-      bot_id: selectedBotId,
-      isSystemMessage: shouldBeSystemMessage,
-      voice_only: isVoiceResponse, // ✅ Only true if user requested voice
-      isVoiceRequested: isVoiceResponse, // ✅ Track the request
-    },
-  ]);
-}
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: data.response,
+            sender: "bot",
+            id: data.message_id,
+            feedback: "",
+            reaction: "",
+            timestamp: currentTime,
+            bot_id: selectedBotId,
+            isSystemMessage: shouldBeSystemMessage,
+            voice_only: isVoiceResponse, // ✅ Only true if user requested voice
+            isVoiceRequested: isVoiceResponse, // ✅ Track the request
+          },
+        ]);
+      }
       // --- NEW INTEGRATION POINT ---
       // AFTER the primary LLM has responded and its message is displayed,
       // call your backend's /store-message endpoint for categorization and delta logic.
@@ -5179,7 +5199,9 @@ setMessages((prev) => [
               <div className="w-2 h-2 bg-[#3B82F6] rounded-full animate-bounce" />
               <div className="w-2 h-2 bg-[#8B5CF6] rounded-full animate-bounce [animation-delay:0.2s]" />
               <div className="w-2 h-2 bg-[#EC4899] rounded-full animate-bounce [animation-delay:0.4s]" />
-              <span className="ml-2 text-sm text-gray-600">Generating selfie...</span>
+              <span className="ml-2 text-sm text-gray-600">
+                Generating selfie...
+              </span>
             </>
           ) : (
             <>
@@ -5300,7 +5322,7 @@ setMessages((prev) => [
             </div>
           </div>
         )}
-      {/* Selfie Button - Beautiful, centered, above chat messages 
+        {/* Selfie Button - Beautiful, centered, above chat messages 
       {!currentActivity && (
         <div className="w-full flex justify-center items-center py-4">
           <button
@@ -5360,103 +5382,108 @@ setMessages((prev) => [
                       )}
 
                       <div className="flex flex-row items-center gap-2">
-{msg.sender === "bot" ? (
-  msg.voice_only && msg.isVoiceRequested ? ( // ✅ BOTH CONDITIONS
-    <PlayAudio
-      text={msg.text}
-      bot_id={msg.bot_id || selectedBotId}
+                        {msg.sender === "bot" ? (
+                          msg.voice_only && msg.isVoiceRequested ? ( // ✅ BOTH CONDITIONS
+                            <PlayAudio
+                              text={msg.text}
+                              bot_id={msg.bot_id || selectedBotId}
                             />
                           ) : (
                             <>
-<div
-  data-sender="bot"
-  className={
-    msg.isImageMessage
-      ? "p-0 m-0 bg-transparent border-none shadow-none rounded-none w-full text-left"
-      : `px-4 py-2 rounded-2xl ${
-          botThemes[selectedBotId]?.botBubble || "bg-white/20 text-gray-900"
-        } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
-          highlightedMessage === msg.id ? "bg-orange-200/30" : ""
-        } w-full text-left`
-  }
-  style={{
-    userSelect: "none",
-    WebkitUserSelect: "none",
-    WebkitTouchCallout: "none",
-  }}
-  onTouchStart={(e) => {
-    e.preventDefault();
-    handleLongPressStart(msg.id);
-  }}
-  onTouchEnd={handleLongPressEnd}
-  onTouchMove={handleLongPressEnd}
-  onTouchCancel={handleLongPressEnd}
->
-  {msg.isImageMessage ? (
-    <div className="flex flex-col gap-2">
-      <img
-        src={msg.imageUrl}
-        alt="Bot selfie"
-        className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
-        onLoad={() => scrollToBottom()}
-        style={{ backgroundColor: "transparent" }}
-      />
-      {msg.text && (
-        <span className="text-sm">{msg.text}</span>
-      )}
-    </div>
-  ) : (
-  <motion.p>
-    {(typeof msg.text === "string"
-      ? msg.text
-      : ""
-    )
-      .split(" ")
-      .map((word, i) => (
-        <motion.span
-          key={i}
-          initial={{
-            filter: "blur(10px)",
-            opacity: 0,
-            y: 5,
-          }}
-          animate={{
-            filter: "blur(0px)",
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.2,
-            ease: "easeInOut",
-            delay: 0.02 * i,
-          }}
-          className="inline-block select-none"
-        >
-          {word}&nbsp;
-        </motion.span>
-      ))}
-    {(msg.isActivityMessage ||
-      msg.platform === "game_activity" ||
-      msg.activityId) && (
-      <span
-        className="inline-block ml-2 align-middle text-lg"
-        title="Game Activity"
-        style={{ verticalAlign: "middle" }}
-      >
-        🎮
-      </span>
-    )}
-  </motion.p>
-)}
+                              <div
+                                data-sender="bot"
+                                className={
+                                  msg.isImageMessage
+                                    ? "p-0 m-0 bg-transparent border-none shadow-none rounded-none w-full text-left"
+                                    : `px-4 py-2 rounded-2xl ${
+                                        botThemes[selectedBotId]?.botBubble ||
+                                        "bg-white/20 text-gray-900"
+                                      } border border-white/20 backdrop-blur-sm shadow-md placeholder-gray-200 ${
+                                        highlightedMessage === msg.id
+                                          ? "bg-orange-200/30"
+                                          : ""
+                                      } w-full text-left`
+                                }
+                                style={{
+                                  userSelect: "none",
+                                  WebkitUserSelect: "none",
+                                  WebkitTouchCallout: "none",
+                                }}
+                                onTouchStart={(e) => {
+                                  e.preventDefault();
+                                  handleLongPressStart(msg.id);
+                                }}
+                                onTouchEnd={handleLongPressEnd}
+                                onTouchMove={handleLongPressEnd}
+                                onTouchCancel={handleLongPressEnd}
+                              >
+                                {msg.isImageMessage ? (
+                                  <div className="flex flex-col gap-2">
+                                    <img
+                                      src={msg.imageUrl}
+                                      alt="Bot selfie"
+                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+                                      onLoad={() => scrollToBottom()}
+                                      style={{ backgroundColor: "transparent" }}
+                                    />
+                                    {msg.text && (
+                                      <span className="text-sm">
+                                        {msg.text}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <motion.p>
+                                    {(typeof msg.text === "string"
+                                      ? msg.text
+                                      : ""
+                                    )
+                                      .split(" ")
+                                      .map((word, i) => (
+                                        <motion.span
+                                          key={i}
+                                          initial={{
+                                            filter: "blur(10px)",
+                                            opacity: 0,
+                                            y: 5,
+                                          }}
+                                          animate={{
+                                            filter: "blur(0px)",
+                                            opacity: 1,
+                                            y: 0,
+                                          }}
+                                          transition={{
+                                            duration: 0.2,
+                                            ease: "easeInOut",
+                                            delay: 0.02 * i,
+                                          }}
+                                          className="inline-block select-none"
+                                        >
+                                          {word}&nbsp;
+                                        </motion.span>
+                                      ))}
+                                    {(msg.isActivityMessage ||
+                                      msg.platform === "game_activity" ||
+                                      msg.activityId) && (
+                                      <span
+                                        className="inline-block ml-2 align-middle text-lg"
+                                        title="Game Activity"
+                                        style={{ verticalAlign: "middle" }}
+                                      >
+                                        🎮
+                                      </span>
+                                    )}
+                                  </motion.p>
+                                )}
                               </div>
-      {!msg.isImageMessage && (
-        <PlayAudio
-          text={msg.text}
-          bot_id={msg.bot_id || selectedBotId}
-          minimal={true}
-        />
-      )}
-    </>
+                              {!msg.isImageMessage && (
+                                <PlayAudio
+                                  text={msg.text}
+                                  bot_id={msg.bot_id || selectedBotId}
+                                  minimal={true}
+                                />
+                              )}
+                            </>
                           )
                         ) : (
                           <div
@@ -5481,45 +5508,27 @@ setMessages((prev) => [
                               WebkitTouchCallout: "none",
                             }}
                           >
-
-
-
-
-
-{msg.isImageMessage ? (
-  <div className="flex flex-col gap-2">
-    {(() => {
-      console.log("Rendering image:", msg.imageUrl); // <-- This should show up if block is entered
-      return (
-        <img
-          src={msg.imageUrl}
-          alt="Shared image"
-          className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
-          onLoad={() => scrollToBottom()}
-          style={{ backgroundColor: "transparent" }}
-        />
-      );
-    })()}
-    {msg.text && (
-      <span className="text-sm">{msg.text}</span>
-    )}
-  </div>
-) : (
-  msg.text
-)}
-
-
-
-
-
-
-
-
-
-
-
-
-
+                            {msg.isImageMessage ? (
+                              <div className="flex flex-col gap-2">
+                                {(() => {
+                                  console.log("Rendering image:", msg.imageUrl); // <-- This should show up if block is entered
+                                  return (
+                                    <img
+                                      src={msg.imageUrl}
+                                      alt="Shared image"
+                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+                                      onLoad={() => scrollToBottom()}
+                                      style={{ backgroundColor: "transparent" }}
+                                    />
+                                  );
+                                })()}
+                                {msg.text && (
+                                  <span className="text-sm">{msg.text}</span>
+                                )}
+                              </div>
+                            ) : (
+                              msg.text
+                            )}
                           </div>
                         )}
                       </div>
@@ -5665,7 +5674,10 @@ setMessages((prev) => [
         </ScrollArea>
 
         {/* ✅ ENHANCED: Modified form to show activity status */}
-        <form onSubmit={handleSend} className="flex items-center px-1 sm:px-2 pt-2">
+        <form
+          onSubmit={handleSend}
+          className="flex items-center px-1 sm:px-2 pt-2"
+        >
           <Input
             type="text"
             value={input}
