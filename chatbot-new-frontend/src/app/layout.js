@@ -8,6 +8,8 @@ import Script from "next/script";
 import React from "react";
 import GlobalErrorListener from "@/components/GlobalErrorListener";
 import ThemeToggleWrapper from "@/components/ThemeToggleWrapper";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // const GA_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS;
 
 const geistSans = Geist({
@@ -40,6 +42,18 @@ export default function RootLayout({ children }) {
                 <GlobalErrorListener />
                 {children}
                 <ThemeToggleWrapper />
+                <ToastContainer
+                  position="top-right"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="colored"
+                />
               </UserProvider>
             </TraitsProvider>
           </BotProvider>
@@ -53,7 +67,6 @@ export default function RootLayout({ children }) {
         {`window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-1P8TNHE2QZ');`}
       </Script>
     </html>
