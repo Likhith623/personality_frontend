@@ -21,7 +21,7 @@ import { useBot } from "@/support/BotContext";
 import { useTraits } from "@/support/TraitsContext";
 import { useUser } from "@/support/UserContext";
 
-import { Bot, ThumbsDown, ThumbsUp, Trash2, X } from "lucide-react";
+import { Bot, ThumbsDown, ThumbsUp, Trash2, X, Download } from "lucide-react";
 import {
   IconThumbDownFilled,
   IconThumbUpFilled,
@@ -3298,6 +3298,35 @@ const Dashboard = ({
     setIsBackgroundDark(false); // Reset to transparent when closing
   };
 
+  // Add image download helper for selfies
+  const downloadImage = async (imageUrl, filename = "selfie.png") => {
+    try {
+      if (!imageUrl) return;
+      if (imageUrl.startsWith("data:")) {
+        const link = document.createElement("a");
+        link.href = imageUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        return;
+      }
+      const response = await fetch(imageUrl, { mode: "cors" });
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      // Fallback: open in new tab if direct download fails (e.g., CORS)
+      window.open(imageUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   const handleGenerateSelfie = async () => {
     setIsGeneratingSelfie(true);
     setIsTyping(true);
@@ -5484,19 +5513,46 @@ const shouldSendWeeklyVoice = () => {
                               >
                                 {msg.isImageMessage ? (
                                   <div className="flex flex-col gap-2">
-                                    <img
-                                      src={msg.imageUrl}
-                                      alt="Bot selfie"
-                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent cursor-pointer hover:opacity-90 transition-opacity"
-                                      onLoad={() => scrollToBottom()}
-                                      onClick={() =>
-                                        openFullScreenImage(
-                                          msg.imageUrl,
-                                          "Bot selfie"
-                                        )
-                                      }
-                                      style={{ backgroundColor: "transparent" }}
-                                    />
+                                    <div className="flex items-center gap-2">
+                                      <img
+                                        src={msg.imageUrl}
+                                        alt="Bot selfie"
+                                        className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent cursor-pointer hover:opacity-90 transition-opacity"
+                                        onLoad={() => scrollToBottom()}
+                                        onClick={() =>
+                                          openFullScreenImage(
+                                            msg.imageUrl,
+                                            "Bot selfie"
+                                          )
+                                        }
+                                        style={{
+                                          backgroundColor: "transparent",
+                                        }}
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          const ext = msg.imageUrl?.startsWith(
+                                            "data:"
+                                          )
+                                            ? "png"
+                                            : msg.imageUrl
+                                                ?.split(".")
+                                                .pop()
+                                                ?.split("?")[0] || "png";
+                                          downloadImage(
+                                            msg.imageUrl,
+                                            `selfie-${Date.now()}.${ext}`
+                                          );
+                                        }}
+                                        title="Download selfie"
+                                        aria-label="Download selfie"
+                                        className="mt-1 w-8 h-8 rounded-full bg-white/80 backdrop-blur-md border border-gray-200 shadow-sm flex items-center justify-center text-gray-700 hover:bg-white hover:shadow-md flex-shrink-0"
+                                      >
+                                        <Download size={16} />
+                                      </button>
+                                    </div>
                                     {msg.text && (
                                       <span className="text-sm">
                                         {msg.text}
