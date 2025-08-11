@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
@@ -21,7 +21,7 @@ import { useBot } from "@/support/BotContext";
 import { useTraits } from "@/support/TraitsContext";
 import { useUser } from "@/support/UserContext";
 
-import { Bot, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Bot, ThumbsDown, ThumbsUp, Trash2, X } from "lucide-react";
 import {
   IconThumbDownFilled,
   IconThumbUpFilled,
@@ -3275,6 +3275,26 @@ const Dashboard = ({
   const fileInputRef = useRef(null);
   const pathname = usePathname();
   const [isGeneratingSelfie, setIsGeneratingSelfie] = useState(false);
+
+  // Full-screen image viewer state
+  const [fullScreenImage, setFullScreenImage] = useState(null);
+  const [isFullScreenOpen, setIsFullScreenOpen] = useState(false);
+  const [isBackgroundDark, setIsBackgroundDark] = useState(false);
+
+  // Full-screen image handlers
+  const openFullScreenImage = (imageUrl, altText = "Image") => {
+    setFullScreenImage({ url: imageUrl, alt: altText });
+    setIsFullScreenOpen(true);
+    // Set background as dark by default when opening from chat
+    setIsBackgroundDark(true);
+  };
+
+  const closeFullScreenImage = () => {
+    setIsFullScreenOpen(false);
+    setFullScreenImage(null);
+    setIsBackgroundDark(false); // Reset to transparent when closing
+  };
+
   const handleGenerateSelfie = async () => {
     setIsGeneratingSelfie(true);
     setIsTyping(true);
@@ -3742,17 +3762,14 @@ const Dashboard = ({
 
     // Show toast notification instead of adding chat message
     const activityName = currentActivity.replace(/_/g, " ");
-    toast.success(
-      `🎉 Activity "${activityName}" completed!${xpMessage}\n`,
-      {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      }
-    );
+    toast.success(`🎉 Activity "${activityName}" completed!${xpMessage}\n`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
 
     setCurrentActivity(null);
     setActivityHistory([]);
@@ -5238,6 +5255,51 @@ const shouldSendWeeklyVoice = () => {
     </div>
   );
 
+  // Full-screen image viewer component
+  const FullScreenImageViewer = () => {
+    const handleImageClick = () => {
+      setIsBackgroundDark(!isBackgroundDark);
+    };
+
+    const handleBackgroundClick = () => {
+      closeFullScreenImage();
+    };
+
+    if (!isFullScreenOpen || !fullScreenImage || !fullScreenImage.url)
+      return null;
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div
+          className={`w-full h-full flex items-center justify-center relative transition-all duration-300 ${
+            isBackgroundDark ? "bg-black/80" : "bg-transparent"
+          }`}
+          onClick={handleBackgroundClick}
+        >
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              closeFullScreenImage();
+            }}
+            className="absolute top-4 right-4 z-50 w-10 h-10 bg-black/50 backdrop-blur-xl border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-all duration-200 shadow-xl"
+          >
+            <X size={20} />
+          </button>
+          <img
+            src={fullScreenImage.url}
+            alt={fullScreenImage.alt || "Full screen image"}
+            className="max-w-full max-h-full object-contain rounded-lg cursor-pointer"
+            style={{ maxHeight: "90vh", maxWidth: "90vw" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleImageClick();
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
   console.log("All chat messages:", messages);
 
   return (
@@ -5422,8 +5484,14 @@ const shouldSendWeeklyVoice = () => {
                                     <img
                                       src={msg.imageUrl}
                                       alt="Bot selfie"
-                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent cursor-pointer hover:opacity-90 transition-opacity"
                                       onLoad={() => scrollToBottom()}
+                                      onClick={() =>
+                                        openFullScreenImage(
+                                          msg.imageUrl,
+                                          "Bot selfie"
+                                        )
+                                      }
                                       style={{ backgroundColor: "transparent" }}
                                     />
                                     {msg.text && (
@@ -5516,8 +5584,14 @@ const shouldSendWeeklyVoice = () => {
                                     <img
                                       src={msg.imageUrl}
                                       alt="Shared image"
-                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent cursor-pointer hover:opacity-90 transition-opacity"
                                       onLoad={() => scrollToBottom()}
+                                      onClick={() =>
+                                        openFullScreenImage(
+                                          msg.imageUrl,
+                                          "Shared image"
+                                        )
+                                      }
                                       style={{ backgroundColor: "transparent" }}
                                     />
                                   );
@@ -5806,6 +5880,9 @@ const shouldSendWeeklyVoice = () => {
           onActivityStart={startActivity}
           selectedBotId={selectedBotId}
         />
+
+        {/* Full-screen image viewer */}
+        <FullScreenImageViewer />
       </div>
     </>
   );
