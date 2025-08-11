@@ -3185,7 +3185,10 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
               </div>
 
               <button
-                onClick={() => setIsActivitiesOpen(true)}
+                onClick={() => {
+                  setIsActivitiesOpen(true);
+                  setOpen(false);
+                }}
                 className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-blue-400/80 via-purple-400/80 to-pink-400/80 hover:from-blue-400/90 hover:via-purple-400/90 hover:to-pink-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
               >
                 🎮 Activities
