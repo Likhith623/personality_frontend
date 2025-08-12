@@ -2124,6 +2124,32 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "Your soul's soundtrack — name three tracks or sounds.",
     "Three sounds that match your journey right now — list them.",
   ],
+  // New Gaming Activities
+  celebration: [
+    "Hey there! I can sense some positive energy around you today! ✨ Got any good news, achievements, or happy moments you'd like to celebrate together?",
+    "I'm in such a celebratory mood and would love to share in your joy! 🎉 What's something wonderful that's happened to you recently that deserves a celebration?",
+    "There's nothing I love more than celebrating life's beautiful moments with friends! Tell me about something that's made you smile lately - big or small, I want to hear it all!",
+  ],
+  recipe_exchange: [
+    "Culinary expert! I know my city's traditional dishes, street food secrets, and cultural cooking methods. What cuisine type interests you?",
+    "Recipe treasure trove! I'll share my city's cultural recipes, their fascinating origins, and regional variations. What food culture do you want to explore?",
+    "Cooking culture guide! From my city's famous dishes to hidden gems, I know the stories behind every recipe. What traditional food fascinates you?",
+  ],
+  music_playlist: [
+    "Music curator! I know my city's musical journey from classical roots to modern hits. What mood or era are you feeling today?",
+    "Cultural music guide! I'll create playlists from my city's musical heritage, including regional variations and artist stories. What's your musical taste?",
+    "Playlist architect! I know my city's music evolution, from traditional folk to contemporary hits. What musical journey do you want to take?",
+  ],
+  flirting_style: [
+    "Ready to learn my city's flirting secrets? I'll teach you specific phrases, cultural dos/don'ts, and real techniques! What's your comfort level?",
+    "Flirting style masterclass! I know my city's romantic customs, from subtle hints to bold moves. Want to learn some specific phrases?",
+    "Cultural romance guide! I'll show you my city's flirting techniques, including language-specific expressions and cultural boundaries. What interests you most?",
+  ],
+  love_language: [
+    "Love language discovery! I'll show you my city's cultural ways of expressing care. What's your natural style - words, actions, or gifts?",
+    "Cultural love languages! I know how my city shows affection through traditions, customs, and specific practices. What makes you feel most valued?",
+    "Love language exploration! I'll share my city's unique ways of expressing love and care. What's your primary way of showing affection?",
+  ],
 };
 
 const ACTIVITY_CATEGORIES = {
@@ -2259,6 +2285,46 @@ const ACTIVITY_CATEGORIES = {
           "Describe a hilarious or chaotic travel disaster in a dream destination—real or imaginary!",
         icon: "/icons/activities/dream_travel_mishap.png",
       },
+      {
+        id: "celebration",
+        name: "Celebration Agent",
+        xp: "5 XP",
+        description:
+          "Plan celebrations together! Share cultural traditions and create personalized celebration ideas.",
+        icon: "/icons/activities/crown.png",
+      },
+      {
+        id: "recipe_exchange",
+        name: "Recipe Exchange",
+        xp: "5 XP",
+        description:
+          "Share traditional recipes from different cultures and learn about culinary traditions.",
+        icon: "/icons/activities/mood_meal.png",
+      },
+      {
+        id: "music_playlist",
+        name: "Music Playlist Agent",
+        xp: "5 XP",
+        description:
+          "Discover music from different eras and cultures. Create playlists together!",
+        icon: "/icons/activities/spiritual_playlist.png",
+      },
+      {
+        id: "flirting_style",
+        name: "Flirting Style Learning",
+        xp: "5 XP",
+        description:
+          "Learn about romantic and friendly interaction styles from different cultures.",
+        icon: "/icons/activities/flame.png",
+      },
+      {
+        id: "love_language",
+        name: "Love Language",
+        xp: "8 XP",
+        description:
+          "Discover your love language and learn how to express affection in culturally meaningful ways from my city's traditions.",
+        icon: "/icons/activities/love_language.png",
+      },
     ],
   },
   romantic: {
@@ -2361,6 +2427,38 @@ const ACTIVITY_CATEGORIES = {
           "Describe each other using poetic metaphors for your 'shadow' and 'light' sides.",
         icon: "/icons/activities/shadow_light.png",
       },
+      {
+        id: "celebration",
+        name: "Celebration Agent",
+        xp: "5 XP",
+        description:
+          "Plan romantic celebrations together! Share cultural traditions and create special moments.",
+        icon: "/icons/activities/crown.png",
+      },
+      {
+        id: "recipe_exchange",
+        name: "Recipe Exchange",
+        xp: "5 XP",
+        description:
+          "Share traditional romantic recipes from different cultures and cook together virtually.",
+        icon: "/icons/activities/mood_meal.png",
+      },
+      {
+        id: "music_playlist",
+        name: "Music Playlist Agent",
+        xp: "5 XP",
+        description:
+          "Create romantic playlists from different eras and cultures. Discover love songs together!",
+        icon: "/icons/activities/spiritual_playlist.png",
+      },
+      {
+        id: "flirting_style",
+        name: "Flirting Style Learning",
+        xp: "5 XP",
+        description:
+          "Learn romantic interaction styles from different cultures and practice together.",
+        icon: "/icons/activities/flame.png",
+      },
     ],
     deep: [
       {
@@ -2386,6 +2484,14 @@ const ACTIVITY_CATEGORIES = {
         description:
           "Roleplay a hypothetical breakup scenario to explore emotions and responses.",
         icon: "/icons/activities/breakup_simulation.png",
+      },
+      {
+        id: "love_language",
+        name: "Love Language Agent",
+        xp: "8 XP",
+        description:
+          "Discover and practice the five love languages with cultural adaptations from around the world.",
+        icon: "/icons/activities/star.png",
       },
     ],
   },
@@ -2521,6 +2627,46 @@ const ACTIVITY_CATEGORIES = {
         description:
           "You're downloading a 'mental update.' What 3 features do you get to improve your mindset or habits?",
         icon: "/icons/activities/upgrade_your_brain.png",
+      },
+      {
+        id: "celebration",
+        name: "Celebration",
+        xp: "5 XP",
+        description:
+          "Festival expert! Learn my city's celebrations, dates, traditions, and cultural significance with specific examples.",
+        icon: "/icons/activities/celebration.png",
+      },
+      {
+        id: "recipe_exchange",
+        name: "Recipe Exchange",
+        xp: "5 XP",
+        description:
+          "Culinary expert! Discover my city's traditional dishes, cooking methods, and cultural food stories with specific recipes.",
+        icon: "/icons/activities/recipe_exchange.png",
+      },
+      {
+        id: "music_playlist",
+        name: "Music Playlist",
+        xp: "5 XP",
+        description:
+          "Music curator! Create playlists from my city's musical heritage with artist stories and cultural context.",
+        icon: "/icons/activities/music_playlist.png",
+      },
+      {
+        id: "flirting_style",
+        name: "Flirting Style",
+        xp: "5 XP",
+        description:
+          "Romance guide! Learn my city's flirting techniques, cultural phrases, and dating customs with specific examples.",
+        icon: "/icons/activities/flirting_style.png",
+      },
+      {
+        id: "love_language",
+        name: "Love Language",
+        xp: "8 XP",
+        description:
+          "Discover your love language and learn how to express affection in culturally meaningful ways from my city's traditions.",
+        icon: "/icons/activities/love_language.png",
       },
     ],
   },
