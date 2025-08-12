@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import { logClientError } from "@/lib/logClientError";
@@ -21,7 +21,7 @@ import { useBot } from "@/support/BotContext";
 import { useTraits } from "@/support/TraitsContext";
 import { useUser } from "@/support/UserContext";
 
-import { Bot, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Bot, ThumbsDown, ThumbsUp, Trash2, X, Download } from "lucide-react";
 import {
   IconThumbDownFilled,
   IconThumbUpFilled,
@@ -3331,7 +3331,10 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
               </div>
 
               <button
-                onClick={() => setIsActivitiesOpen(true)}
+                onClick={() => {
+                  setIsActivitiesOpen(true);
+                  setOpen(false);
+                }}
                 className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-blue-400/80 via-purple-400/80 to-pink-400/80 hover:from-blue-400/90 hover:via-purple-400/90 hover:to-pink-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
               >
                 🎮 Activities
@@ -3421,6 +3424,55 @@ const Dashboard = ({
   const fileInputRef = useRef(null);
   const pathname = usePathname();
   const [isGeneratingSelfie, setIsGeneratingSelfie] = useState(false);
+
+  // Full-screen image viewer state
+  const [fullScreenImage, setFullScreenImage] = useState(null);
+  const [isFullScreenOpen, setIsFullScreenOpen] = useState(false);
+  const [isBackgroundDark, setIsBackgroundDark] = useState(false);
+
+  // Full-screen image handlers
+  const openFullScreenImage = (imageUrl, altText = "Image") => {
+    setFullScreenImage({ url: imageUrl, alt: altText });
+    setIsFullScreenOpen(true);
+    // Set background as dark by default when opening from chat
+    setIsBackgroundDark(true);
+  };
+
+  const closeFullScreenImage = () => {
+    setIsFullScreenOpen(false);
+    setFullScreenImage(null);
+    setIsBackgroundDark(false); // Reset to transparent when closing
+  };
+
+  // Add image download helper for selfies
+  const downloadImage = async (imageUrl, filename = "selfie.png") => {
+    try {
+      if (!imageUrl) return;
+      if (imageUrl.startsWith("data:")) {
+        const link = document.createElement("a");
+        link.href = imageUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        return;
+      }
+      const response = await fetch(imageUrl, { mode: "cors" });
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      // Fallback: open in new tab if direct download fails (e.g., CORS)
+      window.open(imageUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   const handleGenerateSelfie = async () => {
     setIsGeneratingSelfie(true);
     setIsTyping(true);
@@ -3888,17 +3940,14 @@ const Dashboard = ({
 
     // Show toast notification instead of adding chat message
     const activityName = currentActivity.replace(/_/g, " ");
-    toast.success(
-      `🎉 Activity "${activityName}" completed!${xpMessage}\n`,
-      {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      }
-    );
+    toast.success(`🎉 Activity "${activityName}" completed!${xpMessage}\n`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
 
     setCurrentActivity(null);
     setActivityHistory([]);
@@ -5384,6 +5433,51 @@ const shouldSendWeeklyVoice = () => {
     </div>
   );
 
+  // Full-screen image viewer component
+  const FullScreenImageViewer = () => {
+    const handleImageClick = () => {
+      setIsBackgroundDark(!isBackgroundDark);
+    };
+
+    const handleBackgroundClick = () => {
+      closeFullScreenImage();
+    };
+
+    if (!isFullScreenOpen || !fullScreenImage || !fullScreenImage.url)
+      return null;
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div
+          className={`w-full h-full flex items-center justify-center relative transition-all duration-300 ${
+            isBackgroundDark ? "bg-black/80" : "bg-transparent"
+          }`}
+          onClick={handleBackgroundClick}
+        >
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              closeFullScreenImage();
+            }}
+            className="absolute top-4 right-4 z-50 w-10 h-10 bg-black/50 backdrop-blur-xl border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-all duration-200 shadow-xl"
+          >
+            <X size={20} />
+          </button>
+          <img
+            src={fullScreenImage.url}
+            alt={fullScreenImage.alt || "Full screen image"}
+            className="max-w-full max-h-full object-contain rounded-lg cursor-pointer"
+            style={{ maxHeight: "90vh", maxWidth: "90vw" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleImageClick();
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
   console.log("All chat messages:", messages);
 
   return (
@@ -5565,13 +5659,46 @@ const shouldSendWeeklyVoice = () => {
                               >
                                 {msg.isImageMessage ? (
                                   <div className="flex flex-col gap-2">
-                                    <img
-                                      src={msg.imageUrl}
-                                      alt="Bot selfie"
-                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
-                                      onLoad={() => scrollToBottom()}
-                                      style={{ backgroundColor: "transparent" }}
-                                    />
+                                    <div className="flex items-center gap-2">
+                                      <img
+                                        src={msg.imageUrl}
+                                        alt="Bot selfie"
+                                        className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent cursor-pointer hover:opacity-90 transition-opacity"
+                                        onLoad={() => scrollToBottom()}
+                                        onClick={() =>
+                                          openFullScreenImage(
+                                            msg.imageUrl,
+                                            "Bot selfie"
+                                          )
+                                        }
+                                        style={{
+                                          backgroundColor: "transparent",
+                                        }}
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          const ext = msg.imageUrl?.startsWith(
+                                            "data:"
+                                          )
+                                            ? "png"
+                                            : msg.imageUrl
+                                                ?.split(".")
+                                                .pop()
+                                                ?.split("?")[0] || "png";
+                                          downloadImage(
+                                            msg.imageUrl,
+                                            `selfie-${Date.now()}.${ext}`
+                                          );
+                                        }}
+                                        title="Download selfie"
+                                        aria-label="Download selfie"
+                                        className="mt-1 w-8 h-8 rounded-full bg-white/80 backdrop-blur-md border border-gray-200 shadow-sm flex items-center justify-center text-gray-700 hover:bg-white hover:shadow-md flex-shrink-0"
+                                      >
+                                        <Download size={16} />
+                                      </button>
+                                    </div>
                                     {msg.text && (
                                       <span className="text-sm">
                                         {msg.text}
@@ -5662,8 +5789,14 @@ const shouldSendWeeklyVoice = () => {
                                     <img
                                       src={msg.imageUrl}
                                       alt="Shared image"
-                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent"
+                                      className="max-w-full max-h-64 object-contain rounded-lg shadow-md bg-transparent cursor-pointer hover:opacity-90 transition-opacity"
                                       onLoad={() => scrollToBottom()}
+                                      onClick={() =>
+                                        openFullScreenImage(
+                                          msg.imageUrl,
+                                          "Shared image"
+                                        )
+                                      }
                                       style={{ backgroundColor: "transparent" }}
                                     />
                                   );
@@ -5952,6 +6085,9 @@ const shouldSendWeeklyVoice = () => {
           onActivityStart={startActivity}
           selectedBotId={selectedBotId}
         />
+
+        {/* Full-screen image viewer */}
+        <FullScreenImageViewer />
       </div>
     </>
   );
