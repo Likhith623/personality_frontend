@@ -3940,7 +3940,7 @@ const Dashboard = ({
 
     // Show toast notification instead of adding chat message
     const activityName = currentActivity.replace(/_/g, " ");
-    toast.success(`🎉 Activity "${activityName}" completed!${xpMessage}\n`, {
+    toast.success(`🎉 Activities "${activityName}" completed!${xpMessage}\n`, {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
