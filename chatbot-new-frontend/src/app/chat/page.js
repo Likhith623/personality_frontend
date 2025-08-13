@@ -4319,161 +4319,160 @@ const Dashboard = ({
   };
   // Sync the messages with the server
   useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        // Clear existing messages first when bot changes
-        setMessages([]);
-        setGroupedMessages({});
+  const fetchMessages = async () => {
+    try {
+      // Clear existing messages first when bot changes
+      setMessages([]);
+      setGroupedMessages({});
 
-        // When bot changes, we want to get all messages, not just new ones
-        // Prepare request body - intentionally NOT including the last message ID
-        const body = {
-          email: userDetails.email,
-          bot_id: selectedBotId,
-          messages_id: "",
-          // No lastMessageId included to force full refresh
-        };
+      // --- Sync messages from server ---
+      const syncBody = {
+        email: userDetails.email,
+        bot_id: selectedBotId,
+        messages_id: "", // no lastMessageId to force full refresh
+      };
 
-        // Fetch messages from server
-        /* The POST request to the URL 'http://127.0.0.1:8000/sync' with
-        a JSON payload specified in the `body` variable. The `fetch` function is used to send the request
-        asynchronously. The request includes the method 'POST' and sets the 'Content-Type' header to
-        'application/json'. The `JSON.stringify(body)` function is used to convert the `body` object into a
-        JSON string before sending it in the request body. The `await` keyword is used to wait for the
-        response from the server before proceeding. */
-        const response = await fetch("https://api.culturevo.com/sync", {
+      const syncRes = await fetch("https://api.culturevo.com/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(syncBody),
+      });
+
+      if (!syncRes.ok) throw new Error("Failed to fetch messages");
+
+      const syncData = await syncRes.json();
+      const rawMessages = syncData.response || [];
+
+      const formattedMessages = filterEmptyMessages(
+        rawMessages.map((msg) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+          isActivityMessage:
+            msg.platform === "game_activity" ||
+            !!msg.activity_name ||
+            msg.isActivityMessage === true,
+          activityId: msg.activity_name || msg.activityId || null,
+        }))
+      );
+
+      // --- Fetch festival message ---
+      const botLocation = getBotLocation(selectedBotId);
+      const festivalPayload = {
+        user_email: userDetails.email,
+        bot_id: selectedBotId,
+        user_name: userDetails.name,
+        user_location: userDetails.location || "unknown",
+        bot_location: botLocation,
+      };
+
+      const festRes = await fetch(
+        "https://festival-agent-233451779807.asia-south1.run.app/festivals/",
+        {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(festivalPayload),
+        }
+      );
 
-        if (!response.ok) throw new Error("Failed to fetch messages");
-
-        const newMessages = await response.json();
-        console.log("New messages from server:", newMessages.response);
-
-        const rawMessages = newMessages.response || [];
-        // Format timestamps and filter empty messages
-        /* The code is taking an array of messages from `newMessages.response`, mapping over each
-        message to format the timestamp using `toLocaleTimeString` method to display the time in a
-        specific format (hour:minute AM/PM) in the 'en-US' locale. It then filters out any empty
-        messages using the `filterEmptyMessages` function and stores the formatted messages in the
-        `formattedMessages` array. */
-        // In the sync messages useEffect, after mapping messages:
-        const formattedMessages = filterEmptyMessages(
-          rawMessages.map((msg) => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp),
-            // Mark as activity message if platform or activity_name is present
-            isActivityMessage:
-              msg.platform === "game_activity" ||
-              !!msg.activity_name ||
-              msg.isActivityMessage === true,
-            activityId: msg.activity_name || msg.activityId || null,
-          }))
-        );
-
-        const defaultMessageText =
-          bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
-          "Hello, how are you feeling today?";
-        const defaultMessage = [
-          {
-            text: defaultMessageText,
+      let festivalMessage = null;
+      if (festRes.ok) {
+        const festData = await festRes.json();
+        if (festData?.message?.trim()) {
+          festivalMessage = {
+            id: "festival-msg",
+            text: festData.message,
             sender: "bot",
             timestamp: new Date(),
             feedback: "",
             reaction: "",
             bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(defaultMessageText),
-            voice_only: false, // ✅ FIXED: Explicitly set to false
-            isVoiceRequested: false, // ✅ FIXED: Never voice for default message
-          },
-        ];
-        let messagesWithReactions = [];
-
-        /* The code is checking if the `formattedMessages` array has a length greater than 0. If
-        it does, it sets the messages directly from the server response and stores them in the local
-        storage. If `formattedMessages` is empty, it sets a default message "Hello, how are you
-        feeling today?" from a bot and stores it in the local storage. The code ensures that the
-        chat messages are either refreshed from the server response or set to a default message if
-        no messages are available. */
-        if (formattedMessages.length > 0) {
-          // Get stored reactions from localStorage
-          const storedReactions = JSON.parse(
-            localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
-          );
-
-          // Apply stored reactions to messages
-          messagesWithReactions = formattedMessages.map((msg) => ({
-            ...msg,
-            reaction: storedReactions[msg.id] || "",
-            bot_id: msg.bot_id || selectedBotId,
-          }));
-
-          setMessages(messagesWithReactions);
-          localStorage.setItem(
-            `chat_${selectedBotId}`,
-            JSON.stringify(
-              messagesWithReactions.map((msg) => ({
-                ...msg,
-                timestamp: msg.timestamp.toISOString(),
-              }))
-            )
-          );
-        } else {
-          // If no messages from server and no stored messages, set default message
-          setMessages(defaultMessage);
-          localStorage.setItem(
-            `chat_${selectedBotId}`,
-            JSON.stringify(
-              defaultMessage.map((msg) => ({
-                ...msg,
-                timestamp: msg.timestamp.toISOString(),
-              }))
-            )
-          );
-        }
-      } catch (error) {
-        logClientError(error, { source: "sync API Call" });
-        console.error("Error fetching messages:", error);
-        // Set default message if fetch fails
-        const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
-        if (loadedMessages) {
-          setMessages(
-            JSON.parse(loadedMessages).map((msg) => ({
-              ...msg,
-              timestamp: new Date(msg.timestamp),
-            }))
-          );
-        } else {
-          // If nothing in localStorage either, show default message
-          const defaultMessageText =
-            bot_details.find((bot) => bot.bot_id == selectedBotId)?.quote ||
-            "Hello, how are you feeling today?";
-          const defaultMessage = [
-            {
-              text: defaultMessageText,
-              sender: "bot",
-              timestamp: new Date(),
-              feedback: "",
-              reaction: "",
-              bot_id: selectedBotId,
-              isSystemMessage: isSystemMessageContent(defaultMessageText),
-              voice_only: false, // ✅ FIXED: Explicitly set to false
-              isVoiceRequested: false, // ✅ FIXED: Never voice for default message
-            },
-          ];
-          setMessages(defaultMessage);
+            isSystemMessage: isSystemMessageContent(festData.message),
+          };
         }
       }
-    };
 
-    // Reset messages state before fetching new ones
-    fetchMessages();
+      // --- Combine messages ---
+      const existingIds = formattedMessages.map((m) => m.id);
+      let finalMessages = [...formattedMessages];
+
+      if (festivalMessage && !existingIds.includes(festivalMessage.id)) {
+        finalMessages.push(festivalMessage);
+      }
+
+      // --- Default message fallback ---
+      if (finalMessages.length === 0) {
+        const defaultText =
+          bot_details.find((b) => b.bot_id === selectedBotId)?.quote ||
+          "Hello, how are you feeling today?";
+        finalMessages = [
+          {
+            id: "fallback-msg",
+            text: defaultText,
+            sender: "bot",
+            timestamp: new Date(),
+            feedback: "",
+            reaction: "",
+            bot_id: selectedBotId,
+            isSystemMessage: isSystemMessageContent(defaultText),
+          },
+        ];
+      }
+
+      // --- Apply reactions from localStorage ---
+      const storedReactions = JSON.parse(
+        localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
+      );
+      finalMessages = finalMessages.map((msg) => ({
+        ...msg,
+        reaction: storedReactions[msg.id] || "",
+      }));
+
+      // --- Set state and localStorage ---
+      setMessages(finalMessages);
+      localStorage.setItem(
+        `chat_${selectedBotId}`,
+        JSON.stringify(
+          finalMessages.map((msg) => ({
+            ...msg,
+            timestamp: msg.timestamp.toISOString(),
+          }))
+        )
+      );
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+
+      // Fallback to localStorage if fetch fails
+      const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
+      if (loadedMessages) {
+        setMessages(
+          JSON.parse(loadedMessages).map((msg) => ({
+            ...msg,
+            timestamp: new Date(msg.timestamp),
+          }))
+        );
+      } else {
+        const defaultText =
+          bot_details.find((b) => b.bot_id === selectedBotId)?.quote ||
+          "Hello, how are you feeling today?";
+        setMessages([
+          {
+            id: "fallback-msg",
+            text: defaultText,
+            sender: "bot",
+            timestamp: new Date(),
+            feedback: "",
+            reaction: "",
+            bot_id: selectedBotId,
+            isSystemMessage: isSystemMessageContent(defaultText),
+          },
+        ]);
+      }
+    }
     setClearChatCalled(false);
-  }, [selectedBotId, userDetails.email]);
+  };
+
+  fetchMessages();
+}, [selectedBotId, userDetails.email]);
 
   // Save the messages to localStorage when they change
   useEffect(() => {
