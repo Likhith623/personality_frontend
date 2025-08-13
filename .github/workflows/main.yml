@@ -37,48 +37,35 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_KEY }}
 
-      - name: Set up gcloud CLI
-        uses: google-github-actions/setup-gcloud@v1
-
-      - name: Authenticate using JSON key
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: '${{ secrets.NOVI_FE }}'
-        
   deploy-dev:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Authenticate using JSON key
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: '${{ secrets.NOVI_FE }}'
-          
-      - name: Set GCP project
-        run: gcloud config set project cvoapi
-
-      - name: Deploy to Cloud Run dev
+      - name: Set up SSH
         run: |
-          gcloud run deploy novife-frontend-dev \
-            --source=./chatbot-new-frontend \
-            --region=us-central1 \
-            --platform=managed \
-            --allow-unauthenticated \
-            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }}
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to VM (Dev)
+        run: |
+          ssh ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} "
+            cd ~/chatbot-new-frontend || git clone https://github.com/${{ github.repository }}.git && cd chatbot-new-frontend
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart all || pm2 start npm --name 'novife-dev' -- run start
+          "
 
   approval:
     needs: deploy-dev
     runs-on: ubuntu-latest
     environment:
       name: production
-
     steps:
       - name: Await manual approval
         run: echo "Waiting for production deployment approval..."
@@ -86,28 +73,23 @@ jobs:
   deploy-prod:
     needs: approval
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Authenticate using JSON key
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: '${{ secrets.NOVI_FE }}'
-          
-      - name: Set GCP project
-        run: gcloud config set project cvoapi
-
-      - name: Deploy to Cloud Run prod
+      - name: Set up SSH
         run: |
-          gcloud run deploy novife-frontend-prod \
-            --source=./chatbot-new-frontend \
-            --region=us-central1 \
-            --platform=managed \
-            --allow-unauthenticated \
-            --set-env-vars NEXT_PUBLIC_SUPABASE_URL=${{ secrets.SUPABASE_URL }},NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.SUPABASE_KEY }} \
-            --project=cvoapi
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to VM (Prod)
+        run: |
+          ssh ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} "
+            cd ~/chatbot-new-frontend || git clone https://github.com/${{ github.repository }}.git && cd chatbot-new-frontend
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart all || pm2 start npm --name 'novife-prod' -- run start
+          "
