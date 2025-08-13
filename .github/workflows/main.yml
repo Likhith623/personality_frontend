@@ -54,11 +54,16 @@ jobs:
       - name: Deploy to VM (Dev)
         run: |
           ssh ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} "
-            cd ~/chatbot-new-frontend || git clone https://github.com/${{ github.repository }}.git && cd chatbot-new-frontend
+            if [ ! -d ~/chatbot-new-frontend ]; then
+              git clone https://github.com/${{ github.repository }}.git ~/chatbot-new-frontend
+            fi
+            cd ~/chatbot-new-frontend
+            git reset --hard
+            git clean -fd
             git pull origin main
             npm install
             npm run build
-            pm2 restart all || pm2 start npm --name 'novife-dev' -- run start
+            pm2 restart novi-frontend || pm2 start npm --name 'novife-dev' -- run start
           "
 
   approval:
@@ -87,9 +92,14 @@ jobs:
       - name: Deploy to VM (Prod)
         run: |
           ssh ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} "
-            cd ~/chatbot-new-frontend || git clone https://github.com/${{ github.repository }}.git && cd chatbot-new-frontend
+            if [ ! -d ~/chatbot-new-frontend ]; then
+              git clone https://github.com/${{ github.repository }}.git ~/chatbot-new-frontend
+            fi
+            cd ~/chatbot-new-frontend
+            git reset --hard
+            git clean -fd
             git pull origin main
             npm install
             npm run build
-            pm2 restart all || pm2 start npm --name 'novife-prod' -- run start
+            pm2 restart novi-frontend || pm2 start npm --name 'novife-prod' -- run start
           "
