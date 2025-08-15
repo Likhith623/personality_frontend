@@ -887,6 +887,7 @@ const History = () => {
                 </div>
               ) : (
                 chattedBots.map((bot) => {
+                  const msg = latestMessages[bot.bot_id] || {};
                   const botDetails = getBotDetails(bot.bot_id);
                   return (
                     <Card
@@ -917,7 +918,7 @@ const History = () => {
                             </div>
                             <div className="bg-gray-100 dark:bg-gray-800/20 rounded-xl p-4 group-hover:bg-white/80 dark:group-hover:bg-gray-700/20 transition-colors duration-300 overflow-hidden flex flex-col justify-between space-y-2">
                               <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 md:text-md line-clamp-2">
-                                {botDetails?.quote}
+                                 {msg.text || botDetails?.quote}
                               </p>
                               <span className="lg:hidden text-sm text-gray-600 dark:text-gray-300 inline-flex items-center">
                                 <Clock className="h-3 w-3 mr-1.5" />
