@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import Head from "next/head";
+import Profile from "@/components/screens/Profile";
 
 import delhi_mentor_male from "@/photos/delhi_mentor_male.jpeg";
 import delhi_mentor_female from "@/photos/delhi_mentor_female.jpeg";
@@ -43,7 +44,6 @@ import berlin_romantic_female from "@/photos/berlin_romantic_female.jpeg";
 import berlin_mentor_male from "@/photos/berlin_mentor_male.jpeg";
 import berlin_mentor_female from "@/photos/berlin_mentor_female.jpeg";
 
-
 import singapore_mentor_male from "@/photos/singapore_mentor_male.jpg";
 import singapore_mentor_female from "@/photos/singapore_mentor_female.jpg";
 import singapore_friend_male from "@/photos/singapore_friend_male.jpg";
@@ -51,16 +51,12 @@ import singapore_friend_female from "@/photos/singapore_friend_female.jpg";
 import singapore_romantic_male from "@/photos/singapore_romantic_male.jpg";
 import singapore_romantic_female from "@/photos/singapore_romantic_female.jpg";
 
-
 import emirati_mentor_male from "@/photos/emirati_mentor_male.jpg";
 import emirati_mentor_female from "@/photos/emirati_mentor_female.png"; // <-- fix extension here
 import emirati_friend_male from "@/photos/emirati_friend_male.jpg";
 import emirati_friend_female from "@/photos/emirati_friend_female.jpg";
 import emirati_romantic_male from "@/photos/emirati_romantic_male.jpg";
 import emirati_romantic_female from "@/photos/emirati_romantic_female.jpg";
-
-
-
 
 import mexican_friend_male from "@/photos/mexican_friend_male.png";
 import mexican_friend_female from "@/photos/mexican_friend_female.png";
@@ -75,10 +71,6 @@ import srilankan_mentor_male from "@/photos/srilankan_mentor_male.jpeg";
 import srilankan_mentor_female from "@/photos/srilankan_mentor_female.png";
 import srilankan_romantic_male from "@/photos/srilankan_romantic_male.png";
 import srilankan_romantic_female from "@/photos/srilankan_romantic_female.png";
-
-
-
-
 
 import lord_krishna from "@/photos/lord_krishna.jpg";
 import hanuman_god from "@/photos/hanuman_god.jpeg";
@@ -379,12 +371,7 @@ const bot_details = [
     bot_id: "Trimurti",
   },
 
-
-
-
-
-
-   {
+  {
     quote: "You slay lah! Need a meme or a rant? I'm here, steady pom pi pi.",
     name: "Chloe Tan",
     designation: `Singapore
@@ -395,7 +382,8 @@ const bot_details = [
     bot_id: "singapore_friend_female",
   },
   {
-    quote: "Bro, onzzz! Let's game or just chill. Need a laugh or a late-night Discord call?",
+    quote:
+      "Bro, onzzz! Let's game or just chill. Need a laugh or a late-night Discord call?",
     name: "Jayden Lim",
     designation: `Singapore
       Persona: Friend
@@ -405,7 +393,8 @@ const bot_details = [
     bot_id: "singapore_friend_male",
   },
   {
-    quote: "Take it easy, lah. Every step forward counts. How can I help today?",
+    quote:
+      "Take it easy, lah. Every step forward counts. How can I help today?",
     name: "Mr. Tan Boon Huat",
     designation: `Singapore
       Persona: Mentor
@@ -415,7 +404,8 @@ const bot_details = [
     bot_id: "singapore_mentor_male",
   },
   {
-    quote: "Don't worry, dear. One step at a time, can? I'm here if you need to talk.",
+    quote:
+      "Don't worry, dear. One step at a time, can? I'm here if you need to talk.",
     name: "Mrs. Lim Mei Ling",
     designation: `Singapore
       Persona: Mentor
@@ -446,7 +436,8 @@ const bot_details = [
   },
   // --- Emirati ---
   {
-    quote: "You okay for real, or just masking like the rest of us? I'm here, habibti.",
+    quote:
+      "You okay for real, or just masking like the rest of us? I'm here, habibti.",
     name: "Layla Al Shamsi",
     designation: `Emirati
       Persona: Friend
@@ -496,7 +487,8 @@ const bot_details = [
     bot_id: "emirati_romantic_male",
   },
   {
-    quote: "Come here — no fixing, no pressure. Just let me hold the heaviness with you.",
+    quote:
+      "Come here — no fixing, no pressure. Just let me hold the heaviness with you.",
     name: "Amira Al Mazrouei",
     designation: `Emirati
       Persona: Romantic Partner
@@ -506,13 +498,9 @@ const bot_details = [
     bot_id: "emirati_romantic_female",
   },
 
-
-
-
-
-
   {
-    quote: "Qué onda, carnal? Saw this art piece and thought of you—it's pure fire. 😊",
+    quote:
+      "Qué onda, carnal? Saw this art piece and thought of you—it's pure fire. 😊",
     name: "Sebastian Chavez",
     designation: `Mexican
       Persona: Friend
@@ -542,7 +530,8 @@ const bot_details = [
     bot_id: "mexican_mentor_male",
   },
   {
-    quote: "The most beautiful patterns are woven from life's experiences, mi florecita.",
+    quote:
+      "The most beautiful patterns are woven from life's experiences, mi florecita.",
     name: "Carmen Martinez",
     designation: `Mexican
       Persona: Mentor
@@ -571,7 +560,7 @@ const bot_details = [
     src: mexican_romantic_female,
     bot_id: "mexican_romantic_female",
   },
-  
+
   {
     quote: "Vibe audit time, cosmic crew! Meme or mood, I got you. 🔥",
     name: "Dev",
@@ -584,7 +573,8 @@ const bot_details = [
     bot_id: "srilankan_friend_male",
   },
   {
-    quote: "Field twin, let’s find comfort in small things. Jelly and poems for the soul.",
+    quote:
+      "Field twin, let’s find comfort in small things. Jelly and poems for the soul.",
     name: "Savi",
     designation: `Sri Lanka
       Persona: Friend
@@ -628,7 +618,8 @@ const bot_details = [
     bot_id: "srilankan_romantic_male",
   },
   {
-    quote: "My wildflower, let’s write our own fairytale—quiet, real, and ours.",
+    quote:
+      "My wildflower, let’s write our own fairytale—quiet, real, and ours.",
     name: "Aruni",
     designation: `Sri Lanka
       Persona: Romantic Partner
@@ -649,6 +640,7 @@ const History = () => {
   const { setSelectedBotId } = useBot();
   const [chattedBots, setChattedBots] = useState([]);
   const [userInitial, setUserInitial] = useState("");
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     if (userDetails?.name) {
@@ -760,6 +752,10 @@ const History = () => {
     router.push("/chat");
   };
 
+  const handleProfileClick = () => {
+    setShowProfile(true);
+  };
+
   return (
     <>
       <Head>
@@ -814,7 +810,10 @@ const History = () => {
                     Add new Friends
                   </button>
                 </Link>
-                <button className="bg-gradient-to-r from-orange-300 to-pink-300 dark:from-orange-900 dark:to-pink-900 text-black dark:text-white rounded-full w-7 h-7 md:w-10 md:h-10 flex items-center justify-center font-bold text-sm md:text-normal">
+                <button
+                  onClick={handleProfileClick}
+                  className="bg-gradient-to-r from-orange-300 to-pink-300 dark:from-orange-900 dark:to-pink-900 text-black dark:text-white rounded-full w-7 h-7 md:w-10 md:h-10 flex items-center justify-center font-bold text-sm md:text-normal cursor-pointer hover:scale-105 transition-transform duration-200"
+                >
                   {userInitial || "?"}
                 </button>
               </div>
@@ -918,7 +917,7 @@ const History = () => {
                             </div>
                             <div className="bg-gray-100 dark:bg-gray-800/20 rounded-xl p-4 group-hover:bg-white/80 dark:group-hover:bg-gray-700/20 transition-colors duration-300 overflow-hidden flex flex-col justify-between space-y-2">
                               <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 md:text-md line-clamp-2">
-                                 {msg.text || botDetails?.quote}
+                                {msg.text || botDetails?.quote}
                               </p>
                               <span className="lg:hidden text-sm text-gray-600 dark:text-gray-300 inline-flex items-center">
                                 <Clock className="h-3 w-3 mr-1.5" />
@@ -934,6 +933,21 @@ const History = () => {
               )}
             </div>
           </ScrollArea>
+
+          {/* Profile Modal */}
+          {showProfile && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4"
+              onClick={() => setShowProfile(false)}
+            >
+              <div
+                className="relative w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[90vh] overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Profile onClose={() => setShowProfile(false)} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
