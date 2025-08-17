@@ -3729,6 +3729,11 @@ const Dashboard = ({
   const [highlightedMessage, setHighlightedMessage] = useState(null);
   // Define available emoticons
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
+  // Controls visibility of the sticky date chip while scrolling
+  const [showDateChip, setShowDateChip] = useState(false);
+  const scrollIdleTimerRef = useRef(null);
+  const chatViewportRef = useRef(null);
+  const [isFadingOutChip, setIsFadingOutChip] = useState(false);
   // ✅ ADD: Bot location function
   const getBotLocation = (botId) => {
     if (botId.includes("delhi")) return "Delhi";
@@ -4223,6 +4228,31 @@ const Dashboard = ({
       document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [showReactionsFor]);
+
+  // Show date chip while scrolling and fade it out when scrolling stops
+  const handleChatScroll = () => {
+    if (!showDateChip) {
+      setIsFadingOutChip(false);
+      setShowDateChip(true);
+    } else {
+      setIsFadingOutChip(false);
+    }
+    if (scrollIdleTimerRef.current) clearTimeout(scrollIdleTimerRef.current);
+    scrollIdleTimerRef.current = setTimeout(() => {
+      setIsFadingOutChip(true);
+      // Hide after fade-out completes
+      setTimeout(() => {
+        setShowDateChip(false);
+        setIsFadingOutChip(false);
+      }, 600);
+    }, 1500);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (scrollIdleTimerRef.current) clearTimeout(scrollIdleTimerRef.current);
+    };
+  }, []);
 
   // Format date for grouping messages
   const formatDate = (timestamp) => {
@@ -5601,11 +5631,23 @@ const shouldSendWeeklyVoice = () => {
           <span className="ml-3 text-sm text-gray-400">See how your bot might look right now!</span>
         </div>
       )} */}
-        <ScrollArea className="flex-1">
+        <ScrollArea
+          className="flex-1"
+          onScroll={handleChatScroll}
+          viewportRef={chatViewportRef}
+        >
           <div className="px-1 sm:px-2 md:px-2">
             {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
               <div key={date}>
-                <div className="sticky top-5 z-10 my-6 sm:my-10 py-2 mx-auto w-24 sm:w-32 bg-gray-200/40 backdrop-blur-sm backdrop-saturate-150 rounded-md shadow-md">
+                <div
+                  className={`sticky top-5 z-10 my-6 sm:my-10 py-2 mx-auto w-24 sm:w-32 bg-gray-700/90 rounded-md shadow-md ${
+                    showDateChip
+                      ? isFadingOutChip
+                        ? "fade-out-chip"
+                        : "fade-in-chip"
+                      : "opacity-0 pointer-events-none"
+                  }`}
+                >
                   <p
                     className={`text-center text-xs sm:text-sm ${
                       isDarkTheme ? `${textColorClass}` : `${textColorClass}`
