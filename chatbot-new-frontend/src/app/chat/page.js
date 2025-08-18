@@ -2150,8 +2150,20 @@ const ACTIVITY_PROMPT_VARIATIONS = {
     "Cultural love languages! I know how my city shows affection through traditions, customs, and specific practices. What makes you feel most valued?",
     "Love language exploration! I'll share my city's unique ways of expressing love and care. What's your primary way of showing affection?",
   ],
-};
+  two_truths_and_a_lie: [
+    "Game time! We're playing 'Two Truths and a Lie'—I'll share three statements, and you guess which one is false. Ready?",
+    "Playful challenge! I'll give you two truths and one sneaky lie—see if you can spot the fake. Want to try?",
+    "Fun guessing game! I'll drop three statements, two real and one not—your job is to catch the lie. Let's go!",
+  ],
 
+  co_create_story: [
+      "Let's build a story together! I'll start with one line, then you add the next. Want to dive in?",
+      "Story time! I'll begin weaving a tale set in my world, then you carry it forward. Shall we?",
+      "Imaginative adventure! I'll add one playful line to our story, and you continue the journey. Ready to co-create?",
+  ],
+
+};
+//activity displays 
 const ACTIVITY_CATEGORIES = {
   friend: {
     light: [
@@ -2242,6 +2254,22 @@ const ACTIVITY_CATEGORIES = {
         description:
           "List wild or silly things you'll never do in your life—on purpose!",
         icon: "/icons/activities/reverse_bucket_list.png",
+      },
+      {
+        id: "two_truths_and_a_lie",
+        name: "Two Truths and a Lie",
+        xp: "5 XP",
+        description:
+          "A playful guessing game—share three statements, two true and one false, and let your partner spot the lie!",
+        icon: "/icons/activities/two_truths_and_a_lie.png",
+      },
+      {
+        id: "co_create_story",
+        name: "Co-Create Story",
+        xp: "5 XP",
+        description:
+          "Build a fun, collaborative story together—each turn adds a new line, keeping it short, creative, and playful!",
+        icon: "/icons/activities/co_create_story.png",
       },
     ],
     deep: [
@@ -2459,6 +2487,23 @@ const ACTIVITY_CATEGORIES = {
           "Learn romantic interaction styles from different cultures and practice together.",
         icon: "/icons/activities/flame.png",
       },
+      {
+        id: "two_truths_and_a_lie",
+        name: "Two Truths and a Lie",
+        xp: "5 XP",
+        description:
+          "A playful guessing game—share three statements, two true and one false, and let your partner spot the lie!",
+        icon: "/icons/activities/two_truths_and_a_lie.png",
+      },
+      {
+        id: "co_create_story",
+        name: "Co-Create Story",
+        xp: "5 XP",
+        description:
+          "Build a fun, collaborative story together—each turn adds a new line, keeping it short, creative, and playful!",
+        icon: "/icons/activities/co_create_story.png",
+      },
+
     ],
     deep: [
       {
@@ -2553,6 +2598,22 @@ const ACTIVITY_CATEGORIES = {
         description:
           "Roleplay teaching the bot a life skill, and they'll act as your student.",
         icon: "/icons/activities/skill.png",
+      },
+      {
+        id: "two_truths_and_a_lie",
+        name: "Two Truths and a Lie",
+        xp: "5 XP",
+        description:
+          "A playful guessing game—share three statements, two true and one false, and let your partner spot the lie!",
+        icon: "/icons/activities/two_truths_and_a_lie.png",
+      },
+      {
+        id: "co_create_story",
+        name: "Co-Create Story",
+        xp: "5 XP",
+        description:
+          "Build a fun, collaborative story together—each turn adds a new line, keeping it short, creative, and playful!",
+        icon: "/icons/activities/co_create_story.png",
       },
     ],
     deep: [
@@ -2770,6 +2831,22 @@ const ACTIVITY_CATEGORIES = {
           "Imagine your shadow could speak for a day. What hidden part of yourself would it reveal or question?",
         icon: "/icons/activities/shadow_companion.png",
       },
+      {
+        id: "two_truths_and_a_lie",
+        name: "Two Truths and a Lie",
+        xp: "5 XP",
+        description:
+          "A playful guessing game—share three statements, two true and one false, and let your partner spot the lie!",
+        icon: "/icons/activities/two_truths_and_a_lie.png",
+      },
+      {
+        id: "co_create_story",
+        name: "Co-Create Story",
+        xp: "5 XP",
+        description:
+          "Build a fun, collaborative story together—each turn adds a new line, keeping it short, creative, and playful!",
+        icon: "/icons/activities/co_create_story.png",
+      },
     ],
     deep: [
       {
@@ -2839,6 +2916,8 @@ const ACTIVITY_CATEGORY_MAP = {
   karma_knot: "AI Fiction",
   mini_moksha_simulation: "AI Fiction",
   divine_mirror: "AI Art",
+  two_truths_and_a_lie: "Entertainment",
+  co_create_story: "AI Fiction",
 };
 
 const CATEGORY_ICONS = {
@@ -3107,9 +3186,15 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
   const handleBotCustomization = (customizations) => {
     setCustomName(customizations.name);
   };
-
+            /* The above code is making a POST request to the URL
+            'http://127.0.0.1:8000/updated-clear-chat' with a JSON payload. The payload is
+            being stringified using `JSON.stringify()` before sending the request. The request
+            includes the 'Content-Type' header set to 'application/json'. The `await` keyword
+            indicates that the code is using asynchronous JavaScript, likely within an async
+            function. */
   const clearChat = async () => {
     const response = await fetch(
+      
       "https://novi.aigurukul.dev/updated-clear-chat",
       {
         method: "POST",
@@ -3130,7 +3215,12 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
     setMessages([]);
     setClearChatCalled(true);
   };
-
+            /* The above code is making a POST request to the URL
+            'http://127.0.0.1:8000/updated-forgetfriend' with a JSON payload. The payload is
+            being stringified using `JSON.stringify()` before sending the request. The request
+            includes the 'Content-Type' header set to 'application/json'. The `await` keyword
+            indicates that the code is using asynchronous JavaScript, likely within an async
+            function. */
   const forgetFriend = async () => {
     const response = await fetch(
       "https://novi.aigurukul.dev/updated-forgetfriend",
@@ -3472,7 +3562,6 @@ const Dashboard = ({
       window.open(imageUrl, "_blank", "noopener,noreferrer");
     }
   };
-
   const handleGenerateSelfie = async () => {
     setIsGeneratingSelfie(true);
     setIsTyping(true);
@@ -3547,7 +3636,6 @@ const Dashboard = ({
       scrollToBottom();
     }
   };
-
   useEffect(() => {
     const handleEndChat = () => {
       if (userDetails?.email && selectedBotId) {
@@ -3888,8 +3976,8 @@ const Dashboard = ({
       isSystemMessage: true,
       isActivityMessage: true,
       activityId: activityId,
-      voice_only: false, // ✅ FIXED: Activities are always text-only
-      isVoiceRequested: false, // ✅ FIXED: Never voice for activities
+      voice_only: false, // FIXED: Activities are always text-only
+      isVoiceRequested: false, // FIXED: Never voice for activities
     };
 
     // Replace placeholders
@@ -4293,7 +4381,7 @@ const Dashboard = ({
   // Call /login endpoint to load user-bot chats into Redis
   useEffect(() => {
     if (!userDetails?.email || !selectedBotId) return;
-
+    
     fetch("https://api.culturevo.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -4319,160 +4407,172 @@ const Dashboard = ({
   };
   // Sync the messages with the server
   useEffect(() => {
-  const fetchMessages = async () => {
-    try {
-      // Clear existing messages first when bot changes
-      setMessages([]);
-      setGroupedMessages({});
+    const fetchMessages = async () => {
+      try {
+        // Clear existing messages first when bot changes
+        setMessages([]);
+        setGroupedMessages({});
 
-      // --- Sync messages from server ---
-      const syncBody = {
-        email: userDetails.email,
-        bot_id: selectedBotId,
-        messages_id: "", // no lastMessageId to force full refresh
-      };
-
-      const syncRes = await fetch("https://api.culturevo.com/sync", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(syncBody),
-      });
-
-      if (!syncRes.ok) throw new Error("Failed to fetch messages");
-
-      const syncData = await syncRes.json();
-      const rawMessages = syncData.response || [];
-
-      const formattedMessages = filterEmptyMessages(
-        rawMessages.map((msg) => ({
-          ...msg,
-          timestamp: new Date(msg.timestamp),
-          isActivityMessage:
-            msg.platform === "game_activity" ||
-            !!msg.activity_name ||
-            msg.isActivityMessage === true,
-          activityId: msg.activity_name || msg.activityId || null,
-        }))
-      );
-
-      // --- Fetch festival message ---
-      const botLocation = getBotLocation(selectedBotId);
-      const festivalPayload = {
-        user_email: userDetails.email,
-        bot_id: selectedBotId,
-        user_name: userDetails.name,
-        user_location: userDetails.location || "unknown",
-        bot_location: botLocation,
-      };
-
-      const festRes = await fetch(
-        "https://festival-agent-233451779807.asia-south1.run.app/festivals/",
-        {
+        // --- Sync messages from server ---
+        const syncBody = {
+          email: userDetails.email,
+          bot_id: selectedBotId,
+          messages_id: "", // no lastMessageId to force full refresh
+        };
+        /* The above code is making a POST request to the URL
+            'http://127.0.0.1:8000/sync' with a JSON payload. The payload is
+            being stringified using `JSON.stringify()` before sending the request. The request
+            includes the 'Content-Type' header set to 'application/json'. The `await` keyword
+            indicates that the code is using asynchronous JavaScript, likely within an async
+            function. */
+        const syncRes = await fetch("https://api.culturevo.com/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(festivalPayload),
-        }
-      );
+          body: JSON.stringify(syncBody),
+        });
 
-      let festivalMessage = null;
-      if (festRes.ok) {
-        const festData = await festRes.json();
-        if (festData?.message?.trim()) {
-          festivalMessage = {
-            id: "festival-msg",
-            text: festData.message,
-            sender: "bot",
-            timestamp: new Date(),
-            feedback: "",
-            reaction: "",
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(festData.message),
-          };
-        }
-      }
+        if (!syncRes.ok) throw new Error("Failed to fetch messages");
 
-      // --- Combine messages ---
-      const existingIds = formattedMessages.map((m) => m.id);
-      let finalMessages = [...formattedMessages];
+        const syncData = await syncRes.json();
+        const rawMessages = syncData.response || [];
 
-      if (festivalMessage && !existingIds.includes(festivalMessage.id)) {
-        finalMessages.push(festivalMessage);
-      }
-
-      // --- Default message fallback ---
-      if (finalMessages.length === 0) {
-        const defaultText =
-          bot_details.find((b) => b.bot_id === selectedBotId)?.quote ||
-          "Hello, how are you feeling today?";
-        finalMessages = [
-          {
-            id: "fallback-msg",
-            text: defaultText,
-            sender: "bot",
-            timestamp: new Date(),
-            feedback: "",
-            reaction: "",
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(defaultText),
-          },
-        ];
-      }
-
-      // --- Apply reactions from localStorage ---
-      const storedReactions = JSON.parse(
-        localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
-      );
-      finalMessages = finalMessages.map((msg) => ({
-        ...msg,
-        reaction: storedReactions[msg.id] || "",
-      }));
-
-      // --- Set state and localStorage ---
-      setMessages(finalMessages);
-      localStorage.setItem(
-        `chat_${selectedBotId}`,
-        JSON.stringify(
-          finalMessages.map((msg) => ({
-            ...msg,
-            timestamp: msg.timestamp.toISOString(),
-          }))
-        )
-      );
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-
-      // Fallback to localStorage if fetch fails
-      const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
-      if (loadedMessages) {
-        setMessages(
-          JSON.parse(loadedMessages).map((msg) => ({
+        const formattedMessages = filterEmptyMessages(
+          rawMessages.map((msg) => ({
             ...msg,
             timestamp: new Date(msg.timestamp),
+            isActivityMessage:
+              msg.platform === "game_activity" ||
+              !!msg.activity_name ||
+              msg.isActivityMessage === true,
+            activityId: msg.activity_name || msg.activityId || null,
           }))
         );
-      } else {
-        const defaultText =
-          bot_details.find((b) => b.bot_id === selectedBotId)?.quote ||
-          "Hello, how are you feeling today?";
-        setMessages([
-          {
-            id: "fallback-msg",
-            text: defaultText,
-            sender: "bot",
-            timestamp: new Date(),
-            feedback: "",
-            reaction: "",
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(defaultText),
-          },
-        ]);
-      }
-    }
-    setClearChatCalled(false);
-  };
 
-  fetchMessages();
-}, [selectedBotId, userDetails.email]);
+        // --- Fetch festival message ---
+        const botLocation = getBotLocation(selectedBotId);
+        const festivalPayload = {
+          user_email: userDetails.email,
+          bot_id: selectedBotId,
+          user_name: userDetails.name,
+          user_location: userDetails.location || "unknown",
+          bot_location: botLocation,
+        };
+        // API to fetch festival greeting messages to user whenever there is a festival
+        
+        /* The above code is making a POST request to the URL
+            'https://festival-agent-233451779807.asia-south1.run.app/festivals/' with a JSON payload. The payload is
+            being stringified using `JSON.stringify()` before sending the request. The request
+            includes the 'Content-Type' header set to 'application/json'. The `await` keyword
+            indicates that the code is using asynchronous JavaScript, likely within an async
+            function. */
+        const festRes = await fetch(
+          "https://festival-agent-233451779807.asia-south1.run.app/festivals/",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(festivalPayload),
+          }
+        );
+
+        let festivalMessage = null;
+        if (festRes.ok) {
+          const festData = await festRes.json();
+          if (festData?.message?.trim()) {
+            festivalMessage = {
+              id: "festival-msg",
+              text: festData.message,
+              sender: "bot",
+              timestamp: new Date(),
+              feedback: "",
+              reaction: "",
+              bot_id: selectedBotId,
+              isSystemMessage: isSystemMessageContent(festData.message),
+            };
+          }
+        }
+
+        // --- Combine messages ---
+        const existingIds = formattedMessages.map((m) => m.id);
+        let finalMessages = [...formattedMessages];
+
+        if (festivalMessage && !existingIds.includes(festivalMessage.id)) {
+          finalMessages.push(festivalMessage);
+        }
+
+        // --- Default message fallback ---
+        if (finalMessages.length === 0) {
+          const defaultText =
+            bot_details.find((b) => b.bot_id === selectedBotId)?.quote ||
+            "Hello, how are you feeling today?";
+          finalMessages = [
+            {
+              id: "fallback-msg",
+              text: defaultText,
+              sender: "bot",
+              timestamp: new Date(),
+              feedback: "",
+              reaction: "",
+              bot_id: selectedBotId,
+              isSystemMessage: isSystemMessageContent(defaultText),
+            },
+          ];
+        }
+
+        // --- Apply reactions from localStorage ---
+        const storedReactions = JSON.parse(
+          localStorage.getItem(`reactions-${selectedBotId}`) || "{}"
+        );
+        finalMessages = finalMessages.map((msg) => ({
+          ...msg,
+          reaction: storedReactions[msg.id] || "",
+        }));
+
+        // --- Set state and localStorage ---
+        setMessages(finalMessages);
+        localStorage.setItem(
+          `chat_${selectedBotId}`,
+          JSON.stringify(
+            finalMessages.map((msg) => ({
+              ...msg,
+              timestamp: msg.timestamp.toISOString(),
+            }))
+          )
+        );
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+
+        // Fallback to localStorage if fetch fails
+        const loadedMessages = localStorage.getItem(`chat_${selectedBotId}`);
+        if (loadedMessages) {
+          setMessages(
+            JSON.parse(loadedMessages).map((msg) => ({
+              ...msg,
+              timestamp: new Date(msg.timestamp),
+            }))
+          );
+        } else {
+          const defaultText =
+            bot_details.find((b) => b.bot_id === selectedBotId)?.quote ||
+            "Hello, how are you feeling today?";
+          setMessages([
+            {
+              id: "fallback-msg",
+              text: defaultText,
+              sender: "bot",
+              timestamp: new Date(),
+              feedback: "",
+              reaction: "",
+              bot_id: selectedBotId,
+              isSystemMessage: isSystemMessageContent(defaultText),
+            },
+          ]);
+        }
+      }
+      setClearChatCalled(false);
+    };
+
+    fetchMessages();
+  }, [selectedBotId, userDetails.email]);
 
   // Save the messages to localStorage when they change
   useEffect(() => {
@@ -4501,7 +4601,6 @@ const Dashboard = ({
     }
   }, [messages, selectedBotId]);
 
-  // Handle reaction selection for a message
   // Handle reaction selection for a message
   const handleReaction = (msgId, reaction) => {
     setMessages((prevMessages) =>
@@ -4608,11 +4707,17 @@ const Dashboard = ({
   };
 
   // Scroll to bottom of chat when new messages are added
+            /* The above code is making a POST request to the URL
+            'http://127.0.0.1:8000/store-activity-message' with a JSON payload. The payload is
+            being stringified using `JSON.stringify()` before sending the request. The request
+            includes the 'Content-Type' header set to 'application/json'. The `await` keyword
+            indicates that the code is using asynchronous JavaScript, likely within an async
+            function. */
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   async function storeActivityMessageInBackend({ text, sender, activityId }) {
-    try {
+    try { 
       await fetch("https://api.culturevo.com/store-activity-message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -4824,418 +4929,257 @@ const shouldSendWeeklyVoice = () => {
   return false;
 };
 */
-  const handleSend = async (e) => {
-    e.reminder == undefined && e.preventDefault();
-    if (!input.trim() && e.reminder != true) return;
+const handleSend = async (e) => {
+  // ✅ Prevent default form submission (only for normal user input, not reminders)
+  if (e?.reminder === undefined) {
+    e.preventDefault();
+  }
 
-    const userMessage = input.trim();
-    const voiceNotePatterns = [
-      /give.*me.*voice.*note/i,
-      /send.*voice.*note/i,
-      /voice.*message/i,
-      /can.*you.*speak/i,
-      /talk.*to.*me/i,
-      /hear.*your.*voice/i,
-      /voice.*note/i,
-      /speak.*to.*me/i,
-      /voice.*response/i,
-      /send.*me.*audio/i,
-      /audio.*message/i,
-      /want.*to.*hear.*you/i,
-    ];
+  // ✅ Clean and normalize user input
+  const userMessage = (input || "").trim();
+  if (!userMessage && e?.reminder !== true) return; // stop if empty input
 
-    const isVoiceNoteRequest = voiceNotePatterns.some((pattern) =>
-      pattern.test(userMessage)
-    );
-    // Check if user wants to end activity
-    if (
-      currentActivity &&
-      ["exit", "stop", "end"].includes(userMessage.toLowerCase())
-    ) {
-      endActivity();
-      setInput("");
-      return;
-    }
+  // --- Helper: Add a new message to chat state ---
+  const addMessage = (msg) => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        timestamp: new Date(),
+        feedback: "",
+        reaction: "",
+        ...msg, // merge caller-provided fields
+      },
+    ]);
+  };
 
-    // ✅ NEW: Check for selfie generation requests
-    const selfiePatterns = [
-      /\b(?:generate|take|send|show)\b.*\bselfie\b/i,
-      /\bhow.*do.*you.*look\b/i,
-      /\bwhat.*do.*you.*look.*like\b/i,
-      /\bpicture.*yourself\b/i,
-      /\bphoto.*yourself\b/i,
-    ];
+  // --- Regex / Keyword patterns ---
+  const voiceNotePatterns = [
+    /give.*me.*voice.*note/i,
+    /send.*voice.*note/i,
+    /voice.*message/i,
+    /can.*you.*speak/i,
+    /talk.*to.*me/i,
+    /hear.*your.*voice/i,
+    /voice.*note/i,
+    /speak.*to.*me/i,
+    /voice.*response/i,
+    /send.*me.*audio/i,
+    /audio.*message/i,
+    /want.*to.*hear.*you/i,
+  ];
+  const selfiePatterns = [
+    /\b(?:generate|take|send|show)\b.*\bselfie\b/i,
+    /\bhow.*do.*you.*look\b/i,
+    /\bwhat.*do.*you.*look.*like\b/i,
+    /\bpicture.*yourself\b/i,
+    /\bphoto.*yourself\b/i,
+  ];
+  const weatherKeywords = ["weather", "forecast", "climate"];
+  const newsKeywords = ["news", "headlines", "what's happening", "updates", "today's news"];
 
-    const isSelfieRequest = selfiePatterns.some((pattern) =>
-      pattern.test(userMessage)
-    );
+  // --- Flags for requests ---
+  const isVoiceNoteRequest = voiceNotePatterns.some((p) => p.test(userMessage));
+  const isSelfieRequest = selfiePatterns.some((p) => p.test(userMessage));
+  const containsKeyword = (msg, keywords) =>
+    keywords.some((k) => msg.toLowerCase().includes(k));
 
-    if (isSelfieRequest && !currentActivity) {
-      // Add user message to chat
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: userMessage,
-          sender: "user",
-          timestamp: new Date(),
-          feedback: "",
-          reaction: "",
-        },
-      ]);
-      setInput("");
-
-      // Generate selfie
-      await handleGenerateSelfie();
-      return;
-    }
-
-    // 1. Add user message to chat
-    if (e.reminder == undefined) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: userMessage,
-          sender: "user",
-          timestamp: new Date(),
-          feedback: "",
-          reaction: "",
-        },
-      ]);
-    }
-
+  // --- Exit command handling (end current activity) ---
+  if (currentActivity && ["exit", "stop", "end"].includes(userMessage.toLowerCase())) {
+    endActivity();
     setInput("");
+    return;
+  }
 
-    // Handle activity-specific messages
-    if (currentActivity) {
-      await handleActivityMessage(userMessage);
-      return;
-    }
-    setIsTyping(true);
-    scrollToBottom();
-    // Around line 4435, update the voice note request logic:
+  // --- Handle selfie generation request ---
+  if (isSelfieRequest && !currentActivity) {
+    addMessage({ text: userMessage, sender: "user" });
+    setInput("");
+    await handleGenerateSelfie(); // call your selfie generator
+    return;
+  }
 
-    // ✅ ENHANCED: Voice note request patterns
+  // --- Add normal user message (skip if it's a reminder) ---
+  if (e?.reminder === undefined) {
+    addMessage({ text: userMessage, sender: "user" });
+  }
+  setInput("");
 
-    // ✅ REMOVE WEEKLY LIMIT: Allow unlimited voice requests
-    if (isVoiceNoteRequest && !currentActivity) {
-      console.log("✅ Voice note requested by user");
-    }
-    // 1. If message contains a URL, use /api/news
-    if (containsUrl(userMessage)) {
-      try {
-        const res = await fetch("https://api.culturevo.com/api/news", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query: userMessage,
-            bot_id: selectedBotId,
-            user_email: userDetails?.email || "anonymous@example.com",
-          }),
-        });
-        const data = await res.json();
+  // --- Handle activity-specific input (story game, truth/lie game, etc.) ---
+  if (currentActivity) {
+    await handleActivityMessage(userMessage);
+    return;
+  }
 
-        if (data.status === "success" && data.ai_response) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              text: data.ai_response,
-              sender: "bot",
-              timestamp: new Date(),
-              bot_id: selectedBotId,
-            },
-          ]);
-        } else {
-          setMessages((prev) => [
-            ...prev,
-            {
-              text: data.result || "Sorry, I could not summarize that link.",
-              sender: "bot",
-              timestamp: new Date(),
-              bot_id: selectedBotId,
-            },
-          ]);
-        }
-      } catch (err) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: "Sorry, there was an error processing your link.",
-            sender: "bot",
-            timestamp: new Date(),
-            bot_id: selectedBotId,
-          },
-        ]);
-      }
-      setIsTyping(false);
-      scrollToBottom();
-      return;
-    }
-
-    // Continue with LLM processing
-    const currentTime = new Date();
-
-    const convertToOpenAIFormat = (msgs) =>
-      msgs.map((msg) => ({
-        role: msg.sender === "bot" ? "assistant" : "user",
-        content: msg.text,
-      }));
-
-    const primaryLlmPayload = {
-      message:
-        e?.reminder === true
-          ? `User asked to remind: ${e.message}`
-          : userMessage,
-      bot_id: selectedBotId,
-      custom_bot_name: selectedBotDetails?.name || "",
-      user_name: userDetails.name || "",
-      user_gender: userDetails.gender || "",
-      language: "",
-      traits: "",
-      previous_conversation: convertToOpenAIFormat(messages),
-      email: userDetails.email || "",
-      request_time: currentTime.toISOString(),
-      platform: "web",
-    };
-
-    console.log("📤 Sending to Primary LLM (Novi VI):", primaryLlmPayload);
+  // --- Handle news/weather requests before LLM ---
+  if (
+    containsKeyword(userMessage, weatherKeywords) ||
+    containsKeyword(userMessage, newsKeywords)
+  ) {
     try {
-      /**
-       * The function `convertToOpenAIFormat` takes an array of messages and converts them into an
-       * OpenAI format object with role and content properties.
-       * @param msgs - The `msgs` parameter is an array of messages that contains information about the
-       * sender and the text content of each message.
-       */
-      const convertToOpenAIFormat = (msgs) =>
-        msgs.map((msg) => ({
-          role: msg.sender === "bot" ? "assistant" : "user",
-          content: msg.text,
-        }));
-
-      /* The above code is creating a JavaScript object named `payload` with the following properties:
-      - `message`: It is set to a ternary expression that checks if `e.reminder` is true. If true, it sets
-      the message to "User asked to remind: " followed by the value of `e.message`. If false, it sets the
-      message to the value of `input`.
-      - `bot_id`: It is set to the value of `selectedBotId`.
-      - `previous_con */
-
-      const payload = {
-        message:
-          e.reminder === true ? `User asked to remind: ${e.message}` : input,
-        bot_id: selectedBotId,
-        custom_bot_name: selectedBotDetails?.name || "",
-        user_name: userDetails.name || "",
-        user_gender: userDetails.gender || "",
-        language: "", // You can set dynamically if needed
-        traits: "", // Optional: add if user has traits like "funny", "serious", etc.
-        previous_conversation: convertToOpenAIFormat(messages),
-        email: userDetails.email || "", // Optional: provide if available
-        request_time: new Date().toISOString(),
-        platform: "web", // or mobile, etc.
-      };
-
-      console.log("Payload", JSON.stringify(payload, null, 2));
-
-      /* The above code is making a POST request to the URL "http://127.0.0.1:8000/cv/chat" with a
-      JSON payload. The payload is being sent in the body of the request after being stringified
-      using JSON.stringify. The request is being made using the fetch API with the specified method
-      and headers. The response from the server is being stored in the variable `response` using the
-      `await` keyword, indicating that the fetch operation is asynchronous. */
-
-      const response = await fetch("https://api.culturevo.com/cv/chat", {
+      const response = await fetch("http://35.200.228.78:8000/news_weather_agent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(primaryLlmPayload),
+        body: JSON.stringify({ message: userMessage }),
       });
-
       const data = await response.json();
-      // ✅ CRITICAL FIX: Process XP data IMMEDIATELY when response is received
-      console.log("🧠 Primary LLM Response Data:", data);
 
-      if (data.xp_data) {
-        console.log("🎯 XP data found in response:", data.xp_data);
-
-        if (typeof window.updateXPFromResponse === "function") {
-          console.log("✅ Calling updateXPFromResponse with:", data.xp_data);
-          window.updateXPFromResponse(data.xp_data);
-        } else {
-          console.error("❌ window.updateXPFromResponse is not available");
-        }
-      } else {
-        console.warn("⚠️ No XP data found in response");
-      }
-
-      setIsTyping(false);
-
-      let finalMessage = data.response;
-
-      if (!finalMessage) {
-        console.warn("⚠️ Primary LLM response is empty. Using fallback.");
-        finalMessage = "Sorry, I couldn't generate a reply.";
-      }
-
-      if (data.error) {
-        const errorMessage =
-          "Sorry, there was an error processing your request. Please try again.";
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: errorMessage,
-            sender: "bot",
-            id: "",
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: isSystemMessageContent(errorMessage),
-          },
-        ]);
-      } else if (
-        data.reminder?.response &&
-        data.reminder?.task &&
-        data.reminder?.created_at
-      ) {
-        console.log("This is reminder block", data.reminder);
-
-        const reminder = {
-          response: data.reminder.response,
-          task: data.reminder.task,
-          created_at: data.reminder.created_at,
-          remind_on: data.reminder.remind_on,
-          category: "Reminder",
-        };
-
-        console.log("Add reminder", reminder);
-        console.log("Reminders before adding", reminders);
-
-        const updatedReminders = [...reminders, reminder];
-        console.log("New reminders array", updatedReminders);
-
-        setReminders(updatedReminders);
-        localStorage.setItem(
-          `reminders-${selectedBotId}`,
-          JSON.stringify(updatedReminders)
-        );
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: new Date(),
-            isSystemMessage: true,
-            voice_only: false, // ✅ FIXED: Force reminders to be text-only
-            isVoiceRequested: false, // ✅ FIXED: Explicitly disable voice
-          },
-        ]);
-        // Around line 4740, update the bot response creation:
-      } else {
-        const shouldBeSystemMessage = isSystemMessageContent(
-          finalMessage || data.response
-        );
-
-        // ✅ FIXED: Only create voice message if user explicitly requested it
-        const isVoiceResponse = isVoiceNoteRequest; // Only when user asks
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: data.response,
-            sender: "bot",
-            id: data.message_id,
-            feedback: "",
-            reaction: "",
-            timestamp: currentTime,
-            bot_id: selectedBotId,
-            isSystemMessage: shouldBeSystemMessage,
-            voice_only: isVoiceResponse, // ✅ Only true if user requested voice
-            isVoiceRequested: isVoiceResponse, // ✅ Track the request
-          },
-        ]);
-      }
-      // --- NEW INTEGRATION POINT ---
-      // AFTER the primary LLM has responded and its message is displayed,
-      // call your backend's /store-message endpoint for categorization and delta logic.
-      try {
-        const storeMessagePayload = {
-          email: userDetails?.email || "anonymous@example.com",
-          bot_id: selectedBotId,
-          message: userMessage, // Send the original user message
-          user_name: userDetails?.name || "Unknown",
-        };
-
-        console.log(
-          "📤 Sending to Backend /store-message for Categorization & Delta:",
-          storeMessagePayload
-        );
-
-        const storeRes = await fetch(
-          "https://api.culturevo.com/store-message",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(storeMessagePayload),
-          }
-        );
-
-        const storeData = await storeRes.json();
-        console.log(
-          "✅ Backend /store-message Result (Categorization & Delta):",
-          storeData
-        );
-
-        // Optional: You can display a small, non-intrusive notification to the user
-        // if storeData.delta_result.status indicates important changes,
-        // e.g., "Your preferences have been updated!"
-        if (storeData.delta_result?.status === "delta_updates_applied") {
-          console.log(
-            "Info: User persona updated in database due to new message."
-          );
-          // You could add a temporary message to the UI or a log for debugging
-        }
-      } catch (storeError) {
-        console.error(
-          "❌ Error with Backend /store-message (Categorization & Delta):",
-          storeError
-        );
-        // You might want to log this error to your backend's frontend_error_logs
-        // or display a subtle message to the user that memory update failed.
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: `⚠️ Persona memory update failed.`, // Less intrusive message
-            sender: "system",
-            timestamp: new Date(),
-            isSystemMessage: true,
-          },
-        ]);
-      }
+      addMessage({
+        text: data.response || "Sorry, I can't respond at this time.",
+        sender: "bot",
+        bot_id: selectedBotId,
+      });
     } catch (error) {
-      logClientError(error, { source: "API Call" });
-      console.log(error);
-      console.error("❌ Error calling Primary LLM:", error);
-      setIsTyping(false);
-
-      const errorMessage =
-        "Sorry, there was an error processing your request. Please try again.";
-      setMessages((prev) => [
-        ...prev,
-        {
-          text: errorMessage,
-          sender: "bot",
-          id: "",
-          feedback: "",
-          reaction: "",
-          timestamp: currentTime,
-          bot_id: selectedBotId,
-          isSystemMessage: isSystemMessageContent(errorMessage),
-        },
-      ]);
+      addMessage({
+        text: "Sorry, I can't respond at this time.",
+        sender: "bot",
+        bot_id: selectedBotId,
+      });
     }
+
+    setIsTyping(false);
     scrollToBottom();
+    return;
+  }
+
+  // --- Prepare request for Primary LLM ---
+  setIsTyping(true);
+  scrollToBottom();
+
+  // Convert messages to OpenAI chat format
+  const convertToOpenAIFormat = (msgs) =>
+    msgs.map((msg) => ({
+      role: msg.sender === "bot" ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+  const currentTime = new Date();
+  const primaryLlmPayload = {
+    message:
+      e?.reminder === true ? `User asked to remind: ${e.message}` : userMessage,
+    bot_id: selectedBotId,
+    custom_bot_name: selectedBotDetails?.name || "",
+    user_name: userDetails.name || "",
+    user_gender: userDetails.gender || "",
+    language: "",
+    traits: "",
+    previous_conversation: convertToOpenAIFormat(messages),
+    email: userDetails.email || "",
+    request_time: currentTime.toISOString(),
+    platform: "web",
   };
+
+  console.log("📤 Sending to Primary LLM (Novi VI):", primaryLlmPayload);
+            /* The above code is making a POST request to the URL
+            'http://127.0.0.1:8000/cv/chat' with a JSON payload. The payload is
+            being stringified using `JSON.stringify()` before sending the request. The request
+            includes the 'Content-Type' header set to 'application/json'. The `await` keyword
+            indicates that the code is using asynchronous JavaScript, likely within an async
+            function. */
+  try {
+    // --- Call Primary LLM ---
+    const response = await fetch("https://api.culturevo.com/cv/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(primaryLlmPayload),
+    });
+    const data = await response.json();
+    console.log("🧠 Primary LLM Response Data:", data);
+
+    // --- Process XP updates ---
+    if (data.xp_data && typeof window.updateXPFromResponse === "function") {
+      window.updateXPFromResponse(data.xp_data);
+    }
+
+    setIsTyping(false);
+    let finalMessage = data.response || "Sorry, I couldn't generate a reply.";
+
+    // --- Handle reminder responses ---
+    if (data.reminder?.response && data.reminder?.task) {
+      const reminder = {
+        response: data.reminder.response,
+        task: data.reminder.task,
+        created_at: data.reminder.created_at,
+        remind_on: data.reminder.remind_on,
+        category: "Reminder",
+      };
+      const updatedReminders = [...reminders, reminder];
+
+      setReminders(updatedReminders);
+      localStorage.setItem(`reminders-${selectedBotId}`, JSON.stringify(updatedReminders));
+
+      addMessage({
+        text: data.response,
+        sender: "bot",
+        id: data.message_id,
+        isSystemMessage: true,
+        voice_only: false,
+        isVoiceRequested: false,
+      });
+    } else {
+      // --- Normal LLM bot reply ---
+      const shouldBeSystemMessage = isSystemMessageContent(finalMessage);
+      const isVoiceResponse = isVoiceNoteRequest; // only true if user asked
+
+      addMessage({
+        text: finalMessage,
+        sender: "bot",
+        id: data.message_id,
+        bot_id: selectedBotId,
+        isSystemMessage: shouldBeSystemMessage,
+        voice_only: isVoiceResponse,
+        isVoiceRequested: isVoiceResponse,
+      });
+    }
+
+    // --- Store message in backend for categorization & delta updates ---
+    try {
+      const storeMessagePayload = {
+        email: userDetails?.email || "anonymous@example.com",
+        bot_id: selectedBotId,
+        message: userMessage,
+        user_name: userDetails?.name || "Unknown",
+      };
+           /* The above code is making a POST request to the URL
+            'http://127.0.0.1:8000/store-message' with a JSON payload. The payload is
+            being stringified using `JSON.stringify()` before sending the request. The request
+            includes the 'Content-Type' header set to 'application/json'. The `await` keyword
+            indicates that the code is using asynchronous JavaScript, likely within an async
+            function. */
+      const storeRes = await fetch("https://api.culturevo.com/store-message", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(storeMessagePayload),
+      });
+      const storeData = await storeRes.json();
+
+      if (storeData.delta_result?.status === "delta_updates_applied") {
+        console.log("Info: Persona updated in database.");
+      }
+    } catch (storeError) {
+      console.error("❌ Error with /store-message:", storeError);
+      addMessage({
+        text: `⚠️ Persona memory update failed.`,
+        sender: "system",
+        isSystemMessage: true,
+      });
+    }
+  } catch (error) {
+    // --- Handle API/LLM errors ---
+    logClientError(error, { source: "API Call" });
+    console.error("❌ Error calling Primary LLM:", error);
+    setIsTyping(false);
+
+    addMessage({
+      text: "Sorry, there was an error processing your request. Please try again.",
+      sender: "bot",
+      bot_id: selectedBotId,
+      isSystemMessage: true,
+    });
+  }
+
+  // --- Always scroll to bottom after processing ---
+  scrollToBottom();
+};
 
   const handleVoiceCallMessage = async (message) => {
     if (!message) return;
