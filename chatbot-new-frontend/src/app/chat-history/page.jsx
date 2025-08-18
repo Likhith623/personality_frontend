@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import Head from "next/head";
+import Profile from "@/components/screens/Profile";
 
 import delhi_mentor_male from "@/photos/delhi_mentor_male.jpeg";
 import delhi_mentor_female from "@/photos/delhi_mentor_female.jpeg";
@@ -639,6 +640,7 @@ const History = () => {
   const { setSelectedBotId } = useBot();
   const [chattedBots, setChattedBots] = useState([]);
   const [userInitial, setUserInitial] = useState("");
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     if (userDetails?.name) {
@@ -750,6 +752,10 @@ const History = () => {
     router.push("/chat");
   };
 
+  const handleProfileClick = () => {
+    setShowProfile(true);
+  };
+
   return (
     <>
       <Head>
@@ -804,7 +810,10 @@ const History = () => {
                     Add new Friends
                   </button>
                 </Link>
-                <button className="bg-gradient-to-r from-orange-300 to-pink-300 dark:from-orange-900 dark:to-pink-900 text-black dark:text-white rounded-full w-7 h-7 md:w-10 md:h-10 flex items-center justify-center font-bold text-sm md:text-normal">
+                <button
+                  onClick={handleProfileClick}
+                  className="bg-gradient-to-r from-orange-300 to-pink-300 dark:from-orange-900 dark:to-pink-900 text-black dark:text-white rounded-full w-7 h-7 md:w-10 md:h-10 flex items-center justify-center font-bold text-sm md:text-normal cursor-pointer hover:scale-105 transition-transform duration-200"
+                >
                   {userInitial || "?"}
                 </button>
               </div>
@@ -908,7 +917,7 @@ const History = () => {
                             </div>
                             <div className="bg-gray-100 dark:bg-gray-800/20 rounded-xl p-4 group-hover:bg-white/80 dark:group-hover:bg-gray-700/20 transition-colors duration-300 overflow-hidden flex flex-col justify-between space-y-2">
                               <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 md:text-md line-clamp-2">
-                                {msg.text}
+                                {msg.text || botDetails?.quote}
                               </p>
 
                               <span className="lg:hidden text-sm text-gray-600 dark:text-gray-300 inline-flex items-center">
@@ -925,6 +934,21 @@ const History = () => {
               )}
             </div>
           </ScrollArea>
+
+          {/* Profile Modal */}
+          {showProfile && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4"
+              onClick={() => setShowProfile(false)}
+            >
+              <div
+                className="relative w-full h-full sm:h-auto sm:max-w-4xl sm:max-h-[90vh] overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Profile onClose={() => setShowProfile(false)} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -3084,14 +3084,18 @@ export default function SidebarDemo() {
   const router = useRouter();
 
   // Get the selected bot details by bot_id from the bot_details array
-  const selectedBotDetails = bot_details.find(
-    (bot) => bot.bot_id === selectedBotId
-  );
+  const selectedBotDetails =
+    selectedBotId && bot_details
+      ? bot_details.find((bot) => bot.bot_id === selectedBotId)
+      : null;
+
+  // Debug logging
+  console.log("Debug - selectedBotId:", selectedBotId);
+  console.log("Debug - bot_details:", bot_details);
+  console.log("Debug - selectedBotDetails:", selectedBotDetails);
   // const [selectedTraits, setSelectedTraits] = useState(['Curious', 'Open Minded']);
   // const [selectedLanguage, setSelectedLanguage] = useState("English");
-  const [customName, setCustomName] = useState(
-    selectedBotDetails?.name || "Unnamed"
-  );
+  const [customName, setCustomName] = useState("Unnamed");
   const { userDetails } = useUser();
   const [clearChatCalled, setClearChatCalled] = useState(false);
   const [isMemoriesOpen, setIsMemoriesOpen] = useState(false);
@@ -3114,6 +3118,15 @@ export default function SidebarDemo() {
       localStorage.setItem("theme", "light");
     }
   }, [isDarkMode]);
+
+  // Update customName when selectedBotDetails changes
+  useEffect(() => {
+    if (selectedBotDetails?.name) {
+      setCustomName(selectedBotDetails.name);
+    } else {
+      setCustomName("Unnamed");
+    }
+  }, [selectedBotDetails?.name]);
 
   // const traits = [
   //   "Bold/Adventurous",
@@ -3161,11 +3174,11 @@ export default function SidebarDemo() {
     );
     if (savedCustomizations) {
       const { name } = JSON.parse(savedCustomizations);
-      setCustomName(name || selectedBotDetails.name);
+      setCustomName(name || selectedBotDetails?.name || "Unnamed");
     } else {
-      setCustomName(selectedBotDetails.name);
+      setCustomName(selectedBotDetails?.name || "Unnamed");
     }
-  }, [selectedBotId, selectedBotDetails?.name || "Unnamed"]);
+  }, [selectedBotId, selectedBotDetails?.name]);
 
   /* The code is checking if `selectedTraits` is an array using `Array.isArray()`. If it is an array, it
 joins the elements of the array into a string separated by commas. If `selectedTraits` is not an
@@ -3271,11 +3284,13 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden justify-between text-white">
             <div className="text-white">
               <Logo className="text-white" />
-              <BotCustomization
-                selectedBotDetails={selectedBotDetails}
-                onUpdate={handleBotCustomization}
-                className="text-white"
-              />
+              {selectedBotDetails && (
+                <BotCustomization
+                  selectedBotDetails={selectedBotDetails}
+                  onUpdate={handleBotCustomization}
+                  className="text-white"
+                />
+              )}
               <p className="text-sm bg-white text-black dark:bg-black dark:text-white">
                 {selectedBotDetails?.quote || "Unnamed"}
               </p>
@@ -3802,6 +3817,11 @@ const Dashboard = ({
   const [highlightedMessage, setHighlightedMessage] = useState(null);
   // Define available emoticons
   const emoticons = ["❤️", "🥰", "😭", "🤣", "🔥"];
+  // Controls visibility of the sticky date chip while scrolling
+  const [showDateChip, setShowDateChip] = useState(false);
+  const scrollIdleTimerRef = useRef(null);
+  const chatViewportRef = useRef(null);
+  const [isFadingOutChip, setIsFadingOutChip] = useState(false);
   // ✅ ADD: Bot location function
   const getBotLocation = (botId) => {
     if (botId.includes("delhi")) return "Delhi";
@@ -4297,6 +4317,31 @@ const Dashboard = ({
     };
   }, [showReactionsFor]);
 
+  // Show date chip while scrolling and fade it out when scrolling stops
+  const handleChatScroll = () => {
+    if (!showDateChip) {
+      setIsFadingOutChip(false);
+      setShowDateChip(true);
+    } else {
+      setIsFadingOutChip(false);
+    }
+    if (scrollIdleTimerRef.current) clearTimeout(scrollIdleTimerRef.current);
+    scrollIdleTimerRef.current = setTimeout(() => {
+      setIsFadingOutChip(true);
+      // Hide after fade-out completes
+      setTimeout(() => {
+        setShowDateChip(false);
+        setIsFadingOutChip(false);
+      }, 600);
+    }, 1500);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (scrollIdleTimerRef.current) clearTimeout(scrollIdleTimerRef.current);
+    };
+  }, []);
+
   // Format date for grouping messages
   const formatDate = (timestamp) => {
     const dateN = timestamp instanceof Date ? timestamp : new Date(timestamp);
@@ -4419,12 +4464,14 @@ const Dashboard = ({
           bot_id: selectedBotId,
           messages_id: "", // no lastMessageId to force full refresh
         };
+
         /* The above code is making a POST request to the URL
             'http://127.0.0.1:8000/sync' with a JSON payload. The payload is
             being stringified using `JSON.stringify()` before sending the request. The request
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
             indicates that the code is using asynchronous JavaScript, likely within an async
             function. */
+
         const syncRes = await fetch("https://api.culturevo.com/sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -5481,11 +5528,11 @@ const handleSend = async (e) => {
             : undefined
         }
       >
-        {/* ✅ ENHANCED: Always visible activity banner at the very top */}
+        {/* ✅ ENHANCED: Always visible activity banner at the very top with improved mobile layout */}
         {currentActivity && (
           <div className="sticky top-0 z-50 px-2 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-red-500/95 to-pink-500/95 backdrop-blur-md border-b-2 border-white/30 shadow-lg">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 order-2 sm:order-1">
                 <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-300 rounded-full animate-pulse shadow-lg flex-shrink-0"></div>
                 <div className="min-w-0 flex-1">
                   <p className="text-white font-bold text-sm sm:text-base md:text-lg drop-shadow-md truncate">
@@ -5498,9 +5545,9 @@ const handleSend = async (e) => {
               </div>
               <button
                 onClick={endActivity}
-                className="px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-lg border-2 border-white/50 hover:border-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex-shrink-0 ml-2"
+                className="px-4 sm:px-4 md:px-6 py-2 sm:py-2 bg-white/90 hover:bg-white text-red-600 hover:text-red-700 rounded-lg border-2 border-white/50 hover:border-white font-bold text-sm sm:text-sm transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 flex-shrink-0 order-1 sm:order-2 w-full sm:w-auto justify-center"
               >
-                END
+                🚫 END ACTIVITY
               </button>
             </div>
           </div>
@@ -5530,11 +5577,23 @@ const handleSend = async (e) => {
           <span className="ml-3 text-sm text-gray-400">See how your bot might look right now!</span>
         </div>
       )} */}
-        <ScrollArea className="flex-1">
+        <ScrollArea
+          className="flex-1"
+          onScroll={handleChatScroll}
+          viewportRef={chatViewportRef}
+        >
           <div className="px-1 sm:px-2 md:px-2">
             {Object.entries(groupedMessages).map(([date, messagesOnDate]) => (
               <div key={date}>
-                <div className="sticky top-5 z-10 my-6 sm:my-10 py-2 mx-auto w-24 sm:w-32 bg-gray-200/40 backdrop-blur-sm backdrop-saturate-150 rounded-md shadow-md">
+                <div
+                  className={`sticky top-5 z-10 my-6 sm:my-10 py-2 mx-auto w-24 sm:w-32 bg-gray-700/90 rounded-md shadow-md ${
+                    showDateChip
+                      ? isFadingOutChip
+                        ? "fade-out-chip"
+                        : "fade-in-chip"
+                      : "opacity-0 pointer-events-none"
+                  }`}
+                >
                   <p
                     className={`text-center text-xs sm:text-sm ${
                       isDarkTheme ? `${textColorClass}` : `${textColorClass}`
@@ -5895,16 +5954,17 @@ const handleSend = async (e) => {
           </div>
         </ScrollArea>
 
-        {/* ✅ ENHANCED: Modified form to show activity status */}
+        {/* ✅ ENHANCED: Modified form to show activity status with improved mobile layout */}
         <form
           onSubmit={handleSend}
-          className="flex items-center px-1 sm:px-2 pt-2"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center px-1 sm:px-2 pt-2 gap-2 sm:gap-0 relative"
         >
+          {/* Input field - full width on mobile */}
           <Input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className={`flex-1 p-3 sm:p-[22px] outline-none mr-1 sm:mr-2 md:mr-4 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-sm sm:text-base ${
+            className={`flex-1 p-3 sm:p-[22px] outline-none mr-0 sm:mr-1 md:mr-4 bg-white/30 border border-white/20 backdrop-blur-md shadow-md rounded-full text-sm sm:text-base ${
               isDarkTheme ? textColorClass : textColorClass
             } placeholder:${isDarkTheme ? textColorClass : textColorClass}`}
             placeholder={
@@ -5923,18 +5983,59 @@ const handleSend = async (e) => {
             style={{ display: "none" }}
           />
 
-          {/* ✅ NEW: Image upload button */}
-          {!currentActivity && (
-            <button
-              type="button"
-              onClick={handleImageButtonClick}
-              disabled={isImageUploading}
-              className="p-2 sm:p-3 mr-1 sm:mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-orange-400/80 via-yellow-400/80 to-orange-400/80 hover:from-orange-400/90 hover:via-yellow-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
-              title="Upload and analyze image"
-            >
-              {isImageUploading ? (
-                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
+          {/* Button row - horizontal on mobile, better spacing */}
+          <div className="flex items-center justify-center sm:justify-end gap-2 sm:gap-1 w-full sm:w-auto">
+            {/* ✅ NEW: Image upload button */}
+            {!currentActivity && (
+              <button
+                type="button"
+                onClick={handleImageButtonClick}
+                disabled={isImageUploading}
+                className="p-2 sm:p-3 hover:opacity-60 cursor-pointer bg-gradient-to-r from-orange-400/80 via-yellow-400/80 to-orange-400/80 hover:from-orange-400/90 hover:via-yellow-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                title="Upload and analyze image"
+              >
+                {isImageUploading ? (
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="sm:w-5 sm:h-5"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                )}
+              </button>
+            )}
+
+            {/* ✅ CONDITIONAL: Hide voice call button during activities */}
+            {!currentActivity && (
+              <button
+                type="button"
+                onClick={() => setIsVoiceCallOpen(true)}
+                className="p-2 sm:p-3 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] flex-shrink-0"
+                title="Start Voice Call"
+              >
+                <Phone size={20} />
+              </button>
+            )}
+
+            {/* ✅ CONDITIONAL: Show activity end button instead of voice button during activities */}
+            {currentActivity && (
+              <button
+                type="button"
+                onClick={endActivity}
+                className="p-2 sm:p-3 hover:opacity-80 cursor-pointer bg-gradient-to-r from-red-400/80 via-pink-400/80 to-red-500/80 hover:from-red-400/90 hover:via-pink-400/90 hover:to-red-500/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] flex-shrink-0 min-w-[44px] min-h-[44px]"
+                title="End Activity"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -5947,58 +6048,21 @@ const handleSend = async (e) => {
                   strokeLinejoin="round"
                   className="sm:w-5 sm:h-5"
                 >
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
                 </svg>
-              )}
-            </button>
-          )}
+              </button>
+            )}
 
-          {/* ✅ CONDITIONAL: Hide voice call button during activities */}
-          {!currentActivity && (
+            {/* Send button */}
             <button
-              type="button"
-              onClick={() => setIsVoiceCallOpen(true)}
-              className="p-2 sm:p-3 mr-1 sm:mr-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-              title="Start Voice Call"
+              type="submit"
+              className="px-3 sm:px-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-1 sm:gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] text-sm sm:text-base flex-shrink-0"
             >
-              <Phone size={20} />
+              Send
             </button>
-          )}
-
-          {/* ✅ CONDITIONAL: Show activity end button instead of voice button during activities */}
-          {currentActivity && (
-            <button
-              type="button"
-              onClick={endActivity}
-              className="p-2 sm:p-3 mr-1 sm:mr-2 hover:opacity-80 cursor-pointer bg-gradient-to-r from-red-400/80 via-pink-400/80 to-red-500/80 hover:from-red-400/90 hover:via-pink-400/90 hover:to-red-500/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
-              title="End Activity"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="sm:w-5 sm:h-5"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <path d="m15 9-6 6" />
-                <path d="m9 9 6 6" />
-              </svg>
-            </button>
-          )}
-
-          <button
-            type="submit"
-            className="px-3 sm:px-5 py-2 hover:opacity-60 cursor-pointer bg-gradient-to-r from-purple-400/80 via-pink-400/80 to-orange-400/80 hover:from-purple-400/90 hover:via-pink-400/90 hover:to-orange-400/90 text-white rounded-full flex justify-center items-center gap-1 sm:gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] text-sm sm:text-base"
-          >
-            Send
-          </button>
+          </div>
         </form>
 
         <p

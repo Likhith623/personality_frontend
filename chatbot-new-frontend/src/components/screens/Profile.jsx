@@ -19,9 +19,11 @@ import {
   IconCalendar,
   IconGenderMale,
   IconGenderFemale,
+  IconMenu2,
+  IconX,
 } from "@tabler/icons-react";
 
-function Profile() {
+function Profile({ onClose }) {
   const router = useRouter();
   const { userDetails } = useUser();
   const [session, setSession] = useState();
@@ -37,6 +39,7 @@ function Profile() {
   const [pushNotificationsEnabled, setPushNotificationsEnabled] =
     useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const registerServiceWorker = async () => {
@@ -411,13 +414,41 @@ function Profile() {
   return (
     <div
       suppressHydrationWarning
-      className="bg-gray-200 dark:bg-gray-800 backdrop-blur-md p-8 rounded-xl shadow-lg border border-gray-300 dark:border-gray-700 h-[600px] w-[600px] md:w-[800px] overflow-hidden"
+      className="bg-gray-200 dark:bg-gray-800 backdrop-blur-md p-4 sm:p-6 md:p-8 md:rounded-xl md:shadow-lg md:border md:border-gray-300 md:dark:border-gray-700 w-screen h-screen md:w-[800px] md:h-[600px] md:mx-auto overflow-hidden"
     >
-      <div className="flex flex-col md:flex-row gap-8 h-full">
-        {/* Sidebar Navigation */}
-        <div className="w-full md:w-48 space-y-2 overflow-y-auto">
+      {/* Mobile Header with Menu Button */}
+      <div className="flex items-center justify-between mb-4 md:hidden">
+        <h1 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+          Profile
+        </h1>
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setActiveTab("profile")}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 rounded-lg bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-600"
+          >
+            {isMobileMenuOpen ? <IconX size={20} /> : <IconMenu2 size={20} />}
+          </button>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition-colors"
+          >
+            <IconX size={20} />
+          </button>
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row gap-4 md:gap-8 h-full">
+        {/* Sidebar Navigation */}
+        <div
+          className={`w-full md:w-48 space-y-2 overflow-y-auto transition-all duration-300 ${
+            isMobileMenuOpen ? "block" : "hidden md:block"
+          }`}
+        >
+          <button
+            onClick={() => {
+              setActiveTab("profile");
+              setIsMobileMenuOpen(false);
+            }}
             className={`w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 ${
               activeTab === "profile"
                 ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 text-white shadow-lg"
@@ -428,7 +459,10 @@ function Profile() {
             <span>Profile</span>
           </button>
           <button
-            onClick={() => setActiveTab("security")}
+            onClick={() => {
+              setActiveTab("security");
+              setIsMobileMenuOpen(false);
+            }}
             className={`w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 ${
               activeTab === "security"
                 ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 text-white shadow-lg"
@@ -439,7 +473,10 @@ function Profile() {
             <span>Security</span>
           </button>
           <button
-            onClick={() => setActiveTab("preferences")}
+            onClick={() => {
+              setActiveTab("preferences");
+              setIsMobileMenuOpen(false);
+            }}
             className={`w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 ${
               activeTab === "preferences"
                 ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 text-white shadow-lg"
@@ -450,7 +487,10 @@ function Profile() {
             <span>Preferences</span>
           </button>
           <button
-            onClick={() => setActiveTab("subscription")}
+            onClick={() => {
+              setActiveTab("subscription");
+              setIsMobileMenuOpen(false);
+            }}
             className={`w-full flex items-center gap-2 p-3 rounded-lg transition-all duration-300 ${
               activeTab === "subscription"
                 ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 text-white shadow-lg"
@@ -470,7 +510,9 @@ function Profile() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto">{renderProfileContent()}</div>
+        <div className="flex-1 overflow-y-auto pb-4 md:pb-0">
+          {renderProfileContent()}
+        </div>
       </div>
     </div>
   );
