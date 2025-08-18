@@ -683,7 +683,7 @@ const History = () => {
       });
 
       const results = await Promise.all(fetchPromises);
-      console.log("Fetch results:", results); // Debug log
+      console.log("🦜🇮🇳😁😁😄Fetch results:", results); // Debug log
 
       const latestMsgs = {};
       const botsWithChats = [];
@@ -886,8 +886,8 @@ const History = () => {
                 </div>
               ) : (
                 chattedBots.map((bot) => {
-                  const msg = latestMessages[bot.bot_id] || {};
                   const botDetails = getBotDetails(bot.bot_id);
+                  const msg = latestMessages[bot.bot_id] || {};
                   return (
                     <Card
                       key={bot.bot_id}
@@ -919,6 +919,7 @@ const History = () => {
                               <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 md:text-md line-clamp-2">
                                 {msg.text || botDetails?.quote}
                               </p>
+
                               <span className="lg:hidden text-sm text-gray-600 dark:text-gray-300 inline-flex items-center">
                                 <Clock className="h-3 w-3 mr-1.5" />
                                 {formatTimestamp(bot.last_message_time)}

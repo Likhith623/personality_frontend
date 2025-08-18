@@ -51,7 +51,9 @@ function Diary() {
       try {
         const res = await fetch(
           `https://api.culturevo.com/get-summaries/${email}/${bot_id}`
+          
         );
+        console.timeEnd("summaryAPI");
         if (!res.ok) {
           const errorText = await res.text();
           console.error(
@@ -63,25 +65,26 @@ function Diary() {
         const data = await res.json();
         console.log(data);
 
-        if (data && Array.isArray(data.summaries)) {
-          const grouped = groupByMonth(data.summaries);
+        const summariesArray = data?.summaries?.summaries;
+
+        if (Array.isArray(summariesArray)) {
+          const grouped = groupByMonth(summariesArray);
           setSummaries(grouped);
+
           if (Object.keys(grouped).length > 0) {
             const firstMonth = Object.keys(grouped)[0];
             setSelectedMonth(firstMonth);
             setSelectedLog(grouped[firstMonth]?.[0]);
-            setLoading(false);
-          } else {
-            setLoading(false);
           }
         } else {
           console.error(
-            "API response did not contain a valid 'summaries' array:",
+            "API response did not contain a valid summaries array:",
             data
           );
-          setSummaries({}); // Or handle the error state as needed
-          setLoading(false);
+          setSummaries({});
         }
+
+        setLoading(false);
       } catch (err) {
         console.error("Failed to fetch summaries", err);
         setLoading(false);
