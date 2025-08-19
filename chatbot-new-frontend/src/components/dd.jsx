@@ -50,7 +50,7 @@ function Diary() {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://api.culturevo.com/get-summaries/get-summaries/${email}/${bot_id}`
+          `https://api.culturevo.com/get-summaries/${email}/${bot_id}`
         );
         console.timeEnd("summaryAPI");
         if (!res.ok) {
