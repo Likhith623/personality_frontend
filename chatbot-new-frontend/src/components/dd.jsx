@@ -50,8 +50,7 @@ function Diary() {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://api.culturevo.com/get-summaries/${email}/${bot_id}`
-          
+          `https://api.culturevo.com/get-summaries/get-summaries/${email}/${bot_id}`
         );
         console.timeEnd("summaryAPI");
         if (!res.ok) {
@@ -65,7 +64,8 @@ function Diary() {
         const data = await res.json();
         console.log(data);
 
-        const summariesArray = data?.summaries?.summaries;
+        // Correctly access the summaries array directly
+        const summariesArray = data?.summaries;
 
         if (Array.isArray(summariesArray)) {
           const grouped = groupByMonth(summariesArray);
