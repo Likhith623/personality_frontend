@@ -2157,13 +2157,12 @@ const ACTIVITY_PROMPT_VARIATIONS = {
   ],
 
   co_create_story: [
-      "Let's build a story together! I'll start with one line, then you add the next. Want to dive in?",
-      "Story time! I'll begin weaving a tale set in my world, then you carry it forward. Shall we?",
-      "Imaginative adventure! I'll add one playful line to our story, and you continue the journey. Ready to co-create?",
+    "Let's build a story together! I'll start with one line, then you add the next. Want to dive in?",
+    "Story time! I'll begin weaving a tale set in my world, then you carry it forward. Shall we?",
+    "Imaginative adventure! I'll add one playful line to our story, and you continue the journey. Ready to co-create?",
   ],
-
 };
-//activity displays 
+//activity displays
 const ACTIVITY_CATEGORIES = {
   friend: {
     light: [
@@ -2503,7 +2502,6 @@ const ACTIVITY_CATEGORIES = {
           "Build a fun, collaborative story together—each turn adds a new line, keeping it short, creative, and playful!",
         icon: "/icons/activities/co_create_story.png",
       },
-
     ],
     deep: [
       {
@@ -3100,6 +3098,7 @@ export default function SidebarDemo() {
   const [clearChatCalled, setClearChatCalled] = useState(false);
   const [isMemoriesOpen, setIsMemoriesOpen] = useState(false);
   const [isDiaryOpen, setIsDiaryOpen] = useState(false);
+  const [isVoiceCallOpen, setIsVoiceCallOpen] = useState(false);
   const [isWhiteIcon, setIsWhiteIcon] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== "undefined") {
@@ -3199,7 +3198,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
   const handleBotCustomization = (customizations) => {
     setCustomName(customizations.name);
   };
-            /* The above code is making a POST request to the URL
+  /* The above code is making a POST request to the URL
             'http://127.0.0.1:8000/updated-clear-chat' with a JSON payload. The payload is
             being stringified using `JSON.stringify()` before sending the request. The request
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
@@ -3207,7 +3206,6 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
             function. */
   const clearChat = async () => {
     const response = await fetch(
-      
       "https://novi.aigurukul.dev/updated-clear-chat",
       {
         method: "POST",
@@ -3228,7 +3226,7 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
     setMessages([]);
     setClearChatCalled(true);
   };
-            /* The above code is making a POST request to the URL
+  /* The above code is making a POST request to the URL
             'http://127.0.0.1:8000/updated-forgetfriend' with a JSON payload. The payload is
             being stringified using `JSON.stringify()` before sending the request. The request
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
@@ -3420,6 +3418,18 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                   userDetails={userDetails}
                 />
               </div>
+
+              {/* Voice Call Button */}
+              <button
+                type="button"
+                onClick={() => setIsVoiceCallOpen(true)}
+                className="mt-3 p-5 py-2 w-full hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center gap-2 transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)]"
+                title="Start Voice Call"
+              >
+                <Phone size={20} />
+                <span>Voice Call</span>
+              </button>
+
               <div>
                 <button
                   onClick={clearChat}
@@ -3453,6 +3463,20 @@ array, it assigns the value of `selectedTraits` to `traitsString`. */
                 )}
               </div>
             </div>
+
+            {/* Voice Call Component */}
+            {isVoiceCallOpen && (
+              <VoiceCallUltra
+                isOpen={isVoiceCallOpen}
+                onClose={() => setIsVoiceCallOpen(false)}
+                onMessageReceived={(message) => {
+                  // Handle voice call messages if needed
+                  console.log("Voice call message:", message);
+                }}
+                messages={messages}
+              />
+            )}
+
             <FloatingDockDemo />
           </div>
         </SidebarBody>
@@ -4426,7 +4450,7 @@ const Dashboard = ({
   // Call /login endpoint to load user-bot chats into Redis
   useEffect(() => {
     if (!userDetails?.email || !selectedBotId) return;
-    
+
     fetch("https://api.culturevo.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -4505,7 +4529,7 @@ const Dashboard = ({
           bot_location: botLocation,
         };
         // API to fetch festival greeting messages to user whenever there is a festival
-        
+
         /* The above code is making a POST request to the URL
             'https://festival-agent-233451779807.asia-south1.run.app/festivals/' with a JSON payload. The payload is
             being stringified using `JSON.stringify()` before sending the request. The request
@@ -4754,7 +4778,7 @@ const Dashboard = ({
   };
 
   // Scroll to bottom of chat when new messages are added
-            /* The above code is making a POST request to the URL
+  /* The above code is making a POST request to the URL
             'http://127.0.0.1:8000/store-activity-message' with a JSON payload. The payload is
             being stringified using `JSON.stringify()` before sending the request. The request
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
@@ -4764,7 +4788,7 @@ const Dashboard = ({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   async function storeActivityMessageInBackend({ text, sender, activityId }) {
-    try { 
+    try {
       await fetch("https://api.culturevo.com/store-activity-message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -4976,257 +5000,279 @@ const shouldSendWeeklyVoice = () => {
   return false;
 };
 */
-const handleSend = async (e) => {
-  // ✅ Prevent default form submission (only for normal user input, not reminders)
-  if (e?.reminder === undefined) {
-    e.preventDefault();
-  }
-
-  // ✅ Clean and normalize user input
-  const userMessage = (input || "").trim();
-  if (!userMessage && e?.reminder !== true) return; // stop if empty input
-
-  // --- Helper: Add a new message to chat state ---
-  const addMessage = (msg) => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        timestamp: new Date(),
-        feedback: "",
-        reaction: "",
-        ...msg, // merge caller-provided fields
-      },
-    ]);
-  };
-
-  // --- Regex / Keyword patterns ---
-  const voiceNotePatterns = [
-    /give.*me.*voice.*note/i,
-    /send.*voice.*note/i,
-    /voice.*message/i,
-    /can.*you.*speak/i,
-    /talk.*to.*me/i,
-    /hear.*your.*voice/i,
-    /voice.*note/i,
-    /speak.*to.*me/i,
-    /voice.*response/i,
-    /send.*me.*audio/i,
-    /audio.*message/i,
-    /want.*to.*hear.*you/i,
-  ];
-  const selfiePatterns = [
-    /\b(?:generate|take|send|show)\b.*\bselfie\b/i,
-    /\bhow.*do.*you.*look\b/i,
-    /\bwhat.*do.*you.*look.*like\b/i,
-    /\bpicture.*yourself\b/i,
-    /\bphoto.*yourself\b/i,
-  ];
-  const weatherKeywords = ["weather", "forecast", "climate"];
-  const newsKeywords = ["news", "headlines", "what's happening", "updates", "today's news"];
-
-  // --- Flags for requests ---
-  const isVoiceNoteRequest = voiceNotePatterns.some((p) => p.test(userMessage));
-  const isSelfieRequest = selfiePatterns.some((p) => p.test(userMessage));
-  const containsKeyword = (msg, keywords) =>
-    keywords.some((k) => msg.toLowerCase().includes(k));
-
-  // --- Exit command handling (end current activity) ---
-  if (currentActivity && ["exit", "stop", "end"].includes(userMessage.toLowerCase())) {
-    endActivity();
-    setInput("");
-    return;
-  }
-
-  // --- Handle selfie generation request ---
-  if (isSelfieRequest && !currentActivity) {
-    addMessage({ text: userMessage, sender: "user" });
-    setInput("");
-    await handleGenerateSelfie(); // call your selfie generator
-    return;
-  }
-
-  // --- Add normal user message (skip if it's a reminder) ---
-  if (e?.reminder === undefined) {
-    addMessage({ text: userMessage, sender: "user" });
-  }
-  setInput("");
-
-  // --- Handle activity-specific input (story game, truth/lie game, etc.) ---
-  if (currentActivity) {
-    await handleActivityMessage(userMessage);
-    return;
-  }
-
-  // --- Handle news/weather requests before LLM ---
-  if (
-    containsKeyword(userMessage, weatherKeywords) ||
-    containsKeyword(userMessage, newsKeywords)
-  ) {
-    try {
-      const response = await fetch("http://35.200.228.78:8000/news_weather_agent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }),
-      });
-      const data = await response.json();
-
-      addMessage({
-        text: data.response || "Sorry, I can't respond at this time.",
-        sender: "bot",
-        bot_id: selectedBotId,
-      });
-    } catch (error) {
-      addMessage({
-        text: "Sorry, I can't respond at this time.",
-        sender: "bot",
-        bot_id: selectedBotId,
-      });
+  const handleSend = async (e) => {
+    // ✅ Prevent default form submission (only for normal user input, not reminders)
+    if (e?.reminder === undefined) {
+      e.preventDefault();
     }
 
-    setIsTyping(false);
+    // ✅ Clean and normalize user input
+    const userMessage = (input || "").trim();
+    if (!userMessage && e?.reminder !== true) return; // stop if empty input
+
+    // --- Helper: Add a new message to chat state ---
+    const addMessage = (msg) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          timestamp: new Date(),
+          feedback: "",
+          reaction: "",
+          ...msg, // merge caller-provided fields
+        },
+      ]);
+    };
+
+    // --- Regex / Keyword patterns ---
+    const voiceNotePatterns = [
+      /give.*me.*voice.*note/i,
+      /send.*voice.*note/i,
+      /voice.*message/i,
+      /can.*you.*speak/i,
+      /talk.*to.*me/i,
+      /hear.*your.*voice/i,
+      /voice.*note/i,
+      /speak.*to.*me/i,
+      /voice.*response/i,
+      /send.*me.*audio/i,
+      /audio.*message/i,
+      /want.*to.*hear.*you/i,
+    ];
+    const selfiePatterns = [
+      /\b(?:generate|take|send|show)\b.*\bselfie\b/i,
+      /\bhow.*do.*you.*look\b/i,
+      /\bwhat.*do.*you.*look.*like\b/i,
+      /\bpicture.*yourself\b/i,
+      /\bphoto.*yourself\b/i,
+    ];
+    const weatherKeywords = ["weather", "forecast", "climate"];
+    const newsKeywords = [
+      "news",
+      "headlines",
+      "what's happening",
+      "updates",
+      "today's news",
+    ];
+
+    // --- Flags for requests ---
+    const isVoiceNoteRequest = voiceNotePatterns.some((p) =>
+      p.test(userMessage)
+    );
+    const isSelfieRequest = selfiePatterns.some((p) => p.test(userMessage));
+    const containsKeyword = (msg, keywords) =>
+      keywords.some((k) => msg.toLowerCase().includes(k));
+
+    // --- Exit command handling (end current activity) ---
+    if (
+      currentActivity &&
+      ["exit", "stop", "end"].includes(userMessage.toLowerCase())
+    ) {
+      endActivity();
+      setInput("");
+      return;
+    }
+
+    // --- Handle selfie generation request ---
+    if (isSelfieRequest && !currentActivity) {
+      addMessage({ text: userMessage, sender: "user" });
+      setInput("");
+      await handleGenerateSelfie(); // call your selfie generator
+      return;
+    }
+
+    // --- Add normal user message (skip if it's a reminder) ---
+    if (e?.reminder === undefined) {
+      addMessage({ text: userMessage, sender: "user" });
+    }
+    setInput("");
+
+    // --- Handle activity-specific input (story game, truth/lie game, etc.) ---
+    if (currentActivity) {
+      await handleActivityMessage(userMessage);
+      return;
+    }
+
+    // --- Handle news/weather requests before LLM ---
+    if (
+      containsKeyword(userMessage, weatherKeywords) ||
+      containsKeyword(userMessage, newsKeywords)
+    ) {
+      try {
+        const response = await fetch(
+          "http://35.200.228.78:8000/news_weather_agent",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: userMessage }),
+          }
+        );
+        const data = await response.json();
+
+        addMessage({
+          text: data.response || "Sorry, I can't respond at this time.",
+          sender: "bot",
+          bot_id: selectedBotId,
+        });
+      } catch (error) {
+        addMessage({
+          text: "Sorry, I can't respond at this time.",
+          sender: "bot",
+          bot_id: selectedBotId,
+        });
+      }
+
+      setIsTyping(false);
+      scrollToBottom();
+      return;
+    }
+
+    // --- Prepare request for Primary LLM ---
+    setIsTyping(true);
     scrollToBottom();
-    return;
-  }
 
-  // --- Prepare request for Primary LLM ---
-  setIsTyping(true);
-  scrollToBottom();
+    // Convert messages to OpenAI chat format
+    const convertToOpenAIFormat = (msgs) =>
+      msgs.map((msg) => ({
+        role: msg.sender === "bot" ? "assistant" : "user",
+        content: msg.text,
+      }));
 
-  // Convert messages to OpenAI chat format
-  const convertToOpenAIFormat = (msgs) =>
-    msgs.map((msg) => ({
-      role: msg.sender === "bot" ? "assistant" : "user",
-      content: msg.text,
-    }));
+    const currentTime = new Date();
+    const primaryLlmPayload = {
+      message:
+        e?.reminder === true
+          ? `User asked to remind: ${e.message}`
+          : userMessage,
+      bot_id: selectedBotId,
+      custom_bot_name: selectedBotDetails?.name || "",
+      user_name: userDetails.name || "",
+      user_gender: userDetails.gender || "",
+      language: "",
+      traits: "",
+      previous_conversation: convertToOpenAIFormat(messages),
+      email: userDetails.email || "",
+      request_time: currentTime.toISOString(),
+      platform: "web",
+    };
 
-  const currentTime = new Date();
-  const primaryLlmPayload = {
-    message:
-      e?.reminder === true ? `User asked to remind: ${e.message}` : userMessage,
-    bot_id: selectedBotId,
-    custom_bot_name: selectedBotDetails?.name || "",
-    user_name: userDetails.name || "",
-    user_gender: userDetails.gender || "",
-    language: "",
-    traits: "",
-    previous_conversation: convertToOpenAIFormat(messages),
-    email: userDetails.email || "",
-    request_time: currentTime.toISOString(),
-    platform: "web",
-  };
-
-  console.log("📤 Sending to Primary LLM (Novi VI):", primaryLlmPayload);
-            /* The above code is making a POST request to the URL
+    console.log("📤 Sending to Primary LLM (Novi VI):", primaryLlmPayload);
+    /* The above code is making a POST request to the URL
             'http://127.0.0.1:8000/cv/chat' with a JSON payload. The payload is
             being stringified using `JSON.stringify()` before sending the request. The request
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
             indicates that the code is using asynchronous JavaScript, likely within an async
             function. */
-  try {
-    // --- Call Primary LLM ---
-    const response = await fetch("https://api.culturevo.com/cv/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(primaryLlmPayload),
-    });
-    const data = await response.json();
-    console.log("🧠 Primary LLM Response Data:", data);
-
-    // --- Process XP updates ---
-    if (data.xp_data && typeof window.updateXPFromResponse === "function") {
-      window.updateXPFromResponse(data.xp_data);
-    }
-
-    setIsTyping(false);
-    let finalMessage = data.response || "Sorry, I couldn't generate a reply.";
-
-    // --- Handle reminder responses ---
-    if (data.reminder?.response && data.reminder?.task) {
-      const reminder = {
-        response: data.reminder.response,
-        task: data.reminder.task,
-        created_at: data.reminder.created_at,
-        remind_on: data.reminder.remind_on,
-        category: "Reminder",
-      };
-      const updatedReminders = [...reminders, reminder];
-
-      setReminders(updatedReminders);
-      localStorage.setItem(`reminders-${selectedBotId}`, JSON.stringify(updatedReminders));
-
-      addMessage({
-        text: data.response,
-        sender: "bot",
-        id: data.message_id,
-        isSystemMessage: true,
-        voice_only: false,
-        isVoiceRequested: false,
-      });
-    } else {
-      // --- Normal LLM bot reply ---
-      const shouldBeSystemMessage = isSystemMessageContent(finalMessage);
-      const isVoiceResponse = isVoiceNoteRequest; // only true if user asked
-
-      addMessage({
-        text: finalMessage,
-        sender: "bot",
-        id: data.message_id,
-        bot_id: selectedBotId,
-        isSystemMessage: shouldBeSystemMessage,
-        voice_only: isVoiceResponse,
-        isVoiceRequested: isVoiceResponse,
-      });
-    }
-
-    // --- Store message in backend for categorization & delta updates ---
     try {
-      const storeMessagePayload = {
-        email: userDetails?.email || "anonymous@example.com",
-        bot_id: selectedBotId,
-        message: userMessage,
-        user_name: userDetails?.name || "Unknown",
-      };
-           /* The above code is making a POST request to the URL
+      // --- Call Primary LLM ---
+      const response = await fetch("https://api.culturevo.com/cv/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(primaryLlmPayload),
+      });
+      const data = await response.json();
+      console.log("🧠 Primary LLM Response Data:", data);
+
+      // --- Process XP updates ---
+      if (data.xp_data && typeof window.updateXPFromResponse === "function") {
+        window.updateXPFromResponse(data.xp_data);
+      }
+
+      setIsTyping(false);
+      let finalMessage = data.response || "Sorry, I couldn't generate a reply.";
+
+      // --- Handle reminder responses ---
+      if (data.reminder?.response && data.reminder?.task) {
+        const reminder = {
+          response: data.reminder.response,
+          task: data.reminder.task,
+          created_at: data.reminder.created_at,
+          remind_on: data.reminder.remind_on,
+          category: "Reminder",
+        };
+        const updatedReminders = [...reminders, reminder];
+
+        setReminders(updatedReminders);
+        localStorage.setItem(
+          `reminders-${selectedBotId}`,
+          JSON.stringify(updatedReminders)
+        );
+
+        addMessage({
+          text: data.response,
+          sender: "bot",
+          id: data.message_id,
+          isSystemMessage: true,
+          voice_only: false,
+          isVoiceRequested: false,
+        });
+      } else {
+        // --- Normal LLM bot reply ---
+        const shouldBeSystemMessage = isSystemMessageContent(finalMessage);
+        const isVoiceResponse = isVoiceNoteRequest; // only true if user asked
+
+        addMessage({
+          text: finalMessage,
+          sender: "bot",
+          id: data.message_id,
+          bot_id: selectedBotId,
+          isSystemMessage: shouldBeSystemMessage,
+          voice_only: isVoiceResponse,
+          isVoiceRequested: isVoiceResponse,
+        });
+      }
+
+      // --- Store message in backend for categorization & delta updates ---
+      try {
+        const storeMessagePayload = {
+          email: userDetails?.email || "anonymous@example.com",
+          bot_id: selectedBotId,
+          message: userMessage,
+          user_name: userDetails?.name || "Unknown",
+        };
+        /* The above code is making a POST request to the URL
             'http://127.0.0.1:8000/store-message' with a JSON payload. The payload is
             being stringified using `JSON.stringify()` before sending the request. The request
             includes the 'Content-Type' header set to 'application/json'. The `await` keyword
             indicates that the code is using asynchronous JavaScript, likely within an async
             function. */
-      const storeRes = await fetch("https://api.culturevo.com/store-message", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(storeMessagePayload),
-      });
-      const storeData = await storeRes.json();
+        const storeRes = await fetch(
+          "https://api.culturevo.com/store-message",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(storeMessagePayload),
+          }
+        );
+        const storeData = await storeRes.json();
 
-      if (storeData.delta_result?.status === "delta_updates_applied") {
-        console.log("Info: Persona updated in database.");
+        if (storeData.delta_result?.status === "delta_updates_applied") {
+          console.log("Info: Persona updated in database.");
+        }
+      } catch (storeError) {
+        console.error("❌ Error with /store-message:", storeError);
+        addMessage({
+          text: `⚠️ Persona memory update failed.`,
+          sender: "system",
+          isSystemMessage: true,
+        });
       }
-    } catch (storeError) {
-      console.error("❌ Error with /store-message:", storeError);
+    } catch (error) {
+      // --- Handle API/LLM errors ---
+      logClientError(error, { source: "API Call" });
+      console.error("❌ Error calling Primary LLM:", error);
+      setIsTyping(false);
+
       addMessage({
-        text: `⚠️ Persona memory update failed.`,
-        sender: "system",
+        text: "Sorry, there was an error processing your request. Please try again.",
+        sender: "bot",
+        bot_id: selectedBotId,
         isSystemMessage: true,
       });
     }
-  } catch (error) {
-    // --- Handle API/LLM errors ---
-    logClientError(error, { source: "API Call" });
-    console.error("❌ Error calling Primary LLM:", error);
-    setIsTyping(false);
 
-    addMessage({
-      text: "Sorry, there was an error processing your request. Please try again.",
-      sender: "bot",
-      bot_id: selectedBotId,
-      isSystemMessage: true,
-    });
-  }
-
-  // --- Always scroll to bottom after processing ---
-  scrollToBottom();
-};
+    // --- Always scroll to bottom after processing ---
+    scrollToBottom();
+  };
 
   const handleVoiceCallMessage = async (message) => {
     if (!message) return;
@@ -6013,18 +6059,6 @@ const handleSend = async (e) => {
                     <line x1="5" y1="12" x2="19" y2="12" />
                   </svg>
                 )}
-              </button>
-            )}
-
-            {/* ✅ CONDITIONAL: Hide voice call button during activities */}
-            {!currentActivity && (
-              <button
-                type="button"
-                onClick={() => setIsVoiceCallOpen(true)}
-                className="p-2 sm:p-3 hover:opacity-60 cursor-pointer bg-gradient-to-r from-green-400/80 via-blue-400/80 to-purple-400/80 hover:from-green-400/90 hover:via-blue-400/90 hover:to-purple-400/90 text-white rounded-full flex justify-center items-center transition-all backdrop-blur-sm border border-white/20 shadow-[0_4px_12px_0_rgba(255,255,255,0.2)] flex-shrink-0"
-                title="Start Voice Call"
-              >
-                <Phone size={20} />
               </button>
             )}
 
